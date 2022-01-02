@@ -1,0 +1,72 @@
+@startuml MDD documentation architecture
+
+class "Acteur" as A {
+  titre: String
+  description:String
+}
+class "Exigence" as EX {
+  titre:String
+  description: String
+}
+
+class "Justification" as J {
+  titre:String
+  description:String
+}
+
+class "VueArchitecturale" as VA{
+  titre:String
+  description:String
+  style: ENUM{module, \n   Composant&Connecteur, \n   Allocation}
+  type: ENUM{\n   Decomposition, \n   Utilise, \n   generalisation,\n   couche, \n   modèle de données,...}
+}
+class "ElementArchitecturale" as EA{
+  titre:String
+  description:String
+  type: ENUM{\n   interface,\n   class,\n   package,\n   coucche,\n   composant,\n   connecteur,\n   microservice,\n   API,\n   noeud d'exécution, \n   noeud physique}
+}
+class "Etudiant" as ET {
+  titre:String
+  courriel:String
+}
+class "Equipe" as EQ{
+  titre:String
+}
+
+
+class "Implementation" as I {
+  titre:String
+  description:String
+}
+class "Language" as L {
+  titre: String
+  description:String
+}
+class "Cadriciel" as CA {
+  titre:String
+  description:String
+}
+note left of CA: Framework
+class "Deploiement" as D {
+  titre:String
+  url:String 
+  port: Number
+}
+
+A -- "*" EX : a besoin du système \npour réaliser >
+EX -- "*" J: est réalisé par > 
+VA -- "*" EA: sont composé de >
+EA -- "*" EA: est composé de >
+EQ -- "5" ET: est composé de >
+EA -- "*" ET: est documenté par >
+
+EA -- I: est implémenté par >
+I -- L: est réalisé en >
+I --"*" CA: utilise >
+I -- "*" ET: réalise par >
+I -- D: déployé par > 
+ET "*" -- VA: réalisent >
+J "*" -- EA: justifie la présence >
+EQ -- "*" EQ: coordonne >
+
+@enduml

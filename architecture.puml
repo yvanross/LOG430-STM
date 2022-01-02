@@ -1,0 +1,79 @@
+@startwbs parti-prenantes
+* \nResponsable du cours\nÉvaluateur externe
++- test
+** Groupe 01\nChargé de cours
+*** Sous-groupe 01A\nChargé de laboratoire\nEquipe de communication\nTesteur système
+**** Equipe 01A-1\nÉtudiants
+**** Equipe 01A-...1\nÉtudiants
+*** Sous-groupe 01B\nChargé de laboratoire\nEquipe de communication\nTesteur système
+**** Equipe 01B-11\nÉtudiants
+**** Equipe 01B-...1\nÉtudiants
+
+** Groupe 02\nChargé de cours
+*** Sous-groupe 02A\nChargé de laboratoire\nEquipe de communication\nTesteur système
+**** Equipe 02A-11\nÉtudiants
+**** Equipe 02A-...1\nÉtudiants
+*** Sous-groupe 02B\nChargé de laboratoire\nEquipe de communication\nTesteur système
+**** Equipe 02B-11\nÉtudiants
+**** Equipe 02B-...1\nÉtudiants
+
+@endwbs
+
+<!-------------------------------->
+
+@startuml proposition
+
+Actor ChargéDeLaboratoire
+Actor TesteurSystem 
+
+interface IDataReader
+interface IExternalService
+interface IRouteComparator
+interface IServiceDiscovery
+interface IServiceRegister
+
+component ChaosMonkey <<Microservice avec UI>>
+component ExternalServices <<Microservice>>
+component GpsMobileComparatorApp <<Mobile application>>
+component GpsMobileComparatorAppSimulator <<Microservice avec UI>>
+component MqttServerSimulation <<Microservice>>
+component MqttServerSwitch <<Microservice avec UI>>
+component MqttServerVilleDeMontreal <<Microservice>>
+component PerturbateurDeTraffic <<Microservice with UI>>
+component RouteComparatorApp <<Microservice with UI>>
+component RouteComparatorService <<Microservice>>
+component ServiceDiscovery <<Microservice>>
+
+note bottom of ExternalServices: Un seul service externe par équipeÉ\nChaque équipe doit utiliser un service différent.  
+note bottom of IServiceRegister: Tous les microservices s'enregistrent\nà l'aide de cette interface
+
+
+PerturbateurDeTraffic -- MqttServerSimulation: perturbe
+PerturbateurDeTraffic -- MqttServerVilleDeMontreal: perturbe
+
+
+ExternalServices .u.|> IExternalService
+
+ServiceDiscovery .d.|> IServiceRegister
+ServiceDiscovery .u.|> IServiceDiscovery
+ChaosMonkey --> IServiceDiscovery 
+ChargéDeLaboratoire --> PerturbateurDeTraffic
+ChargéDeLaboratoire --> ChaosMonkey  : Utilise et configure
+ChargéDeLaboratoire --> MqttServerSwitch  :switch data source
+ChargéDeLaboratoire --> RouteComparatorApp  : Utilise et configure
+GpsMobileComparatorApp -d-> IRouteComparator
+GpsMobileComparatorAppSimulator -d-> IRouteComparator
+MqttServerSimulation .u.|> IDataReader
+MqttServerSwitch  ..|> IDataReader
+MqttServerSwitch --> IDataReader
+MqttServerVilleDeMontreal .u.|> IDataReader
+RouteComparatorApp --> IRouteComparator
+RouteComparatorService --> IDataReader
+RouteComparatorService --> IExternalService
+RouteComparatorService --> IServiceDiscovery
+RouteComparatorService .u.|> IRouteComparator
+TesteurSystem  --> GpsMobileComparatorApp: utilise et configure 
+TesteurSystem  --> GpsMobileComparatorAppSimulator: utilise et configure 
+
+@enduml
+
