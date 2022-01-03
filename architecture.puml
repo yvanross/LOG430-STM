@@ -35,7 +35,7 @@ interface IServiceRegister
 component ChaosMonkey <<Microservice avec UI>>
 component ExternalServices <<Microservice>>
 component GpsMobileComparatorApp <<Mobile application>>
-component GpsMobileComparatorAppSimulator <<Microservice avec UI>>
+component GpsAppSimulator <<Microservice avec UI>>
 component MqttServerSimulation <<Microservice>>
 component MqttServerSwitch <<Microservice avec UI>>
 component MqttServerVilleDeMontreal <<Microservice>>
@@ -62,7 +62,7 @@ ChargéDeLaboratoire --> ChaosMonkey  : Utilise et configure
 ChargéDeLaboratoire --> MqttServerSwitch  :switch data source
 ChargéDeLaboratoire --> RouteComparatorApp  : Utilise et configure
 GpsMobileComparatorApp -d-> IRouteComparator
-GpsMobileComparatorAppSimulator -d-> IRouteComparator
+GpsAppSimulator -d-> IRouteComparator
 MqttServerSimulation .u.|> IDataReader
 MqttServerSwitch  ..|> IDataReader
 MqttServerSwitch --> IDataReader
@@ -73,7 +73,7 @@ RouteComparatorService --> IExternalService
 RouteComparatorService --> IServiceDiscovery
 RouteComparatorService .u.|> IRouteComparator
 TesteurSystem  --> GpsMobileComparatorApp: utilise et configure 
-TesteurSystem  --> GpsMobileComparatorAppSimulator: utilise et configure 
+TesteurSystem  --> GpsAppSimulator: utilise et configure 
 
 @enduml
 
