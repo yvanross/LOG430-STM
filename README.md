@@ -16,11 +16,9 @@
     - [Sous-groupe](#sous-groupe)
     - [Équipe (Étudiants)](#équipe-étudiants)
     - [Équipe de coordination (Architectes)](#équipe-de-coordination-architectes)
-    - [Équipe de testeurs système (Itération #3 seulement)](#équipe-de-testeurs-système-itération-3-seulement)
 - [Cas d'utilisation](#cas-dutilisation)
   - [Acteurs](#acteurs)
     - [ChargéDeLaboratoire](#chargédelaboratoire)
-    - [TesteurSystème (itération #3 seulement)](#testeursystème-itération-3-seulement)
 - [Attribut de qualité](#attribut-de-qualité)
   - [Disponibilité](#disponibilité)
   - [Modifiabilité:](#modifiabilité)
@@ -121,9 +119,10 @@ Vous êtes nouvellement embauché par l'organisation LOG430 pour développer le 
 
 ### Équipe (Étudiants)
 - Le chargé de cours crée les équipes de laboratoires.
-- Un étudiant par équipe est nommé pour faire partie de l'équipe de coordination (bonis de 5% de la note de laboratoire de l'équipe)
-  - Cet étudiant n'obtiendra pas son bonus de 5% pour la participation à l'équipe de coordination et sera pénalité de 5% sur sa note de laboratoire
+- **A chaque itération**, un étudiant par équipe est nommé pour faire partie de l'équipe de coordination (bonis de 5% de la note de laboratoire de l'équipe)
+  - Un étudiant ne peut pas être coordonateur plus d'une itération.
   - Une équipe peut révoquer son représentant de l'équipe de coordination s'il ne répond pas à leurs attentes 
+    - Cet étudiant n'obtiendra pas son bonus de 5% pour la participation à l'équipe de coordination et sera pénalité de 5% sur sa note de laboratoire
 - Doit conserver une traçabilité de quel étudiant est responsable de quelles tâches
 - Dois connaître en tout temps l'état d'une tâche assignée à un étudiant
 - Ont la responsabilité de concevoir l'architecture permettant de satisfaire aux exigences client
@@ -146,14 +145,6 @@ Vous êtes nouvellement embauché par l'organisation LOG430 pour développer le 
 - Ils ont la responsabilité de faire l'intégration de tous les microservices pour réaliser l'application qui satisfait aux exigences client.
 - Dois conserver une trace écrite pour savoir quelle équipe implémente quel microservice.
 - Je vous suggère fortement de faire implémenter chaque microservice par au moins 2 équipes pour assurer une certaine disponibilité des microservices durant le laboratoire.  
-
-### Équipe de testeurs système (Itération #3 seulement)
-- Chaque équipe de coordination créera une équipe de testeurs système, parmi les étudiants du sous-groupe, qui aura pour responsabilité de réaliser le test final sur le terrain pour comparer en temps réel les données de Google Map, Waze, viaMichelin, etc. et une configuration du sous-groupe. (Chaque membre reçoit un boni de 2% de la note de laboratoire de l'équipe)
-- Aucun membre de l'équipe de coordination ne peut faire partie de l'équipe testeurs système
-- L'équipe de test système peut démettre de ses fonctions un membre qui ne répond pas à ces attentes (perte du boni et pénalité de 2% de la note de laboratoire de l'équipe)
-- Documentation du processus de test système sur le terrain
-- Expérimentation réelle et documentation des résultats
-
 # Cas d'utilisation
 
 ## Acteurs
@@ -176,13 +167,11 @@ Vous êtes nouvellement embauché par l'organisation LOG430 pour développer le 
 - CU04. Veux pouvoir perturber le trafic à l'aide d'une interface usager pour simuler un accident ou une période de pointe.
   - en fermant une voie au niveau d'une ou plusieurs intersections 
   - en diminuant/augmentant la vitesse de la circulation dans une ou plusieurs voies d'une ou plusieurs intersections  
-  - 
-Note 1: Envoie un signal à un microservice pour qu'il se termine automatiquement. 
-
-### TesteurSystème (itération #3 seulement)
-- CU05. Veux utiliser un ou plusieurs téléphones cellulaires pour envoyer les positions GPS et faire le calcul du temps de trajet en temps réel.
+- CU05. Veux utiliser un ou plusieurs application pour envoyer les positions GPS et faire le calcul du temps de trajet en temps réel.
   - On veut voir si les données du temps de trajet sont ajustées en temps réel.
 - CU06. Veux simuler l'envoi simultané des coordonnées GPS de 100 appareils mobiles pendant au moins une minute pour s'assurer du bon fonctionnement du système même lorsqu'il est soumis au chaos.
+
+Note 1: Envoie un signal à un microservice pour qu'il se termine automatiquement. 
 
 # Attribut de qualité
 ## Disponibilité
@@ -394,10 +383,8 @@ Dans le but d'aider les équipes de coordonnateur à démarrer le projet le plus
 ## Composants
 | Composant | Description |
 | ---|--|
-|TesteurSystem|  |
-|ChargéDeLaboratoire| |
-| GpsMobileComparatorApp | Application mobile qui transmet en temps réel ses coordonnées GPS et qui récupère le temps de trajet restant |
-|GpsAppSimulator|Simulation de l'application mobile pour la transmission des coordonnées GPS|
+|ChargéDeLaboratoire|Doit pouvoir vérifier chacune des exigences client le plus rapidement possible|
+|GpsAppSimulator|Simulation de l'application pour la transmission des coordonnées GPS|
 |RouteComparatorApp|Microservice permettant d'afficher les courbes de comparaison de données|
 | ChaosMonkey| générateur de chaos qui peut modifier la latence ou détruire un microservice selon différents critères.  Doit aussi pouvoir détruire/faire arrêter/planter/terminer le processus de ServiceDiscovery pour que celui soit temporairement non disponible. Référence.: https://principlesofchaos.org |
 |RouteComparatorService| Comparateur des calculs du temps de trajet entre deux coordonnées GPS. Le calcul se fait sur le tronçon de la rue Notre-Dame seulement. |
