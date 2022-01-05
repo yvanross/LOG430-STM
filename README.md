@@ -1,5 +1,61 @@
 ![log](architecture/logo-logti.png)
 # LOG430 - Architecture logicielle¶
+- [LOG430 - Architecture logicielle¶](#log430---architecture-logicielle)
+  - [Introduction](#introduction)
+- [Contexte d'affaires](#contexte-daffaires)
+  - [Objectifs](#objectifs)
+  - [API de la ville de Montréal](#api-de-la-ville-de-montréal)
+    - [Capteurs](#capteurs)
+    - [Données de simulation](#données-de-simulation)
+    - [Objectifs d'affaires](#objectifs-daffaires)
+- [Le contexte de l'organisation](#le-contexte-de-lorganisation)
+  - [Partie psrenantes](#partie-psrenantes)
+    - [Chargé de cours (client)](#chargé-de-cours-client)
+    - [Chargé de laboratoire (client)](#chargé-de-laboratoire-client)
+    - [Classe](#classe)
+    - [Sous-groupe](#sous-groupe)
+    - [Équipe (Étudiants)](#équipe-étudiants)
+    - [Équipe de coordination (Architectes)](#équipe-de-coordination-architectes)
+    - [Équipe de testeurs système (Itération #3 seulement)](#équipe-de-testeurs-système-itération-3-seulement)
+- [Cas d'utilisation](#cas-dutilisation)
+  - [Acteurs](#acteurs)
+    - [ChargéDeLaboratoire](#chargédelaboratoire)
+    - [TesteurSystème (itération #3 seulement)](#testeursystème-itération-3-seulement)
+- [Attribut de qualité](#attribut-de-qualité)
+  - [Disponibilité](#disponibilité)
+  - [Modifiabilité:](#modifiabilité)
+  - [Testabilité:](#testabilité)
+  - [Convivialité:](#convivialité)
+  - [Performance](#performance)
+  - [Interopérabilité:](#interopérabilité)
+  - [Sécurité](#sécurité)
+- [Contraintes](#contraintes)
+  - [Language¶](#language)
+- [Planification des itérations](#planification-des-itérations)
+    - [Processus de remises](#processus-de-remises)
+    - [À vérifier avant votre remise](#à-vérifier-avant-votre-remise)
+- [Documentation de l'architecture](#documentation-de-larchitecture)
+  - [Suggestion d'outils](#suggestion-doutils)
+    - [notion.so](#notionso)
+    - [confluence](#confluence)
+    - [Google doc](#google-doc)
+  - [Rapports](#rapports)
+  - [Rapport Test Système (Itération 3 seulement)](#rapport-test-système-itération-3-seulement)
+- [Directives d'implémentation](#directives-dimplémentation)
+- [Directive de déploiement](#directive-de-déploiement)
+  - [Hébergement possible](#hébergement-possible)
+- [Démonstration](#démonstration)
+- [Critères d'évaluation](#critères-dévaluation)
+  - [Grille de correction](#grille-de-correction)
+  - [Collaboration](#collaboration)
+- [Proposition d'architecture](#proposition-darchitecture)
+    - [Légende](#légende)
+  - [Composants](#composants)
+  - [Service externes](#service-externes)
+    - [Exemples](#exemples)
+    - [Fournisseurs potentiels](#fournisseurs-potentiels)
+  - [Bonus projet laboratoire (15% point bonus)](#bonus-projet-laboratoire-15-point-bonus)
+  - [Charge de laboratoire](#charge-de-laboratoire)
 ## Introduction
 Dans le cadre de ce projet, on cherche à créer une application de calcul de temps de trajet se servant de différents microservices. La partie de l'application qui reçoit les requêtes de temps de trajet est aussi un microservice. 
 
@@ -352,6 +408,21 @@ Dans le but d'aider les équipes de coordonnateur à démarrer le projet le plus
 |MqttServerSimulation | Serveur MQTT simulant le serveur de la ville de Montréal et utilisant les données de simulation|
 |MqttServerVilleDeMontreal | Serveur permettant d'obtenir les données des capteurs de la ville de Montréal|
 
+## Service externes
+Utiliser l'API ou la page web des fournisseurs externe pour l'estimation en temps réel du temps nécessaire pour parcourir la distance entre deux points sur le boulevard Notre-Dame
+### Exemples
+- https://www.google.ca/maps/dir/45.58927,-73.50912/45.51577,+-73.55196/@45.5541942,-73.5686356,13z/am=t/data=!3m1!4b1!4m7!4m6!1m0!1m3!2m2!1d-73.55196!2d45.51577!3e0
+- https://www.google.ca/maps/dir/45.51433,+-73.55014/45.58927,+-73.50912/@45.5519338,-73.5641068,13z/data=!3m1!4b1!4m10!4m9!1m3!2m2!1d-73.55014!2d45.51433!1m3!2m2!1d-73.50912!2d45.58927!3e0
+
+### Fournisseurs potentiels
+- google map
+- https://www.viamichelin.com/web/Routes
+- https://en.mappy.com/itineraire
+- https://ca.bonnesroutes.com
+- Waze
+- BingMaps 
+- en.mappy.com
+- Ajouter vos suggestions….
 ## Bonus projet laboratoire (15% point bonus)
 Impressionnez-nous en intégrant de nouvelles fonctionnalités / Apis offrant de nouveaux services ou interagissant avec de nouveaux services externes.
 
