@@ -373,7 +373,7 @@ Cette grille inclut des critères d'évaluation de la collaboration entre les é
 # Proposition d'architecture
 Dans le but d'aider les équipes de coordonnateur à démarrer le projet le plus rapidement possible, je vous fournis une ébauche de solution que vous devez compléter. Celle-ci devrait vous permettre de planifier la distribution des tâches initiale du projet.  Vous devez apporter toutes les modifications nécessaires à cette proposition et l'utiliser comme point de départ.  
 
-![Architecture](../architecture/proposition.svg)
+![Architecture](./architecture/proposition.svg)
 
 ### Légende
 - Composant en vert:  Nouveau microservice pour cette itération.  
