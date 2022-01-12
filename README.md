@@ -115,7 +115,7 @@ Dans le cadre de ce projet, vous devrez donc utiliser les données de ces capteu
 <span style='color:red'>Prenez note que ce service est temporairement hors service.  Vous devez développer votre système et le connecter avec ce service lorsqu'il redeviendra actif.
 </span>### Capteurs
 Liste des capteurs sur une carte
-https://www.google.com/maps/d/u/0/edit?mid=1Xm1J7Zuwp0Ra5GGbws8C4N7WcuNMT3M-&ll=45.5176601142996%2C-73.51752064002218&z=14
+https://www.google.com/maps/d/u/0/edit?mid=1f0b_uTf1Mvqlg45fvRkNOg5CsHqRk3kD&usp=sharing
 
 ### Données de simulation
 [Données pour le simulateur](https://etsmtl365-my.sharepoint.com/:f:/g/personal/cc-yvan_ross_etsmtl_ca/EuBXHT0WSBJIpCtkbpf2dzMBwvMT8JCjBkWjkS6dUEIG-w)
@@ -189,9 +189,14 @@ Vous êtes nouvellement embauché par l'organisation LOG430 pour développer le 
 ### ChargéDeLaboratoire
 #### CU01. Veux comparer les temps de trajet: 
  <span style='color:green'> 1. le CL sélectionne une intersection de départ et une intersection d'arrivée, ainsi que le taux de rafraichissement de la prise de mesure.
-  2. Le CL sélectionne les sources de données qu'il veut utiliser. Externe ou de simulation.
+  2. Le CL sélectionne les sources de données qu'il veut utiliser. Service externe ou de simulation.
   3. Le système affiche un graphique du temps de déplacement et met celui-ci à jour selon le taux de rafraichissement.
   4. Le CL peut récupérer le fichier de données et générer ses propres graphiques à l'aide d’Excel</span>.
+> ##### Cas alternatifs
+> <span style='color:green'> - 2.a Service externe: Utiliser tout les service externe disponible pour faire le comparatif.
+> <span style='color:green'> - 2.b1 Simulation: Vous comparer au moins 2 implémentations différentes du microservice TimeTravelCalculator. 
+> <span style='color:green'> - 2.b2 La comparaison devrait pouvoir s'exécuté sur **toute** les données de simulation. 
+</span>
 
 
 #### CU02. Veut pouvoir mettre le chaos dans les services en
@@ -216,7 +221,7 @@ Veux pouvoir perturber le trafic à l'aide d'une interface usager pour simuler u
 <span style='color:green'>1. Le CL indique la date et heure de début de la perturbation.
 2. Le CL indique le type<sup>1</sup> et la durée de la perturbation ainsi que la ou les intersections perturbées.
 3. Le système perturbe les données de simulation.
-4. Le système affiche le graphique du temps de trajet en temps réel.
+4. Le système affiche le graphique du temps de trajet en temps réel avec et sans perturbation.
 </span>
 Note 1: Type de perturbation
   - fermeture d'une voie de circulation
@@ -248,14 +253,13 @@ chaque microservice doit supporter le mode heartbeat.
 #### AQD4. Redondance passive
 Vous devez implémenter une redondance passive <span style='color:green'>sur le microservice TravelTimeCalculator</span>.
   > 1. <span style='color:green'>Démarrer 1 instance de TravelTimeCalculator qui sera utilisée comme point de référence</span>.
-  > 2. <span style='color:green'>Démarrer 1 instance active et une instance passive de TravelTimeCalculator</span>.
-  > 3. <span style='color:green'>Démarer 1 instance active et une instance passive de TravelTimeCalculator</span>.
-  > 4. <span style='color:green'>Afficher le graphique des temps de trajet de ces deux microservices</span>.
-  > 5. <span style='color:green'>Utiliser CU02 pour détruire l'instance active de TravelTimeCalculator</span>.
-  > 6. <span style='color:green'>Démonter que la simulation est maintenant réalisée par le microservice passif qui est devenu actif. </span>
-  > 7. <span style='color:green'>Démontrer que votre système redémarre une nouvelle instance du serveur passif</span>.
+  > 1. <span style='color:green'>Démarrer 1 instance active et une instance passive de TravelTimeCalculator</span>.
+  > 1. <span style='color:green'>Afficher le graphique des temps de trajet de ces deux microservices</span>.
+  > 1. <span style='color:green'>Utiliser CU02 pour détruire l'instance active de TravelTimeCalculator</span>.
+  > 1. <span style='color:green'>Démonter que la simulation est maintenant réalisée par le microservice passif qui est devenu actif. </span>
+  > 1. <span style='color:green'>Démontrer que votre système redémarre une nouvelle instance du serveur passif</span>.
   
-  > **refaire** <span style='color:green'>l'étape #3 lorsque le serveur passif est opérationnel</span>.
+  > **refaire** <span style='color:green'>l'étape #4 lorsque le serveur passif est opérationnel (actif)</span>.
 
 #### ADQ5. Redondance active
 Vous devez implémenter une redondance active <span style='color:green'>sur le microservice TimeTravelCalulator</span>  .
@@ -499,7 +503,7 @@ Dans le but d'aider les équipes de coordonnateur à démarrer le projet le plus
 |ExternalService|Service externe permettant de calculer le temps de trajet entre deux points GPS|
 |ServiceDiscovery| Microservice permettant d'enregistrer et de découvrir la liste des microservices actifs pour pouvoir obtenir leurs services | 
 |ServerSimulation | Serveur simulant le serveur de la ville de Montréal et utilisant les données de simulation|
-|<span style='color:green'>RouteComputationService</span> |<span style='color:green'> Serveur permettant de faire le calcul des données de chacune des intersections pour permettre d'obtenir le temps de trajet entre deux points sur la rue Notre-Date</span>|
+|<span style='color:green'>TimeTravelCalculator</span> |<span style='color:green'> Serveur permettant de faire le calcul des données de chacune des intersections pour permettre d'obtenir le temps de trajet entre deux points sur la rue Notre-Date</span>|
 |<span style='color:green'>TrafficMonitoring </span>| <span style='color:green'>Microservice permettra d'afficher et d'archiver en temps réel les données de temps de trajet sous forme de graphique avec lignes multiples </span>|
 
 ## Services externes
