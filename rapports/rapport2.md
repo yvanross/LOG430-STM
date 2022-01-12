@@ -12,3 +12,8 @@ https://wiki.sei.cmu.edu/confluence/display/SAD/Template%3AArchitectureViewTempl
 
 Vous devez respecter le template pour la documentation d'interface
 https://wiki.sei.cmu.edu/confluence/display/SAD/Template%3AInterfaceTemplate
+
+Utiliser un code de couleur.
+vert: nouveaux éléments/documentation,
+orange: élément/documentation modifié,
+rouge: élément ou documentation enlevée.

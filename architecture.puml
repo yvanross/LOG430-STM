@@ -34,22 +34,21 @@ interface IServiceRegister
 
 component ChaosMonkey <<Microservice avec UI>>
 component ExternalServices <<Microservice>>
-component GpsMobileComparatorApp <<Mobile application>>
 component GpsAppSimulator <<Microservice avec UI>>
-component MqttServerSimulation <<Microservice>>
-component MqttServerSwitch <<Microservice avec UI>>
-component MqttServerVilleDeMontreal <<Microservice>>
-component PerturbateurDeTraffic <<Microservice with UI>>
-component RouteComparatorApp <<Microservice with UI>>
+component ServerSimulation <<Microservice>>
+component ServerSwitch <<Microservice avec UI>>
+component PerturbateurDeTraffic <<Microservice avec UI>>
+component RouteComparatorApp <<Microservice avec UI>>
 component RouteComparatorService <<Microservice>>
 component ServiceDiscovery <<Microservice>>
+component TimeTravelCalculator <<Microservice>>
+component TrafficMonitoring<<Microservice avec UI>>
 
 note bottom of ExternalServices: Un seul service externe par équipeÉ\nChaque équipe doit utiliser un service différent.  
 note bottom of IServiceRegister: Tous les microservices s'enregistrent\nà l'aide de cette interface
 
 
-PerturbateurDeTraffic -- MqttServerSimulation: perturbe
-PerturbateurDeTraffic -- MqttServerVilleDeMontreal: perturbe
+PerturbateurDeTraffic -- ServerSimulation: perturbe
 
 
 ExternalServices .u.|> IExternalService
@@ -59,20 +58,20 @@ ServiceDiscovery .u.|> IServiceDiscovery
 ChaosMonkey --> IServiceDiscovery 
 ChargéDeLaboratoire --> PerturbateurDeTraffic
 ChargéDeLaboratoire --> ChaosMonkey  : Utilise et configure
-ChargéDeLaboratoire --> MqttServerSwitch  :switch data source
+ChargéDeLaboratoire --> ServerSwitch  :switch data source
 ChargéDeLaboratoire --> RouteComparatorApp  : Utilise et configure
-GpsMobileComparatorApp -d-> IRouteComparator
+ChargéDeLaboratoire --> TrafficMonitoring: Observe
 GpsAppSimulator -d-> IRouteComparator
-MqttServerSimulation .u.|> IDataReader
-MqttServerSwitch  ..|> IDataReader
-MqttServerSwitch --> IDataReader
-MqttServerVilleDeMontreal .u.|> IDataReader
+ServerSimulation .u.|> IDataReader
+ServerSwitch  ..|> IDataReader
+ServerSwitch --> IDataReader
 RouteComparatorApp --> IRouteComparator
-RouteComparatorService --> IDataReader
+TimeTravelCalculator <-- IDataReader
+TimeTravelCalculator -u-> TrafficMonitoring
+RouteComparatorService -u-> TrafficMonitoring
 RouteComparatorService --> IExternalService
 RouteComparatorService --> IServiceDiscovery
 RouteComparatorService .u.|> IRouteComparator
-TesteurSystem  --> GpsMobileComparatorApp: utilise et configure 
 TesteurSystem  --> GpsAppSimulator: utilise et configure 
 
 @enduml

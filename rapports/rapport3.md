@@ -24,3 +24,9 @@ Répondez aux questions suivantes:
 ●	Comment avez-vous acquis ces compétences ?
 ●	Comment pouvez-vous transposer ces processus d’acquisition de compétences avec le marché du travail ?
 ●	Avez-vous des suggestions pour améliorer ou faciliter votre acquisition de compétences associées à l’architecture logicielle ?
+
+
+Utiliser un code de couleur.
+vert: nouveaux éléments/documentation,
+orange: élément/documentation modifié,
+rouge: élément ou documentation enlevée.

@@ -1,15 +1,15 @@
 ![log](architecture/logo-logti.png)
 # LOG430 - Architecture logicielle¶
 - [LOG430 - Architecture logicielle¶](#log430---architecture-logicielle)
+  - [Gestion des versions](#gestion-des-versions)
   - [Introduction](#introduction)
 - [Contexte d'affaires](#contexte-daffaires)
   - [Objectifs](#objectifs)
   - [API de la ville de Montréal](#api-de-la-ville-de-montréal)
-    - [Capteurs](#capteurs)
     - [Données de simulation](#données-de-simulation)
     - [Objectifs d'affaires](#objectifs-daffaires)
 - [Le contexte de l'organisation](#le-contexte-de-lorganisation)
-  - [Partie psrenantes](#partie-psrenantes)
+  - [Partie prenante](#partie-prenante)
     - [Chargé de cours (client)](#chargé-de-cours-client)
     - [Chargé de laboratoire (client)](#chargé-de-laboratoire-client)
     - [Classe](#classe)
@@ -49,11 +49,20 @@
 - [Proposition d'architecture](#proposition-darchitecture)
     - [Légende](#légende)
   - [Composants](#composants)
-  - [Service externes](#service-externes)
+  - [Services externes](#services-externes)
     - [Exemples](#exemples)
     - [Fournisseurs potentiels](#fournisseurs-potentiels)
   - [Bonus projet laboratoire (15% point bonus)](#bonus-projet-laboratoire-15-point-bonus)
   - [Charge de laboratoire](#charge-de-laboratoire)
+
+## Gestion des versions
+2022-01-11 Enlever MQTT, ajouter microservice manquant TimeTravelCalculator, Ajouter TrafficMonitoring, ajout du fichier [Scénario de test](scenarioDeTest.md)
+2021-12-29 Intégration de l'énoncé de laboratoire dans git. Refonte du diagramme de proposition.
+
+- J'utilise le code de couleur suivant. 
+    - <span style="corps:green">vert: nouveaux éléments/documentation, </span>
+    - <span style="corps:orange">orange: élément/documentation modifié, </span>
+    - <span style="corps:red">rouge: élément ou documentation enlevée.<span>
 ## Introduction
 Dans le cadre de ce projet, on cherche à créer une application de calcul de temps de trajet se servant de différents microservices. La partie de l'application qui reçoit les requêtes de temps de trajet est aussi un microservice. 
 
@@ -71,15 +80,15 @@ Dans le cadre de ce projet, vous devrez donc utiliser les données de ces capteu
 ## API de la ville de Montréal
 - [Montréal investit plus de 10 M$ dans son système de transports intelligents](http://ville.montreal.qc.ca/portal/page?_pageid=5798,42657625&_dad=portal&_schema=PORTAL&id=26179)
 
-Analyser les interfaces (API) de la plateforme de la ville de Montréal pour l’accès aux données en temps réel au niveau des capteurs sur le réseau routier à partir du site Websocket Client (from Paho) http://mqtt.cgmu.io/
+<span style='color:red'>Analyser les interfaces (API) de la plateforme de la ville de Montréal pour l’accès aux données en temps réel au niveau des capteurs sur le réseau routier à partir du site Websocket Client (from Paho).</span>
 
-Prenez note que ce service est temporairement hors service.  Vous devez développer votre système et le connecter avec ce service lorsqu'il redeviendra actif.
-### Capteurs
+<span style='color:red'>Prenez note que ce service est temporairement hors service.  Vous devez développer votre système et le connecter avec ce service lorsqu'il redeviendra actif.
+</span>### Capteurs
 Liste des capteurs sur une carte
 https://www.google.com/maps/d/u/0/edit?mid=1Xm1J7Zuwp0Ra5GGbws8C4N7WcuNMT3M-&ll=45.5176601142996%2C-73.51752064002218&z=14
 
 ### Données de simulation
-[Données pour le simulateur mqtt](https://etsmtl365-my.sharepoint.com/:f:/g/personal/cc-yvan_ross_etsmtl_ca/EuBXHT0WSBJIpCtkbpf2dzMBwvMT8JCjBkWjkS6dUEIG-w)
+[Données pour le simulateur](https://etsmtl365-my.sharepoint.com/:f:/g/personal/cc-yvan_ross_etsmtl_ca/EuBXHT0WSBJIpCtkbpf2dzMBwvMT8JCjBkWjkS6dUEIG-w)
 
 Prenez note que votre solution calculera les temps de trajet uniquement entre deux points sur la rue Notre-Dame.
 
@@ -98,9 +107,8 @@ Ces algorithmes permettent de fournir une information pertinente/précise aux sy
 # Le contexte de l'organisation
 Vous êtes nouvellement embauché par l'organisation LOG430 pour développer le projet de Ville intelligente.  La réussite de ce projet n'est pas optionnelle. La carrière des étudiants peut grandement être impactée s'ils échouent ce cours. C'est pour cette raison que l'organisation a décidé de séparer les responsabilités selon les parties prenantes suivantes :
 
-## Partie psrenantes
+## Partie prenante
 ![](../architecture/parti-prenantes.svg)
-
 ### Chargé de cours (client)
 - Effectuera l'évaluation du rapport de test système sur le terrain (4 équipes de terrain, 2 équipes par groupe)
 - L'évaluation ne doit pas prendre plus de 15 minutes par équipe
@@ -119,8 +127,8 @@ Vous êtes nouvellement embauché par l'organisation LOG430 pour développer le 
 
 ### Équipe (Étudiants)
 - Le chargé de cours crée les équipes de laboratoires.
-- **A chaque itération**, un étudiant par équipe est nommé pour faire partie de l'équipe de coordination (bonis de 5% de la note de laboratoire de l'équipe)
-  - Un étudiant ne peut pas être coordonateur plus d'une itération.
+- **À chaque itération**, un étudiant par équipe est nommé pour faire partie de l'équipe de coordination (bonis de 5% de la note de laboratoire de l'équipe)
+  - Un étudiant ne peut pas être coordonnateur plus d'une itération.
   - Une équipe peut révoquer son représentant de l'équipe de coordination s'il ne répond pas à leurs attentes 
     - Cet étudiant n'obtiendra pas son bonus de 5% pour la participation à l'équipe de coordination et sera pénalité de 5% sur sa note de laboratoire
 - Doit conserver une traçabilité de quel étudiant est responsable de quelles tâches
@@ -135,7 +143,7 @@ Vous êtes nouvellement embauché par l'organisation LOG430 pour développer le 
 
 ### Équipe de coordination (Architectes)
 - Cette équipe est responsable de l'architecture globale du système
-- Cette équipe a la responsabilité de **valider et de diffuser** la documentation des interfaces touchant aux composants implémentés par plusieurs équipes. 
+- Cette équipe a la responsabilité de valider et de diffuser la documentation des interfaces touchant aux composants implémentés par plusieurs équipes. 
   - Une version d'interface publiée ne peut pas être changée. Vous devez obligatoirement publier une nouvelle version.
 - L'équipe de coordination peut démettre de ses fonctions un étudiant qui ne répond pas à ses attentes. 
   - Cet étudiant n'obtiendra pas son bonus de 5% pour la participation à cette équipe et sera pénalité de 5% sur sa note de laboratoire
@@ -149,25 +157,26 @@ Vous êtes nouvellement embauché par l'organisation LOG430 pour développer le 
 
 ## Acteurs
 ### ChargéDeLaboratoire
-- CU01. Veux comparer les temps de trajet.  
-  - de l'est vers l'ouest et de l'ouest vers l'est 
-  - avec différentes sources externes
-  - avec différent serveur MQTT
-  - avec les données de simulation
-  - en utilisant les microservices d'une seule équipe
-  - et afficher un graphique correspondant à une plage de 24h.
+- CU01. Veux comparer les temps de trajet: 
+  - de l'est vers l'ouest et de l'ouest vers l'est ;
+  - avec différentes sources externes;
+  - avec différent serveur MQTT;
+  - avec les données de simulation;
+  - en utilisant les microservices d'une seule équipe;
+  - et afficher un graphique <span style='color:green'>en temps réel et persister les données</span> sur une période de 24h.
 - CU02. Veut pouvoir mettre le chaos dans les services en
   - affichant la liste des microservices avec leur latence moyenne et en
     - changeant la latence d'un ou plusieurs microservices
     - changeant la latence de tous les microservices d'une équipe
-  - en détruisant<sup>1</sup> un microservice de façon aléatoire 
+  - en détruisant<sup>1</sup> un microservice de façon aléatoire a toute les x secondes
   - en détruisant <sup>1</sup> tous les microservices d'une équipe 
   - conservant un log des différents changements apportés
-- CU03. Veux contrôler manuellement ou par programmation le fait d'utiliser les données réel ou de simulation.
-- CU04. Veux pouvoir perturber le trafic à l'aide d'une interface usager pour simuler un accident ou une période de pointe.
-  - en fermant une voie au niveau d'une ou plusieurs intersections 
-  - en diminuant/augmentant la vitesse de la circulation dans une ou plusieurs voies d'une ou plusieurs intersections  
-- CU05. Veux utiliser un ou plusieurs application pour envoyer les positions GPS et faire le calcul du temps de trajet en temps réel.
+- <span style='color:red'>CU03. Veux contrôler manuellement ou par programmation le fait d'utiliser les données réel ou de simulation.</span></s>
+- CU04. Veux pouvoir perturber le trafic à l'aide d'une interface usager pour simuler un accident ou une période de pointe;
+  - <span style='color:green'>sur les données de simulation seulement, en ayant la possibilité de mettre une date de début et une date de fin.</span>;
+  - en fermant une voie au niveau d'une ou plusieurs intersections ;
+  - en diminuant/augmentant la vitesse de la circulation dans une ou plusieurs voies d'une ou plusieurs intersections.
+- CU05. Veux utiliser une ou plusieurs applications pour envoyer les positions GPS et faire le calcul du temps de trajet en temps réel;
   - On veut voir si les données du temps de trajet sont ajustées en temps réel.
 - CU06. Veux simuler l'envoi simultané des coordonnées GPS de 100 appareils mobiles pendant au moins une minute pour s'assurer du bon fonctionnement du système même lorsqu'il est soumis au chaos.
 
@@ -178,20 +187,20 @@ Note 1: Envoie un signal à un microservice pour qu'il se termine automatiquemen
 - AQD1. Vous devez implémenter un mécanisme de monitorage pour tous les microservices.
 - AQD2. Chaque microservice doit supporter le mode écho (écho).
 - AQD3. Chaque microservice doit supporter le mode heartbeat.
-- AQD4. Chaque équipe est responsable d'implémenter une redondance passive de l'un de ses microservices.
-- ADQ5. Chaque équipe est responsable d'implémenter une redondance active sur l'un de ses microservices.  
+- AQD4. Vous devez implémenter une redondance passive <span style='color:green'>sur le microservice TravelTimeCalculator</span>.
+- ADQ5. Vous devez implémenter une redondance active <span style='color:green'>sur le microservice TimeTravelCalulator</span>.  
   
 ## Modifiabilité: 
 - AQM1. Vous devez être en mesure de modifier les intersections utilisées (ajoutez ou retrait) seulement en modifiant un fichier de configuration ou à l'aide de l'interface usager.  L’application des changements à votre solution ne devrait pas prendre plus de 15 secondes une fois le fichier de configuration complété.
 - AQM2. Vous devez être en mesure d’adapter votre solution pour utiliser les microservices d'une autre équipe en moins d'une heure.
-- AQM3. Vous devriez être en mesure de généraliser la redondance passive pour n'importe quel composant en moins d'une heure. 
-- AQM4. Vous devriez être en mesure de généraliser la redondance active pour n'importe quel composant en moins de 3 heures.
+- AQM3. <span style='color:orange'>Démontrer que vous</span> êtes en mesure de généraliser la redondance passive pour n'importe quel composant en moins d'une heure. 
+- AQM4. <span style='color:orange'>Démontrer que vous</span> êtes en mesure de généraliser la redondance active pour n'importe quel composant en moins de 3 heures.
 
 ## Testabilité: 
 - AQT1. Ajoutez la tactique "Interface spécialisée" pour permettre de modifier dynamiquement la latence des microservices de votre architecture.
 - AQT2. Utilisez la tactique "Abstraire la source de données" pour spécifier la source de donnée.
 - AQT3. Utilisez la tactique "Limiter opération non déterministe" pour faciliter l'exécution de vos tests.
-- AQT4. Utiliser la tactique « Record/playback » pour pouvoir tester à nouveau votre système avec des données déja recu.
+- AQT4. Utiliser la tactique « Record/playback » pour pouvoir tester à nouveau votre système avec des données déjà reçu.
 - AQT5. Utiliser la tactique "Interface spécialisée" pour suivre à la trace tous les messages entrant dans les microservices par l'association d'un numéro unique à chaque message entrant.  Ceci devrait permettre de faire la trace de tous les microservices actifs ayant été utilisés pour traiter un message.
 
 ## Convivialité: 
@@ -238,8 +247,8 @@ Notez que le calendrier des séances est différent pour chaque groupe-cours, ma
 
 | Itération |Démo/Rapport   |
 | --------: |:--------------|
-|         1 |Début séance 4 |
-|         2 |Début séance 8 |
+|         1 |Début séance 4|
+|         2 |Début séance 8|
 |         3 |Début séance 12|
 
 <!-- Ce point est essentiel pour le BCAPG, car on mesure la partie «évaluation» des rapports -->
@@ -376,7 +385,7 @@ Dans le but d'aider les équipes de coordonnateur à démarrer le projet le plus
 ![Architecture](./architecture/proposition.svg)
 
 ### Légende
-- Composant en vert:  Nouveau microservice pour cette itération.  
+- Composant en vert:  Nouveau microservice pour cette itération.  cu05
 - Composant en blues: Composant modifié dans le cadre de cette itération
 - Composant en rouge: Composant détruit durant cette itération
 
@@ -388,14 +397,15 @@ Dans le but d'aider les équipes de coordonnateur à démarrer le projet le plus
 |RouteComparatorApp|Microservice permettant d'afficher les courbes de comparaison de données|
 | ChaosMonkey| générateur de chaos qui peut modifier la latence ou détruire un microservice selon différents critères.  Doit aussi pouvoir détruire/faire arrêter/planter/terminer le processus de ServiceDiscovery pour que celui soit temporairement non disponible. Référence.: https://principlesofchaos.org |
 |RouteComparatorService| Comparateur des calculs du temps de trajet entre deux coordonnées GPS. Le calcul se fait sur le tronçon de la rue Notre-Dame seulement. |
-|MqttServerSwitch | Commutateur permettant de fournir les données de simulation ou les données en temps réel. Devrait aussi permettre de sélectionner un serveur de simulation particulier|
-|PerturbateurDeTraffic|Élément perturbant le trafic pour voir l'impact sur le temps total de trajet. ex: Fermer une voie, modifier la vitesse, etc.
+|ServerSwitch | Commutateur permettant de fournir les données de simulation ou les données en temps réel. Devrait aussi permettre de sélectionner un serveur de simulation particulier|
+|PerturbateurDeTraffic|Élément perturbant le trafic pour voir l'impact sur le temps total de trajet. Ex.: Fermer une voie, modifier la vitesse, etc.
 |ExternalService|Service externe permettant de calculer le temps de trajet entre deux points GPS|
-|ServiceDiscovery| Microservice permettant de d'enregistrer et de découvrir la liste des microservices actifs pour pouvoir obtenir leurs services | 
-|MqttServerSimulation | Serveur MQTT simulant le serveur de la ville de Montréal et utilisant les données de simulation|
-|MqttServerVilleDeMontreal | Serveur permettant d'obtenir les données des capteurs de la ville de Montréal|
+|ServiceDiscovery| Microservice permettant d'enregistrer et de découvrir la liste des microservices actifs pour pouvoir obtenir leurs services | 
+|ServerSimulation | Serveur simulant le serveur de la ville de Montréal et utilisant les données de simulation|
+|<span style='color:green'>RouteComputationService</span> |<span style='color:green'> Serveur permettant de faire le calcul des données de chacune des intersections pour permettre d'obtenir le temps de trajet entre deux points sur la rue Notre-Date</span>|
+|<span style='color:green'>TrafficMonitoring </span>| <span style='color:green'>Microservice permettra d'afficher et d'archiver en temps réel les données de temps de trajet sous forme de graphique avec lignes multiples </span>|
 
-## Service externes
+## Services externes
 Utiliser l'API ou la page web des fournisseurs externe pour l'estimation en temps réel du temps nécessaire pour parcourir la distance entre deux points sur le boulevard Notre-Dame
 ### Exemples
 - https://www.google.ca/maps/dir/45.58927,-73.50912/45.51577,+-73.55196/@45.5541942,-73.5686356,13z/am=t/data=!3m1!4b1!4m7!4m6!1m0!1m3!2m2!1d-73.55196!2d45.51577!3e0
@@ -409,7 +419,7 @@ Utiliser l'API ou la page web des fournisseurs externe pour l'estimation en temp
 - Waze
 - BingMaps 
 - en.mappy.com
-- Ajouter vos suggestions….
+- Ajouter vos suggestions…
 ## Bonus projet laboratoire (15% point bonus)
 Impressionnez-nous en intégrant de nouvelles fonctionnalités / Apis offrant de nouveaux services ou interagissant avec de nouveaux services externes.
 
