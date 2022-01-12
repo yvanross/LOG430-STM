@@ -19,14 +19,42 @@
 - [Cas d'utilisation](#cas-dutilisation)
   - [Acteurs](#acteurs)
     - [ChargéDeLaboratoire](#chargédelaboratoire)
+      - [CU01. Veux comparer les temps de trajet:](#cu01-veux-comparer-les-temps-de-trajet)
+      - [CU02. Veut pouvoir mettre le chaos dans les services en](#cu02-veut-pouvoir-mettre-le-chaos-dans-les-services-en)
+      - [<span style='color:red'><s>CU03. Controle source de données</s></span>](#scu03-controle-source-de-donnéess)
+      - [CU04. Perturbateur de trafic](#cu04-perturbateur-de-trafic)
+      - [CU05. Simulation données GPS](#cu05-simulation-données-gps)
+      - [CU06. Simulation usager multiple](#cu06-simulation-usager-multiple)
 - [Attribut de qualité](#attribut-de-qualité)
   - [Disponibilité](#disponibilité)
+      - [AQD1. Monitorage](#aqd1-monitorage)
+      - [AQD2. Ping/echo](#aqd2-pingecho)
+      - [AQD3. Heartbeat](#aqd3-heartbeat)
+      - [AQD4. Redondance passive](#aqd4-redondance-passive)
+      - [ADQ5. Redondance active](#adq5-redondance-active)
   - [Modifiabilité:](#modifiabilité)
+      - [AQM1. Modifier sélection intersection](#aqm1-modifier-sélection-intersection)
+      - [AQM2. Interface avec autre équipe](#aqm2-interface-avec-autre-équipe)
+      - [AQM3. Généralisation redondance passive](#aqm3-généralisation-redondance-passive)
+      - [AQM4. Généralisation redondondance active](#aqm4-généralisation-redondondance-active)
   - [Testabilité:](#testabilité)
+      - [AQT1. Interface spécialisé](#aqt1-interface-spécialisé)
+      - [AQT2. Abstraire source de données](#aqt2-abstraire-source-de-données)
+      - [AQT3. "Limiter opération non déterministe"](#aqt3-limiter-opération-non-déterministe)
+      - [AQT4. Record/playback](#aqt4-recordplayback)
+      - [AQT5. Gestion centralisé des logs + id message](#aqt5-gestion-centralisé-des-logs--id-message)
   - [Convivialité:](#convivialité)
+      - [AQU1. UI](#aqu1-ui)
+      - [AQU2. Aggregation](#aqu2-aggregation)
   - [Performance](#performance)
+      - [AQP1. Optimisation sur la latence](#aqp1-optimisation-sur-la-latence)
+      - [AQP2. 1000 clients](#aqp2-1000-clients)
   - [Interopérabilité:](#interopérabilité)
+      - [AQI1. Utilisation des microservices des autres équipes](#aqi1-utilisation-des-microservices-des-autres-équipes)
+      - [AQI2. Découverte dynamique de service](#aqi2-découverte-dynamique-de-service)
   - [Sécurité](#sécurité)
+      - [AQS1. Authentification](#aqs1-authentification)
+      - [AQS2. Maintain audit trail](#aqs2-maintain-audit-trail)
 - [Contraintes](#contraintes)
   - [Language¶](#language)
 - [Planification des itérations](#planification-des-itérations)
@@ -56,13 +84,15 @@
   - [Charge de laboratoire](#charge-de-laboratoire)
 
 ## Gestion des versions
-2022-01-11 Enlever MQTT, ajouter microservice manquant TimeTravelCalculator, Ajouter TrafficMonitoring, ajout du fichier [Scénario de test](scenarioDeTest.md)
-2021-12-29 Intégration de l'énoncé de laboratoire dans git. Refonte du diagramme de proposition.
+|Date   |Description de la mise à jour|
+|-------   |-----------|
+|2022-01-11|Enlever MQTT, ajouter microservice manquant: TimeTravelCalculator et TrafficMonitoring. Améliorer la description des CU et AQ|
+|2021-12-29| Intégration de l'énoncé de laboratoire dans git. Refonte du diagramme de proposition|
 
-- J'utilise le code de couleur suivant. 
-    - <span style="corps:green">vert: nouveaux éléments/documentation, </span>
-    - <span style="corps:orange">orange: élément/documentation modifié, </span>
-    - <span style="corps:red">rouge: élément ou documentation enlevée.<span>
+**J'utilise le code de couleur suivant**
+    - <span style="color:green">vert: nouveaux éléments/documentation, </span>
+    - <span style="color:orange">orange: élément/documentation modifié, </span>
+    - <span style="color:red">rouge: élément ou documentation enlevée.</span>
 ## Introduction
 Dans le cadre de ce projet, on cherche à créer une application de calcul de temps de trajet se servant de différents microservices. La partie de l'application qui reçoit les requêtes de temps de trajet est aussi un microservice. 
 
@@ -157,73 +187,140 @@ Vous êtes nouvellement embauché par l'organisation LOG430 pour développer le 
 
 ## Acteurs
 ### ChargéDeLaboratoire
-- CU01. Veux comparer les temps de trajet: 
-  - de l'est vers l'ouest et de l'ouest vers l'est ;
-  - avec différentes sources externes;
-  - avec différent serveur MQTT;
-  - avec les données de simulation;
-  - en utilisant les microservices d'une seule équipe;
-  - et afficher un graphique <span style='color:green'>en temps réel et persister les données</span> sur une période de 24h.
-- CU02. Veut pouvoir mettre le chaos dans les services en
-  - affichant la liste des microservices avec leur latence moyenne et en
-    - changeant la latence d'un ou plusieurs microservices
-    - changeant la latence de tous les microservices d'une équipe
-  - en détruisant<sup>1</sup> un microservice de façon aléatoire a toute les x secondes
-  - en détruisant <sup>1</sup> tous les microservices d'une équipe 
-  - conservant un log des différents changements apportés
-- <span style='color:red'>CU03. Veux contrôler manuellement ou par programmation le fait d'utiliser les données réel ou de simulation.</span></s>
-- CU04. Veux pouvoir perturber le trafic à l'aide d'une interface usager pour simuler un accident ou une période de pointe;
-  - <span style='color:green'>sur les données de simulation seulement, en ayant la possibilité de mettre une date de début et une date de fin.</span>;
-  - en fermant une voie au niveau d'une ou plusieurs intersections ;
-  - en diminuant/augmentant la vitesse de la circulation dans une ou plusieurs voies d'une ou plusieurs intersections.
-- CU05. Veux utiliser une ou plusieurs applications pour envoyer les positions GPS et faire le calcul du temps de trajet en temps réel;
-  - On veut voir si les données du temps de trajet sont ajustées en temps réel.
-- CU06. Veux simuler l'envoi simultané des coordonnées GPS de 100 appareils mobiles pendant au moins une minute pour s'assurer du bon fonctionnement du système même lorsqu'il est soumis au chaos.
+#### CU01. Veux comparer les temps de trajet: 
+ <span style='color:green'> 1. le CL selectionne une intersection de départ et une intersection d'arrivé, ainsi que le taux de raffraichissement de la prise de mesure
+  2. Le CL sélectionnne les sources de données qu'il veut utiliser. Externe ou de simulation.
+  3. Le système affiche un graphique du temps de déplacement et met celui-ci à jour selon le taux de raffraichissement.
+  4. Le CL peut récupérer le fichier de données et générer ses propres graphiques à l'aide de Excel.</span>
 
-Note 1: Envoie un signal à un microservice pour qu'il se termine automatiquement. 
 
+#### CU02. Veut pouvoir mettre le chaos dans les services en
+  <span style='color:green'>- **Option 1**: Manuel
+    1.1. Le CL consulte la liste des microservices avec leur latence moyenne
+    1.2. Le CL change la latence d'un ou plusieurs microservices</span>
+  
+  <span style='color:green'>- **Option 2**: Automatique
+    2.1. Le CL selectionne le mode automatique tout en spécifiant la fréquence de la perturbation en seconde.
+    2.2. Le système détruit<sup>1</sup> un microservice de façon aléatoire a toute les x secondes</span>
+  
+  <span style='color:green'>- Le système conserve un log des différents changements apportés que nous pourrons utiliser pour vérifier les données accumulé.</span>
+
+> ##### Cas alternatifs
+> <span style='color:green'> - 1.2.a Le CL détruit un ou plusieurs microservice</span>
+> <span style='color:green'> - 1.2.b Le CL détruit tous les microservices d'une équipe
+</span>
+#### <span style='color:red'><s>CU03. Controle source de données</s></span>
+<span style='color:red'><s>Veux contrôler manuellement ou par programmation le fait d'utiliser les données réel ou de simulation.</s></span>
+#### CU04. Perturbateur de trafic
+Veux pouvoir perturber le trafic à l'aide d'une interface usager pour simuler un accident ou une période de pointe sur les données de simulation.
+<span style='color:green'>1. Le CL indique la date et heure de début de la perturbation
+2. Le CL indique le type<sup>1</sup> et la durée de la perturbation ainsi que la ou les intersections perturbés
+3. Le système perturbe les données de simulation 
+4. Le système affiche le graphique du temps de trajet en temps réel.
+</span>
+Note 1: Type de perturbation
+  - fermeture d'une voie de circulation
+  - en diminution ou  augmentation la vitesse de la circulation 
+
+#### CU05. Simulation données GPS
+Veux utiliser une ou plusieurs applications pour envoyer les positions GPS et faire le calcul du temps de trajet en temps réel;
+<span style='color:green'>1. Le CL sélectionne l'intersection de départ et de destination, il indique la vitesse moyenne qu'il veut simulé ainsi que la fréquence à laquel il veut une mise à jours des données graphiques.
+2. Le CL sélectionne le ou les services externes qu'il désire utiliser.
+3. Le système lui indique le temps de trajet estimé s'il n'y a aucune perturbation de trafic
+4. Le CL démarre la simulation
+5. Le système affiche un graphique représentant le temps de trajet de chaque service externe en temps réel.
+</span>
+#### CU06. Simulation usager multiple
+<span style='color:green'>Simulation du CU05 avec 100 véhicules simultanés ayant toutes des vitesse de déplacement différentes (répartie aléatoirement).</span>
+
+<span style='color:green'>Désactiver l'affichage graphique en temps réel et utiliser l'archivage des données pour permettre la réalisation de différents graphiques sur excel. 
+</span>
+<span style='color:green'>Refaire la même simulation en utilisant le CU04 pour perturber le trafic.
+</span>
 # Attribut de qualité
 ## Disponibilité
-- AQD1. Vous devez implémenter un mécanisme de monitorage pour tous les microservices.
-- AQD2. Chaque microservice doit supporter le mode écho (écho).
-- AQD3. Chaque microservice doit supporter le mode heartbeat.
-- AQD4. Vous devez implémenter une redondance passive <span style='color:green'>sur le microservice TravelTimeCalculator</span>.
-- ADQ5. Vous devez implémenter une redondance active <span style='color:green'>sur le microservice TimeTravelCalulator</span>.  
+#### AQD1. Monitorage
+Vous devez implémenter un mécanisme de monitorage pour tous les microservices. 
+#### AQD2. Ping/echo
+Chaque microservice doit supporter le mode écho (écho).
+#### AQD3. Heartbeat
+Chaque microservice doit supporter le mode heartbeat.
+#### AQD4. Redondance passive
+Vous devez implémenter une redondance passive <span style='color:green'>sur le microservice TravelTimeCalculator</span>.
+  > 1. <span style='color:green'>Démarrer 1 instance de TravelTimeCalculator qui sera utilisé comme point de référence</span>
+  > 2. <span style='color:green'>Démarer 1 instance active et une instance passive de TravelTimeCalculator</span>
+  > 3. <span style='color:green'>Démarer 1 instance active et une instance passive de TravelTimeCalculator</span>
+  > 4. <span style='color:green'>Afficher le graphique des temps de trajet de ces deux microservices</span>
+  > 5. <span style='color:green'>Utiliser CU02 pour détruire l'instance active de TravelTimeCalculator</span>
+  > 6. <span style='color:green'>Démonter que la simulation est maintenant réalisé par le microservice passif qui est devenu actif. </span>
+  > 7. <span style='color:green'>Démontrer que votre système redémarre une nouvelle instance du serveur passif.</span>
+  
+  > **refaire** <span style='color:green'>l'étape #3 lorsque le serveur passif est opérationnel.</span>
+
+#### ADQ5. Redondance active
+Vous devez implémenter une redondance active <span style='color:green'>sur le microservice TimeTravelCalulator</span>.  
+  > 1. <span style='color:green'>Démarrer une instance de TimeTravelCalculator en configuration de redondance active</span>
+  > 1. <span style='color:green'>Utiliser CU02 pour détruire une des instance du mécanisme de redondance active</span>
   
 ## Modifiabilité: 
-- AQM1. Vous devez être en mesure de modifier les intersections utilisées (ajoutez ou retrait) seulement en modifiant un fichier de configuration ou à l'aide de l'interface usager.  L’application des changements à votre solution ne devrait pas prendre plus de 15 secondes une fois le fichier de configuration complété.
-- AQM2. Vous devez être en mesure d’adapter votre solution pour utiliser les microservices d'une autre équipe en moins d'une heure.
-- AQM3. <span style='color:orange'>Démontrer que vous</span> êtes en mesure de généraliser la redondance passive pour n'importe quel composant en moins d'une heure. 
-- AQM4. <span style='color:orange'>Démontrer que vous</span> êtes en mesure de généraliser la redondance active pour n'importe quel composant en moins de 3 heures.
+#### AQM1. Modifier sélection intersection
+Vous devez être en mesure de modifier les intersections utilisées (ajoutez ou retrait) seulement en modifiant un fichier de configuration ou à l'aide de l'interface usager.  L’application des changements à votre solution ne devrait pas prendre plus de 15 secondes.
+#### AQM2. Interface avec autre équipe
+Vous devez être en mesure d’adapter votre solution pour utiliser les microservices d'une autre équipe en moins d'une heure.
+#### AQM3. Généralisation redondance passive
+<span style='color:orange'>Démontrer que vous</span> êtes en mesure de généraliser la redondance passive pour n'importe quel composant en moins d'une heure. 
+> 1. <span style='color:green'>Quand vous êtes pret, montrer la liste des microservices que vous avez développé au chargé de laboratoire.</span>
+> 1. <span style='color:green'>Démontrer au chargé de laboratoire que vous avez implémenter des tactiques architecturale vous permettant de facilement généraliser la redondance passive.</span>
+> 1. <span style='color:green'>le chargé de laboratoire choisi un microservice</span>
+> 1. <span style='color:green'>Vous avez une heure pour lui montrer que vous avez implémenté la redondance passive pour ce microservice.</span>
+#### AQM4. Généralisation redondondance active
+ <span style='color:orange'>Démontrer que vous</span> êtes en mesure de généraliser la redondance active pour n'importe quel composant en moins de 3 heures.
+> 1. <span style='color:green'>Quand vous êtes pret, montrer la liste des microservices que vous avez développé au chargé de laboratoire.</span>
+> 1. <span style='color:green'>Démontrer au chargé de laboratoire que vous avez implémenter des tactiques architecturale vous permettant de facilement généraliser la redondance active.</span>
+> 1. <span style='color:green'>le chargé de laboratoire choisi un microservice</span>
+> 1. <span style='color:green'>Vous avez une heure pour lui montrer que vous avez implémenté la redondance passive pour ce microservice.</span>
 
 ## Testabilité: 
-- AQT1. Ajoutez la tactique "Interface spécialisée" pour permettre de modifier dynamiquement la latence des microservices de votre architecture.
-- AQT2. Utilisez la tactique "Abstraire la source de données" pour spécifier la source de donnée.
-- AQT3. Utilisez la tactique "Limiter opération non déterministe" pour faciliter l'exécution de vos tests.
-- AQT4. Utiliser la tactique « Record/playback » pour pouvoir tester à nouveau votre système avec des données déjà reçu.
-- AQT5. Utiliser la tactique "Interface spécialisée" pour suivre à la trace tous les messages entrant dans les microservices par l'association d'un numéro unique à chaque message entrant.  Ceci devrait permettre de faire la trace de tous les microservices actifs ayant été utilisés pour traiter un message.
+#### AQT1. Interface spécialisé
+Démonter que vous utilisez la tactique "Interface spécialisée" pour permettre de modifier dynamiquement la latence des microservices de votre architecture.
+#### AQT2. Abstraire source de données
+Démontrer que vous tilisez la tactique "Abstraire la source de données" pour spécifier les sources de donnée.
+#### AQT3. "Limiter opération non déterministe"
+Démontrer que vous utilisez la tactique "Limiter opération non déterministe" pour faciliter l'exécution de vos tests. Surtout avec les données de simulation
+#### AQT4. Record/playback
+Démonter que vous utiliser la tactique « Record/playback » pour pouvoir tester à nouveau votre système avec des données déjà reçu.
+Démonter que le playback fonctionne.
+#### AQT5. Gestion centralisé des logs + id message
+Démontrer que vous utiliser la tactique "Interface spécialisée" pour suivre à la trace tous les messages entrant dans les microservices par l'association d'un numéro unique à chaque message entrant.  Ceci devrait permettre de faire la trace de tous les microservices actifs ayant été utilisés pour traiter un message.
 
 ## Convivialité: 
-- AQU1. Utiliser des interfaces usager au lieu de fichier de configuration pour faciliter la configuration de vos microservices.
-- AQU2. Utilisez la tactique "Aggregation" pour applique des commandes ou configuration à de multiples microservices simultanément.
+#### AQU1. UI
+Utiliser des interfaces usager au lieu de fichier de configuration pour faciliter la configuration de vos microservices.
+#### AQU2. Aggregation
+Utilisez la tactique "Aggregation" pour applique des commandes ou configuration à de multiples microservices ou intersection simultanément.
   
 ## Performance
-- AQP1. Vous devez être en mesure de configurer votre système pour utiliser les microservices ayant les plus faibles latences pour réaliser le calcul du temps de trajet. Sont inclus les microservices développés par toutes les équipes de votre sous-groupe.
-- AQP2. Proposer un scénario de performance pour que votre système soit en mesure de supporter 1000 clients simultanément.   
-  - Démontrez mathématiquement que la solution proposée est réalisable. 
+#### AQP1. Optimisation sur la latence
+Vous devez être en mesure de configurer votre système pour utiliser les microservices ayant les plus faibles latences pour réaliser le calcul du temps de trajet. Sont inclus les microservices développés par toutes les équipes de votre sous-groupe.
+#### AQP2. 1000 clients
+Proposer un scénario de performance pour que votre système soit en mesure de supporter 1000 clients simultanément <span style='color:green'>en utilisant les données des services externes</span>.   
+  - Démontrez **mathématiquement** que la solution proposée est réalisable. 
   - Vous devez documenter cette solution sans en faire l'implémentation.  
   
 ## Interopérabilité:
-- AQI1. Vous devez pouvoir utiliser les services fournis par les autres équipes du laboratoire uniquement en modifiant dynamiquement la configuration de votre système.
-- AQI2. Votre système devrait pour récupérer la liste des microservices qu'il a besoin pour s'acquitter de sa tâche et d'utiliser ceux-ci dynamiquement.
+#### AQI1. Utilisation des microservices des autres équipes
+Vous devez pouvoir utiliser les services fournis par les autres équipes du laboratoire uniquement en modifiant dynamiquement la configuration de votre système.
+#### AQI2. Découverte dynamique de service
+Votre système devrait pour récupérer la liste des microservices qu'il a besoin pour s'acquitter de sa tâche et d'utiliser ceux-ci dynamiquement.
 ## Sécurité
-- AQS1. Vous devez mettre en place un mécanisme pour que votre service ne soit accessible que pour les équipes autorisées.
-- AQS2. Appliquer la tactique "Maintain audit trail" dans un service centralisé pour faciliter la détection de tentative non autorisée de connexion. Vous devriez enregistrer l'adresse IP de l'appelant pour chaque tentative.
+#### AQS1. Authentification
+Vous devez mettre en place un mécanisme pour que votre service ne soit accessible que pour les équipes autorisées.
+#### AQS2. Maintain audit trail
+Appliquer la tactique "Maintain audit trail" dans un service centralisé pour faciliter la détection de tentative non autorisée de connexion. Vous devriez enregistrer l'adresse IP de l'appelant pour chaque tentative.
   
 # Contraintes
 ## Language¶
 Nous n’imposons aucune contrainte au niveau du langage de développement utilisé.
-
 
 # Planification des itérations
 
@@ -274,19 +371,19 @@ Une attention particulière sera portée sur les éléments suivants au niveau d
 4. Les choix technologiques visibles dans les vues architecturales. 
 5. Chaque diagramme possède un texte explicite pour le décrire.  Ne décrivez pas chaque élément du diagramme, vous le ferez dans le tableau des éléments. Nous voulons savoir à quoi sert ce diagramme, quelle est son utilité, qu'est ce qu'il nous permet de comprendre ou démontrer. Chaque vue architecturale. 
 6. La relation entre les vues facilement compréhensibles.
-3. La relation entre les éléments et cas d'utilisation bien documentée. 
-1. La relation entre les tactiques et les scénarios d'attributs de qualité est bien documentée.
-4. La relation entre les éléments et les tactiques bien documentée. 
-5. Les tactiques sont clairement visibles et bien documentées dans les vues architecturales. 
+7. La relation entre les éléments et cas d'utilisation bien documentée. 
+8. La relation entre les tactiques et les scénarios d'attributs de qualité est bien documentée.
+9. La relation entre les éléments et les tactiques bien documentée. 
+10. Les tactiques sont clairement visibles et bien documentées dans les vues architecturales. 
    1. Les propriétés associées aux tactiques sont bien documentées.
-6. Vous utilisez des liens pour toute référence à de l'information se trouvant dans le document
-7. Votre rapport contient au moins une vue de module. (Itération 2 et 3)
-8. Votre rapport contient au moins une vue d'allocation.
-   1. Assignation des tâches à toutes les itérations
-   2. Déploiement à l'itération #2 et #3.
-9.  Votre rapport contient au moins un diagramme de séquence/activité pour démontrer la mécanique de redondance passive lors d’un crash (itération 2 et/ou 3).
-10. Votre rapport contient au moins un diagramme de séquence/activité pour démontrer la mécanique de redondance active lors d’une augmentation de la latence. (itération 2 et/ou 3)
-11. Vous vous êtes assuré de la correspondance entre la documentation d’architecture et votre implémentation.
+11. Vous utilisez des liens pour toute référence à de l'information se trouvant dans le document
+12. Votre rapport contient au moins une vue de module. (Itération 2 et 3)
+13. Votre rapport contient au moins une vue d'allocation.
+   2. Assignation des tâches à toutes les itérations
+   3. Déploiement à l'itération #2 et #3.
+14. Votre rapport contient au moins un diagramme de séquence/activité pour démontrer la mécanique de redondance passive lors d’un crash (itération 2 et/ou 3).
+15. Votre rapport contient au moins un diagramme de séquence/activité pour démontrer la mécanique de redondance active lors d’une augmentation de la latence. (itération 2 et/ou 3)
+16. Vous vous êtes assuré de la correspondance entre la documentation d’architecture et votre implémentation.
 
 
 # Documentation de l'architecture 
