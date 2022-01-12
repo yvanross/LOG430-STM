@@ -138,7 +138,7 @@ Ces algorithmes permettent de fournir une information pertinente/précise aux sy
 Vous êtes nouvellement embauché par l'organisation LOG430 pour développer le projet de Ville intelligente.  La réussite de ce projet n'est pas optionnelle. La carrière des étudiants peut grandement être impactée s'ils échouent ce cours. C'est pour cette raison que l'organisation a décidé de séparer les responsabilités selon les parties prenantes suivantes :
 
 ## Partie prenante
-![](../architecture/parti-prenantes.svg)
+![](./architecture/parti-prenantes.svg)
 ### Chargé de cours (client)
 - Effectuera l'évaluation du rapport de test système sur le terrain (4 équipes de terrain, 2 équipes par groupe)
 - L'évaluation ne doit pas prendre plus de 15 minutes par équipe
@@ -492,7 +492,7 @@ Dans le but d'aider les équipes de coordonnateur à démarrer le projet le plus
 |ChargéDeLaboratoire|Doit pouvoir vérifier chacune des exigences client le plus rapidement possible|
 |GpsAppSimulator|Simulation de l'application pour la transmission des coordonnées GPS|
 |RouteComparatorApp|Microservice permettant d'afficher les courbes de comparaison de données|
-| ChaosMonkey| générateur de chaos qui peut modifier la latence ou détruire un microservice selon différents critères.  Doit aussi pouvoir détruire/faire arrêter/planter/terminer le processus de ServiceDiscovery pour que celui soit temporairement non disponible. Référence.: https://principlesofchaos.org |
+| ChaosMonkey| Générateur de chaos qui peut modifier la latence ou détruire un microservice selon différents critères.  Doit aussi pouvoir détruire/faire arrêter/planter/terminer le processus de ServiceDiscovery pour que celui soit temporairement non disponible. Référence.: https://principlesofchaos.org |
 |RouteComparatorService| Comparateur des calculs du temps de trajet entre deux coordonnées GPS. Le calcul se fait sur le tronçon de la rue Notre-Dame seulement. |
 |ServerSwitch | Commutateur permettant de fournir les données de simulation ou les données en temps réel. Devrait aussi permettre de sélectionner un serveur de simulation particulier|
 |PerturbateurDeTraffic|Élément perturbant le trafic pour voir l'impact sur le temps total de trajet. Ex.: Fermer une voie, modifier la vitesse, etc.
