@@ -282,7 +282,7 @@ Vous devez être en mesure d’adapter votre solution pour utiliser les microser
 > 1. <span style='color:green'>Quand vous êtes prêt, montrer la liste des microservices que vous avez développés au chargé de laboratoire</span>.
 > 1. <span style='color:green'>Démontrer au chargé de laboratoire que vous avez implémenté des tactiques architecturales vous permettant de facilement généraliser la redondance active</span>.
 > 1. <span style='color:green'>Le chargé de laboratoire choisi un microservice</span>.
-> 1. <span style='color:green'>Vous avez une heure pour lui montrer que vous avez implémenté la redondance passive pour ce microservice</span>.
+> 1. <span style='color:green'>Vous avez trois heures pour lui montrer que vous avez implémenté la redondance active pour ce microservice</span>.
 
 ## Testabilité: 
 #### AQT1. Interface spécialisée
