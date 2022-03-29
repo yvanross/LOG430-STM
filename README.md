@@ -242,6 +242,11 @@ Veux utiliser une ou plusieurs applications pour envoyer les positions GPS et fa
 </span>
 <span style='color:green'>Refaire la même simulation en utilisant le CU04 pour perturber le trafic.
 </span>
+
+#### CU07. Service externe
+<span style='color:green'>Service externe permettant de récupérer le temps de trajet entre deux intersection. Chaque équipe doit implémenter au moins un service externe.</span>.
+
+
 # Attribut de qualité
 ## Disponibilité
 #### AQD1. Monitorage
