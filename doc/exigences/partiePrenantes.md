@@ -1,5 +1,4 @@
-## Partie prenante
-![](assets/parti-prenantes.svg)
+## Parties prenantes
 ### Chargé de laboratoire (client)
 - Effectuera l'évaluation de l'architecture de chaque équipe
 - Responsable de répondre aux questions des étudiants
@@ -7,15 +6,11 @@
 - Veux un rapport détaillé de l'architecture et des interfaces
 
 ### Classe
-- Chaque classe est séparée en deux sous-groupes distincts
-
-### Sous-groupe 
-- Chaque sous-groupe est séparé en équipe de 5 étudiants.
-- Chaque sous-groupe doit démontrer que son architecture est meilleure que celle des autres sous-groupes. Inclus les sous-groupes de l'autre classe qui sont considérés comme des compétiteurs.
+- Chaque classe est séparé en équipe de 5 étudiants.
 
 ### Équipe (Étudiants)
 - Le chargé de cours crée les équipes de laboratoires.
-- **À partir de la seconde itération**, un étudiant par équipe est nommé pour faire partie de l'équipe de coordination (bonis de 5% de la note de laboratoire de l'équipe)
+- Un étudiant par équipe est nommé pour faire partie de l'équipe de coordination (bonis de 5% de la note de laboratoire de l'équipe)
   - Un étudiant ne peut pas être coordonnateur plus d'une itération.
   - Une équipe peut révoquer son représentant de l'équipe de coordination s'il ne répond pas à leurs attentes 
     - Cet étudiant n'obtiendra pas son bonus de 5% pour la participation à l'équipe de coordination et sera pénalité de 5% sur sa note de laboratoire
@@ -30,8 +25,7 @@
 
 
 ### Équipe de coordination
-- Cette équipe est responsable de l'architecture globale du système
-- Cette équipe a la responsabilité de valider et de diffuser la documentation des interfaces touchant aux composants implémentés par plusieurs équipes. 
+- Cette équipe a la responsabilité de valider et de diffuser la documentation des interfaces touchant aux composants implémentés/utilisés par plusieurs équipes. 
   - Une version d'interface publiée ne peut pas être changée. Vous devez obligatoirement publier une nouvelle version.
 - L'équipe de coordination peut démettre de ses fonctions un étudiant qui ne répond pas à ses attentes. 
   - Cet étudiant n'obtiendra pas son bonus de 5% pour la participation à cette équipe et sera pénalité de 5% sur sa note de laboratoire
@@ -40,4 +34,3 @@
 - L'Équipe de coordination est aussi responsable de répartir équitablement les tâches de réalisation de la conception et l'implémentation des différents microservices nécessaire à ce projet.
 - Ils ont la responsabilité de faire l'intégration de tous les microservices pour réaliser l'application qui satisfait aux exigences client.
 - Dois conserver une trace écrite pour savoir quelle équipe implémente quel microservice.
-- Je vous suggère fortement de faire implémenter chaque microservice par au moins 2 équipes pour assurer une certaine disponibilité des microservices durant le laboratoire et surtout les démonstrations.  

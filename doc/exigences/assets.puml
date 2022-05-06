@@ -1,24 +1,10 @@
-@startwbs parti-prenantes
-* \nResponsable du cours\nÉvaluateur externe
-+- test
-** Groupe 01\nChargé de cours
-*** Sous-groupe 01A\nChargé de laboratoire\nEquipe de communication\nTesteur système
-**** Equipe 01A-1\nÉtudiants
-**** Equipe 01A-...1\nÉtudiants
-*** Sous-groupe 01B\nChargé de laboratoire\nEquipe de communication\nTesteur système
-**** Equipe 01B-11\nÉtudiants
-**** Equipe 01B-...1\nÉtudiants
+@startuml parti-prenantes
+left to right direction
+:chargerLaboratoire: --> (Correction)
+:coordonnateur:--> (allo)
+:equipe: --> (aa)
 
-** Groupe 02\nChargé de cours
-*** Sous-groupe 02A\nChargé de laboratoire\nEquipe de communication\nTesteur système
-**** Equipe 02A-11\nÉtudiants
-**** Equipe 02A-...1\nÉtudiants
-*** Sous-groupe 02B\nChargé de laboratoire\nEquipe de communication\nTesteur système
-**** Equipe 02B-11\nÉtudiants
-**** Equipe 02B-...1\nÉtudiants
-
-@endwbs
-
+@enduml
 <!-------------------------------->
 
 @startuml proposition

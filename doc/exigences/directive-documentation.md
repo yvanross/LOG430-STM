@@ -1,9 +1,6 @@
 # Documentation de l'architecture 
 
-Toutes les équipes d'un sous-groupe doivent utiliser les mêmes outils de documentation. L'équipe de coordination est responsable de gérer l'utilisation des outils, de définir et gérer le processus de réalisation de la documentation.  Voici une suggestion d'outils pour documenter votre architecture
-
-DSA????
-C4 ???6
+Toutes les équipes d'une classe doivent utiliser les mêmes outils de documentation. L'équipe de coordination est responsable de gérer l'utilisation des outils, de définir et gérer le processus de réalisation de la documentation.  
 
 
 ## Suggestion d'outils pour la documentation

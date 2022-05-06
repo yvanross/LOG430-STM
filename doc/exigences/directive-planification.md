@@ -8,3 +8,5 @@ Je vous recommande d'utiliser un outil de suivi des tâches.
   - todoist
   - etc.
   - Notion task list
+
+La répartition du travail entre les membres de l'équipe doit être clairement documenté.  Vous devrez inclure cette documentation dans une vue d'allocation.

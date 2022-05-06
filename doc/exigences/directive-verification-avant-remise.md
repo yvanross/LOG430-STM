@@ -14,7 +14,8 @@ Une attention particulière sera portée sur les éléments suivants au niveau d
    1. Les propriétés associées aux tactiques sont bien documentées.
 12. Vous utilisez des liens pour toute référence à de l'information se trouvant dans le document
 13. Votre rapport contient au moins une vue de module. (Itération 2 et 3)
-14. Votre rapport contient au moins une vue d'allocation.
+14. Votre rapport contient au moins une vue de C&C. (Itération 2 et 3)
+14. Votre rapport contient au moins une vue d'allocation. Itération 1,2 et 3
    2. Assignation des tâches à toutes les itérations
    3. Déploiement à l'itération #2 et #3.
 15. Votre rapport contient des diagrammes de séquence/activité pour démontrer les principales opérations.

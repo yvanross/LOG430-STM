@@ -1,9 +1,25 @@
-# LOG430 - Laboratoire #2
-## Architecture logicielle¶
-### Comparateur de temps de trajet
+# LOG430 - Laboratoire #3
+## Comparateur de temps de trajet
 
-# Objectifs
-- Se familiariser avec les vues architecturales de type allocation
-- Se familiariser avec l'environnement de déploiement
-- Réaliser l'architecture selon le document d'architecture fournie par l'équipe de coordonnateur. 
   
+### Séance 9
+>#### Objectifs
+>>- Implémenter vos tactiques
+### Séance 10
+>#### Objectifs
+>>- Implémenter vos tactiques
+
+### Séance 11
+> #### Objectifs
+>>- Se familiariser avec le processus ATAM
+>#### Remises
+>>- Identifier les facteur de 
+  >>>- Risque
+  >>>- Non Risque
+  >>>- Compromis
+  >>>- Sensibilité
+### Séance 12
+>#### Objectifs
+>>- Demonstration finale
+>#### Remises
+>>- Rapport final

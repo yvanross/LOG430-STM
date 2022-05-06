@@ -26,7 +26,6 @@ Répondez aux questions suivantes:
 ●	Avez-vous des suggestions pour améliorer ou faciliter votre acquisition de compétences associées à l’architecture logicielle ?
 
 
-Utiliser un code de couleur.
-vert: nouveaux éléments/documentation,
-orange: élément/documentation modifié,
-rouge: élément ou documentation enlevée.
+
+
+- Se familiariser avec le processus ATAM
