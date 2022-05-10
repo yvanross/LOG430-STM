@@ -1,6 +1,8 @@
 # Rapport #3
 
-## Introduction
+
+# Introduction
+> TODO: Insérer votre introduction
 ## Vue de contexte
 >### Présentation primaire
 >### Catalogue d'éléments
@@ -83,7 +85,7 @@ Toute autre vue architecturale que vous juger pertinentes pour bien comprendre l
 - Vous devez démontrer que votre solution satisfait les cas d'utilisation.
 
 ## Conclusion
-
+> Insérer votre conclusion
 
 
 

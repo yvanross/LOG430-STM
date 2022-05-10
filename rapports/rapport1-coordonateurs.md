@@ -1,5 +1,7 @@
 # Rapport #1 Coordonateurs
 
+# Introduction
+> TODO: Insérer votre introduction
 ## Scénario d'objectif d'affaires
 Un ou plusieurs scénarios d'objectif d'affaire que vous considérez pertinente pour ce projet. À partir de la liste des scénarios priorisés par tous les étudiants de la classe.
 
@@ -95,6 +97,11 @@ Courte description
 >**Artefact:** 
 >**Réponse:**
 >**Mesure de la réponse:** 
+
+
+## Conclusion
+>TODO: insérer votre conclusion
+
 
 
 

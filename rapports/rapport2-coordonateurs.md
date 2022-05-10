@@ -19,6 +19,10 @@
 </style>
 
 # Rapport #2 Coordonateurs
+# Introduction
+> TODO: Insérer votre introduction
+
+# Contenu
 Ce rapport devrait contenir toutes les informations pertinentes concernant les microservices partagés par les différentes équipes.
 
 - Le nom de l'équipe 
@@ -33,4 +37,5 @@ N'oubliez pas d'effacer les TODO et ce texte et de générer une version PDF de 
 Créer un tag git avec la commande "git tag rapport2"
 
 
-
+## Conclusion
+>TODO: insérer votre conclusion

@@ -19,7 +19,10 @@
 </style>
 
 # Rapport #2
-Vous devez utiliser les scénarios d'objectif d'affaires, les cas d'utilisations et les scénarios de qualité sélectionnés par les coordonnateurs à l'itération #1. 
+Vous devez utiliser les scénarios d'objectif d'affaires, les cas d'utilisations et les scénarios de qualité sélectionnés par les coordonnateurs à l'itération #1.
+
+# Introduction
+>TODO: insérer votre introduction
 
 Ce rapport contient les résultats de l'application du processus ADD
 ## Conception dirigée par les attributs (ADD)
@@ -142,6 +145,8 @@ TODO : Cette section peut être organisée comme un dictionnaire où chaque ent
 Documentation des interfaces de votre présentation primaire en utilisant le [gabarit suivant](template-interface.md).
 
 
+# Conclusion
+>TODO: insérer votre introduction
 
 
 N'oubliez pas d'effacer les TODO et ce texte et de générer une version PDF de ce document pour votre remise finale.

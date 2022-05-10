@@ -1,5 +1,8 @@
 # Rapport #1
 
+## Introduction
+>TODO: insérer votre introduction
+
 ## Scénario d'objectif d'affaire
 
 >**Sujet de l'objectif:**
@@ -106,6 +109,8 @@ TODO : Décrivez ici la justification de toute décision de conception importan
 ###Vues associées
 TODO : ajoutez ici des liens vers la vue parent et vers toutes les vues enfants (c'est-à-dire raffinées), si elles existent.
 
+## Conclusion
+>TODO: insérer votre conclusion
 
 
 N'oubliez pas d'effacer les TODO et ce texte et de générer une version PDF de ce document pour votre remise finale.
