@@ -17,7 +17,7 @@
 
 Ouvrez l'utilitaire _Activer ou désactiver des fonctionnalités Windows_.
 
-- [ ] activez Hyper-V et Sous-sytème Windows pour Linux.
+- [ ] activez Hyper-V et Sous-système Windows pour Linux.
 
 - [ ] redémarrez votre ordinateur.
 
@@ -29,7 +29,7 @@ Ouvrez l'utilitaire _Activer ou désactiver des fonctionnalités Windows_.
 
 - [ ] exécutez Docker. Une icône apparaîtra dans la zone de notifications.
 
-- [ ] effectuez un clic droit sur l'icône et sélectionner _Switch to Linux containers_.
+- [ ] effectuez un clic droit sur l'icône et sélectionnez _Switch to Linux containers_.
 
 - [ ] ouvrez la ligne commande (PowerShell sur Windows, Terminal sur macOS).
 
@@ -68,7 +68,7 @@ Une image Docker est un ensemble de scripts et de fichiers de configuration. De 
 
 Dans Docker, un conteneur est une image exécutée dans un environnement. Il est possible d'avoir plusieurs conteneurs créés à partir de la même image.
 
-- [ ] créez et exécutez un nouveau conteneur grâce à <code>docker run php:7.1-apache</code>. Vous pouvez ajouter l'option <code>--name \<nom de votre conteneur></code> afin de lui donner un nom personalisé. Sinon, un nom lui sera attribué automatiquement.
+- [ ] créez et exécutez un nouveau conteneur grâce à <code>docker run php:7.1-apache</code>. Vous pouvez ajouter l'option <code>--name \<nom de votre conteneur></code> afin de lui donner un nom personnalisé. Sinon, un nom lui sera attribué automatiquement.
 
 - [ ] <code>docker ps</code> affichera les conteneurs qui s'exécutent sur votre ordinateur. L'option <code>- a</code> permet d'afficher l'ensemble des conteneurs.
 

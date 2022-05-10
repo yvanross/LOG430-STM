@@ -6,7 +6,7 @@
 - Veux un rapport détaillé de l'architecture et des interfaces
 
 ### Classe
-- Chaque classe est séparé en équipe de 5 étudiants.
+- Chaque classe est séparée en équipe de 5 étudiants.
 
 ### Équipe (Étudiants)
 - Le chargé de cours crée les équipes de laboratoires.

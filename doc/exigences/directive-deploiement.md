@@ -17,4 +17,6 @@ Voir le [tutoriel](Déploiement-Tutoriel-Docker-Heroku.md) de déploiement sur h
 
 
 ## Serveurs virtuels du laboratoire
-L'école mets à votre disposition 1 serveurs virtuels par équipe de coordonnateur.   Ce serveur sera utilisé par les coordonnateurs pour déployé tous les microservices développés par chacune des équipe du sous-groupe.  Ce serveur virtuel permettra aux équipe de coordonateur de démontrer que le système respecte toutes les exigences client.
+L'école met à votre disposition 1 serveur virtuel par équipe de coordonnateur.   Ce serveur sera utilisé par les coordonnateurs pour déployer tous les microservices développés par chacune des équipes du sous-groupe.  Ce serveur virtuel permettra aux équipes de coordonnateur de démontrer que le système respecte toutes les exigences client.
+
+Je suis en discussion avec les techniciens et nous devrions être en mesure d'obtenir un serveur virtuel par équipe pour cette session.  2020-05-10

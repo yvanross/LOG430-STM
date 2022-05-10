@@ -9,4 +9,4 @@ Je vous recommande d'utiliser un outil de suivi des tâches.
   - etc.
   - Notion task list
 
-La répartition du travail entre les membres de l'équipe doit être clairement documenté.  Vous devrez inclure cette documentation dans une vue d'allocation.
+La répartition du travail entre les membres de l'équipe doit être clairement documentée.  Vous devrez inclure cette documentation dans une vue d'allocation.

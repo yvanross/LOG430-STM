@@ -3,34 +3,44 @@
 
 ### Séance #1
 >#### Objectifs
->>- Se familiariser avec les objectifs d'affaire
+>>- Se familiariser avec les objectifs d'affaires
 >>- Se familiariser avec les scénarios d'attribut de qualité
->#### A faire
->>- 1 Scénario d'objectif d'affaire
+>#### À faire
+>>- 1 Scénario d'objectif d'affaires
+>>- 1 Cas d'utilisation
 >>- 1 Scénarios d'attribut de qualité par attribut de qualité
 ### Séance #2
 >#### Objectifs
 >>- Se familiariser avec le processus Quality Attribut Workshop (QAW)
 >>- Se familiariser avec l'arbre d'utilité et la priorisation des scénarios
->#### Remise
->>- 1 Scénario d'objectif d'affaire
+>#### À faire (continuer)
+>>- 1 Scénario d'objectif d'affaires
+>>- 1 Cas d'utilisation
 >>- 1 Scénarios d'attribut de qualité par attribut de qualité
 ### Séance #3
 >#### Objectifs
 >>- Se familiariser avec les vues de contexte
->>- Se faliliariser avec les tactiques architecturales
->#### Remise
->>- Nom des membre de l'équipe de coordonnateur
->>- Arbre d'utilité de la classe (remis par les coordonnateurs)
+>>- Se familiariser avec les tactiques architecturales
+>#### À faire (continuer)
+>>- Nom des membres de l'équipe de coordonnateur
 >>- Votre diagramme de contexte
->>- Comparatif des différentes tactiques applicables pour chaque attribut de qualité
->>- Faire une ébauche de solution pour chaque tactique
-  
+>>- 1 Scénario d'objectif d'affaires
+>>- 1 Cas d'utilisation
+>>- 1 Scénarios d'attribut de qualité par attribut de qualité
+ 
 ### Séance #4
 >#### Objectifs
 >>- Implémenter votre premier microservice
 >#### Remise
->>- Solution pour la réalisation de votre objectif d'affaire 
->>- Solution pour la réalisation d'un objectif d'affaire d'une autre équipe
->>- Solution pour la réalisation de chaque scénario de qualité
+>>- Scénarios d'objectif d'affaires
+>>- Cas d'utilisation
+>>- Scénarios de qualité
+>>- Vue de contexte
+
+Coordonnateur
+  >>- Arbre d'utilité de la classe, avec priorisation (remis par les coordonnateurs)
+  >>- Scénario d'objectif d'affaires
+  >>- Cas d'utilisation
+  >>- Scénario de qualité
+  
 

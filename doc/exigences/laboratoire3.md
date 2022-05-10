@@ -12,14 +12,14 @@
 ### Séance 11
 > #### Objectifs
 >>- Se familiariser avec le processus ATAM
->#### Remises
->>- Identifier les facteur de 
+>#### A faire
+>>- Identifier les facteurs de 
   >>>- Risque
-  >>>- Non Risque
+  >>>- Non-Risque
   >>>- Compromis
   >>>- Sensibilité
 ### Séance 12
 >#### Objectifs
->>- Demonstration finale
+>>- Démonstration finale
 >#### Remises
 >>- Rapport final

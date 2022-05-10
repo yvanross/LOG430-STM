@@ -1,31 +1,92 @@
 # Rapport #3
 
-N'oubliez pas de générer une version pdf de ce document pour votre remise finale.
+## Introduction
+## Vue de contexte
+>### Présentation primaire
+>### Catalogue d'éléments
+>Doit inclure le lien vers la documentation des interfaces de la présentation primaire.
+>### Guide de variabilité
+>### Raisonnement
+>### Vues associées
 
-Documentation de l’architecture des microservices implémenté par l’équipe
+## Vues de qualité
 
-Vous devez respecter le template de documentation de l'architecture d'un système
-https://wiki.sei.cmu.edu/confluence/display/SAD/Software+Architecture+Documentation+Template
+### Disponibilité
 
-Vous devez respecter le template de documentation d'une vue architecture 
-https://wiki.sei.cmu.edu/confluence/display/SAD/Template%3AArchitectureViewTemplate
+>#### Présentation primaire
+>#### Catalogue d'éléments
+>Dois inclure le lien vers la documentation des interfaces de la présentation primaire.
+>#### Diagramme de contexte
+>#### Guide de variabilité
+>#### Raisonnement
+>#### Vues associées
 
-Vous devez respecter le template pour la documentation d'interface
-https://wiki.sei.cmu.edu/confluence/display/SAD/Template%3AInterfaceTemplate
+### Performance
+>#### Présentation primaire
+>#### Catalogue d'éléments
+>Dois inclure le lien vers la documentation des interfaces de la présentation primaire.
+>#### Diagramme de contexte
+>#### Guide de variabilité
+>#### Raisonnement
+>#### Vues associées
 
-# Acquisition des compétences
-Dans le cadre de ce cours et des laboratoires, vous avez acquis des compétences en lien avec l’architecture logicielle.  
+### Testabilité
+>#### Présentation primaire
+>#### Catalogue d'éléments
+>Dois inclure le lien vers la documentation des interfaces de la présentation primaire.
+>#### Diagramme de contexte
+>#### Guide de variabilité
+>#### Raisonnement
+>#### Vues associées
 
-Répondez aux questions suivantes:
+### Modifiabilité
+>#### Présentation primaire
+>#### Catalogue d'éléments
+>Dois inclure le lien vers la documentation des interfaces de la présentation primaire.
+>#### Diagramme de contexte
+>#### Guide de variabilité
+>#### Raisonnement
+>#### Vues associées
 
-●	Quelles sont les compétences acquises ? 
-●	Quelles méthodes de formation vous ont aidé le plus à acquérir ces compétences ? cours, laboratoire, travail au tableau, conférence, échange avec d’autres étudiants, etc.
-●	Quelles sont les compétences qui n’étaient pas couvertes par le cours, mais que vous avez dû acquérir pour réaliser votre travail ? 
-●	Comment avez-vous acquis ces compétences ?
-●	Comment pouvez-vous transposer ces processus d’acquisition de compétences avec le marché du travail ?
-●	Avez-vous des suggestions pour améliorer ou faciliter votre acquisition de compétences associées à l’architecture logicielle ?
+### Sécurité
+>#### Présentation primaire
+>#### Catalogue d'éléments
+>Dois inclure le lien vers la documentation des interfaces de la présentation primaire.
+>#### Diagramme de contexte
+>#### Guide de variabilité
+>#### Raisonnement
+>#### Vues associées
+
+### Convivialité
+>#### Présentation primaire
+>#### Catalogue d'éléments
+>Dois inclure le lien vers la documentation des interfaces de la présentation primaire.
+>#### Diagramme de contexte
+>#### Guide de variabilité
+>#### Raisonnement
+>#### Vues associées
+
+### Interopérabilité
+>#### Présentation primaire
+>#### Catalogue d'éléments
+>Dois inclure le lien vers la documentation des interfaces de la présentation primaire.
+>#### Diagramme de contexte
+>#### Guide de variabilité
+>#### Raisonnement
+>#### Vues associées
+
+
+## Autres vues architecturales
+Toute autre vue architecturale que vous juger pertinentes pour bien comprendre l'architecture de votre solution.
+
+- Vous devez démontrer la relation entre les objectifs d'affaires et votre solution.
+- Vous devez démontrer que votre solution satisfait les cas d'utilisation.
+
+## Conclusion
 
 
 
 
-- Se familiariser avec le processus ATAM
+N'oubliez pas d'effacer les TODO et ce texte et de générer une version PDF de ce document pour votre remise finale.
+Créer un tag git avec la commande "git tag rapport3"
+

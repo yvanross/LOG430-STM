@@ -6,7 +6,7 @@ Une attention particulière sera portée sur les éléments suivants au niveau d
 4. Les choix technologiques sont visibles dans les vues architecturales. 
 5. Chaque diagramme possède un texte explicite pour le décrire.  Ne décrivez pas chaque élément du diagramme, vous le ferez dans le tableau des éléments. Nous voulons savoir à quoi sert ce diagramme, quelle est son utilité, qu'est ce qu'il nous permet de comprendre ou démontrer.
 6. Chaque diagramme possède une légende
-7. La relation entre les vues est facilement compréhensibles.
+7. La relation entre les vues est facilement compréhensible.
 8. Les relations entre les éléments et les cas d'utilisation sont bien documentés. 
 9. La relation entre les tactiques et les scénarios d'attributs de qualité est bien documentée.
 10. La relation entre les éléments et les tactiques est  bien documentée. 
