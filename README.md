@@ -24,6 +24,7 @@ Vous devez développer l'architecture d'un système de compaison de temps de tra
 
 # Grille de pointage
 Voir la [grille de pointage](doc/grille-pointage.xlsx) pour connaître le nombre de points associé à chacun des artéfacts que vous réalisez durant ce projet.
+Le nombre normal d'étudiants dans une équipe est de 5 personnes. Nous ajusterons le nombre de points à implémenter proportionnellement au nombre d'étudiants dans chaque équipe.
 
 # Directives pour chaque itération
 Le projet doit être divisé en 3 itérations distinctes.  
