@@ -37,9 +37,9 @@ Ce rapport contient les résultats de l'application du processus ADD
 
 |Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
+| <li>tactique 1</li>|avantages| désavantages|M|M|
+| <li>tactique 2</li>|avantages| désavantages|M|M|
+| <li>tactique 3</li>|avantages| désavantages|M|M|
 </div>
 
 ### Présentation primaire
@@ -54,12 +54,12 @@ Documentation des interfaces de votre présentation primaire en utilisant le [ga
 
 |Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
+| <li>tactique 1</li>|avantages| désavantages|M|M|
+| <li>tactique 2</li>|avantages| désavantages|M|M|
+| <li>tactique 3</li>|avantages| désavantages|M|M|
 </div>
 ### Présentation primaire
-TODO : Ajoutez ici le diagramme (ou la représentation non graphique) qui montre les éléments et les relations dans cette vue. Indiquez la langue ou la notation utilisée. S'il ne s'agit pas d'une notation standard telle qu’UML, ajoutez une clé de notation. Peut-être un diagramme de type module, composant & connecteur, allocation, séquence, activité, état.
+  TODO : Ajoutez ici le diagramme (ou la représentation non graphique) qui montre les éléments et les relations dans cette vue. Indiquez la langue ou la notation utilisée. S'il ne s'agit pas d'une notation standard telle qu’UML, ajoutez une clé de notation. Peut-être un diagramme de type module, composant & connecteur, allocation, séquence, activité, état.
 ### Catalogue d'éléments
 TODO : Cette section peut être organisée comme un dictionnaire où chaque entrée est un élément de la présentation principale. Pour chaque élément, fournissez des informations et des propriétés supplémentaires dont les lecteurs auraient besoin et qui ne rentreraient pas dans la présentation principale. En option, vous pouvez ajouter des spécifications d'interface et des diagrammes de comportement (par exemple, des diagrammes de séquence UML, des diagrammes d'états).
 ### Interfaces
@@ -70,9 +70,9 @@ Documentation des interfaces de votre présentation primaire en utilisant le [ga
 
 |Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
+| <li>tactique 1</li>|avantages| désavantages|M|M|
+| <li>tactique 2</li>|avantages| désavantages|M|M|
+| <li>tactique 3</li>|avantages| désavantages|M|M|
 </div>
 ### Présentation primaire
 TODO : Ajoutez ici le diagramme (ou la représentation non graphique) qui montre les éléments et les relations dans cette vue. Indiquez la langue ou la notation utilisée. S'il ne s'agit pas d'une notation standard telle qu’UML, ajoutez une clé de notation. Peut-être un diagramme de type module, composant & connecteur, allocation, séquence, activité, état.
@@ -86,9 +86,9 @@ Documentation des interfaces de votre présentation primaire en utilisant le [ga
 
 |Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
+| <li>tactique 1</li>|avantages| désavantages|M|M|
+| <li>tactique 2</li>|avantages| désavantages|M|M|
+| <li>tactique 3</li>|avantages| désavantages|M|M|
 </div>
 ### Présentation primaire
 TODO : Ajoutez ici le diagramme (ou la représentation non graphique) qui montre les éléments et les relations dans cette vue. Indiquez la langue ou la notation utilisée. S'il ne s'agit pas d'une notation standard telle qu’UML, ajoutez une clé de notation. Peut-être un diagramme de type module, composant & connecteur, allocation, séquence, activité, état.
@@ -102,9 +102,9 @@ Documentation des interfaces de votre présentation primaire en utilisant le [ga
 
 |Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
+| <li>tactique 1</li>|avantages| désavantages|M|M|
+| <li>tactique 2</li>|avantages| désavantages|M|M|
+| <li>tactique 3</li>|avantages| désavantages|M|M|
 </div>
 ### Présentation primaire
 TODO : Ajoutez ici le diagramme (ou la représentation non graphique) qui montre les éléments et les relations dans cette vue. Indiquez la langue ou la notation utilisée. S'il ne s'agit pas d'une notation standard telle qu’UML, ajoutez une clé de notation. Peut-être un diagramme de type module, composant & connecteur, allocation, séquence, activité, état.
@@ -118,9 +118,9 @@ Documentation des interfaces de votre présentation primaire en utilisant le [ga
 
 |Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
+| <li>tactique 1</li>|avantages| désavantages|M|M|
+| <li>tactique 2</li>|avantages| désavantages|M|M|
+| <li>tactique 3</li>|avantages| désavantages|M|M|
 </div>
 ### Présentation primaire
 TODO : Ajoutez ici le diagramme (ou la représentation non graphique) qui montre les éléments et les relations dans cette vue. Indiquez la langue ou la notation utilisée. S'il ne s'agit pas d'une notation standard telle qu’UML, ajoutez une clé de notation. Peut-être un diagramme de type module, composant & connecteur, allocation, séquence, activité, état.
@@ -134,9 +134,9 @@ Documentation des interfaces de votre présentation primaire en utilisant le [ga
 
 |Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 1</li> <li>tactique 2</li>|avantages| désavantages|M|M|
+| <li>tactique 1</li>|avantages| désavantages|M|M|
+| <li>tactique 2</li>|avantages| désavantages|M|M|
+| <li>tactique 3</li>|avantages| désavantages|M|M|
 </div>### Présentation primaire
 TODO : Ajoutez ici le diagramme (ou la représentation non graphique) qui montre les éléments et les relations dans cette vue. Indiquez la langue ou la notation utilisée. S'il ne s'agit pas d'une notation standard telle qu’UML, ajoutez une clé de notation. Peut-être un diagramme de type module, composant & connecteur, allocation, séquence, activité, état.
 ### Catalogue d'éléments
