@@ -1,10 +1,40 @@
 # Rapport #1
 
+- [Rapport #1](#rapport-1)
+  - [Introduction](#introduction)
+  - [Scénario d'objectif d'affaire](#scénario-dobjectif-daffaire)
+    - [OA-10. Propostion objectif affaire #1.](#oa-10-propostion-objectif-affaire-1)
+    - [OA-11. Propostion objectif affaire #2.](#oa-11-propostion-objectif-affaire-2)
+  - [Cas d'utilisations](#cas-dutilisations)
+    - [CU03 - Nouveau cas d'utlisation](#cu03---nouveau-cas-dutlisation)
+    - [CU04 - Nouveau cas d'utilisation](#cu04---nouveau-cas-dutilisation)
+  - [Scénarios de qualité](#scénarios-de-qualité)
+    - [Disponibilité](#disponibilité)
+    - [Performance](#performance)
+    - [Testabilité](#testabilité)
+    - [Modifiabilité](#modifiabilité)
+    - [Sécurité](#sécurité)
+    - [Convivialité](#convivialité)
+    - [Interopérabilité](#interopérabilité)
+  - [Vue de contexte](#vue-de-contexte)
+    - [Présentation primaire (Diagramme de contexte)](#présentation-primaire-diagramme-de-contexte)
+    - [Catalogue d'éléments](#catalogue-déléments)
+    - [Guide de variabilité](#guide-de-variabilité)
+    - [Raisonnement](#raisonnement)
+  - [Conclusion](#conclusion)
 ## Introduction
 >TODO: insérer votre introduction
 
 ## Scénario d'objectif d'affaire
+### OA-10. Propostion objectif affaire #1.
+>**Sujet de l'objectif:**
+>**Objet de l'objectif**
+>**Objectif:** 
+>**Environnement:**  
+>**Mesure de l'objectif:** 
+>**Valeur:** 
 
+### OA-11. Propostion objectif affaire #2.
 >**Sujet de l'objectif:**
 >**Objet de l'objectif**
 >**Objectif:** 
@@ -13,7 +43,24 @@
 >**Valeur:** 
 
 ## Cas d'utilisations
-### Nom du cas d'utilisation
+### CU03 - Nouveau cas d'utlisation
+>#### Parties prenantes et intérêt
+>- sks
+>- sasf
+
+>#### Préconditions
+>- a
+>- b
+
+>#### Acteur principal: Nom
+>1. sc
+>2. sc
+>3. sc..
+
+>#### Extension (scénarios alternatifs)
+>4a. lslsl
+
+### CU04 - Nouveau cas d'utilisation
 >#### Parties prenantes et intérêt
 >- sks
 >- sasf
@@ -32,7 +79,7 @@
 
 ## Scénarios de qualité
 
-## Disponibilité
+### Disponibilité
 Courte description
 >**Source:** 
 >**Stimuli:**
@@ -41,7 +88,7 @@ Courte description
 >**Réponse:**
 >**Mesure de la réponse:** 
 
-## Performance
+### Performance
 Courte description
 >**Source:** 
 >**Stimuli:**
@@ -50,7 +97,7 @@ Courte description
 >**Réponse:**
 >**Mesure de la réponse:** 
 
-## Testabilité
+### Testabilité
 Courte description
 >**Source:** 
 >**Stimuli:**
@@ -59,7 +106,7 @@ Courte description
 >**Réponse:**
 >**Mesure de la réponse:** 
 
-## Modifiabilité
+### Modifiabilité
 Courte description
 >**Source:** 
 >**Stimuli:**
@@ -68,7 +115,7 @@ Courte description
 >**Réponse:**
 >**Mesure de la réponse:** 
 
-## Sécurité
+### Sécurité
 Courte description
 >**Source:** 
 >**Stimuli:**
@@ -77,7 +124,7 @@ Courte description
 >**Réponse:**
 >**Mesure de la réponse:** 
 
-## Convivialité
+### Convivialité
 Courte description
 >**Source:** 
 >**Stimuli:**
@@ -86,7 +133,7 @@ Courte description
 >**Réponse:**
 >**Mesure de la réponse:** 
 
-## Interopérabilité
+### Interopérabilité
 Courte description
 >**Source:** 
 >**Stimuli:**

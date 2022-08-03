@@ -1,39 +1,21 @@
 # Rapport #1 Coordonateurs
-
+- [Rapport #1 Coordonateurs](#rapport-1-coordonateurs)
+- [Introduction](#introduction)
+  - [Scénarios de qualité](#scénarios-de-qualité)
+  - [Disponibilité](#disponibilité)
+  - [Performance](#performance)
+  - [Testabilité](#testabilité)
+  - [Modifiabilité](#modifiabilité)
+  - [Sécurité](#sécurité)
+  - [Convivialité](#convivialité)
+  - [Interopérabilité](#interopérabilité)
+  - [Conclusion](#conclusion)
 # Introduction
 > TODO: Insérer votre introduction
-## Scénario d'objectif d'affaires
-Un ou plusieurs scénarios d'objectif d'affaire que vous considérez pertinente pour ce projet. À partir de la liste des scénarios priorisés par tous les étudiants de la classe.
-
-###Scénario1
->**Sujet de l'objectif:**
->**Objet de l'objectif**
->**Objectif:** 
->**Environnement:**  
->**Mesure de l'objectif:** 
->**Valeur:** 
-
-## Cas d'utilisations
-Un ou plusieurs cas d'utilisation que vous considérez pertinents pour ce projet. À partir de la liste des cas d'utilisation priorisés par tous les étudiants de la classe.
-### Nom du cas d'utilisation
->#### Parties prenantes et intérêt
->- sks
->- sasf
-
->#### Préconditions
->- a
->- b
-
->#### Acteur principal: Nom
->1. sc
->2. sc
->3. sc..
-
->#### Extension (scénarios alternatifs)
->4a. lslsl
-
+> TODO: Vous devez réaliser ce rapport aussitôt que toutes les équipes ont remis leur scénarios de qualité de la primière itération.  
+> TODO: Vous devez organiser la priorisation des scénarios de chaque attribut de qualité et inscrire dans ce document le scénario ayant recu le plus de votes de la parts des étudiants.  Vous pouvez ajouter des commentaires aux scénarios pour proposer des correctifs aux élément que vous juger non cohérents.
 ## Scénarios de qualité
-Les scénarios de qualité qui ont été priorisés par tous les étudiants de la classe.
+Les scénarios de qualité qui ont été priorisés par tous les étudiants du sous-groupe de la classe.
 
 ## Disponibilité
 Courte description
