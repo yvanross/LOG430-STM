@@ -1,3 +1,21 @@
+<style>
+    .concept {
+        width: 1000%;
+        text-align: center;
+    }
+    .concept th {
+        background: grey;
+        word-wrap: break-word;
+        text-align: center;
+    }
+    .disponibilite tr:nth-child(1) { background: orange; }
+    .performance tr:nth-child(2) { background: orange; }
+    .securite tr:nth-child(3) { background: orange; }
+    .usabilite tr:nth-child(1) { background: orange; }
+    .interoperabilite tr:nth-child(2) { background: orange; }
+    .modifiabilite tr:nth-child(3) { background: orange; }
+    .testabilite tr:nth-child(1) { background: orange; }    
+</style>
 # Documentation de l'architecture du laboratoire de LOG430
 - [Documentation de l'architecture du laboratoire de LOG430](#documentation-de-larchitecture-du-laboratoire-de-log430)
 - [Page titre](#page-titre)
@@ -111,7 +129,7 @@
       - [Raisonnement](#raisonnement-7)
       - [Vues associées](#vues-associées-6)
 - [Compilation des vues architecturales](#compilation-des-vues-architecturales)
-  - [Vues architectrurale de type Module](#vues-architectrurale-de-type-module)
+  - [Vues architecturales de type Module](#vues-architecturales-de-type-module)
     - [Vue #1](#vue-1)
     - [Vue #2...](#vue-2)
   - [Vues architecturales de type composant et connecteur](#vues-architecturales-de-type-composant-et-connecteur)
