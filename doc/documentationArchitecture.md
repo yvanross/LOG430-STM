@@ -141,6 +141,20 @@
 - [Conclusion](#conclusion)
 - [Documentation des interfaces](#documentation-des-interfaces)
 
+Structure dans l'équipe
+Kanban 
+  backlog -> idée générique de tâches à considéré, priorisé par l'équipe 
+  todo -> ce qu'on fait à la prochaine itération, a faire (assigné explicitement ou non) 
+  in progress
+  review (le plus rapidement possible) => pull request
+  Done
+
+
+
+
+
+
+
 # Page titre
 # Introduction
 >TODO: insérer votre introduction
@@ -167,21 +181,42 @@
 
 # Cas d'utilisations
 ## CU01. Veux comparer les temps de trajet
->### Parties prenantes et intérêt
+>### Acteurs (interne ou externe)
 >- sks
 >- sasf
 
+
+
 >### Préconditions
->- a
+>- Dans quelle état doit être le système pour permettre le déclenchement de ce scénaro
 >- b
 
->### Acteur principal: Nom
+>### Évènement déclencheur
+>- Évenement qui vas démarrer le scénario
+>### Description du scénario principal
 >1. sc
 >2. sc
 >3. sc..
 
->### Extension (scénarios alternatifs)
+>### Évènement résultant
+Évènement produit par le système comme résultat d'exécution
+
+>### Post condition
+
+>### scénarios alternatifs
 >4a. lslsl
+
+>### Attribut de qualité
+Documenter l'ensemble des attributs de qualité qui s'appliquent à ce scénario en terme d'objectif et de mesure
+- Disponibilité: n/a
+- Interoperabilité:
+- Modifiabilité:
+- Performance:
+- Securité:
+- Testabilité:
+- Usabilité:
+
+>### Commentaires
 
 ### Démontrez la relation entre les éléments de votre architecture et votre cas d'utilisation.
 

@@ -91,6 +91,7 @@ Utiliser l'API ou la page web des fournisseurs externe pour l'estimation en temp
 
 ## Équipe de coordination
 - L'équipe de coordination est aussi responsable de répartir équitablement les tâches de réalisation de la conception et l'implémentation des différents microservices nécessaire à ce projet.
+- L'équipe de coordination gère les droits d'accès/d'utilisation des équipes aux intégrations réalisées par les autres équipes.
   - Dois conserver une trace écrite pour savoir quelle équipe implémente quel microservice.
 - L'équipe a la responsabilité de valider et de diffuser la documentation des interfaces touchant aux composants implémentés/utilisés par plusieurs équipes. 
   - Une version d'interface publiée ne peut pas être changée. Vous devez obligatoirement publier une nouvelle version.
