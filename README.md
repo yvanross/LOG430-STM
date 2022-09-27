@@ -260,6 +260,18 @@ Ces microservices doivent être déployés par l'équipe propriétaire ou l'équ
 Vous pouvez déployer votre solution sur n'importe quel serveur. Dans le cadre du laboratoire nous vous fournirons l'accès à un serveur virtuel.  Ce serveur vous permettra de déployer des microservices réalisés à l'aide de docker et docker-compose.
 
 
+### Déploiement avec Portainer
+```
+docker build -t video-storage --file Dockerfile .
+
+docker save video-storage -o video-storage.tar
+```
+
+Voir les vidéos:
+- portainer-1: https://youtu.be/L0ak_Jsi3W8  Test en mode local
+- portainer-2: https://youtu.be/VSxIHf0ZuF0  Deployement sur portainer
+- portainer-3: https://youtu.be/1vDqsMESGyI  Docker-compose sur portainer
+
 ## Directive de Démonstration
 - Vous n'aurez droit qu'à une seule démonstration pour l'intégration et/ou l'implémentation de chaque exigence. 
 - Chaque équipe disposera d'un maximum de 10 minutes par démonstration/exigence.
