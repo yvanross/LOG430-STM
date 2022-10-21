@@ -275,50 +275,70 @@ Documenter l'ensemble des attributs de qualité qui s'appliquent à ce scénario
 
 **Commentaires:**
 
-### **CU04** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>
+### **CU04** - Veux pouvoir s'authentifier.
 
 **Acteurs externe:** 
+- **Chargé de laboratoire:** Veut pouvoir faire la correction de chaque cas d'utilisation.
 
-**Précondition:** 
+**Précondition:**
+- tous les microservices sont opérationnels.
 
 **Évènement déclencheur:** 
+- La documentation pour cet attribut est terminée et l'équipe demande au chargé de laboratoire de corriger celle-ci. 
+- L'implémentation est complétée est l'équipe demande au chargé de laboratoire de corriger celle-ci.
 
 **Scénario**
+1.  Le (chargé de laboratoire) CL crée un compte utilisateur.
+2.  Le CL entre le courriel utilisé pour créer le compte dans la fenêtre appropriée.
+3.  Le CL entre le mot de passe utilisé pour créer le compte dans la fenêtre appropriée.
+4. Le CL clique sur le bouton afin de se connecter.
+5. Le service s'ouvre.
 
 **Évènement résultant:**
+- Le CL est authentifié en tant qu'utilisateur du service.
+- Le système reconnaît les préférences (s'il y a lieu) de l'utilisateur.
 
 **Postcondition:** 
 
 **Cas alternatifs:**
+- 1.a Le CL possède déjà un compte.
+- 5.b Le courriel et le mot de passe ne correspondent pas à un compte existant.
 
 **Attributs de qualité**
 
 #### CU04-D1 [**Disponibilité**](#add-disponibilité) 
-<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
+Ce service doit être disponible uniquement si les autres microservices le sont aussi.
 #### CU04-M1 [**Modifiabilité**](#add-modifiabilité)
-<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
+N/a
 #### CU04-P1 [**Performance**](#add-performance) 
-<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
+Ce service doit pouvoir permettre à l'utilisateur d'être connecté moins de 5 secondes après avoir cliqué sur le bouton de connexion.
 #### CU04-S1 [**Sécurité**](#add-sécurité)
-<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
+Ce service doit encrypter l'information du mot de passe des utilisateurs.
 #### CU04-T1 [**Testabilité**](#add-testabilité) 
-<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
+TODO
 #### CU04-U1 [**Usabilité**](#add-usabilité)
-<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
+Ce service doit être intuitif et suivre les normes des pages de connexion des applications en utilisant une adresse courriel et un mot de passe.
 #### CU04-I1 [**Interopérabilité**](#add-interopérabilité)
-<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
+ N/a
 
 **Commentaires:**
 
-### **CU05** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>
+### **CU05** - Veux pouvoir ajouter un endroit favori.
+
 
 **Acteurs externe:** 
+- **Chargé de laboratoire:** Veut pouvoir faire la correction de chaque cas d'utilisation.
 
-**Précondition:** 
+**Précondition:**
+- tous les microservices sont opérationnels.
+- L'utilisateur est connecté.
 
 **Évènement déclencheur:** 
+- La documentation pour cet attribut est terminée et l'équipe demande au chargé de laboratoire de corriger celle-ci. 
+- L'implémentation est complétée est l'équipe demande au chargé de laboratoire de corriger celle-ci.
 
 **Scénario**
+
 
 **Évènement résultant:**
 
@@ -329,29 +349,35 @@ Documenter l'ensemble des attributs de qualité qui s'appliquent à ce scénario
 **Attributs de qualité**
 
 #### CU05-D1 [**Disponibilité**](#add-disponibilité) 
-<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
+
 #### CU05-M1 [**Modifiabilité**](#add-modifiabilité)
-<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
+
 #### CU05-P1 [**Performance**](#add-performance) 
-<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
+
 #### CU05-S1 [**Sécurité**](#add-sécurité)
-<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
+
 #### CU05-T1 [**Testabilité**](#add-testabilité) 
-<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
+
 #### CU05-U1 [**Usabilité**](#add-usabilité)
-<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
+
 #### CU05-I1 [**Interopérabilité**](#add-interopérabilité)
-<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
+
 
 **Commentaires:**
 
-### **CU06** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>
+### **CU06** - Veux pouvoir se déconnecter.
+
 
 **Acteurs externe:** 
+- **Chargé de laboratoire:** Veut pouvoir faire la correction de chaque cas d'utilisation.
 
-**Précondition:** 
+**Précondition:**
+- tous les microservices sont opérationnels.
+- L'utilisateur est connecté.
 
 **Évènement déclencheur:** 
+- La documentation pour cet attribut est terminée et l'équipe demande au chargé de laboratoire de corriger celle-ci. 
+- L'implémentation est complétée est l'équipe demande au chargé de laboratoire de corriger celle-ci.
 
 **Scénario**
 
@@ -552,7 +578,7 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 ### ADD-[détection de faute](#rdtq-détection-de-faute)
 <div class="concept disponibilite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -563,7 +589,7 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 ### ADD-[Préparation et réparation](#rdtq-préparation-et-réparation)
 <div class="concept disponibilite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -574,7 +600,7 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 ### ADD-[Réintroduction](#rdtq-réintroduction)
 <div class="concept disponibilite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -585,7 +611,7 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 ### ADD-[Prévention des fautes](#rdtq-prévention-des-fautes)  
 <div class="concept disponibilite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -610,7 +636,7 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 ### ADD-[Réduire la taille des modules](#rdtq-réduire-la-taille-des-modules)
 <div class="concept modifiabilite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -621,7 +647,7 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 ### ADD-[Augmenter la cohésion](#rdtq-augmenter-la-cohésion)
 <div class="concept modifiabilite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -632,7 +658,7 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 ### ADD-[Réduire le couplage](#rdtq-réduire-le-couplage)
 <div class="concept modifiabilite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -643,7 +669,7 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 ### ADD-[Defer binding](#rdtq-defer-binding)
 <div class="concept modifiabilite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -669,7 +695,7 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 ### ADD-[Contrôler la demande en ressources](#rdtq-contrôler-la-demande-en-ressources)
 <div class="concept performance">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -680,7 +706,7 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 ADD-Gérer les ressources
 <div class="concept performance">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -693,7 +719,7 @@ ADD-Gérer les ressources
 ### ADD-[Détecter les attaques](#rdtq-détecter-les-attaques)
 <div class="concept securite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -704,7 +730,7 @@ ADD-Gérer les ressources
 ### ADD-[Résister aux attaques](#rdtq-résister-aux-attaques)
 <div class="concept securite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -716,7 +742,7 @@ ADD-Gérer les ressources
 ### ADD-[Réagir aux attaques](#rdtq-réagir-aux-attaques)
 <div class="concept securite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -727,7 +753,7 @@ ADD-Gérer les ressources
 ### ADD-[Récupérer d'une attaque](#rdtq-récupérer-dune-attaque)
 <div class="concept securite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -753,7 +779,7 @@ ADD-Gérer les ressources
 ### ADD-[Controle and observe l'état du système](#rdtq-contrôle-et-observe-létat-du-système)
 <div class="concept testabilite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -765,7 +791,7 @@ ADD-Gérer les ressources
 
 <div class="concept testabilite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -791,7 +817,7 @@ ADD-Gérer les ressources
 ### ADD-[Supporter l'initiative de l'usager](#rdtq-supporter-linitiative-de-lusager)
 <div class="concept usabilite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -802,7 +828,7 @@ ADD-Gérer les ressources
 ### ADD-[Supporter l'initiative du système](#rdtq-supporter-linitiative-du-système)
 <div class="concept usabilite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -826,7 +852,7 @@ ADD-Gérer les ressources
 ### ADD-[Localiser](#rdtq-localiser)
 <div class="concept interoperabilite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -837,7 +863,7 @@ ADD-Gérer les ressources
 ### ADD-[Gérer les interfaces](#rdtq-gérer-les-ressources)
 <div class="concept interoperabilite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
+|Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
 | <li>tactique 1</li>|avantages| désavantages|M|M|
 | <li>tactique 2</li>|avantages| désavantages|M|M|
@@ -1129,4 +1155,9 @@ La documentation des interfaces de vos éléments doit se faire en utilisant le 
 Voici quelques exemples de documentation d'interface utilisant ce gabarit:
 - https://wiki.sei.cmu.edu/confluence/display/SAD/OpcPurchaseOrderService+Interface+Documentation
 - https://wiki.sei.cmu.edu/confluence/display/SAD/OpcOrderTrackingService+Interface+Documentation
-- https://wiki.sei.cmu.edu/confluence/display/SAD/WebServiceBroker+Interface+Documentation
+- https://wiki.sei.cmu.edu/confluence/display/SAD/WebServiceBroker+Interface
+
+<!--stackedit_data:
+eyJoaXN0b3J5IjpbNDU4ODUwNzIwXX0=
+-->
+
