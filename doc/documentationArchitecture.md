@@ -1,21 +1,5 @@
-<style>
-    .concept {
-        width: 1000%;
-        text-align: center;
-    }
-    .concept th {
-        background: grey;
-        word-wrap: break-word;
-        text-align: center;
-    }
-    .disponibilite tr:nth-child(1) { background: orange; }
-    .performance tr:nth-child(2) { background: orange; }
-    .securite tr:nth-child(3) { background: orange; }
-    .usabilite tr:nth-child(1) { background: orange; }
-    .interoperabilite tr:nth-child(2) { background: orange; }
-    .modifiabilite tr:nth-child(3) { background: orange; }
-    .testabilite tr:nth-child(1) { background: orange; }    
-</style>
+
+
 # Documentation de l'architecture du laboratoire de LOG430
 - [Documentation de l'architecture du laboratoire de LOG430](#documentation-de-larchitecture-du-laboratoire-de-log430)
 - [Page titre](#page-titre)
@@ -27,7 +11,7 @@
     - [**CU01** - Veux comparer les temps de trajet.](#cu01---veux-comparer-les-temps-de-trajet)
     - [**CU02** - Veux pouvoir mettre le chaos dans les microservices.](#cu02---veux-pouvoir-mettre-le-chaos-dans-les-microservices)
     - [**CU03** - <span style="color:red">Vous devez proposer un nouveau cas d'utilisation</span>](#cu03---vous-devez-proposer-un-nouveau-cas-dutilisation)
-    - [**CU04** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>](#cu04---vous-devez-proposer-un-nouveau-cas-dutilisation)
+    - [**CU04** - Veux pouvoir s'authentifier ](#cu04---vous-devez-proposer-un-nouveau-cas-dutilisation)
     - [**CU05** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>](#cu05---vous-devez-proposer-un-nouveau-cas-dutilisation)
     - [**CU06** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>](#cu06---vous-devez-proposer-un-nouveau-cas-dutilisation)
     - [**CU07** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>](#cu07---vous-devez-proposer-un-nouveau-cas-dutilisation)
@@ -284,61 +268,97 @@ Documenter l'ensemble des attributs de qualité qui s'appliquent à ce scénario
 - tous les microservices sont opérationnels.
 
 **Évènement déclencheur:** 
-- La documentation pour cet attribut est terminée et l'équipe demande au chargé de laboratoire de corriger celle-ci. 
-- L'implémentation est complétée est l'équipe demande au chargé de laboratoire de corriger celle-ci.
+- La documentation pour cet attribut est terminé et l'équipe demande au chargé de laboratoire de corriger celle-ci. 
+- L'implémentation est complété est l'équipe demande au chargé de laboratoire de corriger celle-ci.
 
 **Scénario**
 1.  Le (chargé de laboratoire) CL crée un compte utilisateur.
-2.  Le CL entre le courriel utilisé pour créer le compte dans la fenêtre appropriée.
-3.  Le CL entre le mot de passe utilisé pour créer le compte dans la fenêtre appropriée.
-4. Le CL clique sur le bouton afin de se connecter.
-5. Le service s'ouvre.
+2. Le CL navige vers la page d'authentification
+3.  Le CL entre le courriel utilisé pour créer le compte dans la fenêtre appropriée.
+4.  Le CL entre le mot de passe utilisé pour créer le compte dans la fenêtre appropriée.
+5. Le CL clique sur le bouton afin de se connecter.
+6. Le service s'ouvre.
 
 **Évènement résultant:**
 - Le CL est authentifié en tant qu'utilisateur du service.
 - Le système reconnaît les préférences (s'il y a lieu) de l'utilisateur.
 
 **Postcondition:** 
+- Le CL peut naviguer en étant connecté.
 
 **Cas alternatifs:**
-- 1.a Le CL possède déjà un compte.
-- 5.b Le courriel et le mot de passe ne correspondent pas à un compte existant.
+- 1.
+	a) Le CL possède déjà un compte, le système rejette la création du compte.
+- 6.
+	a) Le courriel et le mot de passe ne correspondent pas à un compte existant, le système rejette l'authentification.
 
 **Attributs de qualité**
 
 #### CU04-D1 [**Disponibilité**](#add-disponibilité) 
-Ce service doit être disponible uniquement si les autres microservices le sont aussi.
+*Détection de fautes*
+- Doit répondre au ping/echo du service de monitoring.
+
+*Détection de fautes*
+- Si la copie passive (warm) ne reçoit pas de "heartbeat" pendant un certain temps, elle devient la copie principale et averti le service discovery.
+
+*Réintroduction*
+- Redémarrer le service qui s'est arrêté et il devient une copie passive (warm).
+
+*Prévention de fautes*
+- Dans le cas d’une perte de connexion avec la base de données, garder les opérations en mémoire et effectuer une synchronisation.
+
 #### CU04-M1 [**Modifiabilité**](#add-modifiabilité)
-N/a
+*Réduire le couplage*
+- Chaque module du système reste de petite taille.
+
+*Augmenter la cohésion*
+- Chaque module du système d'authentification a un rôle défini.
+
+*Defer binding*
+- Utilisation de l'injection de dépendances.
+
 #### CU04-P1 [**Performance**](#add-performance) 
-Ce service doit pouvoir permettre à l'utilisateur d'être connecté moins de 5 secondes après avoir cliqué sur le bouton de connexion.
+*Contrôler la demande en ressources*
+- Utilisation d'une couche de “cache” afin d’éviter de contacter la base de données trop souvent.
+
 #### CU04-S1 [**Sécurité**](#add-sécurité)
-Ce service doit encrypter l'information du mot de passe des utilisateurs.
+*Détecter les attaques*
+- Conserver les adresses IP reçues précédemment pour les analyser.
+
+*Résister aux attaques*
+- Encrypter l'information du mot de passe des utilisateurs.
+- Refuser les requêtes reçues par les adresses IP inconnues lors du login.
+
+*Réagir aux attaques*
+- Refuser l'accès après 3 demandes d'authentification erronées avec un minuteur.
+
 #### CU04-T1 [**Testabilité**](#add-testabilité) 
-TODO
+*Contrôle et observe l’état du système*
+- Utilisation de sources de données abstraites, pour pouvoir facilement injecter des "mocks" avec l’injection de dépendances.
+
+*Limiter la complexité*
+- Utilisation d’injection de dépendances pour bien cibler les responsabilités des modules et pouvoir les tester indépendamment.
+
 #### CU04-U1 [**Usabilité**](#add-usabilité)
-Ce service doit être intuitif et suivre les normes des pages de connexion des applications en utilisant une adresse courriel et un mot de passe.
+*Convivialité*
+- Ce service doit être intuitif et suivre les normes des pages de connexion des applications en utilisant une adresse courriel et un mot de passe.
+
 #### CU04-I1 [**Interopérabilité**](#add-interopérabilité)
- N/a
+*Localiser*
+- Utilisation du service de découverte pour communiquer avec les autres micro services.
 
 **Commentaires:**
 
-### **CU05** - Veux pouvoir ajouter un endroit favori.
 
+### **CU05** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>
 
 **Acteurs externe:** 
-- **Chargé de laboratoire:** Veut pouvoir faire la correction de chaque cas d'utilisation.
 
-**Précondition:**
-- tous les microservices sont opérationnels.
-- L'utilisateur est connecté.
+**Précondition:** 
 
 **Évènement déclencheur:** 
-- La documentation pour cet attribut est terminée et l'équipe demande au chargé de laboratoire de corriger celle-ci. 
-- L'implémentation est complétée est l'équipe demande au chargé de laboratoire de corriger celle-ci.
 
 **Scénario**
-
 
 **Évènement résultant:**
 
@@ -349,35 +369,29 @@ Ce service doit être intuitif et suivre les normes des pages de connexion des a
 **Attributs de qualité**
 
 #### CU05-D1 [**Disponibilité**](#add-disponibilité) 
-
+<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
 #### CU05-M1 [**Modifiabilité**](#add-modifiabilité)
-
+<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
 #### CU05-P1 [**Performance**](#add-performance) 
-
+<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
 #### CU05-S1 [**Sécurité**](#add-sécurité)
-
+<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
 #### CU05-T1 [**Testabilité**](#add-testabilité) 
-
+<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
 #### CU05-U1 [**Usabilité**](#add-usabilité)
-
+<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
 #### CU05-I1 [**Interopérabilité**](#add-interopérabilité)
-
+<span style="color:red">Définir l'exigence que qualité associé à ce scénario ou N/a</span>
 
 **Commentaires:**
 
-### **CU06** - Veux pouvoir se déconnecter.
-
+### **CU06** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>
 
 **Acteurs externe:** 
-- **Chargé de laboratoire:** Veut pouvoir faire la correction de chaque cas d'utilisation.
 
-**Précondition:**
-- tous les microservices sont opérationnels.
-- L'utilisateur est connecté.
+**Précondition:** 
 
 **Évènement déclencheur:** 
-- La documentation pour cet attribut est terminée et l'équipe demande au chargé de laboratoire de corriger celle-ci. 
-- L'implémentation est complétée est l'équipe demande au chargé de laboratoire de corriger celle-ci.
 
 **Scénario**
 
@@ -1160,4 +1174,3 @@ Voici quelques exemples de documentation d'interface utilisant ce gabarit:
 <!--stackedit_data:
 eyJoaXN0b3J5IjpbNDU4ODUwNzIwXX0=
 -->
-
