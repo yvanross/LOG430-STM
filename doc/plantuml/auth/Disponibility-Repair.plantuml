@@ -1,0 +1,23 @@
+@startuml RDTQ Disponbilité : Préparation et réparation
+
+participant "Copie secondaire : Authentication Microservice" as copy
+participant "Copie principale : Authentication Microservice" as main
+participant ": Service Registry" as service
+
+note over copy, service : Tactique : Passive redundancy
+note over copy
+Considere que la copie
+principale n'est plus disponible
+et connait son pid et url
+end note
+activate copy
+activate main
+note over of main : Peut encore exister
+copy -> main : kill
+destroy main
+copy -> service : register(copyUrl)
+copy -> service : unregister(mainUrl)
+copy -> copy : listenForCalls()
+note over copy : Est maintenant la copie principale
+ref over copy : voir Disponibilité : Réintroduction
+@enduml

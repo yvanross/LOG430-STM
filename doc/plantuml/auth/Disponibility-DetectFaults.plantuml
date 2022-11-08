@@ -1,0 +1,23 @@
+@startuml RDTQ Disponbilité : Détection de faute
+
+participant "Copie secondaire : Authentication Microservice" as copy
+participant "Copie principale : Authentication Microservice" as main
+
+note over copy, main : Tactique : Heartbeat
+note over main : Connaît l'url de la copie secondaire
+activate copy
+activate main
+copy -> copy : setTimeout(maxTimeBetweenHeartbeats)
+loop Toujours
+  main -> copy : heartbeat()
+  copy -> copy : resetTimer()
+end
+opt Pas de heartbeat depuis x secondes
+note right of copy
+On considère que la copie 
+principale n'est plus disponible
+end note
+ref over copy, main : voir Disponibilité : Préparation et réparation
+end
+
+@enduml

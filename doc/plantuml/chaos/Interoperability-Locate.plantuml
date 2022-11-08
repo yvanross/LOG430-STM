@@ -1,0 +1,20 @@
+@startuml RDTQ Interopérabilité : Localiser
+
+actor ": Utilisateur" as user
+participant ": Chaosmonkey" as chaos
+participant ": Service Registry" as services
+participant "Service 1 : Microservice" as s1
+
+note over user, s1 : Tactique : Discover service
+activate chaos
+activate services
+activate s1
+user -> chaos : getServices()
+chaos -> services : getServices()
+services --> chaos : services
+chaos --> user : services
+user -> chaos : kill(service1)
+chaos -> s1 : kill()
+destroy s1
+
+@enduml

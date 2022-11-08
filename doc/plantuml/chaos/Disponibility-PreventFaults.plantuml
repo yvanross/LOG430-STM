@@ -1,0 +1,30 @@
+@startuml RDTQ Disponbilité : Prévention de fautes
+
+actor "Utilisateur 1 : Utilisateur" as user1
+actor "Utilisateur 2 : Utilisateur" as user2
+participant ": Chaosmonkey" as chaos
+participant ": Service Registry" as services
+participant "Service 1 : Microservice" as s1
+
+note over user1, s1 : Tactique : Increase competence set
+activate chaos
+activate services
+activate s1
+user1 -> chaos : getServices()
+chaos -> services : getServices()
+services --> chaos : services
+chaos -> chaos : saveToCache(services)
+chaos --> user1 : services
+user2 -> chaos : getServices()
+opt Connexion perdue avec le service registry
+  destroy services
+  chaos -x services : getServices()
+  chaos -> chaos : services = getFromCache()
+  chaos --> user2 : services
+  user2 -> chaos : kill(service1)
+  chaos -> s1 : kill()
+  destroy s1
+end
+
+
+@enduml

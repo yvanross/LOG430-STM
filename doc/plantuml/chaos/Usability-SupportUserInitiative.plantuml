@@ -1,0 +1,34 @@
+@startuml Usabilité : Suuporter l'initiative de l'usager
+
+actor ": Utilisateur" as user
+participant ": Chaosmonkey" as chaos
+participant ": Service Registry" as services
+participant "Service1 : Microservice" as s1
+participant "Service2 : Microservice" as s2
+participant "Service3 : Microservice" as s3
+
+note over user, s3 : Tactique : Aggregate
+
+activate chaos
+activate services
+activate s1
+activate s2
+activate s3
+
+user -> chaos : getServices()
+chaos -> services : getServices()
+services --> chaos : services
+chaos --> user : services
+
+user -> chaos : kill([service1, service2, service3])
+chaos -> s1 : kill()
+destroy s1
+chaos -> s2 : kill()
+destroy s2
+chaos -> s3 : kill()
+destroy s3
+
+
+
+
+@enduml
