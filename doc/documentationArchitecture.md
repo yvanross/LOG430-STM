@@ -717,7 +717,7 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 </div>
 <span style="color:red">Quelle tactique avez vous choisi et pourquoi?</span>
 
-ADD-Gérer les ressources
+### ADD-[Gérer les ressources](#rdtq-gérer-les-ressources)
 <div class="concept performance">
 
 |Concept de design| Pour | Contre| Valeur | Cout|
