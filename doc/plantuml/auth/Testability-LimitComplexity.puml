@@ -1,0 +1,90 @@
+@startuml
+title RDTQ Testabilité : Limiter la Complexité du Système\nTactique: Limiter la Complexité Structurelle
+
+
+note as n
+Chaque module a des résponsabilités bien définies,
+et sont très peu dépendants les uns des autres.
+Ils sont très cohésifs et très peu couplés entre eux.
+Il n'y a pas de polymorphisme ou d'abstraction,
+seulement des appels dynamiques.
+end note
+class AuthController {
+login(username: string, password: string): Token
+signup(username: string, password: string): Token
+authorization(token: Token): boolean
+}
+
+class JWT {
+generateToken(): Token
+authorizeToken(): boolean
+}
+
+class Validation {
+usernameValidation(username: string): boolean
+passwordValidation(password: string): boolean
+}
+
+class DBAuth {
+login(username: string, password: string): boolean
+signup(username: string, password: string): boolean
+}
+
+class Token {
+token: string
+}
+
+AuthController ..> JWT
+AuthController ..> Validation
+AuthController ..> DBAuth
+
+
+@enduml
+
+
+skinparam linetype ortho
+skinparam nodesep 100
+skinparam ranksep 100
+left to right direction
+
+
+component :AuthController {
+portout login as al
+portout signup as as
+portout verify as av
+
+}
+
+component :JWT {
+portin generateToken
+portin verifyToken
+}
+
+component ":UsernameAndPasswordValidation" as val {
+
+}
+
+as --> generateToken
+al --> generateToken
+av --> verifyToken
+as --> val
+al --> val
+
+database "MongoDB" {
+    component :AuthDB {
+    portin login as da
+    portin signup as ds
+
+    component ":User" as us
+    }
+
+    da --> us
+    ds --> us
+}
+
+al --> da
+as --> ds
+
+
+
+@enduml

@@ -1,4 +1,5 @@
-@startuml RDTQ Interopérabilité : Localiser
+@startuml
+title RDTQ Interopérabilité : Localiser
 
 actor ": Utilisateur" as user
 participant ": Chaosmonkey" as chaos

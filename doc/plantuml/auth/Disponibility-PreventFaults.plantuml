@@ -1,4 +1,5 @@
-@startuml RDTQ Disponbilité : Prévention de fautes
+@startuml
+title RDTQ Disponbilité : Prévention de fautes
 
 actor ": Utilisateur" as user
 participant ": Authentication Microservice" as auth

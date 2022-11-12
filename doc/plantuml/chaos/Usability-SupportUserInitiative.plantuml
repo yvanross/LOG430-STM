@@ -1,4 +1,5 @@
-@startuml Usabilité : Suuporter l'initiative de l'usager
+@startuml
+title Usabilité : Suuporter l'initiative de l'usager
 
 actor ": Utilisateur" as user
 participant ": Chaosmonkey" as chaos

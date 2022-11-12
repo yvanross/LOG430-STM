@@ -1,0 +1,32 @@
+@startuml
+title RDTQ Testabilité : Contrôle et Observation de l'État du Système\nTactique : Utilisation de Sources de données abstraites
+
+
+
+
+actor ": Utilisateur" as user
+participant ": AuthController" as auth
+participant ": ValidationService" as val
+database ": MongoDB" as db
+participant ": JWTService" as jwt
+
+note over user, jwt : Tactique : Abstract Data Sources
+
+activate auth
+activate jwt
+activate val
+activate db
+user -> auth : login(username, password)
+note left : Scénario de login d'un utilisateur\nChaque module est indépendant les uns des autres,\navec des interfaces bien définies.\nIls peuvent donc être mockés pour être testés indépendamment.\nNous pouvons clairement voir les différentes couches\nqui sont indépendants les uns des autres.
+
+auth -> val : usernameValidation(username)
+val --> auth : true
+auth -> val : passwordValidation(password)
+val --> auth : true
+auth -> db : login(username, password)
+db --> auth : true
+auth -> jwt : generateToken()
+jwt --> auth : token
+auth --> user : token
+
+@enduml

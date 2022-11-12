@@ -1,4 +1,5 @@
-@startuml RDTQ Sécurité : Résister aux attaques
+@startuml
+title RDTQ Sécurité : Résister aux attaques
 
 actor ": Utilisateur" as user
 participant ": Chaosmonkey" as chaos

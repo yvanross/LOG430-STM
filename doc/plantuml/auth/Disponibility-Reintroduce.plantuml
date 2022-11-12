@@ -1,10 +1,11 @@
-@startuml RDTQ Disponbilité : Préparation et réparation
+@startuml
+title RDTQ Disponbilité : Préparation et réparation
 
 participant "Copie principale : Authentication Microservice" as main
 participant "Nouvelle Copie : Authentication Microservice" as copy
 
 note over main, copy : Tactique : State resynchronization
-note over main 
+note over main
 Ancienne copie secondaire,
 maintenant principale
 end note

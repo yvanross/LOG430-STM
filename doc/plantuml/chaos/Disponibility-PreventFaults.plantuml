@@ -1,4 +1,5 @@
-@startuml RDTQ Disponbilité : Prévention de fautes
+@startuml
+title RDTQ Disponbilité : Prévention de fautes
 
 actor "Utilisateur 1 : Utilisateur" as user1
 actor "Utilisateur 2 : Utilisateur" as user2
