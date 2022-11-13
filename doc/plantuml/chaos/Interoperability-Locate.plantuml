@@ -1,4 +1,4 @@
-@startuml
+@startuml RDTQ Interopérabilité : Localiser
 title RDTQ Interopérabilité : Localiser
 
 actor ": Utilisateur" as user

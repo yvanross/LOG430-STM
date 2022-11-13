@@ -1,5 +1,5 @@
-@startuml
-title Usabilité : Suuporter l'initiative de l'usager
+@startuml Convivialité : Supporter l'initiative de l'usager
+title Convivialité : Supporter l'initiative de l'usager
 
 actor ": Utilisateur" as user
 participant ": Chaosmonkey" as chaos
