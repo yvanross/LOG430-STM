@@ -1,12 +1,15 @@
-@startuml RDTQ Sécurité : Détecter les attaques
+@startuml RDTQ Sécurité : Résister aux attaques
 
 actor ": Utilisateur" as user
 participant ": AuthController" as auth
 
-note over user, auth : Tactique : Détecter l'intrusion
+note over user, auth : Tactique : Identifier les acteurs
 activate auth
 user -> auth : login(username, password)
-auth -> auth : failLimiter.consume(usernameIPkey).then((failCheck)
-auth -->> auth : catch(err)
+auth -> auth : catch(error)
+auth -> auth : res.set(message, time)
+auth -->> auth : return send.TOO_MANY_REQUESTS_429(res)
+
+
 
 @enduml
