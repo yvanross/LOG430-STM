@@ -735,7 +735,7 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 
 |Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
-| <li>Détecter l'intrusion</li>|Permet d'identifier des motifs récurrents et connaitre les bons utilisateurs| Pourrait refuser l'accès à un utilisateur légitime|M|M|
+| <li>Détecter l'intrusion</li>|Permet d'identifier des motifs récurrents et connaitre les bons utilisateurs| Aucun dans ce contexte|M|M|
 | <li>Vérifier l'intégrité du message</li>|Un très petit changement sera détecté| Difficile dans le cas de l'authentification|M|M|
 </div>
 <span>Nous avons choisi la tactique "Détecter l'intrusion" puisqu'elle est une bonne manière de reconnaître un utilisateur qui n'est pas normal et qu'elle est simple à implémenter en comparant les adresses IP</span>
@@ -745,11 +745,11 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 
 |Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
-| <li>tactique 1</li>|avantages| désavantages|M|M|
-| <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 3</li>|avantages| désavantages|M|M|
+| <li>Identifier les acteurs</li>|L'identification permet de facilement refuser un utilisateur anormal| Pourrait refuser l'accès à un utilisateur légitime|M|M|
+| <li>Limiter l'accès</li>|Permet de résister aux utilisateurs mal intentionnés| Tous les utilisateurs doivent avoir accès au service|M|M|
+| <li>Encrypter les données</li>|Permet de garantir que les données des utilisateurs ne sont pas volées|L'encryption n'est pas sans failles|M|M|
 </div>
-<span style="color:red">Quelle tactique avez vous choisi et pourquoi?</span>
+<span>Nous avons choisi la tactique "Identifier les acteurs" puisque malgré qu'il y ait un risque qu'un utilisateur légitime se voit refuser l'accès, cette technique est sécuritaire et s'applique bien au contexte de l'authentification où les utilisateurs reviennent plus d'une fois.</span>
 
 
 ### ADD-[Réagir aux attaques](#rdtq-réagir-aux-attaques)
@@ -757,22 +757,19 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 
 |Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
-| <li>tactique 1</li>|avantages| désavantages|M|M|
-| <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 3</li>|avantages| désavantages|M|M|
+| <li>Barrer l'ordinateur</li>|Barrer le site assure qu'aucune autre attaque n'ait lieu| plus aucun utilisateur ne peut accéder au service|M|M|
+| <li>Révoquer l'accès</li>|Permet de protéger le service d,une personne qui essaie plusieurs mots de passes| pourrait bloquer un utilisateur légitime qui a oublié son mot de passe|M|M|
 </div>
-<span style="color:red">Quelle tactique avez vous choisi et pourquoi?</span>
+<span>Nous avons choisi la tactique "Révoquer l'accès" puisqu'un utilisateur qui oublie son mot de passe peut potentiellement créer un autre compte, tandis qu'une attaque sera certainement bloquée.</span>
 
 ### ADD-[Récupérer d'une attaque](#rdtq-récupérer-dune-attaque)
 <div class="concept securite">
 
 |Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
-| <li>tactique 1</li>|avantages| désavantages|M|M|
-| <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 3</li>|avantages| désavantages|M|M|
+| <li>Maintenir une piste d'audits</li>|La piste d'audits permet de retracer les attaqueurs| ne change pas le système si des dommages ont été faits|M|M|
 </div>
-<span style="color:red">Quelle tactique avez vous choisi et pourquoi?</span>
+<span>Nous avons choisi la tactique "Maintenir une piste d'audits"</span>
 
 
 ## ADD-[Testabilité](#rdaq-testabilité)
