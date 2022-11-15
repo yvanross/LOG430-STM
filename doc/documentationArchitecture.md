@@ -811,38 +811,30 @@ La deuxième raison est qu'il a été facile d'implémenter cette tactique pour
 ## ADD-[Usabilité](#rdaq-usabilité)
   |Identifiant|Description|
   |-----------|------------|
-  |[CU01-U1](#cu01-u1-usabilité) |
-  |[CU02-U1](#cu02-u1-usabilité) |
-  |[CU03-U1](#cu03-u1-usabilité) |
-  |[CU04-U1](#cu04-u1-usabilité) |
-  |[CU05-U1](#cu05-u1-usabilité) |
-  |[CU06-U1](#cu06-u1-usabilité) |
-  |[CU07-U1](#cu07-u1-usabilité) |
-  |[CU08-U1](#cu08-u1-usabilité) |
-  |[CU09-U1](#cu09-u1-usabilité) |
-  |[CU10-U1](#cu10-u1-usabilité) |
+  |[CU02-U1](#cu02-u1-usabilité) |Attribut de l'utilisabilité permettant une utilisation facile du microservice de Chaosmonkey|
 
 ### ADD-[Supporter l'initiative de l'usager](#rdtq-supporter-linitiative-de-lusager)
 <div class="concept usabilite">
 
 |Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
-| <li>tactique 1</li>|avantages| désavantages|M|M|
-| <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 3</li>|avantages| désavantages|M|M|
+| <li>Cancel</li>|<li>Permettre à l'utilisateur d'annuler une erreur commise</li>| <li>Ajoute beaucoup de complexité à l'exécution de la requête</li>|M|H|
+| <li>Undo</li>|<li>Permettre à l'utilisateur d'annuler une erreur commise</li>| <li>Ajoute beaucoup de complexité à l'exécution de la requête</li>|M|H|
+| <li>Pause/Resume</li>|<li>Permettre à l'utilisateur de valider que sa commande est correcte avant de continuer</li>| <li>Ajoute beaucoup de complexité à l'exécution de la requête</li>|M|H|
+| <li>Aggregate</li>|<li>Permet à l'utilisateur d'effectuer plusieurs actions en même temps, ce qui réduit le nombre de clics nécessaires</li>|<li>Ajoute un peu de complexité à l'exécution de la requête</li> |H|L|
 </div>
-<span style="color:red">Quelle tactique avez vous choisi et pourquoi?</span>
+<span>Nous avons choisi d'utiliser la tactique "Aggregate", puisqu'elle est la plus simple à implémenter et que la valeur ajoutée est plus grande. En effet, toutes les autres tactiques se concentrent sur la modification d'une requête après son envoi, ce qui est moins utile dans notre contexte puisque la simplicité des requêtes réduit le risque d'erreurs. Il est ainsi plus utile de pouvoir permettre à l'utilisateur de réduire le nombre de clics pour affecter plusieurs microservices, ce qui réduit également le nombre d'erreurs.</span>
 
 ### ADD-[Supporter l'initiative du système](#rdtq-supporter-linitiative-du-système)
 <div class="concept usabilite">
 
 |Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
-| <li>tactique 1</li>|avantages| désavantages|M|M|
-| <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 3</li>|avantages| désavantages|M|M|
+| <li>Maintain task model</li>|N/A| Ne s'applique pas|L|M|
+| <li>Maintain user model</li>|N/A| Ne s'applique pas|L|M|
+| <li>Maintain system model</li>|<li>Permet à l'utilisateur de connaître l'état de sa requête</li>| <li>Ajoute beaucoup de complexité au système</li>|M|H|
 </div>
-<span style="color:red">Quelle tactique avez vous choisi et pourquoi?</span>
+<span>On ne peut pas utiliser la tactique "Maintain task model" puisque la tâche à effectuer par l'utilisateur est beaucoup trop simple pour en bénéficier, et on ne peut pas utiliser la tactique "Maintain user model" pour la même raison. On doit donc utiliser la tactique "Maintain system model", implémentée de manière à pouvoir fournir à l'utilisateur l'état d'une requête. Cette tactique demande cependant beaucoup d'effort à implémenter puisque l'on doit retourner à l'utilisateur une manière de suivre l'état de sa requête avant la complétion de celle-ci, ce qui demande d'ajouter des tâches en arrière-plan.</span>
 
 ## ADD-[Interopérabilité](#rdaq-interopérabilité)
   |Identifiant|Description|

@@ -7,7 +7,7 @@ participant "Service1 : Microservice" as s1
 participant "Service2 : Microservice" as s2
 participant "Service3 : Microservice" as s3
 
-note over user, s3 : Tactique : Maintain Task Model
+note over user, s3 : Tactique : Maintain System Model
 
 activate chaos
 activate s1
