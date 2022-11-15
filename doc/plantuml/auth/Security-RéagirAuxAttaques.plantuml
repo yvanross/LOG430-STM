@@ -1,0 +1,16 @@
+@startuml RDTQ Sécurité : Réagir aux attaques
+
+actor ": Utilisateur" as user
+participant ": AuthController" as auth
+
+note over user, auth : Tactique : Révoquer l'accès
+activate auth
+user -> auth : login(username, password)
+opt failCheck !== null && failCheck.consumedPoints > maxFails
+  auth -> auth : set retrySecs
+  auth -->> auth : return retrySecs
+end
+
+
+
+@enduml
