@@ -777,41 +777,39 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 
 
 ## ADD-[Testabilité](#rdaq-testabilité)
-  |Identifiant|Description|
-  |-----------|------------|
-  |[CU01-T1](#cu01-t1-testabilité)|  | 
-  |[CU02-T1](#cu02-t1-testabilité)|  | 
-  |[CU03-T1](#cu03-t1-testabilité)|  | 
-  |[CU04-T1](#cu04-t1-testabilité)|  | 
-  |[CU05-T1](#cu05-t1-testabilité)|  | 
-  |[CU06-T1](#cu06-t1-testabilité)|  | 
-  |[CU07-T1](#cu07-t1-testabilité)|  | 
-  |[CU08-T1](#cu08-t1-testabilité)|  | 
-  |[CU09-T1](#cu09-t1-testabilité)|  | 
-  |[CU10-T1](#cu10-t1-testabilité)|  | 
+
+  | Identifiant                     | Description                           |
+---------------------------------|---------------------------------------|------------|
+  | [CU04-T1](#cu04-t1-testabilité) | Ce service est concerné. | 
 
 ### ADD-[Controle and observe l'état du système](#rdtq-contrôle-et-observe-létat-du-système)
 <div class="concept testabilite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
-|-----------------|------|-------|--------|-----|
-| <li>tactique 1</li>|avantages| désavantages|M|M|
-| <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 3</li>|avantages| désavantages|M|M|
+| Concept de design               | Pour                                                                                                                                                                 | Contre                                                                                                | Valeur | Cout |
+|---------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|--------|------|
+| <li>Abstract Data Sources</li>  | <li>Isolation des modules importants</li><li>Encourage cohésion</li><li>Encourage indépendance des modules</li><li>Encourage meilleur définition des interfaces</li> | <li>Il faut déterminer quels modules sont concernés. La limite, frontière peut être floue.</li>     | H      | M    |
+| <li>Specialized Interfaces</li> | <li>Très utile dans de nombreux scénarios</li><li>Encourage généralisation et standardisation des modules</li>                                                      | <li>Peu utile dans notre microservice d'authentification pour du test</li><li>"Bloating" du code</li> | B      | B    |
+| <li>Sandbox</li>                | <li>Isolation complète</li><li>Forte cohésion</li>                                                                                                                  | <li>Impossible de tester les modules indépendamment</li>                                              | M      | H    |
 </div>
-<span style="color:red">Quelle tactique avez vous choisi et pourquoi?</span>
+<span style="color:red">Nous avons choisi Abstract Data Sources.
+Cette tactique a été peu coûteuse à implémenter, car nous avons pensé notre système autour de modules indépendants dès le départ (Separation of Concerns).
+Il a just fallu déterminer quels modules devraient êtres testés et si cette tactique pouvait être appliquée à ceux ci ou non.
+De plus, cette tactique rapporte la plus haute valeur ajoutée à note application.
+Non seulement elle est plus testable, mais également plus modifiable et plus maintenable.
+Cette tactique a donc la plus haute valeur ajoutée.</span>
 
 ### ADD-[Limiter la complexité](#rdtq-limiter-la-complexité)
 
 <div class="concept testabilite">
 
-|Concept de design| Pour | Contre| Valeur | Cout|
-|-----------------|------|-------|--------|-----|
-| <li>tactique 1</li>|avantages| désavantages|M|M|
-| <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 3</li>|avantages| désavantages|M|M|
+| Concept de design                    | Pour                                                                                                           | Contre                                                                                                                                      | Valeur | Cout |
+|--------------------------------------|----------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|--------|------|
+| <li>Limit Structural Complexity</li> | <li>Permet d'accomplir d'autres AQs comme Modifiabilité</li><li>Réduit couplage</li><li>Augmente cohésion</li> | <li>Complexe à mettre en oeuvre en général</li><li>Risque d'entrer en contradiction avec d'autres patterns utilisant le polymorphisme</li> | H      | M    |
+| <li>Limit Nondeterminism</li>        | <li>Augmente prédictabilité du système</li>                                                                   | <li>Pas applicable dans le cadre d'un service d'authentification/autorisation</li>                                                          | B      | M    |
 </div>
-<span style="color:red">Quelle tactique avez vous choisi et pourquoi?</span>
+<span style="color:red">Nous avons choisi Limit Structural Complexity. Ce choix a été assez rapide, pour 2 raisons principales.
+La première, la tactique de limiter le nondéterminisme ne s'applique peu, voir pas du tout, dans le cadre d'un microservice d'authentification et d'authorisation, qui est déterministe par définition (un login correspond à un token qui est unique. Il ne peut pas en générer un autre à un même instant T).
+La deuxième raison est qu'il a été facile d'implémenter cette tactique pour notre système, facielement découpable en modules indépendants, très cohésifs avec peu de couplage.</span>
 
 
 ## ADD-[Usabilité](#rdaq-usabilité)

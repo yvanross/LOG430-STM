@@ -1,0 +1,39 @@
+@startuml RDTQ Interopérabilité : Gérer les interfaces
+title RDTQ Interopérabilité : Gérer les interfaces
+
+actor "Utilisateur : Utilisateur" as user
+actor "Poweruser : Utilisateur" as poweruser
+participant ": Chaosmonkey" as chaos
+participant ": Service Registry" as services
+participant "Service 1 : Microservice" as s1
+participant "Service 2 : Microservice" as s2
+participant "Service 3 : Microservice" as s3
+
+note over user, s3 : Tactique : Tailor interface
+activate chaos
+activate services
+activate s1
+activate s2
+activate s3
+
+user -> chaos : kill([service1, service2])
+note left of chaos
+L'utilisateur n'est pas un poweruser,
+il ne peut donc pas faire du batching
+end note
+chaos -> user : Status 401. Batching not allowed.
+user -> chaos : kill(service1)
+chaos -> s1 : kill()
+destroy s1
+
+poweruser -> chaos : kill([service2, service3])
+note left of chaos
+L'utilisateur est un poweruser,
+on ajoute la fonctionnalité de
+batching à l'interface
+end note
+chaos -> s2 : kill()
+destroy s2
+chaos -> s3 : kill()
+destroy s3
+@enduml

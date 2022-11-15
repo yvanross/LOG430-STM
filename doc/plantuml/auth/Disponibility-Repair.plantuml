@@ -1,4 +1,5 @@
-@startuml RDTQ Disponbilité : Préparation et réparation
+@startuml
+title RDTQ Disponbilité : Préparation et réparation
 
 participant "Copie secondaire : Authentication Microservice" as copy
 participant "Copie principale : Authentication Microservice" as main
