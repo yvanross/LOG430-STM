@@ -25,7 +25,7 @@ usernameValidation(username: string): boolean
 passwordValidation(password: string): boolean
 }
 
-class DBAuth {
+class AuthDB {
 login(username: string, password: string): boolean
 signup(username: string, password: string): boolean
 }
@@ -36,7 +36,7 @@ token: string
 
 AuthController ..> JWT
 AuthController ..> Validation
-AuthController ..> DBAuth
+AuthController ..>AuthDB
 
 
 @enduml

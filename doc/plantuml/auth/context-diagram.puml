@@ -1,0 +1,26 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+package "LOG430-STM - Microservices" {
+  [Authentification] as a
+  [Chaos Monkey] as c
+  [Trajet] as t
+  [Discovery] as d
+  [Monitoring] as m
+
+}
+
+cloud "Services Externes" as se {
+}
+
+actor "Chargé de Laboratoire .. 1" as cl
+t --> se
+
+cl --> d
+d --> a
+d --> t
+d --> c
+d --> m
+m --> d : "ping/echo"
+
+@enduml

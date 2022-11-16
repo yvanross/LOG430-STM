@@ -564,12 +564,57 @@ Documenter l'ensemble des attributs de qualité qui s'appliquent à ce scénario
 
 <span style="color:red">Utiliser le gabarit suivant: https://wiki.sei.cmu.edu/confluence/display/SAD/Template%3AArchitectureViewTemplate</span>
 ## Présentation primaire
-## Catalogue d'éléments
-## <s>Diagramme de contexte</s> Pas nécessaire puisque c'est déja un vue de contexte
-## Guide de variabilité
-## Raisonnement
-## <s>Vues associées</s> pas nécessaire puisque c'est la première vue que vous réalisé pour votre système.
+```plantuml
+@startuml
+'https://plantuml.com/component-diagram
 
+package "LOG430-STM - Microservices" {
+[Authentification] as a
+[Chaos Monkey] as c
+[Trajet] as t
+[Discovery] as d
+[Monitoring] as m
+
+}
+
+cloud "Services Externes" as se {
+}
+
+actor "Chargé de Laboratoire .. 1" as cl
+t --> se
+
+cl --> d
+d --> a
+d --> t
+d --> c
+d --> m
+m --> d : "ping/echo"
+
+@enduml
+```
+## Catalogue d'éléments
+| Élement               | Description                                                                                                                                                                                                                                                                                                                                                                                                                            | lien vers document d'interfaces |
+|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
+| Monitoring            | Ce microservice a en charge le monitoring du système en entier, afin de surveiller son bon fonctionnement et d'alerter les autres microservices en cas de panne ou de problème. Les autres microservices doivent s'enregistrer auprès de ce dernier, afin qu'il puisse les ping de temps à autre, en attendant une réponse de ces derniers.                                                                                        | http://www.etsmtl.ca            |
+| Chaos Monkey          | Ce microservice a été créé pour perturber les autres microservices, en simulant une panne. Il est utilisé pour les tuer, forçant la bonne implémentation du redémarrage ainsi que de s'assurer de la disponibilité du service.                                                                                                                                                                                                        |                                 |
+| Discovery             | Le service Discovery est un patron d'architecture utilisé pour simplifier l'interaction entre un élément du système et un autre. Il agit comme une façade, centralisant toutes les interactions entre les différents microservices, ainsi que les acteurs utilisant le système. Le chargé de laboratoire ne pourra accéder aux autres microservices uniquement via ce service, afin de respecter l'esprit du patron.                |                                 |
+| Authentification      | Ce service d'authentification et d'autorisation sert à verifier que l'utilisation du système par un utilisateur est sincère est justifié. L'utilisateur concerné doit alors s'authentifier dans le système avant de pouvoir effectuer une action, qui devra être autorisée par ce microservice. Les informations essentielles seront stockées dans une base de données afin d'assurer la persistence et la continuité du service. |                                 |
+| Trajet                | Ce microservice est le point central de nos objectifs d'affaires pour les utilisateurs, Effectuer et comparer un trajet. Ce service contient la logique métier pour réaliser cette opération, en interargissant avec les services externes appropriés  afin de récolter les informations ainsi que pour "process" la requête du client et lui retourner les informations voulues.                                                     |                                 |
+| Services Externes     | Cet élément représente l'ensemble des services avec lesquels le microservice de trajet devra communiquer pour récupérer les informations pertinentes. Il s'agit par exemple des horaires de la STM.                                                                                                                                                                                                                                    |                                 |
+| Chargé de Laboratoire | Le chargé de Laboratoire est le principal utilisateur du système, chargé de vérifier son bon fonctionnement et de corriger les étudiants sur le travail qui a été accompli sur ce système.                                                                                                                                                                                                                                           |                                 |
+
+## Guide de variabilité
+### Services Externes
+Les services externes sont configurables, divers et variés, ne s'agissant pas d'un seul service centralisé. Il peut s'agir de Google Maps, de la STM, etc. Ces différents services sont interchangeables et leur accès configurable.
+### Base de Données pour l'authentification
+Les paramètres pour l'accès à la base de données contenant les éléments pour l'identification, l'authentification et l'autorisation des utilisateurs est configurable via un fichier de configuration. Ces paramètres prennent la forme d'une URL.
+### Ajout ou Retrait d'un microservice
+Dans le cas du service de Chaos Monkey, du service de monitoring ainsi que du service Discovery, les différents microservices devant êtres appelés/notifiés/retournés/etc doivent d'abord êtres enregistrés auprès de ces derniers, via les routes correspondantes.
+## Raisonnement
+### Architecture Microservices
+Une architecture microservices a été choisir pour une meilleure répartition de la charge de travail entre les différentes équipes. En effet, chaque microservice est indépendant et hautement cohésif, seule une interface commune doit être négociée et documentée pour être partagée avec les autres équipes dans un but commun. Cela permet une meilleure lisibilité du système et une plus grande harmonie, ainsi qu'une répartion équilibrée.
+### Patron Discovery
+Le patron d'architecture Discovery a été choisi afin d'agir comme un Guichet Unique. Dans le cadre d'une architecture microservices, cela a un grand avantage, qui est une meilleure accessibilité pour l'utilisateur, n'ayant qu'un intermédiaire avec qui communiquer, mais aussi pour les autres services : Chaque requête doit être faite via ce microservice avant d'atteindre le service demandé. Cela augmente la clarté pour les équipes de développement, n'ayant qu'un intermédiaire avec qui communiquer, diminue le couplage et augmente le potentiel de scalability du système.
 
 # Conception axée sur les attributs de qualité
 A partir des qualités associées à tous vos cas d'utilisation, réaliser un mini ADD pour comparer les différents tactiques et identifier clairement la raison de votre choix.
@@ -778,9 +823,19 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 
 ## ADD-[Testabilité](#rdaq-testabilité)
 
-  | Identifiant                     | Description                           |
----------------------------------|---------------------------------------|------------|
-  | [CU04-T1](#cu04-t1-testabilité) | Ce service est concerné. | 
+| Identifiant                     | Description              |
+|---------------------------------|--------------------------|
+| [CU01-P1](#cu01-t1-testabilité) | N/A                      |
+| [CU02-P1](#cu02-t1-testabilité) | N/A                      |
+| [CU03-P1](#cu03-t1-testabilité) | N/A                      |
+| [CU04-P1](#cu04-t1-testabilité) | Ce service est concerné. |
+| [CU05-P1](#cu05-t1-testabilité) | N/A                      |
+| [CU06-P1](#cu06-t1-testabilité) | N/A                      |
+| [CU07-P1](#cu07-t1-testabilité) | N/A                      |
+| [CU08-P1](#cu08-t1-testabilité) | N/A                      |
+| [CU09-P1](#cu09-t1-testabilité) | N/A                      |
+| [CU10-P1](#cu10-t1-testabilité) | N/A                      |
+
 
 ### ADD-[Controle and observe l'état du système](#rdtq-contrôle-et-observe-létat-du-système)
 <div class="concept testabilite">
@@ -791,12 +846,12 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 | <li>Specialized Interfaces</li> | <li>Très utile dans de nombreux scénarios</li><li>Encourage généralisation et standardisation des modules</li>                                                      | <li>Peu utile dans notre microservice d'authentification pour du test</li><li>"Bloating" du code</li> | B      | B    |
 | <li>Sandbox</li>                | <li>Isolation complète</li><li>Forte cohésion</li>                                                                                                                  | <li>Impossible de tester les modules indépendamment</li>                                              | M      | H    |
 </div>
-<span style="color:red">Nous avons choisi Abstract Data Sources.
+Nous avons choisi Abstract Data Sources.
 Cette tactique a été peu coûteuse à implémenter, car nous avons pensé notre système autour de modules indépendants dès le départ (Separation of Concerns).
 Il a just fallu déterminer quels modules devraient êtres testés et si cette tactique pouvait être appliquée à ceux ci ou non.
 De plus, cette tactique rapporte la plus haute valeur ajoutée à note application.
 Non seulement elle est plus testable, mais également plus modifiable et plus maintenable.
-Cette tactique a donc la plus haute valeur ajoutée.</span>
+Cette tactique a donc la plus haute valeur ajoutée.
 
 ### ADD-[Limiter la complexité](#rdtq-limiter-la-complexité)
 
@@ -807,9 +862,9 @@ Cette tactique a donc la plus haute valeur ajoutée.</span>
 | <li>Limit Structural Complexity</li> | <li>Permet d'accomplir d'autres AQs comme Modifiabilité</li><li>Réduit couplage</li><li>Augmente cohésion</li> | <li>Complexe à mettre en oeuvre en général</li><li>Risque d'entrer en contradiction avec d'autres patterns utilisant le polymorphisme</li> | H      | M    |
 | <li>Limit Nondeterminism</li>        | <li>Augmente prédictabilité du système</li>                                                                   | <li>Pas applicable dans le cadre d'un service d'authentification/autorisation</li>                                                          | B      | M    |
 </div>
-<span style="color:red">Nous avons choisi Limit Structural Complexity. Ce choix a été assez rapide, pour 2 raisons principales.
+Nous avons choisi Limit Structural Complexity. Ce choix a été assez rapide, pour 2 raisons principales.
 La première, la tactique de limiter le nondéterminisme ne s'applique peu, voir pas du tout, dans le cadre d'un microservice d'authentification et d'authorisation, qui est déterministe par définition (un login correspond à un token qui est unique. Il ne peut pas en générer un autre à un même instant T).
-La deuxième raison est qu'il a été facile d'implémenter cette tactique pour notre système, facielement découpable en modules indépendants, très cohésifs avec peu de couplage.</span>
+La deuxième raison est qu'il a été facile d'implémenter cette tactique pour notre système, facielement découpable en modules indépendants, très cohésifs avec peu de couplage.
 
 
 ## ADD-[Usabilité](#rdaq-usabilité)
@@ -1032,29 +1087,96 @@ La deuxième raison est qu'il a été facile d'implémenter cette tactique pour
 ## RDAQ-[Testabilité](#add-testabilité)
 
   ### [RDTQ-Contrôle et observe l'état du système](#add-controle-and-observe-létat-du-système)[](https://file%2B.vscode-resource.vscode-cdn.net/Users/yvanross/sources/log430/LOG430-STM/doc/documentationArchitecture.md#add-usabilit%C3%A9)
-  <span style="color:red">nom de la tactique</span>
-  
-  <span style="color:red">Diagramme(s) de séquence ou autre information pertinente démontrant la réalisation de(s) tactique(s)</span>
- 
+Tactique : Utilisation de Sources de données abstraites
+```plantuml
+@startuml
+
+actor ": Utilisateur" as user
+participant ": AuthController" as auth
+participant ": ValidationService" as val
+database ": MongoDB" as db
+participant ": JWTService" as jwt
+
+note over user, jwt : Tactique : Abstract Data Sources
+
+activate auth
+activate jwt
+activate val
+activate db
+user -> auth : login(username, password)
+note left : Scénario de login d'un utilisateur\nChaque module est indépendant les uns des autres,\navec des interfaces bien définies.\nIls peuvent donc être mockés pour être testés indépendamment.\nNous pouvons clairement voir les différentes couches\nqui sont indépendants les uns des autres.
+
+auth -> val : usernameValidation(username)
+val --> auth : true
+auth -> val : passwordValidation(password)
+val --> auth : true
+auth -> db : login(username, password)
+db --> auth : true
+auth -> jwt : generateToken()
+jwt --> auth : token
+auth --> user : token
+
+@enduml
+
+```
   ### [RDTQ-limiter la complexité](#add-limiter-la-complexité)
-  <span style="color:red">nom de la tactique</span>
- 
-  <span style="color:red">Diagramme(s) de séquence ou autre information pertinente démontrant la réalisation de(s) tactique(s)</span>
-  
+Tactique: Limiter la Complexité Structurelle
+```plantuml
+@startuml
+
+note as n
+Chaque module a des résponsabilités bien définies,
+et sont très peu dépendants les uns des autres.
+Ils sont très cohésifs et très peu couplés entre eux.
+Il n'y a pas de polymorphisme ou d'abstraction,
+seulement des appels dynamiques.
+end note
+class AuthController {
+login(username: string, password: string): Token
+signup(username: string, password: string): Token
+authorization(token: Token): boolean
+}
+
+class JWT {
+generateToken(): Token
+authorizeToken(): boolean
+}
+
+class Validation {
+usernameValidation(username: string): boolean
+passwordValidation(password: string): boolean
+}
+
+class AuthDB {
+login(username: string, password: string): boolean
+signup(username: string, password: string): boolean
+}
+
+class Token {
+token: string
+}
+
+AuthController ..> JWT
+AuthController ..> Validation
+AuthController ..> AuthDB
+
+
+@enduml
+```
   ### Relation entre les éléments architectuale et les exigences de testabilité
-  |Identifiant|Éléments|Description de la responabilité|
-  |-----------|--------|-------------------------------|
-  |[CU01-T1](#cu01-t1-testabilité) | |
-  |[CU02-T1](#cu02-t1-testabilité) | |
-  |[CU03-T1](#cu03-t1-testabilité) | |
-  |[CU04-T1](#cu04-t1-testabilité) | |
-  |[CU05-T1](#cu05-t1-testabilité) | |
-  |[CU06-T1](#cu06-t1-testabilité) | |
-  |[CU07-T1](#cu07-t1-testabilité) | |
-  |[CU08-T1](#cu08-t1-testabilité) | |
-  |[CU09-T1](#cu09-t1-testabilité) | |
-  |[CU10-T1](#cu10-t1-testabilité) | |
-  
+  |Identifiant| Éléments         | Description de la responabilité                               |
+  |------------------|---------------------------------------------------------------|-------------------------------|
+  |[CU01-T1](#cu01-t1-testabilité) | N/A              | N/A                                                           |
+  |[CU02-T1](#cu02-t1-testabilité) | N/A              | N/A                                                           |
+  |[CU03-T1](#cu03-t1-testabilité) | N/A              | N/A                                                           |
+  |[CU04-T1](#cu04-t1-testabilité) | Authentification | Microservice d'authentification et d'autorisation du système |
+  |[CU05-T1](#cu05-t1-testabilité) | N/A              | N/A                                                           |
+  |[CU06-T1](#cu06-t1-testabilité) | N/A              | N/A                                                           |
+  |[CU07-T1](#cu07-t1-testabilité) | N/A              | N/A                                                           |
+  |[CU08-T1](#cu08-t1-testabilité) | N/A              | N/A                                                           |
+  |[CU09-T1](#cu09-t1-testabilité) | N/A              | N/A                                                           |
+  |[CU10-T1](#cu10-t1-testabilité) | N/A              | N/A                                                           |
+
 ## RDAQ-[Usabilité](#add-usabilité)
 
   ### [RDTQ-Supporter l'initiative de l'usager](#add-supporter-linitiative-de-lusager)
