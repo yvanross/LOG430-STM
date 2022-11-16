@@ -711,22 +711,22 @@ A partir des qualités associées à tous vos cas d'utilisation, réaliser un mi
 
 |Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
-| <li>tactique 1</li>|avantages| désavantages|M|M|
-| <li>tactique 2</li>|avantages| désavantages|M|M|
-| <li>tactique 3</li>|avantages| désavantages|M|M|
+| <li>Incrémenter l'efficacité des ressources</li>|Augmenter l'efficacité des algorithmes permettrait une connexion plus rapide lorsque le système recherche les informations nécessaire pour connecter l'utilisateur| Étant donné qu'il y a peu de calculations, il n'y aura pas une grande différence dans la performance|M|M|
+| <li>Couper le temps d'exécution</li>|Si la requête d'un utilisateur prends trop de temps à s'effectuer, cela ne bloquera pas d'autres utilisateurs potentiels ayant besoin de l'accès| Un utilisateur pourrait demeurer bloquer et ne jamais pouvoir se connecter|M|M|
+| <li>Réduire les coûts d'utilisation</li>|Utiliser un intermédiaire pour réduire les coûts permet un accès moins fréquent à la base de données et donc un temps de réponse plus rapide| La fidélité de la cache par rapport à la base de données dépends du délai de temps auquel elle est mise à jour, cela pourrait donc conduire à une cache contenant des données qui ne sont plus les bonnes |M|M|
 </div>
-<span style="color:red">Quelle tactique avez vous choisi et pourquoi?</span>
+<span> Nous avons choisi la tactique "Réduire les coûts d'utilisation" puisque la cache est un intermédiaire qui non seulement augmente la performance, mais conserve aussi une copie de certaines données en cas d'erreur. De plus, c'est un méchanisme qui, s'il est mis à jour fréquemment, est généralement très fiable.</span>
 
 ### ADD-[Gérer les ressources](#rdtq-gérer-les-ressources)
 <div class="concept performance">
 
 |Concept de design| Pour | Contre| Valeur | Cout|
 |-----------------|------|-------|--------|-----|
-| <li>tactique 1</li>|avantages| désavantages|M|M|
-| <li>tactique 2</li>|avantages| désavantages|M|M|
+| <li>Introduire la concurrence </li>|De la concurrence permettrait à beaucoup de connexions d'être effectuées en même temps, réduisant la charge et l'attente. | Plusieurs fils sont complexes à implémenter dans le cas de l'authentification|M|M|
+| <li>Maintenir plusieurs copies des données </li>|L'utilisation d'un load balancer permettrait de s'assurer que toutes le nombre de requête ne dépasse pas la limite du serveur en utilisant plusieurs serveurs, cela veut dire qu'il y aurait moins de chance qu'une connexion soit refusée par manque de ressources et que les autres connexions se font plus rapidement | L'utilisation de plusieurs serveurs peut s'avérer couteuse et ne s'applique pas à notre laboratoire|M|M|
 | <li>tactique 3</li>|avantages| désavantages|M|M|
 </div>
-<span style="color:red">Quelle tactique avez vous choisi et pourquoi?</span>
+<span>Nous avons choisi la tactique "xxx"</span>
 
 ## ADD-[Sécurité](#rdaq-sécurité)
 
