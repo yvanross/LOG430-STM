@@ -1,0 +1,27 @@
+@startuml
+title RDTQ Performance : Contrôler la demande en ressources\nTactique : Réduire les coûts logiciel
+
+
+actor ": Utilisateur" as user
+participant ": AuthController" as auth
+participant ": JWTService" as jwt
+participant ":Cache" as cache
+database ": MongoDB" as db
+
+note over user, jwt : Tactique : Réduire les coûts logiciel
+
+activate auth
+activate cache
+activate jwt
+activate db
+user -> auth : login(username, password)
+note left : scénario d'un login d'utilisateur, \n où le token est pris de la cache afin de ne pas \n lire la database, seulement d'y écrire \n si le token est mis à  jour
+auth -> jwt : generateToken()
+jwt -> cache : retrieveAllCache()
+cache -->> jwt : Cache
+jwt --> auth : token
+auth --> user : token
+jwt -> cache : updateUserToken()
+cache -> db : findOneAndUpdate()
+
+@enduml

@@ -1,0 +1,16 @@
+@startuml RDTQ Sécurité : Récupérer des attaques
+
+actor ": Utilisateur" as user
+participant ": AuthController" as auth
+
+note over user, auth : Tactique : Maintenir une piste d'audits
+activate auth
+user -> auth : login(username, password)
+opt retrySecs > 0
+  auth -> auth : log.error(check, username, message)
+  auth -->> auth : getLocal(username, password)
+end
+
+
+
+@enduml

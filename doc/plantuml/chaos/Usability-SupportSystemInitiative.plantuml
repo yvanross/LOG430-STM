@@ -1,0 +1,45 @@
+@startuml Convivialité : Supporter l'initiative du système
+title Convivialité : Supporter l'initiative du système
+
+actor ": Utilisateur" as user
+participant ": Chaosmonkey" as chaos
+participant "Service1 : Microservice" as s1
+participant "Service2 : Microservice" as s2
+participant "Service3 : Microservice" as s3
+
+note over user, s3 : Tactique : Maintain System Model
+
+activate chaos
+activate s1
+activate s2
+activate s3
+
+user -> chaos : kill([service1, service2, service3])
+chaos -> chaos : taskId = startTask(numSteps = 3)
+chaos -> user : taskId
+
+chaos -> chaos : startThread
+activate chaos #orange
+
+chaos -> s1 : kill()
+destroy s1
+chaos -> chaos : updateTask(taskId, 1)
+chaos -> s2 : kill()
+destroy s2
+chaos -> chaos : updateTask(taskId, 2)
+user -> chaos : getTaskStatus(taskId)
+chaos -> user : taskStatus : 2/3
+chaos -> s3 : kill()
+destroy s3
+chaos -> chaos : updateTask(taskId, 3)
+
+chaos -> chaos : endThread
+deactivate chaos
+
+user -> chaos : getTaskStatus(taskId)
+chaos -> user : taskStatus : 3/3
+
+
+
+
+@enduml

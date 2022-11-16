@@ -1,0 +1,12 @@
+@startuml RDTQ Sécurité : Détecter les attaques
+
+actor ": Utilisateur" as user
+participant ": AuthController" as auth
+
+note over user, auth : Tactique : Détecter l'intrusion
+activate auth
+user -> auth : login(username, password)
+auth -> auth : failLimiter.consume(usernameIPkey).then((failCheck)
+auth -->> auth : catch(err)
+
+@enduml
