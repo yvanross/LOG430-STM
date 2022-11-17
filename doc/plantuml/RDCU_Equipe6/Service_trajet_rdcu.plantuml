@@ -1,0 +1,24 @@
+@startuml
+skinparam Style strictuml
+participant "ctrl:ControleurAuthentification_UI" as ctrl
+participant "Ipublic:ServiceTrajet" as Ipublic
+
+note left of ctrl: Controleur de session
+note left of ctrl: CU1:Veux comparer les temps de trajet en automobile versus autobus
+-> ctrl: ComparerTrajet(String: départ, String: arrivée, int:taux,String: nom)
+note left of Ipublic: Expert qui dirige les requetes vers les autres microServices
+ctrl -> Ipublic: selectionnerTrajet(String: depart, String: arrivée, int:taux)
+ctrl -> Ipublic: selectionnerServiceDeComparaison(String: nom)
+Ipublic -> ctrl:  graphique du temps de déplacement
+
+note left of ctrl: cu8: Veux avoir le temps d’un trajet en autobus
+-> ctrl: ComparerCourtTrajet(String: départ, String: arrivée,String: nom)
+ctrl -> Ipublic: selectionnerAdresse(String: depart, String: arrivée)
+ctrl -> Ipublic: selectionnerServiceDeComparaisonExterne(String: nom)
+Ipublic -> ctrl:  trajet le plus court
+note left of ctrl: cu9:  Veux avoir le temps de trajet en auto
+-> ctrl: ComparerTrajetAuto(String: départ, String: arrivée,String: nom)
+ctrl -> Ipublic: selectionnerAdresse(String: depart, String: arrivée)
+ctrl -> Ipublic: selectionnerServiceDeComparaisonExterne(String: nom)
+Ipublic -> ctrl:  trajet le plus court
+@enduml

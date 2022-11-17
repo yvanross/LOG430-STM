@@ -1,0 +1,35 @@
+
+@startuml
+skinparam component {
+  backgroundColor<<IMPLEMENTATION>> DarkKhaki
+  backgroundColor<<Integration>> yellow
+}
+component Authentification-MS_Copie  as ms2 <<IMPLEMENTATION>> {
+  }
+component Authentification-MS_Origniale as ms1 <<IMPLEMENTATION>>{
+  }
+  component MS_Equipe4 as equipe4 <<Integration>> {
+  }
+  component MS_Equipe6 as equipe6 <<Integration>> {
+  }
+  component MS_Equipe8  as equipe8 <<Integration>>{
+  
+  }
+
+  () IDatabase
+
+[Database] as bd <<IMPLEMENTATION>>
+[Chaos] as k <<IMPLEMENTATION>>
+() IPublic as i
+ms2 --> i
+k --> ms1
+k --> ms2
+ms1 --> i
+equipe4 --> i
+equipe6 --> i
+equipe8 --> i
+ms1 --> IDatabase
+ms2 --> IDatabase
+IDatabase -- bd
+
+@enduml
