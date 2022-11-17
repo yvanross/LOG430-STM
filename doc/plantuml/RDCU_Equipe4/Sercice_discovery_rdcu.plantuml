@@ -1,0 +1,15 @@
+@startuml
+skinparam Style strictuml
+participant "ctrl:ControleurAuthentification_UI" as ctrl
+participant "Ipublic:ServiceDiscovery" as Ipublic
+
+note left of ctrl: Controleur de session
+-> ctrl: postRegister(String: token)
+note left of Ipublic: Expert qui dirige les requetes vers les autres microServices
+ctrl -> Ipublic: reponse = postRegister(String: token)
+Ipublic -> ctrl: reponse = 200
+-> ctrl: getDiscover()
+ctrl -> Ipublic: message = getDiscover(url)
+Ipublic -> ctrl: message = 200
+
+@enduml
