@@ -1,0 +1,12 @@
+@startuml
+skinparam Style strictuml
+participant "ctrl:ControleurAuthentification_UI" as ctrl
+participant "Ipublic:ServiceTrajet" as Ipublic
+
+note left of ctrl: Controleur de session
+-> ctrl: subcribe(String:  AuthentificationMS)
+note left of Ipublic: Expert qui dirige les requetes vers les autres microServices
+ctrl -> Ipublic: message:get(https://localhost/v1/components/schemas/Subscribe) 
+Ipublic -> ctrl: message: "The service was subscribed"
+
+@enduml

@@ -4,21 +4,16 @@ skinparam component {
   backgroundColor<<Exterme>> Green
 }
 actor User as u
-package SystemeAuthentificationMS as s {
- [Authentification_UI] as clt <<Interne>>
+
+ [Authentification_UI] as ui <<Interne>>
  [Authentification_MS] as ms <<Interne>>
-    } 
  [Database] as bd <<Interne>>
- [Chaos] as k <<Interne>>
- [MS_Equipe4] as 4 <<Exterme>>
- [MS_Equipe6] as 6 <<Exterme>>
- [MS_Equipe8] as 8 <<Exterme>>
- 
-u   ->   s 
-s  ->  bd
-s  ->  4
-s  ->  6
-s  ->  8
-clt   ->  ms 
-k   ->  ms 
+ [Chaos]  as ko <<Interne>> 
+ () IPublic as i <<Exterme>>
+ note bottom of i:IPublic est interface des equipes 4,6 et 8
+u   ->  ui
+ui ->  ms
+ui ->  ko
+ms   ->  bd 
+ui   ->  i 
 @enduml

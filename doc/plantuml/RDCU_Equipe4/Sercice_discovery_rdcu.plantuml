@@ -4,12 +4,12 @@ participant "ctrl:ControleurAuthentification_UI" as ctrl
 participant "Ipublic:ServiceDiscovery" as Ipublic
 
 note left of ctrl: Controleur de session
--> ctrl: postRegister(String: token)
+-> ctrl: Register(String: token)
 note left of Ipublic: Expert qui dirige les requetes vers les autres microServices
-ctrl -> Ipublic: reponse = postRegister(String: token)
+ctrl -> Ipublic: reponse = Post(https://localhost/v1/components/schemas/Registration)
 Ipublic -> ctrl: reponse = 200
--> ctrl: getDiscover()
-ctrl -> Ipublic: message = getDiscover(url)
-Ipublic -> ctrl: message = 200
+-> ctrl: Discover(Sting :msRoute)
+ctrl -> Ipublic: msRoute = get(https://localhost/v1/components/schemas/route)
+Ipublic -> ctrl: msRoute = "route"
 
 @enduml

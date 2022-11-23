@@ -1241,6 +1241,15 @@ AuthController ..> AuthDB
 |Élement|Description|lien vers document d'interfaces|
 |-------|-----------|-------------------------------|
 |el1|responsabilité incluant les liens vers les diagrammes de séquence démontrant le fonctionnement de celui-ci|http://www.etsmtl.ca|
+ |User | Composant qui initie la requête|
+ |Database|Composant qui contient les tokens d’authentification|CU4
+ |IDatabase|Interface qui utilise le micro service d’authentification pour vérifier la validité d’un token donné par un user|CU4
+ |Authentification_MS_Originale|Microservice qui authentifie qu’un user a le droit d’accéder à un service donné|CU4
+ |Authentification_MS_Copie|La copie du micro service originale pour assurer la disponibilité|CU4
+ |Chaos|Micro service utiliser pour détruire une instance d’un autre microservice|CU
+ |IserviceDiscovery!Interface à travers laquelle le micro service externe qui intercommunication entre microservices à l’aide d’une source unique de découverte de route est visible|CU5
+ |IserviceTrajet|Interface à travers laquelle le micro service externe qui compare les temps de trajet est visible|CU1
+ |IserviceMonitoring| Interface à travers laquelle le micro service externe qui informe le mainteneur sur le status de vie des autres microservices est visible|CU6
 >#### Diagramme de contexte
 >#### Guide de variabilité
 >#### Raisonnement
