@@ -154,7 +154,7 @@
 
 **Scénario**
     
-1. Le (chargé de laboratoire) CL sélectionne une intersection de départ et une intersection d'arrivée, ainsi que le taux de rafraichissement de la prise de mesure.
+1. Le (chargé de laboratoire) CL sélectionne une intersection (Arrêt d'autobus) de départ et une intersection d'arrivée, ainsi que le taux de rafraichissement de la prise de mesure.
 2. Le CL sélectionne le [service externe](service-externe.md) qu'il veut utiliser pour faire la comparaison des temps de trajet avec les donnés temps réel de la STM.
 3. Le système affiche un graphique du temps de déplacement et met celui-ci à jour selon le taux de rafraichissement.
 

@@ -44,16 +44,11 @@
   - [Directive pour la planification par les coordonnateurs](#directive-pour-la-planification-par-les-coordonnateurs)
   - [Directive de documentation de l'architecture](#directive-de-documentation-de-larchitecture)
     - [Suggestion d'outils pour la documentation](#suggestion-doutils-pour-la-documentation)
-      - [notion.so](#notionso)
-      - [confluence](#confluence)
-      - [Google doc](#google-doc)
-      - [markdown](#markdown)
-      - [structurizer](#structurizer)
-      - [Éclipse Papyrus](#éclipse-papyrus)
   - [Directive de gestion du flux de travail](#directive-de-gestion-du-flux-de-travail)
   - [Directive d'implémentation](#directive-dimplémentation)
   - [Directive d'intégration](#directive-dintégration)
   - [Directive de déploiement](#directive-de-déploiement)
+    - [Déploiement avec Portainer](#déploiement-avec-portainer)
   - [Directive de Démonstration](#directive-de-démonstration)
   - [Directives de vérification de la documentation](#directives-de-vérification-de-la-documentation)
   - [Directives pour la remise](#directives-pour-la-remise)
@@ -204,6 +199,8 @@ voir la [Directive de gestion du flux de travail](#directive-de-gestion-du-flux-
 ## Directive de documentation de l'architecture 
 
 Toutes les équipes d'un sous-groupe doivent utiliser les mêmes outils de documentation. L'équipe de coordination est responsable de gérer l'utilisation des outils, de définir et gérer le processus de réalisation de la documentation.  
+
+Vous devez utiliser le gabarit suivant pour la documentation de votre architecture: [DocumentationArchitecture.md](doc/documentationArchitecture.md)
 
 ### Suggestion d'outils pour la documentation
 #### notion.so
