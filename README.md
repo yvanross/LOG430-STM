@@ -1,71 +1,24 @@
 ![log](doc/assets/logo-logti.png)
+
 # LOG430 Architecture logicielle
-- [LOG430 Architecture logicielle](#log430-architecture-logicielle)
-- [Objectif principal](#objectif-principal)
-- [Le contexte de l'organisation](#le-contexte-de-lorganisation)
-- [Le comparateur de trajet](#le-comparateur-de-trajet)
-- [Services externes](#services-externes)
-  - [Exemples](#exemples)
-  - [Fournisseurs potentiels](#fournisseurs-potentiels)
-- [Parties prenantes du projet](#parties-prenantes-du-projet)
-  - [Chargé de laboratoire (client)](#chargé-de-laboratoire-client)
-  - [Classe](#classe)
-  - [Sous-Groupe](#sous-groupe)
-  - [Équipe de coordination](#équipe-de-coordination)
-  - [Équipe (Étudiants)](#équipe-étudiants)
-- [Exigences](#exigences)
-  - [Objectifs d'affaires](#objectifs-daffaires)
-    - [**OA01** - Faciliter le recrutement des nouveaux chargés de laboratoire.](#oa01---faciliter-le-recrutement-des-nouveaux-chargés-de-laboratoire)
-    - [**OA02** - Vérifiez si le transport par autobus est toujours plus rapide, peu importe l'heure de la journée.](#oa02---vérifiez-si-le-transport-par-autobus-est-toujours-plus-rapide-peu-importe-lheure-de-la-journée)
-  - [Exigences fonctionnelles](#exigences-fonctionnelles)
-    - [**CU01** - Veux comparer les temps de trajet.](#cu01---veux-comparer-les-temps-de-trajet)
-    - [**CU02** - Veux pouvoir mettre le chaos dans les services en mode.](#cu02---veux-pouvoir-mettre-le-chaos-dans-les-services-en-mode)
-    - [**CU03** - <span style="color:red">Vous devez proposer un nouveau cas d'utilisation</span>](#cu03---vous-devez-proposer-un-nouveau-cas-dutilisation)
-    - [**CU04** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>](#cu04---vous-devez-proposer-un-nouveau-cas-dutilisation)
-    - [**CU05** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>](#cu05---vous-devez-proposer-un-nouveau-cas-dutilisation)
-    - [**CU06** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>](#cu06---vous-devez-proposer-un-nouveau-cas-dutilisation)
-    - [**CU07** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>](#cu07---vous-devez-proposer-un-nouveau-cas-dutilisation)
-    - [**CU08** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>](#cu08---vous-devez-proposer-un-nouveau-cas-dutilisation)
-    - [**CU09** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>](#cu09---vous-devez-proposer-un-nouveau-cas-dutilisation)
-    - [**CU10** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation.</span>](#cu10---vous-devez-proposer-un-nouveau-cas-dutilisation)
-  - [Exigences de qualité](#exigences-de-qualité)
-    - [(A) Disponibilité](#a-disponibilité)
-    - [(A) Modifiabilité](#a-modifiabilité)
-    - [(A) Performance](#a-performance)
-    - [(A) Sécurité](#a-sécurité)
-    - [(A) Testabilité](#a-testabilité)
-    - [(A) Convivialité](#a-convivialité)
-    - [(A) Interopérabilité](#a-interopérabilité)
-  - [Contraintes de réalisation](#contraintes-de-réalisation)
-    - [Language¶](#language)
-    - [Réalisation](#réalisation)
-    - [Contrainte d'équipe](#contrainte-déquipe)
-- [Grille de pointage](#grille-de-pointage)
-  - [Directive pour la planification par les coordonnateurs](#directive-pour-la-planification-par-les-coordonnateurs)
-  - [Directive de documentation de l'architecture](#directive-de-documentation-de-larchitecture)
-    - [Suggestion d'outils pour la documentation](#suggestion-doutils-pour-la-documentation)
-  - [Directive de gestion du flux de travail](#directive-de-gestion-du-flux-de-travail)
-  - [Directive d'implémentation](#directive-dimplémentation)
-  - [Directive d'intégration](#directive-dintégration)
-  - [Directive de déploiement](#directive-de-déploiement)
-    - [Déploiement avec Portainer](#déploiement-avec-portainer)
-  - [Directive de Démonstration](#directive-de-démonstration)
-  - [Directives de vérification de la documentation](#directives-de-vérification-de-la-documentation)
-  - [Directives pour la remise](#directives-pour-la-remise)
-- [Parasites et mollasson](#parasites-et-mollasson)
-- [Bonus projet laboratoire (5% point bonus)](#bonus-projet-laboratoire-5-point-bonus)
+
 # Objectif principal
-L'objectif principal de ce projet de cours est de proposer un système de comparaison de temps de trajet basée sur une architecture de microservices. Ce système permettra de comparer les temps de trajets entre les autobus et les automobiles.  Il sera réalisé au travers d'un seul laboratoire de 36 heures au total. Les spécifications des exigences portent sur l'analyse, la conception et l'implantation de ce système. Ce projet sera réalisé selon un seul livrable, qui devra être validé régulièrement auprès du chargé de laboratoire. Ce livrable comprendra les objectifs d'affaires, les cas d'utilisation, les scénarios de qualité priorisés, des vues architecturales permettant de démonter chacune des tactiques, une ou plusieurs vues de modules, une ou plusieurs vu composants et connecteurs, une ou plusieurs vues d'allocation.  
+
+L'objectif principal de ce projet de cours est de proposer un système de comparaison de temps de trajet basée sur une architecture de microservices. Ce système permettra de comparer les temps de trajets entre les autobus et les automobiles **pour les étudiants qui veulent se rendre à leurs cours de LOG430 à l'ÉTS**.  Il sera réalisé au travers d'un seul laboratoire de 36 heures au total. Les spécifications des exigences portent sur l'analyse, la conception et l'implantation de ce système. Ce projet sera réalisé selon un seul livrable, qui devra être validé régulièrement auprès du chargé de laboratoire. Ce livrable comprendra les objectifs d'affaires, les cas d'utilisation, les scénarios de qualité priorisés, des vues architecturales permettant de démonter chacune des tactiques, une ou plusieurs vues de modules, une ou plusieurs vus composants et connecteurs, une ou plusieurs vues d'allocation.  
 
 # Le contexte de l'organisation
-Vous êtes nouvellement embauché par l'organisation LOG430STM pour développer le système de comparateur de trajet.  La réussite de ce projet n'est pas optionnelle. La carrière des étudiants peut grandement être impactée s'ils échouent à ce cours. C'est pour cette raison que l'organisation a décidé de séparer les responsabilités selon les différentes [parties prenantes.](doc/exigences/partiePrenantes.md)
+
+Vous êtes nouvellement embauché par l'organisation LOG430STM pour développer le système de comparateur de trajet.  La réussite de ce projet n'est pas optionnelle. La carrière des étudiants peut grandement être impactée s'ils échouent à ce cours. C'est pour cette raison que l'organisation a décidé de séparer les responsabilités selon les différentes [parties prenantes.](#parties-prenantes-du-projet)
 
 
 # Le comparateur de trajet
+
 Vous devez développer l'architecture d'un système de comparaison de temps de trajet en utilisant les données temps réel de la STM disponible sur le site suivant: https://www.stm.info/fr/a-propos/developpeurs et les donnés fournie par des [services externes](#services-externes)
 
 # Services externes
-Utiliser l'API ou la page web des fournisseurs externe pour l'estimation en temps réel du temps nécessaire pour parcourir la distance entre deux points correspondant aux points de départ et point d'arrivée d'un trajet d'autobus. L'estimation doit se faire en empruntant exactement le même trajet que l'autobus.
+
+Utiliser l'API ou la page web des fournisseurs externe pour l'estimation en temps réel du temps nécessaire pour parcourir la distance de la résidence des étudiants vers l'ETS.  P.s n'utilisez pas vos adresse personnelle exacte pour les tests et démonstration. 
+
 ## Exemples
 - https://www.google.ca/maps/dir/Marché+Jean-Talon/45.51433,+-73.55014/45.58927,+-73.50912/@45.5503686,-73.5965441,13z/data=!3m2!4b1!5s0x4cc919136bb582b5:0xf0b087b71589c626!4m20!4m19!1m5!1m1!1s0x4cc919136130849d:0x5c1098d838d87981!2m2!1d-73.6148902!2d45.5361095!1m5!1m1!1s0x0:0xf12664c8f968830d!2m2!1d-73.5502413!2d45.514437!1m5!1m1!1s0x0:0xfeb4b67d79e8fa7c!2m2!1d-73.5091582!2d45.589417!3e0
 
@@ -90,10 +43,10 @@ Utiliser l'API ou la page web des fournisseurs externe pour l'estimation en temp
 - Chaque classe est séparée en deux groupes
 
 ## Sous-Groupe
-- Chaque sous-groupe est séparé en équipe de 5 étudiants.
-- Chaque sous-groupe est en compétition avec les groupes de toutes les classes.
-- Les équipes de chaque sous-groupe peuvent partager leurs microservices avec toutes les équipes du sous-groupe pour permettre aux autres équipes de faire de l'intégration au lieu de faire de l'implémentation.  Utiliser l'intégration pour satisfaire une exigence est plus payant en termes de point.  Voir le ficher de la grille de correction.
-- Le chargé de cours crée les sous-groupes.
+- Chaque groupe est séparé en équipe de 5 étudiants.
+- Chaque groupe est en compétition avec les groupes de toutes les classes.
+- Les équipes de chaque groupe peuvent partager leurs microservices avec toutes les équipes du groupe pour permettre aux autres équipes de faire de l'intégration au lieu de faire de l'implémentation.  Utiliser l'intégration pour satisfaire une exigence est plus payant en termes de point.  Voir le ficher de la grille de correction.
+- Le chargé de cours crée les groupes.
 
 ## Équipe de coordination
 - L'équipe de coordination est  responsable de répartir équitablement les tâches de réalisation de la conception et l'implémentation des différents microservices nécessaire à ce projet.
@@ -120,56 +73,56 @@ Utiliser l'API ou la page web des fournisseurs externe pour l'estimation en temp
 # Exigences
 ## Objectifs d'affaires
 
-### **OA01** - Faciliter le recrutement des nouveaux chargés de laboratoire.
-### **OA02** - Vérifiez si le transport par autobus est toujours plus rapide, peu importe l'heure de la journée.
+### [**OA01** - Faciliter le recrutement des nouveaux chargés de laboratoire.](doc/OA1.md)
+### [**OA02** - Promouvoir le transport par autobus.](doc/OA2.md)
 
 ## Exigences fonctionnelles
 
-### **CU01** - Veux comparer les temps de trajet.
-### **CU02** - Veux pouvoir mettre le chaos dans les services en mode.
-### **CU03** - <span style="color:red">Vous devez proposer un nouveau cas d'utilisation</span>
-### **CU04** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>
-### **CU05** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>
-### **CU06** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>
-### **CU07** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>
-### **CU08** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>
-### **CU09** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation</span>
-### **CU10** - <span style="color:red">vous devez proposer un nouveau cas d'utilisation.</span>
+### [**CU01** - Veux comparer les temps de trajet.](doc/CU01.md)
+### [**CU02** - Mettre le chaos dans les microservices en termes de performance et de disponibilité.](doc/CU02.md)
+### [**CU03** - Comparer l'impact écologique de divers trajets en autobus et en auto.](doc/CU03.md)
+### [**CU04** - Veux s'assurer que seuls les acteurs/systèmes autorisés ont accès aux Apis.](doc/CU04.md)
+### [**CU05** - Veux informer l'administrateur sur les changements de statut des microservices.](doc/CU05.md)
+### [**CU06** - Veux démontrer l'impact de la météo sur les temps de trajet en auto vs en autobus.](doc/CU06.md)
+### [**CU07** - Veux interagir avec le système à partir d'interface utilisateur.](doc/CU07.md)
+### [**CU08** - Veux sauvegarder les trajets favoris qui seront utilisés pour faire les analyses comparatives.](doc/CU08.md)
+### [**CU09** - Veux sélectionner à partir de l'interface usagée quelle application externe utiliser pour comparer le trajet.](doc/CU09.md)
+### [**CU10** - Veux pouvoir informer l'administrateur sur l'état interne de tous les services.](doc/CU10.md)
 
 
 ## Exigences de qualité
 
 - Vous devez vous assurer que les attributs de qualité (A) associés à chacun de vos cas d'utilisation soient documentés et réalisés. Pour chacun des attributs de qualité (A), vous devrez concevoir et réaliser une architecture qui utilisera au minimum une tactique architecturale pour chacune des sous-catégories (SC) suivantes.
 
-- Si un attribut de qualité (A) ou une sous-catégorie (SC) n'est pas représenté dans votre architecture, vous devez ajouter de nouveau cas d'utilisation tant que tous n'auront pas été couverts.
+- Si un attribut de qualité ou une sous-catégorie (SC) n'est pas représenté dans votre architecture, vous devez ajouter de nouveau cas d'utilisation tant que tous n'auront pas été couverts.
   
-  ### (A) Disponibilité
-    - (SC) détection de faute
-    - (SC) Préparation et réparation
-    - (SC) Réintroduction
-    - (SC) Prévention des fautes
-  ### (A) Modifiabilité
-    - (SC) Réduire la taille des modules
-    - (SC) Augmenter la cohésion
-    - (SC) Réduire le couplage
-    - (SC) Defer binding
-  ### (A) Performance
-    - (SC) Contrôler la demande en ressources
-    - (SC) Gérer les ressources
-  ### (A) Sécurité
-    - (SC) Détecter les attaques
-    - (SC) Résister aux attaques
-    - (SC) Réagir aux attaques
-    - (SC) Récupérer d'une attaque
-  ### (A) Testabilité
-    - (SC) Contrôle et observe l'état du système
-    - (SC) limiter la complexité
-  ### (A) Convivialité
-    - (SC) Supporter l'initiative de l'usager
-    - (SC) Supporter l'initiative du système
-  ### (A) Interopérabilité
-    - (SC) Localiser
-    - (SC) Gérer les interfaces
+  ### (A) [Disponibilité](doc/AQ-disponibilite.md)
+    - (SC) [détection de faute](doc/AQ-disponibilite.md#détection-de-faute)
+    - (SC) [Préparation et réparation](doc/AQ-disponibilite.md#préparation-et-réparation)
+    - (SC) [Réintroduction](doc/AQ-disponibilite.md#réintroduction)
+    - (SC) [Prévention des fautes](doc/AQ-disponibilite.md#prévention-des-fautes)
+  ### (A) [Modifiabilité](doc/AQ-modifiabilite.md)
+    - (SC) [Réduire la taille des modules](doc/AQ-modifiabilite.md#réduire-la-taille-des-modules)
+    - (SC) [Augmenter la cohésion](doc/AQ-modifiabilite.md#augmenter-la-cohésion)
+    - (SC) [Réduire le couplage](doc/AQ-modifiabilite.md#réduire-le-couplage)
+    - (SC) [Defer binding](doc/AQ-modifiabilite.md#defer-binding)
+  ### (A) [Performance](doc/AQ-performance.md)
+    - (SC) [Contrôler la demande en ressources](doc/AQ-performance.md#contrôler-la-demande-en-ressources)
+    - (SC) [Gérer les ressources](doc/AQ-performance.md#gérer-les-ressources)
+  ### (A) [Sécurité](doc/AQ-securite.md)
+    - (SC) [Détecter les attaques](doc/AQ-securite.md#détecter-les-attaques)
+    - (SC) [Résister aux attaques](doc/AQ-securite.md#résister-aux-attaques)
+    - (SC) [Réagir aux attaques](doc/AQ-securite.md#réagir-aux-attaques)
+    - (SC) [Récupérer d'une attaque](doc/AQ-securite.md#récupérer-dune-attaque)
+  ### (A) [Testabilité](doc/AQ-testabilite.md)
+    - (SC) [Contrôle et observe l'état du système](doc/AQ-testabilite.md#controle-and-observe-létat-du-système)
+    - (SC) [limiter la complexité](doc/AQ-testabilite.md#limiter-la-complexité)
+  ### (A) [Convivialité](doc/AQ-usabilite.md)
+    - (SC) [Supporter l'initiative de l'usager](doc/AQ-usabilite.md#supporter-linitiative-de-lusager)
+    - (SC) [Supporter l'initiative du système](doc/AQ-usabilite.md#rdtq-supporter-linitiative-du-système)
+  ### (A) [Interopérabilité](doc/AQ-interoperabilite.md)
+    - (SC) [Localiser](doc/AQ-interoperabilite.md#localiser)
+    - (SC) [Gérer les interfaces](doc/AQ-interoperabilite.md#gérer-les-interfaces)
 
 ## Contraintes de réalisation
 ### Language¶
@@ -190,55 +143,18 @@ La note finale de chaque équipe sera pondérée en fonction du nombre d'étudia
 
 La note finale de chaque équipe sera pondérée en fonction des notes de toutes les équipes de toutes les classes.
 
-## Directive pour la planification par les coordonnateurs
+## Directives pour la planification
 
 L'équipe de coordination répartit la charge de travail au niveau des équipes et indique clairement (avec document à l'appui) ses attentes par rapport à chaque équipe.
 
-voir la [Directive de gestion du flux de travail](#directive-de-gestion-du-flux-de-travail)
-
-## Directive de documentation de l'architecture 
-
-Toutes les équipes d'un sous-groupe doivent utiliser les mêmes outils de documentation. L'équipe de coordination est responsable de gérer l'utilisation des outils, de définir et gérer le processus de réalisation de la documentation.  
-
-Vous devez utiliser le gabarit suivant pour la documentation de votre architecture: [DocumentationArchitecture.md](doc/documentationArchitecture.md)
-
-### Suggestion d'outils pour la documentation
-#### notion.so
-https://notion.so/<sup>1</sup>
-ÉTAPES POUR ÊTRE ENREGISTRÉ DANS LA DOCUMENTATION NOTION
-1. Créer un compte notion avec votre adresse Google de l'ÉTS @etsmtl.net
-2. Associer votre compte notion à un compte équipe
-2.0. pour complété l'étape 2 entrée sur l'interface de notion authentifier avec votre compte google
-2.1.  sélectionner l'onglet Settings & Members dans notion
-2.2. Cliquer l'onglet Plans
-2.4. Scroll passer la table de prix
-2.3. Cliquer le bouton Activate Student plan
-3. Mettre votre courriel etsmtl.ca ici pour qu'on vous ajoute à l'espace de documentation 
-
-#### confluence
-http://www.confluence.com
-
-#### Google doc
-http://www.googledoc.com
-
-#### markdown
-avec le plugin [plantuml](https://plantuml.com/fr/) ou [c4-plantuml](https://github.com/plantuml-stdlib/C4-PlantUML)
-
-#### structurizer
-https://structurizr.com<sup>1</sup>
-
-#### Éclipse Papyrus
-https://www.eclipse.org/papyrus/<sup>1</sup>
-
-
-## Directive de gestion du flux de travail
-Vous devez utiliser le Kanban de Github pour planifier et réaliser votre projet.
-Votre Kanban doit avoir au minimum les colonnes suivantes:
+L'équipe de coordonnateur et les équipes doivent utiliser le Kanban de Github pour planifier et réaliser le projet.
+Vos Kanban doivent avoir au minimum les colonnes suivantes:
   - **backlog**: idée générique de tâches à considérer, priorisée par l'équipe.
   - **todo**: ce qu'on fait à la prochaine itération, à faire, assignée explicitement ou non.
   - **in progress**: tâches sur lesquels vous travaillez présentement. Généralement, une seule tâche par étudiant
   - **review**: les tâches qui doivent être révisées par un autre étudiant de l'équipe.  Idéalement sous forme de pull request.
   - **Done**: le pull request a été accepté et la tâche est terminée.
+
 
 ## Directive d'implémentation
 
@@ -254,34 +170,26 @@ L'équipe qui développe un microservice qui sera intégré par d'autres équipe
 Ces microservices doivent être déployés par l'équipe propriétaire ou l'équipe de coordonnateur.
 
 ## Directive de déploiement
-Vous pouvez déployer votre solution sur n'importe quel serveur. Dans le cadre du laboratoire nous vous fournirons l'accès à un serveur virtuel.  Ce serveur vous permettra de déployer des microservices réalisés à l'aide de docker et docker-compose.
-
+Vous pouvez déployer votre solution sur n'importe quel serveur. Dans le cadre du laboratoire nous vous fournirons l'accès à un serveur virtuel utilisant l'interface [Portainer](#déploiement-avec-portainer).  Ce serveur vous permettra de déployer des microservices réalisés à l'aide de docker et docker-compose.
 
 ### Déploiement avec Portainer
-```
-docker build -t video-storage --file Dockerfile .
-
-docker save video-storage -o video-storage.tar
-```
 
 Voir les vidéos:
 - portainer-1: https://youtu.be/L0ak_Jsi3W8  Test en mode local
-- portainer-2: https://youtu.be/VSxIHf0ZuF0  Deployement sur portainer
-- portainer-3: https://youtu.be/1vDqsMESGyI  Docker-compose sur portainer
+- portainer-2: https://youtu.be/VSxIHf0ZuF0  Deployement sur Portainer
+- portainer-3: https://youtu.be/1vDqsMESGyI  Docker-compose sur Portainer
 
 ## Directive de Démonstration
 - Vous n'aurez droit qu'à une seule démonstration pour l'intégration et/ou l'implémentation de chaque exigence. 
 - Chaque équipe disposera d'un maximum de 10 minutes par démonstration/exigence.
-- Vous pouvez demander à faire une démonstration à n'importe quelle séance.
-- Plus vous faites votre démonstration tôt durant la session plus cela sera payant (bonus) pour votre équipe. Voir la colonne pourcentage dans la [grille de pointage.](#grille-de-pointage)
 - Donc soyez bien préparé
   - Assurez-vous d'avoir testé vos microservices individuellement et dans le système
   - Assurez-vous de ne pas faire des modifications de dernières minutes qui pourraient impacter votre démonstration
-- À chaque démonstration, le chargé de laboratoire peut vous demander de créer des issues que vous devrez avoir satisfaites lors de la démonstration subséquente.  Le non respect de cette directive pourrait entrainer des pertes de points.
+- À chaque démonstration, le chargé de laboratoire peut vous demander de créer des issues que vous devrez avoir satisfaites lors de la démonstration subséquente.  Le non-respect de cette directive pourrait entrainer des pertes de points.
  
 ## Directives de vérification de la documentation
 Une attention particulière sera portée sur les éléments suivants au niveau de votre documentation d'architecture:
-1. Le stéréotype de chaque élément est bien identifié
+1. Le stéréotype de chaque élément dans un diagramme est bien identifié
 2. Les interfaces sont explicites dans les diagrammes et documentées en fonction du type d’interface.  
 3. Chaque interface doit être adéquatement détaillée dans un fichier séparé.
 4. Les choix technologiques sont visibles dans les vues architecturales. 
@@ -301,22 +209,66 @@ Une attention particulière sera portée sur les éléments suivants au niveau d
    3. Déploiement
 16. Votre rapport contient des diagrammes de séquence/activité pour démontrer le comportement des composants dans la réalisation des différentes tactiques.
 17. Vous vous êtes assuré de la correspondance entre la documentation d’architecture et votre implémentation.
+18. **Vos diagrammes indiquent clairement quels sont les composants intégrés versus ceux qui sont développés par votre équipe.**
 
-## Directives pour la remise
-Toutes les remises se font directement sur le répertoire Github de votre équipe, sur la branche principale [«main»]. Assurez-vous que votre rapport est situé dans le répertoire DOC, qu'il est au format PDF et se nomme documentationArchitecture.PDF .
+## Directives pour les remises
 
-Vous devez mettre votre documentation et vos sources à jour dans la branche main, et ensuite vous générer un tag correspondant à la semaine ou vous faites votre remise. 
+Vous devez utiliser le document suivant pour la documentation de votre architecture: [DocumentationArchitecture.md](doc/documentationArchitecture.md)
 
-| Semaine   |Tag           |
-| --------: |:-----------------|
-|         2 | git tag semaine2 |
-|         3 | git tag semaine3 |
-|         n | git tag semainen |
+Toutes les remises se font directement sur le répertoire Github de votre équipe, sur la branche principale [«main»]. Assurez-vous que votre rapport est situé dans le répertoire DOC, qu'il est au format PDF et se nomme [documentationArchitecture.pdf](doc/documentationArchitecture.pdf) .
+
+Utiliser la commande suivante pour générer le PDF de la documentation avec l'outil [Pandoc](https://pandoc.org)
+```bash
+pandoc documentationArchitecture.md footer.md oa1.md footer.md  oa2.md footer.md cu01.md footer.md cu02.md footer.md cu03.md footer.md cu04.md footer.md cu05.md footer.md cu06.md footer.md cu07.md footer.md cu08.md footer.md cu09.md footer.md cu10.md footer.md AQ-disponibilite.md footer.md AQ-modifiabilite.md footer.md AQ-performance.md footer.md AQ-securite.md footer.md AQ-testabilite.md footer.md AQ-usabilite.md footer.md AQ-interoperabilite.md footer.md -o documentationArchitecture.pdf && open documentationArchitecture.pdf
+```
+
+Vous devez mettre votre documentation et vos sources à jour dans la branche main, et ensuite vous générez un tag correspondant à l'itération ou vous faites votre remise. **Les remises doivent se faire avant la séance de laboratoire correspondant à la semaine identifié dans le tableau suivant**.
+
+| Semaine   |Tag                 |Évaluation durant cette remise |  
+| --------: |:-------------------|-------------------------------|
+|         4 | git tag itération1 |La documentation des cas d’utilisation et attributs de qualité, aucune démonstration    |
+|         8 | git tag iteration2 |La documentation des interfaces et le fonctionnement des composants développé par l'équipe |
+|         12| git tag iteration3 |La documentation des 3 vues architecturales et le fonctionnement du système complet |
+
 
 # Parasites et mollasson
-Les membres de l'équipe devront réaliser une évaluation par les pairs pour chacun des membres de l'équipe. La note finale du laboratoire de ce membre sera pondérée par rapport à cette évaluation. Référez-vous à l'article Parasites et mollasson pour vous aider à faire l'évaluation des autres étudiants. Voir les [fichiers Excel d'évaluation par les pairs](docs/../doc/EvaluationParLesPairs-etudiant1.xlsx) dans le répertoire docs. 
+À la fin de la session, les membres de l'équipe devront réaliser une évaluation par les pairs pour chacun des membres de l'équipe. La note finale du laboratoire de ce membre sera pondérée par rapport à cette évaluation. Référez-vous à l'article Parasites et mollasson pour vous aider à faire l'évaluation des autres étudiants. Voir les [fichiers Excel d'évaluation par les pairs](docs/../doc/EvaluationParLesPairs-etudiant1.xlsx) dans le répertoire DOC. 
+
+N'oubliez pas que cette clause du plan de cours s'applique à chaque itération et sera appliquée avant l'évaluation par les pairs. **Un étudiant ou une étudiante dont le nom n'est pas sur un travail de laboratoire reçoit une note de "0" pour le travail.**
 
 # Bonus projet laboratoire (5% point bonus)
 Impressionnez-nous en intégrant de nouvelles fonctionnalités / Apis offrant de nouveaux services ou interagissant avec de nouveaux services externes.
 
 
+
+ # Documentation des interfaces
+Les catalogues d'élément devraient être des tableaux qui contiennent la description des éléments en plus d'un lien vers la documentation de l'interface de ceux-ci.
+Je vous suggère d'utiliser un document par interface pour vous faciliter la tâche. Il sera ainsi plus facile de distribuer la documentation d'une interface aux équipes en ayant besoin.
+La documentation des interfaces de vos éléments doit se faire en utilisant le [gabarit suivant](template-interface.md).
+
+Voici quelques exemples de documentation d'interface utilisant ce gabarit:
+- https://wiki.sei.cmu.edu/confluence/display/SAD/OpcPurchaseOrderService+Interface+Documentation
+- https://wiki.sei.cmu.edu/confluence/display/SAD/OpcOrderTrackingService+Interface+Documentation
+- https://wiki.sei.cmu.edu/confluence/display/SAD/WebServiceBroker+Interface+Documentation
+
+\newpage
+
+
+
+## Relation entre les éléments architecturale et les exigences de qualité
+
+Dans les diagrammes de séquence, vous devez faire le lien entre l'exigence et le participant ainsi qu'identifier le type de l'élément.  Est-ce un module (classe), un composant, un connecteur ou une interface?
+
+- \<\<cu01>> correspond à l'exigence qui requiert cet élément
+- \<\<composant>> correspond au type de l'élément
+- ChaosMonkey correspond au nom de l'élément ou de l'interface
+
+```plantuml
+@startuml
+skinparam style strictuml
+participant "<<cu01>>\n<<Composant>>\n:ChaosMonkey" as monkey
+
+
+@enduml
+
+```
