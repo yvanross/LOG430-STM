@@ -18,3 +18,6 @@ les étudiants réussissent à intégrer
 
 **valeurs**
 deux ou plus fournisseurs de données dans une application apportant quelque chose de significatif à la collectivité.
+
+### Analyse et conception
+- Information pertinente démontrant la réalisation de cet objectif d'affaire

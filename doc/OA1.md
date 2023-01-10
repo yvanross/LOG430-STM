@@ -20,3 +20,6 @@ le nombre de chargés de laboratoire trouvé
 **valeurs**
 à 1 pour moins de 40 élèves
 à 2 pour 40 élèves et plus
+
+### Analyse et conception
+- Information pertinente démontrant la réalisation de cet objectif d'affaire
