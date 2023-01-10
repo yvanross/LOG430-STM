@@ -1,5 +1,11 @@
 ## Testabilité
 
+### [D-OA01] Faciliter le recrutement des nouveaux chargés de laboratoire.
+**Décrive comment vous pouvez satisfaire cette exigence avec cet attribut de qualité.**
+
+### [D-OA02] Promouvoir l'utilisation des données ouvertes
+**Décrive comment vous pouvez satisfaire cette exigence avec cet attribut de qualité.**
+
 
 ### [T-CU01](#cu01) Comparaison de temps de trajet
 - Ce cas d'utilisation doit avoir une couverture de test de 100%

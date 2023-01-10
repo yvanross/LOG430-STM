@@ -1,5 +1,12 @@
 ## Sécurité
 
+### [D-OA01] Faciliter le recrutement des nouveaux chargés de laboratoire.
+**Décrive comment vous pouvez satisfaire cette exigence avec cet attribut de qualité.**
+
+### [D-OA02] Promouvoir l'utilisation des données ouvertes
+**Décrive comment vous pouvez satisfaire cette exigence avec cet attribut de qualité.**
+
+
 ### Pour tous les Cu's
 - Vos microservices doivent implémenter une méchanique d'authentification
 

@@ -1,5 +1,12 @@
 ## Usabilité
 
+### [D-OA01] Faciliter le recrutement des nouveaux chargés de laboratoire.
+**Décrive comment vous pouvez satisfaire cette exigence avec cet attribut de qualité.**
+
+### [D-OA02] Promouvoir l'utilisation des données ouvertes
+**Décrive comment vous pouvez satisfaire cette exigence avec cet attribut de qualité.**
+
+
 ## [U-CU01](#cu01) Comparaison de temps de trajet
 - L'étudiant doit pouvoir sélectionner simultanément plusieurs services externe pour fin de comparaison.
 - Cet attribut nous permet de faciliter le travail de l'utilisateur en lui offrant les autobus, les arrêts de départ et d'arrivées. Tout en lui offrant un champ simple pour mettre l'heure de départ et/ou d'arrivée.

@@ -1,8 +1,16 @@
 ## Modifiabilité
 
+### [D-OA01] Faciliter le recrutement des nouveaux chargés de laboratoire.
+**Décrive comment vous pouvez satisfaire cette exigence avec cet attribut de qualité.**
+
+### [D-OA02] Promouvoir l'utilisation des données ouvertes
+**Décrive comment vous pouvez satisfaire cette exigence avec cet attribut de qualité.**
+
+
 ### [M-CU01](#cu01) Comparaison de temps de trajet
 - Le système doit être facilement modifiable pour ajouter ou enlever un nouveau service externe en moins de 30 secondes.
 - On veut connaitre votre estimation du temps nécessaire pour implémenter un nouveau service externe.
+
 ### [M-CU02](#cu02) ChaosMonkey
 - L'ajout d'un nouveau microservice dans les listes de service perturbable doit se faire en moins de 30 secondes.
 - L'implémentation du mécanisme de perturbation pour un nouveau microservice doit se faire en moins de 3 heures.

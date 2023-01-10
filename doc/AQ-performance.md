@@ -1,5 +1,11 @@
 ## Performance
 
+### [D-OA01] Faciliter le recrutement des nouveaux chargés de laboratoire.
+**Décrive comment vous pouvez satisfaire cette exigence avec cet attribut de qualité.**
+
+### [D-OA02] Promouvoir l'utilisation des données ouvertes
+**Décrive comment vous pouvez satisfaire cette exigence avec cet attribut de qualité.**
+
 ### Pour tous les Cu's
 - Vous devez démontrer l'impact de la perturbation par le chaos monkey pour chacune des services externes.
 
@@ -27,6 +33,7 @@ La performance est importante dans ce cas d’utilisation puisqu’il va y avoir
 
 ### [P-CU07](#cu07) partager une comparaison de trajets
 - Le service doit avoir un temps de réponse de moins de 3 secondes
+  
 ### [P-CU08](#cu08) Favoris
 - Le service doit supporter plusieurs requêtes simultanées.
 

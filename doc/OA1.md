@@ -1,19 +1,22 @@
 ## **OA01** 
 Faciliter le recrutement des nouveaux chargés de laboratoire.
 
-**Acteurs externe:** 
+**Objectif-sujet**
 La personne responsable de donner le cours de LOG430
 
-**Précondition:** 
+**a pour but que**
+le cours de LOG430 
 
-**Évènement déclencheur:** 
+**atteint**
+le bon nombre de chargé de laboratoire
 
-**Scénario**
+**dans le contexte de**
+satisfaire les besoins en formation des étudiants
 
-**Évènement résultant:**
+**et sera satisfait si** 
+le nombre de chargés de laboratoire trouvé
+égale
 
-**Postcondition:** 
-
-**Cas alternatifs:**
-
-**Commentaires:**
+**valeurs**
+à 1 pour moins de 40 élèves
+à 2 pour 40 élèves et plus

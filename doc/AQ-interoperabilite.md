@@ -1,10 +1,18 @@
 ## Interopérabilité
 
+### [D-OA01] Faciliter le recrutement des nouveaux chargés de laboratoire.
+**Décrive comment vous pouvez satisfaire cette exigence avec cet attribut de qualité.**
+
+### [D-OA02] Promouvoir l'utilisation des données ouvertes
+**Décrive comment vous pouvez satisfaire cette exigence avec cet attribut de qualité.**
+
+
 ### [ICU01](#cu01) Comparaison de temps de trajet
 Utiliser un adaptateur pour connecter votre système à la STM en prévision de pouvoir utiliser votre système dans d'autre université à travers l'amérique du Nord.
 
 ### [ICU02](#cu02) ChaosMonkey
 Le ChaosMonkey doit pouvoir interagir avec n'importe quel microservice faisant partie de votre système.
+
 ### [ICU03](#cu03) Impact écologique 
 On devrait pouvoir facilement interchanger le fournisseur de données pour obtenir les données de l'impact écologique à partir de différents fournisseurs. 
 

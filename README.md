@@ -126,7 +126,7 @@ Utiliser l'API ou la page web des fournisseurs externe pour l'estimation en temp
 
 ## Contraintes de réalisation
 ### Language¶
-Nous n’imposons aucune contrainte au niveau du langage de développement utilisé.
+Nous n’imposons aucune contrainte au niveau du langage de développement utilisé à l'exception que celui-ci doit être de type **Orienté objet**.
 
 ### Réalisation
 Vous devez réaliser votre projet avec des **microservices**

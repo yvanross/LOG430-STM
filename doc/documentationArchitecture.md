@@ -20,8 +20,10 @@
 # Membre de votre équipe
 ## Actif
 >TODO: Idenfitier tous les membres de votre équipe que vous désirez inclure dans cette évaluation
+
 ## Passif
 >TODO: Identifié les membres que vous désirez ne pas inclure dans l'évaluation de cette itération
+
 # Introduction
 >TODO: insérer votre introduction
 

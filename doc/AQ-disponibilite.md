@@ -3,6 +3,13 @@
 ### Pour tous les CU's
 - En cas de détection d'un défaut ou d'une défaillance, il doit être enregistré dans les fichiers journaux (logs).
 
+### [D-OA01] Faciliter le recrutement des nouveaux chargés de laboratoire.
+**Décrive comment vous pouvez satisfaire cette exigence avec cet attribut de qualité.**
+
+### [D-OA02] Promouvoir l'utilisation des données ouvertes
+**Décrive comment vous pouvez satisfaire cette exigence avec cet attribut de qualité.**
+
+
 ### [D-CU01](#cu01) Comparaison de temps de trajet
 - Si un service n'est pas disponible, il faut pouvoir quand même comparer le reste des services.
 - Le service de la STM doit être disponible puisque c'est un élément central de ce projet. En effet, le premier cas d'utilisation a besoin du système de la STM pour pouvoir accomplir le but de l'utilisateur de comparer un temps de trajet de la STM avec un autre service externe.
