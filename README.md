@@ -17,7 +17,7 @@ Vous devez développer l'architecture d'un système de comparaison de temps de t
 
 # Services externes
 
-Utiliser l'API ou la page web des fournisseurs externe pour l'estimation en temps réel du temps nécessaire pour parcourir la distance de la résidence des étudiants vers l'ETS.  P.s n'utilisez pas vos adresse personnelle exacte pour les tests et démonstration. 
+Utiliser l'API ou la page web des fournisseurs externe pour l'estimation en temps réel du temps nécessaire pour parcourir la distance de la résidence des étudiants vers l'ETS.  P-S N'utilisez pas vos adresse personnelle exacte pour les tests et démonstration. 
 
 ## Exemples
 - https://www.google.ca/maps/dir/Marché+Jean-Talon/45.51433,+-73.55014/45.58927,+-73.50912/@45.5503686,-73.5965441,13z/data=!3m2!4b1!5s0x4cc919136bb582b5:0xf0b087b71589c626!4m20!4m19!1m5!1m1!1s0x4cc919136130849d:0x5c1098d838d87981!2m2!1d-73.6148902!2d45.5361095!1m5!1m1!1s0x0:0xf12664c8f968830d!2m2!1d-73.5502413!2d45.514437!1m5!1m1!1s0x0:0xfeb4b67d79e8fa7c!2m2!1d-73.5091582!2d45.589417!3e0
@@ -129,7 +129,7 @@ Utiliser l'API ou la page web des fournisseurs externe pour l'estimation en temp
 Nous n’imposons aucune contrainte au niveau du langage de développement utilisé.
 
 ### Réalisation
-Vous devez réaliser votre projet avec des microservices
+Vous devez réaliser votre projet avec des **microservices**
 
 ### Contrainte d'équipe
 L'équipe de coordonnateur peut imposer aux équipes les contraintes quelle juge nécessaires pour le bon déroulement du projet. 
@@ -175,7 +175,7 @@ Vous pouvez déployer votre solution sur n'importe quel serveur. Dans le cadre d
 ### Déploiement avec Portainer
 
 Voir les vidéos:
-- portainer-1: https://youtu.be/L0ak_Jsi3W8  Test en mode local
+- portainer-1: https://youtu.be/L0ak_Jsi3W8  teste en mode local
 - portainer-2: https://youtu.be/VSxIHf0ZuF0  Deployement sur Portainer
 - portainer-3: https://youtu.be/1vDqsMESGyI  Docker-compose sur Portainer
 
@@ -193,7 +193,7 @@ Une attention particulière sera portée sur les éléments suivants au niveau d
 2. Les interfaces sont explicites dans les diagrammes et documentées en fonction du type d’interface.  
 3. Chaque interface doit être adéquatement détaillée dans un fichier séparé.
 4. Les choix technologiques sont visibles dans les vues architecturales. 
-5. Chaque diagramme possède un texte explicite pour le décrire.  Ne décrivez pas chaque élément du diagramme, vous le ferez dans le tableau des éléments. Nous voulons savoir à quoi sert ce diagramme, quelle est son utilité, qu'est-ce qu'il nous permet de comprendre ou démontrer.
+5. Chaque diagramme possède un texte explicite pour le décrire.  Ne décrivez pas chaque élément du diagramme, vous le ferez dans le tableau des éléments. Nous voulons savoir à quoi sert ce diagramme, quelle est son utilité, qu'est-ce qu'il permet de comprendre ou de démontrer.
 6. Chaque diagramme possède une légende
 7. La relation entre les vues est facilement compréhensible.
 8. Les relations entre les cas d'utilisation et les éléments de votre architecture sont bien documentées. 

@@ -1,36 +1,40 @@
 ## Performance
 
-## [P-CU01](#cu01) 
-Le système ne doit pas prendre beaucoup de temps pour afficher le résultat de la comparaison.
-- Vous devez documenter la latence normale de chaque service
-
-## [P-CU02](#cu02)
-Aucune perturbation de performance ne devrait être perceptible par l'usager.
-
-## [P-CU03](#cu03)
-Définir l'exigence que qualité associé à ce scénario ou N/a
-
-## [P-CU04](#cu04)
-Définir l'exigence que qualité associé à ce scénario ou N/a
-
-## [P-CU05](#cu05)
-Définir l'exigence que qualité associé à ce scénario ou N/a
-
-## [P-CU06](#cu06)
-Définir l'exigence que qualité associé à ce scénario ou N/a
-
-## [P-CU07](#cu07)
-Définir l'exigence que qualité associé à ce scénario ou N/a
-
-## [P-CU08](#cu08)
-Définir l'exigence que qualité associé à ce scénario ou N/a
-
-## [P-CU09](#cu09) 
-- Vous devez démontrer la performance de chaque service externe.
+### Pour tous les Cu's
 - Vous devez démontrer l'impact de la perturbation par le chaos monkey pour chacune des services externes.
-  
-## [P-CU10](#cu10)
+
+
+### [P-CU01](#cu01) Comparaison de temps de trajet
+Le système ne doit pas prendre beaucoup de temps pour afficher le résultat de la comparaison.
+- Vous devez documenter la latence normale de chaque service et documenter la latence du service de comparaison.
+
+### [P-CU02](#cu02) ChaosMonkey
+Aucune perturbation de performance des microservices ne devrait être perceptible par l'usager.
+
+### [P-CU03](#cu03) Impact écologique 
+- Le service doit avoir un temps de réponse de moins de 1 seconde.
+
+### [P-CU04](#cu04) Service d'authentification
+- le service doit avoir un temps de réponse de moins de 1 seconde.
+
+### [P-CU05](#cu05) Notification administrateur
 La performance est importante dans ce cas d’utilisation puisqu’il va y avoir énormément d’informations qui vont être reçues et affichées pour les utilisateurs ayant le rôle d’administrateur.
+- Vous devez calculer en temps réel la latence de chaque microservice et afficher celui-ci dans la console d'administration.
+- Vous devriez être en mesure de faire fonctionner votre architecture avec et sans mécanisme de performance pour démontrer l'efficacité de ceux-ci.
+
+### [P-CU06](#cu06) Service externe
+- Vous devez démontrer la performance de chaque service externe.
+
+### [P-CU07](#cu07) partager une comparaison de trajets
+- Le service doit avoir un temps de réponse de moins de 3 secondes
+### [P-CU08](#cu08) Favoris
+- Le service doit supporter plusieurs requêtes simultanées.
+
+### [P-CU09](#cu09) Temps de trajet de STM
+- Le service doit avoir un temps de réponse de moins de 10 secondes
+  
+### [P-CU10](#cu10) Météo
+- Le service de météo doit avoir un temps de réponse de moins de 1 seconde.
 
 ## Conception pilotée par les attributs
   
@@ -43,7 +47,7 @@ La performance est importante dans ce cas d’utilisation puisqu’il va y avoir
 | <li>tactique 2</li>|avantages| désavantages|M|M|
 | <li>tactique 3</li>|avantages| désavantages|M|M|
 </div>
-<span style="color:red">Quelle tactique avez vous choisi et pourquoi?</span>
+<span style="color:red">Quelle tactique avez-vous choisie et pourquoi?</span>
 
 ### [Gérer les ressources](#rdtq-gérer-les-ressources)
 <div class="concept performance">
@@ -54,7 +58,7 @@ La performance est importante dans ce cas d’utilisation puisqu’il va y avoir
 | <li>tactique 2</li>|avantages| désavantages|M|M|
 | <li>tactique 3</li>|avantages| désavantages|M|M|
 </div>
-<span style="color:red">Quelle tactique avez vous choisi et pourquoi?</span>
+<span style="color:red">Quelle tactique avez-vous choisie et pourquoi?</span>
 
 # Réalisation des tactiques de qualité
 
@@ -72,9 +76,9 @@ La performance est importante dans ce cas d’utilisation puisqu’il va y avoir
 
 
 
-### Relation entre les éléments architectuale et les exigences d'modifiabilité
+### Relation entre les éléments architecturale et les exigences
 
-|Identifiant|Éléments|Description de la responabilité|
+|Identifiant|Éléments|Description de la responsabilité|
 |-----------|--------|-------------------------------|
   |[P-CU01](#p-cu01) | |
   |[P-CU02](#p-cu02) | |
