@@ -18,6 +18,10 @@
 </style>
 
 # Membre de votre équipe
+
+Groupe: 
+Equipe: 
+
 ## Actif
 >TODO: Idenfitier tous les membres de votre équipe que vous désirez inclure dans cette évaluation
 
@@ -30,87 +34,49 @@
 
 
 # Scénario d'objectif d'affaires
-## OA-1. Faciliter le recrutement des nouveaux chargés de laboratoire.
-<span style="color:red">Expliquez et démontrez comment votre architecture permet la réalisation de votre scénario d'objectif d'affaires. </span>
-
-## OA-2. Validez si le transport par autobus est toujours plus rapide, peu importe l'heure de la journée et la météo
-<span style="color:red">Expliquer, et démontrez comment votre architecture permet la réalisation de votre scénario d'objectif d'affaires. </span>
+- [OA-1  - Faciliter le recrutement des nouveaux chargés de laboratoire](#oa01){#da-oa01}
+- [OA-2 - Promouvoir l'utilisation des données ouvertes](#oa02){#da-oa02}
 
 # Cas d'utilisations
-- [CU01 - Veux comparer les temps de trajet.](#cu01)
-- [CU02 - Mettre le chaos dans les microservices en termes de performance et de disponibilité.](#cu02)
-- [CU03 - Comparer l'impact écologique de divers trajets en autobus et en auto.](#cu03)
-- [CU04 - Veux s'assurer que seuls les acteurs autorisés ont accès aux Apis. (service d'authentification)](#cu04)
-- [CU05 - Veux informer l'administrateur sur les changements de statut des microservices.](#cu05)
-- [CU06 - Veux pouvoir récupérer le temps de trajets d'un service externe.](#cu06)
-- [CU07 - Partager une comparaison de trajets.](#cu07)
-- [CU08 - Sauvegarder les trajets favoris qui seront utilisés pour faire les analyses comparatives.](#cu08)
-- [CU09 - Veux pouvoir récupérer le temps de trajet de STM.](#cu 09)
-- [CU10 - Veux démontrer l'impact de la météo sur les temps de trajet en auto vs en autobus.](#cu10)
+- [CU01 - Veux comparer les temps de trajet.](#cu01){#da-cu01}
+- [CU02 - Mettre le chaos dans les microservices en termes de performance et de disponibilité.](#cu02){#da-cu02}
+- [CU03 - Comparer l'impact écologique de divers trajets en autobus et en auto.](#cu03){#da-cu03}
+- [CU04 - Veux s'assurer que seuls les acteurs autorisés ont accès aux Apis. (service d'authentification)](#cu04){#da-cu04}
+- [CU05 - Veux informer l'administrateur sur les changements de statut des microservices.](#cu05){#da-cu05}
+- [CU06 - Veux pouvoir récupérer le temps de trajets d'un service externe.](#cu06){#da-cu06}
+- [CU07 - Partager une comparaison de trajets.](#cu07){#da-cu07}
+- [CU08 - Sauvegarder les trajets favoris qui seront utilisés pour faire les analyses comparatives.](#cu08){#da-cu08}
+- [CU09 - Veux pouvoir récupérer le temps de trajet de STM](#cu09){#da-cu09}
+- [CU10 - Veux démontrer l'impact de la météo sur les temps de trajet en auto vs en autobus.](#cu10){#da-cu010}
 
 # Attributs de qualité
-À partir des qualités associées à tous vos cas d'utilisation, réaliser un mini ADD pour comparer les différentes tactiques et identifier clairement la raison de vos choix.
 
-- [Disponibilité](#disponibilité)
-- [Modifiabilité](#modifiabilité)
-- [Performance](#performance)
-- [Sécurité](#sécurité)
-- [Testabilité](#testabilité)
-- [Convivialité](#usabilité)
-- [Interopérabilité](#interopérabilité)
+- Vous devez vous assurer que les attributs de qualité (A) associés à chacun de vos cas d'utilisation soient documentés et réalisés. Pour chacun des attributs de qualité (A), vous devrez concevoir et réaliser une architecture qui utilisera au minimum une tactique architecturale pour chacune des sous-catégories (SC) suivantes.
 
-  
-\newpage
+- Si un attribut de qualité ou une sous-catégorie (SC) n'est pas représenté dans votre architecture, vous devez ajouter de nouveau cas d'utilisation tant que tous n'auront pas été couverts.
+
+- [(A) Disponibilité](#disponibilité){#da-disponibilite}
+- [(A) Modifiabilité](#modifiabilité){#da-modifiabilite}
+- [(A) Performance](#performance){#da-performance}
+- [(A) Sécurité](#sécurité){#da-securite}
+- [(A) Testabilité](#testabilité){#da-testabilite}
+- [(A) Convivialité](#usabilité){#da-usabilite}
+- [(A) Interopérabilité](#interopérabilité){#da-interoperabilite}
+
 # Vues architecturales 
+- [Vues architecturales de type Module](#vues-module){#da-vues-module}
+- [Vues architecturales de type composant et connecteur](#vues-cetc){#da-vues-cetc}
+- [Vues architecturales de type allocation](#vues-allocation){#da-vues-allocation}
 
-## Vues architecturales de type Module
-### Vue #1
->#### Présentation primaire
->#### Catalogue d'éléments
-|Élement|Description|lien vers document d'interfaces|
-|-------|-----------|-------------------------------|
-|el1|responsabilité incluant les liens vers les diagrammes de séquence démontrant le fonctionnement de celui-ci|http://www.etsmtl.ca|
->#### Diagramme de contexte
->#### Guide de variabilité
->#### Raisonnement
->#### Vues associées
-### Vue #2...
-
-\newpage
-## Vues architecturales de type composant et connecteur
-### Vue #1
->#### Présentation primaire
->#### Catalogue d'éléments
-|Élement|Description|lien vers document d'interfaces|
-|-------|-----------|-------------------------------|
-|el1|responsabilité incluant les liens vers les diagrammes de séquence démontrant le fonctionnement de celui-ci|http://www.etsmtl.ca|
->#### Diagramme de contexte
->#### Guide de variabilité
->#### Raisonnement
->#### Vues associées
-### Vue #2...
-
-\newpage
-## Vues architecturales de type allocation
-### Vue #1
->#### Présentation primaire
->#### Catalogue d'éléments
-|Élement|Description|lien vers document d'interfaces|
-|-------|-----------|-------------------------------|
-|el1|responsabilité incluant les liens vers les diagrammes de séquence démontrant le fonctionnement de celui-ci|http://www.etsmtl.ca|
->#### Diagramme de contexte
->#### Guide de variabilité
->#### Raisonnement
->#### Vues associées
-### Vue #2 ...
-
-\newpage
 # Conclusion
 >TODO: insérer votre conclusion
 
 
-N'oubliez pas d'effacer les TODO et ce texte et de générer une version PDF de ce document pour votre remise finale.
-Créer un tag git avec la commande "git tag rapport1"
+- N'oubliez pas d'effacer les TODO
+- Générer une version PDF de ce document pour votre remise finale.
+- Assurez vous du bon format de votre rapport PDF.
+- Créer un tag git avec la commande "git tag iterationX"
+
 
 \newpage
 # Annexes

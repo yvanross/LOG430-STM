@@ -34,19 +34,30 @@ Utiliser l'API ou la page web des fournisseurs externe pour l'estimation en temp
 
 # Parties prenantes du projet
 ## Chargé de laboratoire (client)
-- Effectuera l'évaluation en continu de l'architecture de chaque équipe (Documentation, Intégration et Implémentation)
+- Effectuera l'évaluation de l'architecture de chaque équipe (Documentation, Intégration et Implémentation)
 - Responsable de répondre aux questions des étudiants (durant les périodes de laboratoire seulement)
 - Responsable d'aider les étudiants à maîtriser les concepts d'architecture
 - Veux un rapport détaillé de l'architecture et des interfaces
 
 ## Classe
-- Chaque classe est séparée en deux groupes
+- Chaque classe est séparée en deux cohorte
 
-## Sous-Groupe
-- Chaque groupe est séparé en équipe de 5 étudiants.
-- Chaque groupe est en compétition avec les groupes de toutes les classes.
-- Les équipes de chaque groupe peuvent partager leurs microservices avec toutes les équipes du groupe pour permettre aux autres équipes de faire de l'intégration au lieu de faire de l'implémentation.  Utiliser l'intégration pour satisfaire une exigence est plus payant en termes de point.  Voir le ficher de la grille de correction.
-- Le chargé de cours crée les groupes.
+## cohorte
+- Chaque cohorte est séparé en équipe de 5 étudiants.
+- Les équipes de chaque cohorte peuvent partager leurs microservices avec toutes les équipes de la cohorte pour permettre aux autres équipes de faire de l'intégration au lieu de faire de l'implémentation.  Utiliser l'intégration pour satisfaire une exigence est plus payant en termes de point.  Voir le ficher de la grille de correction.
+- Le chargé de cours crée les cohortes.
+
+## Équipe (Étudiants)
+- L'équipe doit concevoir et réaliser une architecture qui satisfait **toutes** les exigences.
+- Je recommande à l'équipe d'utiliser les microservices implémentés par les autres équipes puisque c'est 2 fois plus payant en termes de points accumulés. Voir la [grille de pointage](#grille-de-pointage) pour plus d'information.
+- Un étudiant par équipe est nommé pour faire partie de l'équipe de coordination 
+  - Une équipe peut révoquer son représentant de l'équipe de coordination s'il ne répond pas à leurs attentes 
+- L'équipe doit conserver une traçabilité de quel étudiant est responsable de quelles tâches. Ceci correspond à une vue d'allocation à insérer dans votre rapport.
+- L'équipe doit connaître en tout temps l'état d'une tâche assignée à un étudiant
+- L'équipe a la responsabilité de concevoir/documenter et diffuser (à l'équipe de coordination) la documentation des interfaces des microservices qui leur ont été assignés.
+- Le chargé de cours crée les équipes de laboratoires.
+### S20231 Équipe
+- Nous avons comme objectif de créer une banque de microservice qui pourra être utilisé pour les laboratoires de LOG430 des prochaines sessions.  Vous trouverez donc dans chaque répertoire des microservices, un fichier README.md qui demande l'autorisation des étudiants pour une licence de droit d'utilisation.  Aucune pénalité ne sera appliquée si une équipe décide de ne pas accorder cette licence.
 
 ## Équipe de coordination
 - L'équipe de coordination est  responsable de répartir équitablement les tâches de réalisation de la conception et l'implémentation des différents microservices nécessaire à ce projet.
@@ -58,71 +69,6 @@ Utiliser l'API ou la page web des fournisseurs externe pour l'estimation en temp
 - L'équipe de coordination peut démettre de ses fonctions un étudiant qui ne répond pas à ses attentes. 
   - L'équipe affectée devra nommer un nouveau représentant
 - Les équipes de coordination ne doivent pas travailler ensemble ils sont des compétiteurs
-
-## Équipe (Étudiants)
-- L'équipe doit concevoir et réaliser une architecture qui satisfait toutes les [exigences](#exigences) documentées dans ce document de spécification.
-- Je recommande à l'équipe d'utiliser les microservices implémentés par les autres équipes puisque c'est 2 fois plus payant en termes de points accumulés. Voir la [grille de pointage](#grille-de-pointage) pour plus d'information.
-- Un étudiant par équipe est nommé pour faire partie de l'équipe de coordination 
-  - Une équipe peut révoquer son représentant de l'équipe de coordination s'il ne répond pas à leurs attentes 
-- L'équipe doit conserver une traçabilité de quel étudiant est responsable de quelles tâches. Ceci correspond à une vue d'allocation à insérer dans votre rapport.
-- L'équipe doit connaître en tout temps l'état d'une tâche assignée à un étudiant
-- L'équipe a la responsabilité de concevoir/documenter et diffuser (à l'équipe de coordination) la documentation des interfaces des microservices qui leur ont été assignés.
-- Le chargé de cours crée les équipes de laboratoires.
-
-
-# Exigences
-## Objectifs d'affaires
-
-### [**OA01** - Faciliter le recrutement des nouveaux chargés de laboratoire.](doc/OA1.md)
-### [**OA02** - Promouvoir le transport par autobus.](doc/OA2.md)
-
-## Exigences fonctionnelles
-
-### [**CU01** - Veux comparer les temps de trajet.](doc/CU01.md)
-### [**CU02** - Mettre le chaos dans les microservices en termes de performance et de disponibilité.](doc/CU02.md)
-### [**CU03** - Comparer l'impact écologique de divers trajets en autobus et en auto.](doc/CU03.md)
-### [**CU04** - Veux s'assurer que seuls les acteurs/systèmes autorisés ont accès aux Apis.](doc/CU04.md)
-### [**CU05** - Veux informer l'administrateur sur les changements de statut des microservices.](doc/CU05.md)
-### [**CU06** - Veux démontrer l'impact de la météo sur les temps de trajet en auto vs en autobus.](doc/CU06.md)
-### [**CU07** - Veux interagir avec le système à partir d'interface utilisateur.](doc/CU07.md)
-### [**CU08** - Veux sauvegarder les trajets favoris qui seront utilisés pour faire les analyses comparatives.](doc/CU08.md)
-### [**CU09** - Veux sélectionner à partir de l'interface usagée quelle application externe utiliser pour comparer le trajet.](doc/CU09.md)
-### [**CU10** - Veux pouvoir informer l'administrateur sur l'état interne de tous les services.](doc/CU10.md)
-
-
-## Exigences de qualité
-
-- Vous devez vous assurer que les attributs de qualité (A) associés à chacun de vos cas d'utilisation soient documentés et réalisés. Pour chacun des attributs de qualité (A), vous devrez concevoir et réaliser une architecture qui utilisera au minimum une tactique architecturale pour chacune des sous-catégories (SC) suivantes.
-
-- Si un attribut de qualité ou une sous-catégorie (SC) n'est pas représenté dans votre architecture, vous devez ajouter de nouveau cas d'utilisation tant que tous n'auront pas été couverts.
-  
-  ### (A) [Disponibilité](doc/AQ-disponibilite.md)
-    - (SC) [détection de faute](doc/AQ-disponibilite.md#détection-de-faute)
-    - (SC) [Préparation et réparation](doc/AQ-disponibilite.md#préparation-et-réparation)
-    - (SC) [Réintroduction](doc/AQ-disponibilite.md#réintroduction)
-    - (SC) [Prévention des fautes](doc/AQ-disponibilite.md#prévention-des-fautes)
-  ### (A) [Modifiabilité](doc/AQ-modifiabilite.md)
-    - (SC) [Réduire la taille des modules](doc/AQ-modifiabilite.md#réduire-la-taille-des-modules)
-    - (SC) [Augmenter la cohésion](doc/AQ-modifiabilite.md#augmenter-la-cohésion)
-    - (SC) [Réduire le couplage](doc/AQ-modifiabilite.md#réduire-le-couplage)
-    - (SC) [Defer binding](doc/AQ-modifiabilite.md#defer-binding)
-  ### (A) [Performance](doc/AQ-performance.md)
-    - (SC) [Contrôler la demande en ressources](doc/AQ-performance.md#contrôler-la-demande-en-ressources)
-    - (SC) [Gérer les ressources](doc/AQ-performance.md#gérer-les-ressources)
-  ### (A) [Sécurité](doc/AQ-securite.md)
-    - (SC) [Détecter les attaques](doc/AQ-securite.md#détecter-les-attaques)
-    - (SC) [Résister aux attaques](doc/AQ-securite.md#résister-aux-attaques)
-    - (SC) [Réagir aux attaques](doc/AQ-securite.md#réagir-aux-attaques)
-    - (SC) [Récupérer d'une attaque](doc/AQ-securite.md#récupérer-dune-attaque)
-  ### (A) [Testabilité](doc/AQ-testabilite.md)
-    - (SC) [Contrôle et observe l'état du système](doc/AQ-testabilite.md#controle-and-observe-létat-du-système)
-    - (SC) [limiter la complexité](doc/AQ-testabilite.md#limiter-la-complexité)
-  ### (A) [Convivialité](doc/AQ-usabilite.md)
-    - (SC) [Supporter l'initiative de l'usager](doc/AQ-usabilite.md#supporter-linitiative-de-lusager)
-    - (SC) [Supporter l'initiative du système](doc/AQ-usabilite.md#rdtq-supporter-linitiative-du-système)
-  ### (A) [Interopérabilité](doc/AQ-interoperabilite.md)
-    - (SC) [Localiser](doc/AQ-interoperabilite.md#localiser)
-    - (SC) [Gérer les interfaces](doc/AQ-interoperabilite.md#gérer-les-interfaces)
 
 ## Contraintes de réalisation
 ### Language¶
@@ -158,16 +104,18 @@ Vos Kanban doivent avoir au minimum les colonnes suivantes:
 
 ## Directive d'implémentation
 
-Chaque équipe doit implémenter sa propre solution tout en réalisant l'intégration avec des microservices développés par d'autres [équipes](#équipe-étudiants). 
-
 La coordination et l'échange d'information entre les équipes deviennent cruciaux pour le bon succès de votre projet. 
 
-Vous devrez clairement démontrer comment vous faites l'intégration des composants développés par les autres équipes.  L'utilisation de diagramme de séquence et de diagramme de composant est particulièrement adaptée à ce besoin.
-
-## Directive d'intégration
 L'équipe qui développe un microservice qui sera intégré par d'autres équipes doit s'assurer de la robustesse de son microservice. Le microservice doit satisfaire les attributs de qualité associée à celui-ci. 
 
 Ces microservices doivent être déployés par l'équipe propriétaire ou l'équipe de coordonnateur.
+
+## Directive d'intégration
+
+Chaque équipe doit implémenter sa propre solution tout en réalisant l'intégration avec des microservices développés par d'autres [équipes](#équipe-étudiants). 
+
+Vous devrez clairement démontrer comment vous faites l'intégration des composants développés par les autres équipes.  L'utilisation de diagramme de séquence et de diagramme de composant est particulièrement adaptée à ce besoin.
+
 
 ## Directive de déploiement
 Vous pouvez déployer votre solution sur n'importe quel serveur. Dans le cadre du laboratoire nous vous fournirons l'accès à un serveur virtuel utilisant l'interface [Portainer](#déploiement-avec-portainer).  Ce serveur vous permettra de déployer des microservices réalisés à l'aide de docker et docker-compose.
@@ -178,6 +126,9 @@ Voir les vidéos:
 - portainer-1: https://youtu.be/L0ak_Jsi3W8  teste en mode local
 - portainer-2: https://youtu.be/VSxIHf0ZuF0  Deployement sur Portainer
 - portainer-3: https://youtu.be/1vDqsMESGyI  Docker-compose sur Portainer
+
+### Déploiement avec Heroku (option)
+  - [Déploiement avec Heroku](doc/deploiement/Déploiement-Tutoriel-Docker-Heroku.md)
 
 ## Directive de Démonstration
 - Vous n'aurez droit qu'à une seule démonstration pour l'intégration et/ou l'implémentation de chaque exigence. 
@@ -219,7 +170,7 @@ Toutes les remises se font directement sur le répertoire Github de votre équip
 
 Utiliser la commande suivante pour générer le PDF de la documentation avec l'outil [Pandoc](https://pandoc.org)
 ```bash
-pandoc documentationArchitecture.md footer.md oa1.md footer.md  oa2.md footer.md cu01.md footer.md cu02.md footer.md cu03.md footer.md cu04.md footer.md cu05.md footer.md cu06.md footer.md cu07.md footer.md cu08.md footer.md cu09.md footer.md cu10.md footer.md AQ-disponibilite.md footer.md AQ-modifiabilite.md footer.md AQ-performance.md footer.md AQ-securite.md footer.md AQ-testabilite.md footer.md AQ-usabilite.md footer.md AQ-interoperabilite.md footer.md -o documentationArchitecture.pdf && open documentationArchitecture.pdf
+pandoc documentationArchitecture.md vues-module.md footer.md vues-cetc.md footer.md vues-allocation.md footer.md oa1.md footer.md  oa2.md footer.md cu01.md footer.md cu02.md footer.md cu03.md footer.md cu04.md footer.md cu05.md footer.md cu06.md footer.md cu07.md footer.md cu08.md footer.md cu09.md footer.md cu10.md footer.md AQ-disponibilite.md footer.md AQ-modifiabilite.md footer.md AQ-performance.md footer.md AQ-securite.md footer.md AQ-testabilite.md footer.md AQ-usabilite.md footer.md AQ-interoperabilite.md footer.md -o documentationArchitecture.pdf && open documentationArchitecture.pdf
 ```
 
 Vous devez mettre votre documentation et vos sources à jour dans la branche main, et ensuite vous générez un tag correspondant à l'itération ou vous faites votre remise. **Les remises doivent se faire avant la séance de laboratoire correspondant à la semaine identifié dans le tableau suivant**.
@@ -251,7 +202,7 @@ Voici quelques exemples de documentation d'interface utilisant ce gabarit:
 - https://wiki.sei.cmu.edu/confluence/display/SAD/OpcOrderTrackingService+Interface+Documentation
 - https://wiki.sei.cmu.edu/confluence/display/SAD/WebServiceBroker+Interface+Documentation
 
-\newpage
+
 
 
 
