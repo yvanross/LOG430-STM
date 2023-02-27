@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "VRg+PvheJ/+zobiJz0cLUwkmzgggtqxiEYMcTKrlAFiLedmh6P9jHYMI+S38KI/gY+uIkUB0Qa7oOWhtTWCOsA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\RouteTimeProvider\\APIClient\\APIClient.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\david\\.nuget\\packages\\restsharp\\108.0.3\\restsharp.108.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
