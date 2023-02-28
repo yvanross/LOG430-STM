@@ -26,7 +26,5 @@ jobs:
           cd ./microservices/CommunicatorNuget/CommunicatorNuget
           dotnet pack -c Release -o out  
 
-      - name: Push generated package to GitHub registry
-        run: dotnet nuget push **.nupkg --skip-duplicate --no-symbols true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push Package to GitHub.com
+        run: dotnet nuget push *.nupkg -k ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/DavidDaniel18/index.json
