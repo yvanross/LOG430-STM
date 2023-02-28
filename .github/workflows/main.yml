@@ -19,7 +19,7 @@ jobs:
         with:
           source-url: https://nuget.pkg.github.com/DavidDaniel18/index.json
         env:
-          NUGET_AUTH_TOKEN: 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       
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}        
           
       - name: Build solution and generate NuGet package
         run: |  
