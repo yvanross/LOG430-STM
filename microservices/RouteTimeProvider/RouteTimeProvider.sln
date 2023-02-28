@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RouteTimeProvider", "PLACEHOLDER\RouteTimeProvider.csproj", "{B62F2F57-AFBB-4862-B722-0381E75AACEB}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationLogic", "ApplicationLogic\ApplicationLogic.csproj", "{2C8FCF0E-FFC4-425C-AD6D-C917C95A4D8E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{51977229-1B41-45B6-9C34-F68D7CACC0DA}"
@@ -13,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationLogicTests", "Ap
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CD4D3F31-E80E-495C-8F76-F5335F5EE5E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIClient", "APIClient\APIClient.csproj", "{E74CB4BF-FEB6-4141-AA39-CF362A9B73A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIClient", "APIClient\APIClient.csproj", "{E74CB4BF-FEB6-4141-AA39-CF362A9B73A9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RouteTimeProvider", "RouteTimeProvider\RouteTimeProvider.csproj", "{9C3F219B-2DAC-484A-8733-0F8ADE8CB397}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B62F2F57-AFBB-4862-B722-0381E75AACEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B62F2F57-AFBB-4862-B722-0381E75AACEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B62F2F57-AFBB-4862-B722-0381E75AACEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B62F2F57-AFBB-4862-B722-0381E75AACEB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2C8FCF0E-FFC4-425C-AD6D-C917C95A4D8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2C8FCF0E-FFC4-425C-AD6D-C917C95A4D8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C8FCF0E-FFC4-425C-AD6D-C917C95A4D8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,6 +37,10 @@ Global
 		{E74CB4BF-FEB6-4141-AA39-CF362A9B73A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E74CB4BF-FEB6-4141-AA39-CF362A9B73A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E74CB4BF-FEB6-4141-AA39-CF362A9B73A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C3F219B-2DAC-484A-8733-0F8ADE8CB397}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C3F219B-2DAC-484A-8733-0F8ADE8CB397}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C3F219B-2DAC-484A-8733-0F8ADE8CB397}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C3F219B-2DAC-484A-8733-0F8ADE8CB397}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

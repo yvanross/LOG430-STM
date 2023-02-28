@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/Ur1UBwA0Y4E+nB8dBgdPqPNSnrXwEcLpUcNEuEuQnpQQxzv3CTK5p7VuTHYRUK17+fa6PxKAKWqrdNsMaGWWg==",
+  "dgSpecHash": "/wF5mBSsBWHEcKK94Br18mDqF9ny8MfWGHGpYP2NNQ+2UFO6+Eq1XYSvh7s9tKwmhnIQETIL3lFtfefRX+4Z2g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\RouteTimeProvider\\Entities\\Entities.csproj",
+  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\Entities\\Entities.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
