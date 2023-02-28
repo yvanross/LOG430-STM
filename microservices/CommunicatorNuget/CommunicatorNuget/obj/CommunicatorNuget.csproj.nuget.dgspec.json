@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\ApplicationLogicTests\\ApplicationLogicTests.csproj": {}
+    "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\CommunicatorNuget\\CommunicatorNuget.csproj": {}
   },
   "projects": {
-    "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\ApplicationLogicTests\\ApplicationLogicTests.csproj": {
+    "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\CommunicatorNuget\\CommunicatorNuget.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
-        "projectName": "ApplicationLogicTests",
-        "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
+        "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\CommunicatorNuget\\CommunicatorNuget.csproj",
+        "projectName": "CommunicatorNuget",
+        "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\CommunicatorNuget\\CommunicatorNuget.csproj",
         "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\ApplicationLogicTests\\obj\\",
+        "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\CommunicatorNuget\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -44,21 +44,9 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
-            "MSTest.TestAdapter": {
+            "RestSharp": {
               "target": "Package",
-              "version": "[2.2.10, )"
-            },
-            "MSTest.TestFramework": {
-              "target": "Package",
-              "version": "[2.2.10, )"
-            },
-            "Microsoft.NET.Test.Sdk": {
-              "target": "Package",
-              "version": "[17.3.2, )"
-            },
-            "coverlet.collector": {
-              "target": "Package",
-              "version": "[3.1.2, )"
+              "version": "[108.0.3, )"
             }
           },
           "imports": [

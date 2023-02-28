@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "dgSpecHash": "lcC757nbELKN1BGCvpQa02Ii2AS58jSoT+0N5bPU97sjQScWnUicMTzdh4/8h+oTDB1+LhdwZDWT3lpnMtnJJg==",
-  "success": false,
+  "dgSpecHash": "jEqe2VWnoF8YqeJsbAlCJYXdWxIU5pKzgB07UnHumz9aXCNnrY5NvXdYV9EhJ8pmmtO6EwCmYOPWVMT1XUhrOg==",
+  "success": true,
   "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
@@ -100,15 +100,5 @@
     "C:\\Users\\david\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1105",
-      "level": "Error",
-      "message": "Unable to find project information for 'C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\ApplicationLogic\\CommunicatorNuget.csproj'. If you are using Visual Studio, this may be because the project is unloaded or not part of the current solution so run a restore from the command-line. Otherwise, the project file may be invalid or missing targets required for restore.",
-      "libraryId": "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\ApplicationLogic\\CommunicatorNuget.csproj",
-      "targetGraphs": [
-        "net7.0"
-      ]
-    }
-  ]
+  "logs": []
 }

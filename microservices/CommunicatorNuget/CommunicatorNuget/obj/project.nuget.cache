@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "Kt9N5eiUhz7P2AVcaNs0FJHE3Kvfx5bIM+DnuQ/vJMIXnSyZdyVaXWushUHKjh38i4z/KY2QAfSzV2IrmCyWjQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\CommunicatorNuget\\CommunicatorNuget.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\david\\.nuget\\packages\\restsharp\\108.0.3\\restsharp.108.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

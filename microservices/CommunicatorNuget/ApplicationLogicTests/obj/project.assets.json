@@ -6765,7 +6765,6 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\ApplicationLogic\\CommunicatorNuget.csproj",
       "MSTest.TestAdapter >= 2.2.10",
       "MSTest.TestFramework >= 2.2.10",
       "Microsoft.NET.Test.Sdk >= 17.3.2",
@@ -6803,11 +6802,7 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
-          "projectReferences": {
-            "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\ApplicationLogic\\CommunicatorNuget.csproj": {
-              "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\ApplicationLogic\\CommunicatorNuget.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {
@@ -6856,16 +6851,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1105",
-      "level": "Error",
-      "message": "Unable to find project information for 'C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\ApplicationLogic\\CommunicatorNuget.csproj'. If you are using Visual Studio, this may be because the project is unloaded or not part of the current solution so run a restore from the command-line. Otherwise, the project file may be invalid or missing targets required for restore.",
-      "libraryId": "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\ApplicationLogic\\CommunicatorNuget.csproj",
-      "targetGraphs": [
-        "net7.0"
-      ]
-    }
-  ]
+  }
 }
