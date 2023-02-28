@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["PLACEHOLDER/PLACEHOLDER.csproj", "PLACEHOLDER/"]
-RUN dotnet restore "PLACEHOLDER/PLACEHOLDER.csproj"
+COPY ["Ingress/Ingress.csproj", "Ingress/"]
+RUN dotnet restore "Ingress/Ingress.csproj"
 COPY . .
-WORKDIR "/src/PLACEHOLDER"
-RUN dotnet build "PLACEHOLDER.csproj" -c Release -o /app/build
+WORKDIR "/src/Ingress"
+RUN dotnet build "Ingress.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "PLACEHOLDER.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Ingress.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "PLACEHOLDER.dll"]
+ENTRYPOINT ["dotnet", "Ingress.dll"]

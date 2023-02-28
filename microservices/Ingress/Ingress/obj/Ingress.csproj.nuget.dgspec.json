@@ -48,6 +48,12 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
+          "dependencies": {
+            "Ambassador": {
+              "target": "Package",
+              "version": "[1.0.6, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -173,9 +179,9 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
-            "CommunicatorNuget": {
+            "Ambassador": {
               "target": "Package",
-              "version": "[1.0.1, )"
+              "version": "[1.0.6, )"
             },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",

@@ -1,8 +1,13 @@
 
+using Ambassador;
+using Ambassador.Usecases;
+
 namespace PLACEHOLDER
 {
     public class Program
     {
+        private static readonly RegistrationUC _registration = new ();
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +42,8 @@ namespace PLACEHOLDER
 
 
             app.MapControllers();
+
+            _registration.Register(ServiceTypes.RouteTimeProvider.ToString());
 
             app.Run();
         }

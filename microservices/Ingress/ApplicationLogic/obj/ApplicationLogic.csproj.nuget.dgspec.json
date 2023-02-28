@@ -48,6 +48,12 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
+          "dependencies": {
+            "Ambassador": {
+              "target": "Package",
+              "version": "[1.0.6, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

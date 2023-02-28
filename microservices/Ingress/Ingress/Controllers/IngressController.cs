@@ -1,9 +1,9 @@
+using Ambassador.BusinessObjects;
 using ApplicationLogic.Usecases;
-using CommunicatorNuget.BusinessObjects;
+using Ingress.Extensions;
 using Ingress.Repository;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using CommunicatorNuget.Usecases;
 
 namespace Ingress.Controllers
 {
@@ -15,6 +15,8 @@ namespace Ingress.Controllers
         private readonly SubscriptionUC _subscriptionUC = new (new RepositoryWrite(), new RepositoryRead());
 
         private readonly RoutingUC _routingUC = new (new RepositoryRead());
+        
+        private readonly HeadersUC _headersUc = new ();
 
         private readonly ILogger<IngressController> _logger;
 
@@ -27,21 +29,34 @@ namespace Ingress.Controllers
         [ActionName(nameof(Subscribe))]
         public IActionResult Subscribe(string serviceType, string serviceName = "")
         {
-            var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+            try
+            {
+                var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
 
-            if (ip is null)
-                return UnprocessableEntity("No Remote Ip Address");
+                if (ip is null)
+                    return UnprocessableEntity("No Remote Ip Address");
 
-            var port = HttpContext.Connection.RemotePort.ToString();
+                var port = HttpContext.Connection.RemotePort.ToString();
 
-            _subscriptionUC.Subscribe(serviceName, ip, port, serviceType);
+                _subscriptionUC.Subscribe(serviceName, ip, port, serviceType);
+
+                _logger.LogInformation($"{serviceType} from {ip}:{port} has subscribed");
+            }
+            catch (Exception e)
+            {
+                var errorMessage = $"{e.Message} \n \t{e.StackTrace}";
+
+                _logger.LogError(errorMessage);
+
+                return Problem(errorMessage);
+            }
 
             return Ok();
         }
 
         [HttpGet]
-        [ActionName(nameof(Route))]
-        public ActionResult<RouteTarget> RouteByServiceType(string serviceType)
+        [ActionName(nameof(RouteByServiceType))]
+        public ActionResult<RoutingData> RouteByServiceType(string serviceType)
         {
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
 
@@ -53,7 +68,18 @@ namespace Ingress.Controllers
             if(_subscriptionUC.CheckIfServiceIsSubscribed(ip, port))
                 return Unauthorized("Subscribe your service before making routing requests");
 
-            return Ok();
+            return Try.WithConsequence(() =>
+            {
+                var address = _routingUC.RouteByDestinationType(serviceType);
+
+                var routingData = new RoutingData() { Address = address };
+
+                _headersUc.AddJsonHeader(routingData);
+
+                _headersUc.AddAuthorizationHeaders(routingData, serviceType);
+
+                return routingData;
+            });
         }
     }
 }

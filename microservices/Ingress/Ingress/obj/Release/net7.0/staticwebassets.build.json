@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "pzKSVgAjfYrc75ZtwKG0DCN25PfiE8G8Aj0+KgTalHY=",
+  "Source": "Ingress",
+  "BasePath": "_content/Ingress",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

@@ -12,10 +12,15 @@ public class RoutingUC
         _repositoryRead = repositoryRead;
     }
 
-    public string? RouteByDestinationType(string serviceType)
+    public string RouteByDestinationType(string serviceType)
     {
         var serviceRoute = _repositoryRead.ReadRouteByType(serviceType);
 
-        return serviceRoute?.Address;
+        if (serviceRoute is null)
+            throw new Exception("service route was not found");
+
+        var port = string.IsNullOrEmpty(serviceRoute.PortNumber) ? string.Empty : $":{serviceRoute.PortNumber}";
+
+        return $"https://{serviceRoute.Address}{port}";
     }
 }

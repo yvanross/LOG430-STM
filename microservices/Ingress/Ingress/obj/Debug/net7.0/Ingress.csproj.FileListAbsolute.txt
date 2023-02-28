@@ -31,3 +31,9 @@ C:\Users\david\LOG430-STM\microservices\Ingress\Ingress\obj\Debug\net7.0\refint\
 C:\Users\david\LOG430-STM\microservices\Ingress\Ingress\obj\Debug\net7.0\Ingress.pdb
 C:\Users\david\LOG430-STM\microservices\Ingress\Ingress\obj\Debug\net7.0\Ingress.genruntimeconfig.cache
 C:\Users\david\LOG430-STM\microservices\Ingress\Ingress\obj\Debug\net7.0\ref\Ingress.dll
+C:\Users\david\LOG430-STM\microservices\Ingress\Ingress\bin\Debug\net7.0\RestSharp.dll
+C:\Users\david\LOG430-STM\microservices\Ingress\Ingress\bin\Debug\net7.0\ApplicationLogic.dll
+C:\Users\david\LOG430-STM\microservices\Ingress\Ingress\bin\Debug\net7.0\Entities.dll
+C:\Users\david\LOG430-STM\microservices\Ingress\Ingress\bin\Debug\net7.0\ApplicationLogic.pdb
+C:\Users\david\LOG430-STM\microservices\Ingress\Ingress\bin\Debug\net7.0\Entities.pdb
+C:\Users\david\LOG430-STM\microservices\Ingress\Ingress\bin\Debug\net7.0\Ambassador.dll

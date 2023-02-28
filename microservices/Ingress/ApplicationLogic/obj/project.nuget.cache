@@ -1,8 +1,23 @@
 {
   "version": 2,
-  "dgSpecHash": "MebCnmTvYfyQUxs/2vTds75ROBnW8soQn25kG2jr+39A5/LSHHUN1bCivYeUuhXK9bHY3NdrnLJ20Z5R4t85dw==",
+  "dgSpecHash": "zpaad2TPuBvEswqj1Sco0BE+EJjJDNLNTEfTVGJdW0ImKrct7ETk4kQbDp7EaMq/RJg7R4nQAHW6qYyVOYszvQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
-  "expectedPackageFiles": [],
-  "logs": []
+  "expectedPackageFiles": [
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.6\\ambassador.1.0.6.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.1\\microsoft.extensions.primitives.5.0.1.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\microsoft.net.http.headers\\2.2.8\\microsoft.net.http.headers.2.2.8.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\restsharp\\108.0.3\\restsharp.108.0.3.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\system.buffers\\4.5.0\\system.buffers.4.5.0.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\system.io.pipelines\\5.0.2\\system.io.pipelines.5.0.2.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "No Authorization header detected"
+    }
+  ]
 }

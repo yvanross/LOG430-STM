@@ -1,4 +1,9 @@
 
+using Ambassador;
+using Entities.BusinessObjects;
+using Ingress.Repository;
+using Route = Entities.BusinessObjects.Route;
+
 namespace Ingress
 {
     public class Program
@@ -38,7 +43,22 @@ namespace Ingress
 
             app.MapControllers();
 
+            CreateDefaultRoutes();
+
             app.Run();
+        }
+
+        private static void CreateDefaultRoutes()
+        {
+            var writeModel = new RepositoryWrite();
+
+            writeModel.Write(new Route()
+            {
+                Address = "api.tomtom.com",
+                PortNumber = string.Empty,
+                Id = "TomtomService",
+                ServiceType = ServiceTypes.Tomtom.ToString()
+            });
         }
     }
 }
