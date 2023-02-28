@@ -12,7 +12,7 @@ public class RoutingUC
         _repositoryRead = repositoryRead;
     }
 
-    public string? TravelByDestinationType(string serviceType)
+    public string? RouteByDestinationType(string serviceType)
     {
         var serviceRoute = _repositoryRead.ReadRouteByType(serviceType);
 

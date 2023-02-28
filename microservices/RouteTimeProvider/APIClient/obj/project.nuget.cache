@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "2wiLJEYYuUmEC9NoiO83SXdnU9msax/7pgw+SX1AlwnUvMeUvDa6lGHA51JmqD6s8Uj3FCYBgcV62PRM7mGOkg==",
+  "dgSpecHash": "SfUezjror4zANG2QeM9S4YjxhkqoNfzvAm/BXERMd+aR9PlHpCCnwGK6CxAueF2jRjkk0wH006NTV20Qo5o9fQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\APIClient\\APIClient.csproj",
   "expectedPackageFiles": [

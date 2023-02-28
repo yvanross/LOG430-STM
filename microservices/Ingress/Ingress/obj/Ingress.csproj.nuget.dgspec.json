@@ -26,7 +26,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.pkg.github.com/DavidDaniel18/index.json": {}
         },
         "frameworks": {
           "net7.0": {
@@ -89,7 +90,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.pkg.github.com/DavidDaniel18/index.json": {}
         },
         "frameworks": {
           "net7.0": {
@@ -148,7 +150,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.pkg.github.com/DavidDaniel18/index.json": {}
         },
         "frameworks": {
           "net7.0": {
@@ -170,6 +173,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "CommunicatorNuget": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[7.0.3, )"

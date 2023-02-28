@@ -47,7 +47,7 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "restore": {
       "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\CommunicatorNuget\\CommunicatorNuget\\CommunicatorNuget.csproj",
       "projectName": "CommunicatorNuget",
@@ -68,7 +68,8 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://nuget.pkg.github.com/DavidDaniel18/index.json": {}
       },
       "frameworks": {
         "net7.0": {

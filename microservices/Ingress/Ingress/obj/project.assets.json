@@ -2,6 +2,18 @@
   "version": 3,
   "targets": {
     "net7.0": {
+      "CommunicatorNuget/1.0.1": {
+        "type": "package",
+        "dependencies": {
+          "RestSharp": "108.0.3"
+        },
+        "compile": {
+          "lib/net7.0/CommunicatorNuget.dll": {}
+        },
+        "runtime": {
+          "lib/net7.0/CommunicatorNuget.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.OpenApi/7.0.3": {
         "type": "package",
         "dependencies": {
@@ -68,6 +80,19 @@
         "build": {
           "build/Microsoft.VisualStudio.Azure.Containers.Tools.Targets.props": {},
           "build/Microsoft.VisualStudio.Azure.Containers.Tools.Targets.targets": {}
+        }
+      },
+      "RestSharp/108.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/RestSharp.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/RestSharp.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Swashbuckle.AspNetCore/6.4.0": {
@@ -358,6 +383,17 @@
     }
   },
   "libraries": {
+    "CommunicatorNuget/1.0.1": {
+      "sha512": "wsqtUol0Pg7Ia/J5ZCd7w86ohA+Pb9+fjN/hPMoqiY1BCsp8F3dCdOsbe8k/gUE0tmhGOIIVkwgNqAebdDqSuw==",
+      "type": "package",
+      "path": "communicatornuget/1.0.1",
+      "files": [
+        ".nupkg.metadata",
+        "communicatornuget.1.0.1.nupkg.sha512",
+        "communicatornuget.nuspec",
+        "lib/net7.0/CommunicatorNuget.dll"
+      ]
+    },
     "Microsoft.AspNetCore.OpenApi/7.0.3": {
       "sha512": "nihfseI7Jpaogc5bPAbta17sFzhyXwwC74xAhOyc6cgqriJQ2eB4TcJsAi4NePT2q+pFfEAtSCgPXw4IdJOF0w==",
       "type": "package",
@@ -727,6 +763,24 @@
         "tools/zh-Hant/Microsoft.VisualStudio.Containers.Tools.Common.resources.dll",
         "tools/zh-Hant/Microsoft.VisualStudio.Containers.Tools.Shared.resources.dll",
         "tools/zh-Hant/Microsoft.VisualStudio.Containers.Tools.Tasks.resources.dll"
+      ]
+    },
+    "RestSharp/108.0.3": {
+      "sha512": "phq1AkVhqVXHZxvWDV4fJEJKCR5OHNFUGx2Ix8o5EFShS6654oZhth4X2RWvaU/W7UexIswW0T+lTirxfLU2Ow==",
+      "type": "package",
+      "path": "restsharp/108.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net5.0/RestSharp.dll",
+        "lib/net5.0/RestSharp.xml",
+        "lib/net6.0/RestSharp.dll",
+        "lib/net6.0/RestSharp.xml",
+        "lib/netstandard2.0/RestSharp.dll",
+        "lib/netstandard2.0/RestSharp.xml",
+        "restsharp.108.0.3.nupkg.sha512",
+        "restsharp.nuspec",
+        "restsharp.png"
       ]
     },
     "Swashbuckle.AspNetCore/6.4.0": {
@@ -1842,6 +1896,7 @@
   "projectFileDependencyGroups": {
     "net7.0": [
       "ApplicationLogic >= 1.0.0",
+      "CommunicatorNuget >= 1.0.1",
       "Microsoft.AspNetCore.OpenApi >= 7.0.3",
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.17.2",
       "Swashbuckle.AspNetCore >= 6.4.0",
@@ -1874,7 +1929,8 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://nuget.pkg.github.com/DavidDaniel18/index.json": {}
       },
       "frameworks": {
         "net7.0": {
@@ -1896,6 +1952,10 @@
       "net7.0": {
         "targetAlias": "net7.0",
         "dependencies": {
+          "CommunicatorNuget": {
+            "target": "Package",
+            "version": "[1.0.1, )"
+          },
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",
             "version": "[7.0.3, )"
@@ -1935,5 +1995,13 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "No Authorization header detected"
+    }
+  ]
 }

@@ -1,7 +1,9 @@
 using ApplicationLogic.Usecases;
+using CommunicatorNuget.BusinessObjects;
 using Ingress.Repository;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using CommunicatorNuget.Usecases;
 
 namespace Ingress.Controllers
 {
@@ -10,7 +12,7 @@ namespace Ingress.Controllers
     [Route("[controller]/[action]")]
     public class IngressController : ControllerBase
     {
-        private readonly SubscriptionUC _subscriptionUC = new (new RepositoryWrite());
+        private readonly SubscriptionUC _subscriptionUC = new (new RepositoryWrite(), new RepositoryRead());
 
         private readonly RoutingUC _routingUC = new (new RepositoryRead());
 
@@ -39,7 +41,7 @@ namespace Ingress.Controllers
 
         [HttpGet]
         [ActionName(nameof(Route))]
-        public IActionResult<> RouteByServiceType(string serviceType)
+        public ActionResult<RouteTarget> RouteByServiceType(string serviceType)
         {
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
 
@@ -52,8 +54,6 @@ namespace Ingress.Controllers
                 return Unauthorized("Subscribe your service before making routing requests");
 
             return Ok();
-
-            _routingUC.RouteByDestinationType(serviceType);
         }
     }
 }
