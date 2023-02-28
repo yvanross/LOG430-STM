@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     name: Update NuGet package
     steps:
 
@@ -23,8 +23,8 @@ jobs:
           
       - name: Build solution and generate NuGet package
         run: |  
-          cd /microservices/CommunicatorNuget/CommunicatorNuget/CommunicatorNuget.csproj
+          cd ./microservices/CommunicatorNuget/CommunicatorNuget
           dotnet pack -c Release -o out  
 
       - name: Push generated package to GitHub registry
-        run: dotnet nuget push ./CommunicatorNuget/out/*.nupkg --skip-duplicate --no-symbols true
+        run: dotnet nuget push **.nupkg --skip-duplicate --no-symbols true
