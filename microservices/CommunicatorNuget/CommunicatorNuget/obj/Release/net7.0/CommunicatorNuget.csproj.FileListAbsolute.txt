@@ -1,0 +1,7 @@
+C:\Users\david\LOG430-STM\microservices\CommunicatorNuget\CommunicatorNuget\obj\Release\net7.0\CommunicatorNuget.csproj.AssemblyReference.cache
+C:\Users\david\LOG430-STM\microservices\CommunicatorNuget\CommunicatorNuget\obj\Release\net7.0\CommunicatorNuget.Properties.Resources.resources
+C:\Users\david\LOG430-STM\microservices\CommunicatorNuget\CommunicatorNuget\obj\Release\net7.0\CommunicatorNuget.csproj.GenerateResource.cache
+C:\Users\david\LOG430-STM\microservices\CommunicatorNuget\CommunicatorNuget\obj\Release\net7.0\CommunicatorNuget.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\david\LOG430-STM\microservices\CommunicatorNuget\CommunicatorNuget\obj\Release\net7.0\CommunicatorNuget.AssemblyInfoInputs.cache
+C:\Users\david\LOG430-STM\microservices\CommunicatorNuget\CommunicatorNuget\obj\Release\net7.0\CommunicatorNuget.AssemblyInfo.cs
+C:\Users\david\LOG430-STM\microservices\CommunicatorNuget\CommunicatorNuget\obj\Release\net7.0\CommunicatorNuget.csproj.CoreCompileInputs.cache

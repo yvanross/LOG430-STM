@@ -11,7 +11,7 @@ namespace ApplicationLogic.Usecases
     {
         public int SendRequest(RestClient client, RestRequest request)
         {
-            client
+            
             return 0;
         }
     }
