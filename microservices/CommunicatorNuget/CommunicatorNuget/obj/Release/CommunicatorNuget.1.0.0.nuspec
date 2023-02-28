@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>CommunicatorNuget</id>
+    <version>1.0.0</version>
+    <authors>CommunicatorNuget</authors>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework="net7.0">
+        <dependency id="RestSharp" version="108.0.3" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\Users\david\LOG430-STM\microservices\CommunicatorNuget\CommunicatorNuget\bin\Release\net7.0\CommunicatorNuget.dll" target="lib\net7.0\CommunicatorNuget.dll" />
+  </files>
+</package>

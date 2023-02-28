@@ -1,7 +1,4 @@
-﻿using System.Resources;
-using System.Xml.Linq;
-
-namespace ApplicationLogic.Usecases;
+﻿namespace CommunicatorNuget.Usecases;
 
 public class RegistrationUC
 {

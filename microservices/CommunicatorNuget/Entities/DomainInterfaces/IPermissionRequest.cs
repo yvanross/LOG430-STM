@@ -1,4 +1,4 @@
-﻿namespace CommunicatorNuget.Interfaces;
+﻿namespace Entities.DomainInterfaces;
 
 public interface IPermissionRequest
 {
