@@ -8,13 +8,13 @@
     ".NETCoreApp,Version=v7.0": {
       "ApplicationLogic/1.0.0": {
         "dependencies": {
-          "Ambassador": "1.0.10"
+          "Ambassador": "1.0.11"
         },
         "runtime": {
           "ApplicationLogic.dll": {}
         }
       },
-      "Ambassador/1.0.10": {
+      "Ambassador/1.0.11": {
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
           "Microsoft.Net.Http.Headers": "2.2.8",
@@ -23,8 +23,8 @@
         },
         "runtime": {
           "lib/net7.0/Ambassador.dll": {
-            "assemblyVersion": "1.0.10.0",
-            "fileVersion": "1.0.10.0"
+            "assemblyVersion": "1.0.11.0",
+            "fileVersion": "1.0.11.0"
           }
         }
       },
@@ -877,12 +877,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Ambassador/1.0.10": {
+    "Ambassador/1.0.11": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-eYM84h4QUghH9MBosxtH2Hu5ftogGbXmF+1OuGStnp8THQ+jOQ8kvw8NzVUI2i10qxldICILajyqiJ7NvTY2dA==",
-      "path": "ambassador/1.0.10",
-      "hashPath": "ambassador.1.0.10.nupkg.sha512"
+      "sha512": "sha512-YOIu2Oa5QO329HLfUxz4d2idqDjCQy9/Llgb46nP6fuNZjVwh01l9nh1xj6aMT995o9OkXe3J0uiAS8KKIqCpA==",
+      "path": "ambassador/1.0.11",
+      "hashPath": "ambassador.1.0.11.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Http.Features/5.0.17": {
       "type": "package",

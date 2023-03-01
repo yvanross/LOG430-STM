@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v7.0": {
-      "Ambassador/1.0.10": {
+      "Ambassador/1.0.12": {
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
           "Microsoft.Net.Http.Headers": "2.2.8",
@@ -861,7 +861,7 @@
     }
   },
   "libraries": {
-    "Ambassador/1.0.10": {
+    "Ambassador/1.0.12": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

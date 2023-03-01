@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="IngressAddressWithPort" xml:space="preserve">
-    <value>https://localhost:49165</value>
+    <value>https://localhost:32770</value>
   </data>
   <data name="RouteByServiceType_Endpoint" xml:space="preserve">
     <value>Ingress/RouteByServiceType</value>

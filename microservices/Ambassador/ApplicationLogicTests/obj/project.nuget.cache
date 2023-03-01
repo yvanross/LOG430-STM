@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0CliZDUjBDaLF+8FTuiJ/sRZoi0BA5mMAV/y0k96LCZUHGDL1oBC6Di+nstDiyswEj2zK0EjnSpkoCY8geRqNg==",
+  "dgSpecHash": "29Ft5zFHmqJwpUM4UP+tSfzQAoMG8/jDIw5y2Y5Xr/MXPhHotA3IkS9+B3nP5u32y1JAx7UvLG8MkoVuC3ZmXA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ambassador\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ambassador\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.codecoverage\\17.3.2\\microsoft.codecoverage.17.3.2.nupkg.sha512",

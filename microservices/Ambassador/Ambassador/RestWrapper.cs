@@ -60,11 +60,12 @@ namespace Ambassador
                 var request = new RestRequest(routingRequest.Endpoint, method);
 
                 routingData.IngressAddedHeaders.ForEach(header => request.AddHeader(header.Name, header.Value));
+                
+                routingData.IngressAddedQueryParams.ForEach(queryParams => request.AddQueryParameter(queryParams.Name, queryParams.Value));
 
                 routingRequest.Params.ForEach(param => request.AddQueryParameter(param.Name, param.Value));
 
                 return (client, request);
-
             }
             catch (Exception e)
             {

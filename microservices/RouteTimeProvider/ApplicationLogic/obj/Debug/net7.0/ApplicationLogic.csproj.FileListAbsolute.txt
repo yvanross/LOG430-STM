@@ -10,3 +10,15 @@ C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogic\obj\D
 C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogic\obj\Debug\net7.0\refint\ApplicationLogic.dll
 C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogic\obj\Debug\net7.0\ApplicationLogic.pdb
 C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogic\obj\Debug\net7.0\ref\ApplicationLogic.dll
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\ApplicationLogic\bin\Debug\net7.0\ApplicationLogic.deps.json
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\ApplicationLogic\bin\Debug\net7.0\ApplicationLogic.dll
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\ApplicationLogic\bin\Debug\net7.0\ApplicationLogic.pdb
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\ApplicationLogic\obj\Debug\net7.0\ApplicationLogic.csproj.AssemblyReference.cache
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\ApplicationLogic\obj\Debug\net7.0\ApplicationLogic.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\ApplicationLogic\obj\Debug\net7.0\ApplicationLogic.AssemblyInfoInputs.cache
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\ApplicationLogic\obj\Debug\net7.0\ApplicationLogic.AssemblyInfo.cs
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\ApplicationLogic\obj\Debug\net7.0\ApplicationLogic.csproj.CoreCompileInputs.cache
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\ApplicationLogic\obj\Debug\net7.0\ApplicationLogic.dll
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\ApplicationLogic\obj\Debug\net7.0\refint\ApplicationLogic.dll
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\ApplicationLogic\obj\Debug\net7.0\ApplicationLogic.pdb
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\ApplicationLogic\obj\Debug\net7.0\ref\ApplicationLogic.dll

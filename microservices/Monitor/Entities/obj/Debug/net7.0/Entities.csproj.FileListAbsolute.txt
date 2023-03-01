@@ -1,0 +1,12 @@
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Entities\bin\Debug\net7.0\Entities.deps.json
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Entities\bin\Debug\net7.0\Entities.dll
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Entities\bin\Debug\net7.0\Entities.pdb
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Entities\obj\Debug\net7.0\Entities.csproj.AssemblyReference.cache
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Entities\obj\Debug\net7.0\Entities.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Entities\obj\Debug\net7.0\Entities.AssemblyInfoInputs.cache
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Entities\obj\Debug\net7.0\Entities.AssemblyInfo.cs
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Entities\obj\Debug\net7.0\Entities.csproj.CoreCompileInputs.cache
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Entities\obj\Debug\net7.0\Entities.dll
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Entities\obj\Debug\net7.0\refint\Entities.dll
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Entities\obj\Debug\net7.0\Entities.pdb
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Entities\obj\Debug\net7.0\ref\Entities.dll

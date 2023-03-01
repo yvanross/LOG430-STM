@@ -4,7 +4,7 @@ public enum ServiceTypes
 {
     Gateway,
     AuthService,
-    AntiCheat,
+    Monitor,
     Meteo,
     ComparateurTrajet,
     ChaosMonkey,

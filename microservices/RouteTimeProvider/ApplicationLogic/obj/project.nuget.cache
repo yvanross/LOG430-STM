@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "jkx1Yci/YaADPUNFyCiLcQD84jn/7JEN7eG4IVDMtyCnx2qdOss+ngNOnCnf4WLEFtT3e84WTFHR33JjUae6fA==",
+  "dgSpecHash": "C7L13bi69BgLBV3r0+0U3GE7Fl8q7d+OVozfqv6VDKTsIwwrxyRbDxikquopqJuLZidmWBnsaBQpeeJxWOay1Q==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogic\\ApplicationLogic.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\RouteTimeProvider\\ApplicationLogic\\ApplicationLogic.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.10\\ambassador.1.0.10.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.11\\ambassador.1.0.11.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.csharp\\4.3.0\\microsoft.csharp.4.3.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.1\\microsoft.extensions.primitives.5.0.1.nupkg.sha512",
@@ -95,12 +95,5 @@
     "C:\\Users\\david\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "No Authorization header detected"
-    }
-  ]
+  "logs": []
 }

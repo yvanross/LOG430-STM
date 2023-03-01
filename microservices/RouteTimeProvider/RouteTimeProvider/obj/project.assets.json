@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net7.0": {
-      "Ambassador/1.0.10": {
+      "Ambassador/1.0.11": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
@@ -1710,7 +1710,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "Ambassador": "1.0.10"
+          "Ambassador": "1.0.11"
         },
         "compile": {
           "bin/placeholder/ApplicationLogic.dll": {}
@@ -1722,13 +1722,13 @@
     }
   },
   "libraries": {
-    "Ambassador/1.0.10": {
-      "sha512": "eYM84h4QUghH9MBosxtH2Hu5ftogGbXmF+1OuGStnp8THQ+jOQ8kvw8NzVUI2i10qxldICILajyqiJ7NvTY2dA==",
+    "Ambassador/1.0.11": {
+      "sha512": "YOIu2Oa5QO329HLfUxz4d2idqDjCQy9/Llgb46nP6fuNZjVwh01l9nh1xj6aMT995o9OkXe3J0uiAS8KKIqCpA==",
       "type": "package",
-      "path": "ambassador/1.0.10",
+      "path": "ambassador/1.0.11",
       "files": [
         ".nupkg.metadata",
-        "ambassador.1.0.10.nupkg.sha512",
+        "ambassador.1.0.11.nupkg.sha512",
         "ambassador.nuspec",
         "lib/net7.0/Ambassador.dll"
       ]
@@ -6074,7 +6074,7 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "Ambassador >= 1.0.10",
+      "Ambassador >= 1.0.11",
       "ApplicationLogic >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 7.0.3",
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.17.2",
@@ -6088,11 +6088,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\RouteTimeProvider\\RouteTimeProvider.csproj",
+      "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\RouteTimeProvider\\RouteTimeProvider\\RouteTimeProvider.csproj",
       "projectName": "RouteTimeProvider",
-      "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\RouteTimeProvider\\RouteTimeProvider.csproj",
+      "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\RouteTimeProvider\\RouteTimeProvider\\RouteTimeProvider.csproj",
       "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\RouteTimeProvider\\obj\\",
+      "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\RouteTimeProvider\\RouteTimeProvider\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -6108,14 +6108,15 @@
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {},
-        "https://nuget.pkg.github.com/DavidDaniel18/index.json": {}
+        "https://nuget.pkg.github.com/DavidDaniel18/index.json": {},
+        "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogic\\ApplicationLogic.csproj": {
-              "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogic\\ApplicationLogic.csproj"
+            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\RouteTimeProvider\\ApplicationLogic\\ApplicationLogic.csproj": {
+              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\RouteTimeProvider\\ApplicationLogic\\ApplicationLogic.csproj"
             }
           }
         }
@@ -6132,7 +6133,7 @@
         "dependencies": {
           "Ambassador": {
             "target": "Package",
-            "version": "[1.0.10, )"
+            "version": "[1.0.11, )"
           },
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",

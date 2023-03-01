@@ -23,9 +23,9 @@ public class HeadersUC
     {
         if (serviceType.Equals(ServiceTypes.Tomtom.ToString()))
         {
-            data.IngressAddedHeaders.Add(new NameValue()
+            data.IngressAddedQueryParams.Add(new NameValue()
             {
-                Name = HeaderNames.Authorization,
+                Name = "key",
                 Value = TomtomApiKey
             });
         }
