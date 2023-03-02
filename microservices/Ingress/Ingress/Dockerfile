@@ -7,14 +7,18 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["Ingress/Ingress.csproj", "Ingress/"]
+COPY ["Nuget/Ambassador.1.1.0.nupkg", "Ingress/"]
+COPY ["Ingress/Ingress/nuget.config", ""]
+COPY ["Ingress/Ingress/Ingress.csproj", "Ingress/"]
+COPY ["Ingress/ApplicationLogic/ApplicationLogic.csproj", "ApplicationLogic/"]
+COPY ["Ingress/Entities/Entities.csproj", "Entities/"]
 RUN dotnet restore "Ingress/Ingress.csproj"
 COPY . .
 WORKDIR "/src/Ingress"
-RUN dotnet build "Ingress.csproj" -c Release -o /app/build
+RUN dotnet build "Ingress/Ingress.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Ingress.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Ingress/Ingress.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

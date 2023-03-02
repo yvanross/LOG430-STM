@@ -6797,6 +6797,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Nuget": {},
         "https://api.nuget.org/v3/index.json": {},
         "https://nuget.pkg.github.com/DavidDaniel18/index.json": {},
         "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}

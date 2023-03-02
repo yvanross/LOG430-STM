@@ -19,16 +19,17 @@
           "ApplicationLogicTests.dll": {}
         }
       },
-      "Ambassador/1.0.5": {
+      "Ambassador/1.0.12": {
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
           "Microsoft.Net.Http.Headers": "2.2.8",
+          "Newtonsoft.Json": "10.0.3",
           "RestSharp": "108.0.3"
         },
         "runtime": {
           "lib/net7.0/Ambassador.dll": {
-            "assemblyVersion": "1.0.5.0",
-            "fileVersion": "1.0.5.0"
+            "assemblyVersion": "1.0.12.0",
+            "fileVersion": "1.0.12.0"
           }
         }
       },
@@ -1183,7 +1184,7 @@
       },
       "ApplicationLogic/1.0.0": {
         "dependencies": {
-          "Ambassador": "1.0.5",
+          "Ambassador": "1.0.12",
           "Entities": "1.0.0"
         },
         "runtime": {
@@ -1211,12 +1212,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Ambassador/1.0.5": {
+    "Ambassador/1.0.12": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-cZ18otUslw+376MHg+bQ5GZKagcvPfX4kdC14nK4K8LFH7ZFsABalL9DcJkf+cERJ3jRceJD7qsassuEZgOOcQ==",
-      "path": "ambassador/1.0.5",
-      "hashPath": "ambassador.1.0.5.nupkg.sha512"
+      "sha512": "sha512-fFlb3h6PpN7NrrAsSYILQBGLm8to2+yxOm4LDYODIsMHTD1VmuGtjST+mqYlsdFVm3oUKpSGwmntUplypN4CTg==",
+      "path": "ambassador/1.0.12",
+      "hashPath": "ambassador.1.0.12.nupkg.sha512"
     },
     "coverlet.collector/3.1.2": {
       "type": "package",

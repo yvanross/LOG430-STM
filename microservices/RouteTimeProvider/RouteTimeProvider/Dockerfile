@@ -7,14 +7,18 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["RouteTimeProvider/RouteTimeProvider.csproj", "RouteTimeProvider/"]
+COPY ["Nuget/Ambassador.1.1.0.nupkg", "RouteTimeProvider/"]
+COPY ["RouteTimeProvider/RouteTimeProvider/nuget.config", ""]
+COPY ["RouteTimeProvider/RouteTimeProvider/RouteTimeProvider.csproj", "RouteTimeProvider/"]
+COPY ["RouteTimeProvider/ApplicationLogic/ApplicationLogic.csproj", "ApplicationLogic/"]
+COPY ["RouteTimeProvider/Entities/Entities.csproj", "Entities/"]
 RUN dotnet restore "RouteTimeProvider/RouteTimeProvider.csproj"
 COPY . .
 WORKDIR "/src/RouteTimeProvider"
-RUN dotnet build "RouteTimeProvider.csproj" -c Release -o /app/build
+RUN dotnet build "RouteTimeProvider/RouteTimeProvider.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "RouteTimeProvider.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "RouteTimeProvider/RouteTimeProvider.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

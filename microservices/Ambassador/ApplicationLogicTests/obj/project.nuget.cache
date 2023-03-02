@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "29Ft5zFHmqJwpUM4UP+tSfzQAoMG8/jDIw5y2Y5Xr/MXPhHotA3IkS9+B3nP5u32y1JAx7UvLG8MkoVuC3ZmXA==",
+  "dgSpecHash": "RT1kz2M698tEVZIvYj2iRF0io2M33glIw6/vN5gH8T9Jpr0ZADOZ1LP/U7lkqPrepW4hb/DuR9uAWrf1j20VNA==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ambassador\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
   "expectedPackageFiles": [

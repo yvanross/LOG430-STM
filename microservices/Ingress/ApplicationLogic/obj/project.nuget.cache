@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "q63iZIDj2Xdd6AqmTGbxtdEdLuBhYJGTrYXvLIsFx8T1NaE8RDG3uBlw9b19HBHdyrmgcLIEQDwOniRRdcAOoQ==",
+  "dgSpecHash": "YC9vhEggn2a9FR2PtNEO7THYNYyTBFqXMlRfr8tCNtRZAV2OimqD3HS3fBCOjxbIXcsaZdfs7o1MB81D9JEBZw==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.11\\ambassador.1.0.11.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.12\\ambassador.1.0.12.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.csharp\\4.3.0\\microsoft.csharp.4.3.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.1\\microsoft.extensions.primitives.5.0.1.nupkg.sha512",

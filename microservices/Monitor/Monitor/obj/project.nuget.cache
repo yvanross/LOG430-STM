@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "EWcGUV8ae+J7LsehOke4YH2+GAeToybweoirbFG2sd5tX8NvIaGwR4IK+gtMQ4E+A3plxqQ9Mj1DBeLbPr+b3A==",
+  "dgSpecHash": "phptF0vKbVQUHIJHQw2EMZHv/4kGnubUGD1vYPn4jWA/v880MLq3Y4+XvYlgnGARYoFbhOmUtLPMXr6rKdn17Q==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Monitor\\Monitor\\Monitor.csproj",
   "expectedPackageFiles": [
@@ -103,12 +103,5 @@
     "C:\\Users\\david\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "No Authorization header detected"
-    }
-  ]
+  "logs": []
 }

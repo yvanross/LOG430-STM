@@ -20,6 +20,8 @@ public class PortainerClient : IEnvironmentClient
 
     private string _environmentId = string.Empty;
 
+    private const int _retryCount = 3;
+
     public PortainerClient(string portainerAddress, string username, string password)
     {
         _portainerClient = new RestClient(portainerAddress);
@@ -28,7 +30,7 @@ public class PortainerClient : IEnvironmentClient
         _password = password;
     }
 
-    public async Task<List<Microservice>> GetRunningContainersIds()
+    public async Task<List<Microservice>> GetRunningServices()
     {
         if (string.IsNullOrEmpty(_environmentId))
             _environmentId = await GetEnvironmentId();
@@ -50,7 +52,7 @@ public class PortainerClient : IEnvironmentClient
                 microservices.Add(new Microservice()
                 {
                     Id = container.Id,
-                    Name = (container.Names as ICollection<string>)?.FirstOrDefault() ?? string.Empty,
+                    Name = ((container.Names as List<object>)?.FirstOrDefault()?.ToString())?[1..] ?? string.Empty,
                     ImageName = container.Image,
                     Status = container.Status
                 });
@@ -58,7 +60,7 @@ public class PortainerClient : IEnvironmentClient
 
             return microservices;
         },
-        retryCount: 2,
+        retryCount: _retryCount,
         onFailure: async (_, _) => _jwt = $"bearer {await GetAuthorization()}");
     }
 
@@ -77,8 +79,57 @@ public class PortainerClient : IEnvironmentClient
 
             return res.Data ?? "container log empty or couldn't fetch it";
         },
-        retryCount: 2,
+        retryCount: _retryCount,
         onFailure: async (_, _) => _jwt = $"bearer {await GetAuthorization()}");
+    }
+
+    public async Task IncreaseByOneNumberOfInstances(string containerId, string newContainerName)
+    {
+        var services = await GetRunningServices();
+
+        var service = services.SingleOrDefault(s => s.Id.Equals(containerId));
+
+        if (service is null) throw new Exception("Service with container Id was not found");
+
+        await Try.WithConsequenceAsync(async () =>
+        {
+            var request = new RestRequest($"api/endpoints/{_environmentId}/docker/containers/create", Method.Post);
+
+            request.AddHeader(HeaderNames.Authorization, _jwt);
+            
+            request.AddJsonBody(new
+            {
+                Image = service.ImageName,
+                Name = newContainerName,
+                HostConfig = new
+                {
+                    RestartPolicy = new
+                    {
+                        Name = "always"
+                    }
+                }
+            });
+
+            var res = await _portainerClient.ExecuteAsync(request);
+
+            return 0;
+        },
+        retryCount: _retryCount,
+        onFailure: async (_, _) => _jwt = $"bearer {await GetAuthorization()}");
+    }
+
+    public async Task RemoveContainerInstance(string containerId)
+    {
+        await Try.WithConsequenceAsync(async () =>
+        {
+            var request = new RestRequest($"api/endpoints/{_environmentId}/docker/containers/{containerId}", Method.Delete);
+
+            request.AddHeader(HeaderNames.Authorization, _jwt);
+
+            await _portainerClient.ExecuteAsync(request);
+
+            return 0;
+        }, retryCount: _retryCount);
     }
 
     private async Task<string> GetAuthorization()
@@ -98,7 +149,7 @@ public class PortainerClient : IEnvironmentClient
             dynamic expando = JsonConvert.DeserializeObject<ExpandoObject>(res.Content);
 
             return expando.jwt;
-        }, retryCount: 2);
+        }, retryCount: _retryCount);
     }
 
     private async Task<string> GetEnvironmentId()
@@ -115,7 +166,7 @@ public class PortainerClient : IEnvironmentClient
 
             return expando[0].Id;
         }, 
-            retryCount: 2, 
+            retryCount: _retryCount, 
             onFailure: async (_, _) => _jwt = $"bearer {await GetAuthorization()}");
     }
 }

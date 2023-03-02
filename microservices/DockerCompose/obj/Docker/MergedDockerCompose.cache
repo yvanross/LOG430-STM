@@ -1,0 +1,98 @@
+name: dockercompose4137228204049225588
+services:
+  ingress:
+    build:
+      context: C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices
+      dockerfile: Ingress/Ingress/Dockerfile
+    container_name: Ingress
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:80
+    image: ingress
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      published: "32770"
+      protocol: tcp
+    volumes:
+    - type: bind
+      source: C:\Users\david\AppData\Roaming/Microsoft/UserSecrets
+      target: /root/.microsoft/usersecrets
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\david\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
+      read_only: true
+      bind:
+        create_host_path: true
+  monitor:
+    build:
+      context: C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices
+      dockerfile: Monitor/Monitor/Dockerfile
+    container_name: Monitor
+    depends_on:
+      ingress:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:80
+    image: monitor
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      published: "32772"
+      protocol: tcp
+    volumes:
+    - type: bind
+      source: C:\Users\david\AppData\Roaming/Microsoft/UserSecrets
+      target: /root/.microsoft/usersecrets
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\david\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
+      read_only: true
+      bind:
+        create_host_path: true
+  routetimeprovider:
+    build:
+      context: C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices
+      dockerfile: RouteTimeProvider/RouteTimeProvider/Dockerfile
+    container_name: RouteTimeProvider
+    depends_on:
+      ingress:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:80
+    image: routetimeprovider
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      published: "32771"
+      protocol: tcp
+    volumes:
+    - type: bind
+      source: C:\Users\david\AppData\Roaming/Microsoft/UserSecrets
+      target: /root/.microsoft/usersecrets
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\david\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
+      read_only: true
+      bind:
+        create_host_path: true
+networks:
+  default:
+    name: dockercompose4137228204049225588_default

@@ -1,2 +1,0 @@
-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
-dotnet nuget push "C:/Users/david/LOG430-STM/microservices/Ambassador/Ambassador/bin/Release/Ambassador.1.0.11.nupkg"  --api-key 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 --source "https://nuget.pkg.github.com/DavidDaniel18/index.json"

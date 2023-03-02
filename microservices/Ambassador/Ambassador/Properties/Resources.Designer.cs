@@ -61,7 +61,7 @@ namespace Ambassador.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://localhost:32770.
+        ///   Looks up a localized string similar to http://host.docker.internal:32770.
         /// </summary>
         internal static string IngressAddressWithPort {
             get {

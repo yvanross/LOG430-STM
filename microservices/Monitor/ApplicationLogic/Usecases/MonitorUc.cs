@@ -16,9 +16,20 @@ namespace ApplicationLogic.Usecases
         {
             _client = client;
         }
+
         public async Task<List<Microservice>> GetRunningMicroservices()
         {
-            return await _client.GetRunningContainersIds();
+            return await _client.GetRunningServices();
+        }
+
+        public async Task IncreaseByOneNumberOfInstances(string containerId, string newContainerName)
+        {
+            await _client.IncreaseByOneNumberOfInstances(containerId, newContainerName);
+        }
+
+        public async Task RemoveContainerInstance(string containerId)
+        {
+            await _client.RemoveContainerInstance(containerId);
         }
     }
 }

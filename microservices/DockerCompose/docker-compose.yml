@@ -1,0 +1,51 @@
+version: '3.4'
+
+services:
+  ingress:
+    image: ${DOCKER_REGISTRY-}ingress
+    ports:
+      - "32770:80"
+    build:
+      context: ../
+      dockerfile: Ingress/Ingress/Dockerfile
+    container_name: Ingress
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+  routetimeprovider:
+    image: ${DOCKER_REGISTRY-}routetimeprovider
+    build:
+      context: ../
+      dockerfile: RouteTimeProvider/RouteTimeProvider/Dockerfile
+    container_name: RouteTimeProvider
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+        - "32771:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      - ingress
+  monitor:
+    image: ${DOCKER_REGISTRY-}monitor
+    build:
+      context: ../
+      dockerfile: Monitor/Monitor/Dockerfile
+    container_name: Monitor
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+        - "32772:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      - ingress
+
+

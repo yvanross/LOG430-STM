@@ -1,8 +1,10 @@
-﻿using System.Dynamic;
+﻿using System.Collections;
+using System.Dynamic;
 using ApplicationLogic.Extensions;
 using Entities.BusinessObjects;
 using Entities.DomainInterfaces;
 using Microsoft.Net.Http.Headers;
+using Monitor.Portainer;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -15,7 +17,7 @@ public class LocalDockerClient : IEnvironmentClient
 {
     private readonly RestClient _dockerClient = new ("http://localhost:2375/");
 
-    public async Task<List<Microservice>> GetRunningContainersIds()
+    public async Task<List<Microservice>> GetRunningServices()
     {
         return await Try.WithConsequenceAsync(async () =>
         {
@@ -32,9 +34,9 @@ public class LocalDockerClient : IEnvironmentClient
                 microservices.Add(new Microservice()
                 {
                     Id = container.Id,
-                    Name = (container.Names as ICollection<string>)?.FirstOrDefault() ?? string.Empty,
+                    Name = ((container.Names as List<object>)?.FirstOrDefault()?.ToString())?[1..] ?? string.Empty,
                     ImageName = container.Image,
-                    Status = container.Status
+                    Status = container.Status,
                 });
             }
 
@@ -45,5 +47,79 @@ public class LocalDockerClient : IEnvironmentClient
     public Task<string> GetContainerLogs(string containerId)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task IncreaseByOneNumberOfInstances(string containerId, string newContainerName)
+    {
+        var services = await GetRunningServices();
+
+        var service = services.SingleOrDefault(s => s.Id.Equals(containerId));
+
+        if (service is null) throw new Exception("Service with container Id was not found");
+
+        var containerData = await Try.WithConsequenceAsync<(dynamic Config, dynamic HostConfig)>(async () =>
+            {
+                var request = new RestRequest($"containers/{service.Id}/json", Method.Get);
+
+                var res = await _dockerClient.ExecuteAsync(request);
+
+                dynamic expando = JsonConvert.DeserializeObject<ExpandoObject>(res.Content);
+
+                return (expando.Config, expando.HostConfig);
+            },
+            retryCount: 2);
+
+        var newId = await Try.WithConsequenceAsync<string>(async () =>
+            {
+                var request = new RestRequest($"containers/create?name={newContainerName}", Method.Post);
+
+                var body = containerData.Config;
+
+                body.Name = newContainerName;
+                body.HostConfig = containerData.HostConfig;
+
+                request.AddJsonBody((object)body);
+
+                var res = await _dockerClient.ExecuteAsync(request);
+
+                dynamic expando = JsonConvert.DeserializeObject<ExpandoObject>(res.Content);
+
+                return expando.Id;
+            },
+            retryCount: 2);
+
+        await Try.WithConsequenceAsync(async () =>
+            {
+                var request = new RestRequest($"containers/{newId}/start", Method.Post);
+
+                var res = await _dockerClient.ExecuteAsync(request);
+
+                return 0;
+            });
+
+        /*
+        await Try.WithConsequenceAsync(async () =>
+            {
+                var request = new RestRequest($"containers/{newId}/json", Method.Get);
+
+                var res = await _dockerClient.ExecuteAsync(request);
+
+                dynamic expando = JsonConvert.DeserializeObject<ExpandoObject>(res.Content);
+
+                return 0;
+            },
+            retryCount: 2);*/
+    }
+
+    public async Task RemoveContainerInstance(string containerId)
+    {
+        await Try.WithConsequenceAsync(async () =>
+        {
+            var request = new RestRequest($"containers/{containerId}", Method.Delete);
+
+            await _dockerClient.ExecuteAsync(request);
+
+            return 0;
+        }, retryCount: 2);
     }
 }

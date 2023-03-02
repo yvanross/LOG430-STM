@@ -73,3 +73,4 @@ C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvi
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\RouteTimeProvider\obj\Debug\net7.0\RouteTimeProvider.pdb
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\RouteTimeProvider\obj\Debug\net7.0\RouteTimeProvider.genruntimeconfig.cache
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\RouteTimeProvider\obj\Debug\net7.0\ref\RouteTimeProvider.dll
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\nuget.config

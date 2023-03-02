@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "PQfsSRIiOjZJQsMnAU55l+zh5IylxM+HrMaAi7FE0xfQi8Pvr+Mr3BxX3i22VpsCA4EEG6Z6LAsVEYLJTj8EPw==",
+  "dgSpecHash": "fmc3xwWX2RMyG0vn61Nfphlufizq3ILxdlrqszSWB8mP8hGQKCyFZ09PQyvpX3LIte+g2Y+2KvMJs/FkR8i6iQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\RouteTimeProvider\\RouteTimeProvider\\RouteTimeProvider.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.11\\ambassador.1.0.11.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.12\\ambassador.1.0.12.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.3\\microsoft.aspnetcore.openapi.7.0.3.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.csharp\\4.3.0\\microsoft.csharp.4.3.0.nupkg.sha512",

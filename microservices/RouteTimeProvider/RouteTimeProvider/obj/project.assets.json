@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net7.0": {
-      "Ambassador/1.0.11": {
+      "Ambassador/1.0.12": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
@@ -1710,7 +1710,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "Ambassador": "1.0.11"
+          "Ambassador": "1.0.12"
         },
         "compile": {
           "bin/placeholder/ApplicationLogic.dll": {}
@@ -1722,13 +1722,13 @@
     }
   },
   "libraries": {
-    "Ambassador/1.0.11": {
-      "sha512": "YOIu2Oa5QO329HLfUxz4d2idqDjCQy9/Llgb46nP6fuNZjVwh01l9nh1xj6aMT995o9OkXe3J0uiAS8KKIqCpA==",
+    "Ambassador/1.0.12": {
+      "sha512": "fFlb3h6PpN7NrrAsSYILQBGLm8to2+yxOm4LDYODIsMHTD1VmuGtjST+mqYlsdFVm3oUKpSGwmntUplypN4CTg==",
       "type": "package",
-      "path": "ambassador/1.0.11",
+      "path": "ambassador/1.0.12",
       "files": [
         ".nupkg.metadata",
-        "ambassador.1.0.11.nupkg.sha512",
+        "ambassador.1.0.12.nupkg.sha512",
         "ambassador.nuspec",
         "lib/net7.0/Ambassador.dll"
       ]
@@ -6074,7 +6074,7 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "Ambassador >= 1.0.11",
+      "Ambassador >= 1.0.12",
       "ApplicationLogic >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 7.0.3",
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.17.2",
@@ -6107,6 +6107,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Nuget": {},
         "https://api.nuget.org/v3/index.json": {},
         "https://nuget.pkg.github.com/DavidDaniel18/index.json": {},
         "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
@@ -6133,7 +6134,7 @@
         "dependencies": {
           "Ambassador": {
             "target": "Package",
-            "version": "[1.0.11, )"
+            "version": "[1.0.12, )"
           },
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",

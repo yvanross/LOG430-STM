@@ -40,3 +40,4 @@ C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Monito
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Monitor\obj\Debug\net7.0\Monitor.pdb
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Monitor\obj\Debug\net7.0\Monitor.genruntimeconfig.cache
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Monitor\obj\Debug\net7.0\ref\Monitor.dll
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Monitor\bin\Debug\net7.0\nuget.config
