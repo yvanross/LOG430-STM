@@ -7,7 +7,7 @@ internal class IngressRoutingRequest
 {
     public required string TargetService { get; set; }
 
-    private protected static RestClient IngressClient { get; } = new(Resources.IngressAddressWithPort);
+    private protected static RestClient IngressClient { get; } = new(EnvironmentVariables.IngressAddress);
 
     internal async Task<RoutingData> Execute()
     {

@@ -1,20 +1,38 @@
-version: '3.4'
+version: '3.9'
+
+x-conf: 
+  - ingress_port: &ingress_port "32770:80"
+  - env: 
+      &env
+      #adjust this to fit the address (without the port) of your ingress service
+      - INGRESS_ADDRESS=localhost
+
+      #adjust this to fit the address (without the port) of your services
+      - SERVICES_ADDRESS=localhost
+     
+      - ASPNETCORE_URLS=http://+:80
+      
+      #this needs to match with ingress_port
+      - INGRESS_PORT=32770
+  - vol:
+      &vol
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
 services:
   ingress:
     image: ${DOCKER_REGISTRY-}ingress
     ports:
-      - "32770:80"
+      - *ingress_port
     build:
       context: ../
       dockerfile: Ingress/Ingress/Dockerfile
     container_name: Ingress
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
+      *env
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      *vol
+
   routetimeprovider:
     image: ${DOCKER_REGISTRY-}routetimeprovider
     build:
@@ -22,15 +40,14 @@ services:
       dockerfile: RouteTimeProvider/RouteTimeProvider/Dockerfile
     container_name: RouteTimeProvider
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
+      *env
     ports:
         - "32771:80"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      *vol
     depends_on:
       - ingress
+
   monitor:
     image: ${DOCKER_REGISTRY-}monitor
     build:
@@ -38,13 +55,26 @@ services:
       dockerfile: Monitor/Monitor/Dockerfile
     container_name: Monitor
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
+      *env
     ports:
         - "32772:80"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      *vol
+    depends_on:
+      - ingress
+
+  tripcomparator:
+    image: ${DOCKER_REGISTRY-}tripcomparator
+    build:
+      context: ../
+      dockerfile: TripComparator/TripComparator/Dockerfile
+    container_name: TripComparator
+    environment:
+      *env
+    ports:
+        - "32773:80"
+    volumes:
+      *vol
     depends_on:
       - ingress
 

@@ -6,8 +6,10 @@ services:
       dockerfile: Ingress/Ingress/Dockerfile
     container_name: Ingress
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:80
+      INGRESS_ADDRESS: localhost
+      INGRESS_PORT: "32770"
+      SERVICES_ADDRESS: localhost
     image: ingress
     networks:
       default: null
@@ -38,8 +40,10 @@ services:
       ingress:
         condition: service_started
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:80
+      INGRESS_ADDRESS: localhost
+      INGRESS_PORT: "32770"
+      SERVICES_ADDRESS: localhost
     image: monitor
     networks:
       default: null
@@ -70,8 +74,10 @@ services:
       ingress:
         condition: service_started
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:80
+      INGRESS_ADDRESS: localhost
+      INGRESS_PORT: "32770"
+      SERVICES_ADDRESS: localhost
     image: routetimeprovider
     networks:
       default: null
@@ -93,6 +99,50 @@ services:
       read_only: true
       bind:
         create_host_path: true
+  tripcomparator:
+    build:
+      context: C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices
+      dockerfile: TripComparator/TripComparator/Dockerfile
+    container_name: TripComparator
+    depends_on:
+      ingress:
+        condition: service_started
+    environment:
+      ASPNETCORE_URLS: http://+:80
+      INGRESS_ADDRESS: localhost
+      INGRESS_PORT: "32770"
+      SERVICES_ADDRESS: localhost
+    image: tripcomparator
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      published: "32773"
+      protocol: tcp
+    volumes:
+    - type: bind
+      source: C:\Users\david\AppData\Roaming/Microsoft/UserSecrets
+      target: /root/.microsoft/usersecrets
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\david\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
+      read_only: true
+      bind:
+        create_host_path: true
 networks:
   default:
     name: dockercompose4137228204049225588_default
+x-conf:
+- ingress_port: 32770:80
+- env:
+  - INGRESS_ADDRESS=localhost
+  - SERVICES_ADDRESS=localhost
+  - ASPNETCORE_URLS=http://+:80
+  - INGRESS_PORT=32770
+- vol:
+  - C:\Users\david\AppData\Roaming/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  - C:\Users\david\AppData\Roaming/ASP.NET/Https:/root/.aspnet/https:ro

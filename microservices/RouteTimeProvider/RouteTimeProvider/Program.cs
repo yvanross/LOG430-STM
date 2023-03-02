@@ -6,8 +6,6 @@ namespace PLACEHOLDER
 {
     public class Program
     {
-        private static readonly RegistrationUC _registration = new ();
-
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -43,9 +41,21 @@ namespace PLACEHOLDER
 
             app.MapControllers();
 
-            _registration.Register(ServiceTypes.RouteTimeProvider.ToString());
+            var logger = app.Services.GetRequiredService<ILogger<AmbassadorService>>();
+
+            _ = new AmbassadorService(logger);
 
             app.Run();
+        }
+    }
+
+    public class AmbassadorService
+    {
+        private readonly RegistrationUC _registration = new();
+
+        public AmbassadorService(ILogger<AmbassadorService> logger)
+        {
+            _registration.Register(ServiceTypes.Monitor.ToString(), logger);
         }
     }
 }

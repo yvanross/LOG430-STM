@@ -61,15 +61,6 @@ namespace Ambassador.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://host.docker.internal:32770.
-        /// </summary>
-        internal static string IngressAddressWithPort {
-            get {
-                return ResourceManager.GetString("IngressAddressWithPort", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Ingress/RouteByServiceType.
         /// </summary>
         internal static string RouteByServiceType_Endpoint {

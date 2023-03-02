@@ -20,7 +20,7 @@ namespace ApplicationLogic.Usecases.Tests
         [TestInitialize]
         public void Init()
         {
-            _registration.Register(ServiceTypes.RouteTimeProvider.ToString());
+            _registration.Register(ServiceTypes.RouteTimeProvider.ToString(), default);
         }
 
         [TestMethod()]

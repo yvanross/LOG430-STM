@@ -61,7 +61,6 @@ C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingres
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingress\obj\Debug\net7.0\Ingress.AssemblyInfoInputs.cache
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingress\obj\Debug\net7.0\Ingress.AssemblyInfo.cs
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingress\obj\Debug\net7.0\Ingress.csproj.CoreCompileInputs.cache
-C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingress\obj\Debug\net7.0\Ingress.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingress\obj\Debug\net7.0\Ingress.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingress\obj\Debug\net7.0\staticwebassets\msbuild.Ingress.Microsoft.AspNetCore.StaticWebAssets.props
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingress\obj\Debug\net7.0\staticwebassets\msbuild.build.Ingress.props
@@ -78,3 +77,4 @@ C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingres
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingress\obj\Debug\net7.0\Ingress.genruntimeconfig.cache
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingress\obj\Debug\net7.0\ref\Ingress.dll
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingress\bin\Debug\net7.0\nuget.config
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingress\bin\Debug\net7.0\Docker.DotNet.dll

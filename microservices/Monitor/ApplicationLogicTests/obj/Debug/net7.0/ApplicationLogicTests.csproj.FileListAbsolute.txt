@@ -116,3 +116,4 @@ C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\Applic
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\ApplicationLogicTests\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\ApplicationLogicTests\bin\Debug\net7.0\Monitor.dll
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\ApplicationLogicTests\bin\Debug\net7.0\Monitor.pdb
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Monitor\ApplicationLogicTests\bin\Debug\net7.0\nuget.config

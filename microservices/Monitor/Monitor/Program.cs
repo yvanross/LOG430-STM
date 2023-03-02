@@ -5,8 +5,6 @@ namespace Monitor
 {
     public class Program
     {
-        private static readonly RegistrationUC _registration = new();
-
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -42,9 +40,32 @@ namespace Monitor
 
             app.MapControllers();
 
-            _registration.Register(ServiceTypes.Monitor.ToString());
+            var logger = app.Services.GetRequiredService<ILogger<AmbassadorService>>();
+
+            _ = new AmbassadorService(logger);
 
             app.Run();
+        }
+
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Program>();
+                });
+    }
+
+    public class AmbassadorService
+    {
+        private readonly ILogger<AmbassadorService> _logger;
+
+        private readonly RegistrationUC _registration = new();
+
+        public AmbassadorService(ILogger<AmbassadorService> logger)
+        {
+            _logger = logger;
+
+            _registration.Register(ServiceTypes.Monitor.ToString(), _logger);
         }
     }
 }

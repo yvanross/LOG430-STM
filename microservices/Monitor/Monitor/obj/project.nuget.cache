@@ -1,14 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "phptF0vKbVQUHIJHQw2EMZHv/4kGnubUGD1vYPn4jWA/v880MLq3Y4+XvYlgnGARYoFbhOmUtLPMXr6rKdn17Q==",
+  "dgSpecHash": "km1nEuS8gdQYSJDMwaoqZV5l10f31XliV1PR4+Ey1xWrExXWAX+Du3+Kw5wMrHw4UwxJCQ6xGtJWvaFyvRq1OA==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Monitor\\Monitor\\Monitor.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.12\\ambassador.1.0.12.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.18\\ambassador.1.0.18.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.3\\microsoft.aspnetcore.openapi.7.0.3.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.csharp\\4.3.0\\microsoft.csharp.4.3.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.1\\microsoft.extensions.primitives.5.0.1.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.net.http.headers\\2.2.8\\microsoft.net.http.headers.2.2.8.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",

@@ -1,4 +1,5 @@
 ﻿using ApplicationLogic.Interfaces;
+using Docker.DotNet;
 using Entities.DomainInterfaces;
 
 namespace ApplicationLogic.Usecases;
@@ -19,8 +20,11 @@ public class RoutingUC
         if (serviceRoute is null)
             throw new Exception("service route was not found");
 
-        var port = string.IsNullOrEmpty(serviceRoute.PortNumber) ? string.Empty : $":{serviceRoute.PortNumber}";
+        return serviceRoute.HttpRoute;
+    }
 
-        return $"https://{serviceRoute.Address}{port}";
+    public async Task a()
+    {
+        
     }
 }

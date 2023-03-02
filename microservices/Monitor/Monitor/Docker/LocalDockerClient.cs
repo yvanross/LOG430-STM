@@ -96,19 +96,6 @@ public class LocalDockerClient : IEnvironmentClient
 
                 return 0;
             });
-
-        /*
-        await Try.WithConsequenceAsync(async () =>
-            {
-                var request = new RestRequest($"containers/{newId}/json", Method.Get);
-
-                var res = await _dockerClient.ExecuteAsync(request);
-
-                dynamic expando = JsonConvert.DeserializeObject<ExpandoObject>(res.Content);
-
-                return 0;
-            },
-            retryCount: 2);*/
     }
 
     public async Task RemoveContainerInstance(string containerId)

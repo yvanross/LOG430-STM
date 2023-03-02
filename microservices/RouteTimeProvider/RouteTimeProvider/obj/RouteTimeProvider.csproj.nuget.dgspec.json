@@ -49,7 +49,7 @@
           "dependencies": {
             "Ambassador": {
               "target": "Package",
-              "version": "[1.0.12, )"
+              "version": "[1.0.16, )"
             }
           },
           "imports": [
@@ -121,7 +121,7 @@
           "dependencies": {
             "Ambassador": {
               "target": "Package",
-              "version": "[1.0.12, )"
+              "version": "[1.0.16, )"
             },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",

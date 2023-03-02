@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj": {
-      "version": "1.0.14",
+      "version": "1.0.23",
       "restore": {
         "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj",
         "projectName": "Ambassador",
@@ -50,6 +50,10 @@
             "Microsoft.AspNetCore.Http.Features": {
               "target": "Package",
               "version": "[5.0.17, )"
+            },
+            "Microsoft.Extensions.Logging.Abstractions": {
+              "target": "Package",
+              "version": "[7.0.0, )"
             },
             "Microsoft.Net.Http.Headers": {
               "target": "Package",

@@ -54,6 +54,10 @@
             "Ambassador": {
               "target": "Package",
               "version": "[1.0.12, )"
+            },
+            "Docker.DotNet": {
+              "target": "Package",
+              "version": "[3.125.13, )"
             }
           },
           "imports": [

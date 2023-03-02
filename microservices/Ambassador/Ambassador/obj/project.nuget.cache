@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "f6sp/3SeYO69/ajhjaE8ZZH2w7xz2P3PEp2ua/tCthY1p53ImhAtNpF+ofxhjgPzCD2oQPlhMdS5FUarKCRgjg==",
+  "dgSpecHash": "btsYh+4s6QhvapdBv00h6OKshdKoLjIP1dleILQCPVLjfzFzvCOsxt82tUy0BOFXJaOhDH+Lqc2OpXznv3DouQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.csharp\\4.3.0\\microsoft.csharp.4.3.0.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.1\\microsoft.extensions.primitives.5.0.1.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.net.http.headers\\2.2.8\\microsoft.net.http.headers.2.2.8.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",

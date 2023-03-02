@@ -15,6 +15,6 @@ internal static class RouteCache
         RegisteredRoutes = RegisteredRoutes.Add(route);
 
         bool TryMatchRoute(IRoute registeredRoute)
-         => registeredRoute.Id.Equals(route.Id) || registeredRoute.Address.Equals(route.Address);
+         => registeredRoute.HttpRoute.Equals(route.HttpRoute);
     }
 }   

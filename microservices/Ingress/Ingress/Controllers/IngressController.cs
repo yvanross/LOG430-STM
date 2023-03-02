@@ -1,9 +1,11 @@
 using Ambassador.BusinessObjects;
 using ApplicationLogic.Usecases;
+using Docker.DotNet;
 using Ingress.Extensions;
 using Ingress.Repository;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Monitor.Docker;
 
 namespace Ingress.Controllers
 {
@@ -16,6 +18,8 @@ namespace Ingress.Controllers
 
         private readonly RoutingUC _routingUC = new (new RepositoryRead());
         
+        private readonly MonitorUc _monitorUc = new (new LocalDockerClient());
+        
         private readonly HeadersUC _headersUc = new ();
 
         private readonly ILogger<IngressController> _logger;
@@ -27,20 +31,19 @@ namespace Ingress.Controllers
 
         [HttpPut]
         [ActionName(nameof(Subscribe))]
-        public IActionResult Subscribe(string serviceType, string serviceName = "")
+        public async Task<IActionResult> Subscribe(string serviceType, string serviceAddress, string containerId)
         {
             try
             {
-                var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+                _logger.LogInformation($"{serviceType} attempting to subscribe");
 
-                if (ip is null)
-                    return UnprocessableEntity("No Remote Ip Address");
+                var port = await _monitorUc.GetPort(containerId);
 
-                var port = HttpContext.Connection.RemotePort.ToString();
+                if (string.IsNullOrEmpty(port)) throw new Exception("Source port couldn't be determined");
 
-                _subscriptionUC.Subscribe(serviceName, ip, port, serviceType);
+                _subscriptionUC.Subscribe(serviceType, serviceAddress, port);
 
-                _logger.LogInformation($"{serviceType} from {ip}:{port} has subscribed");
+                _logger.LogInformation($"{serviceType} from {serviceAddress}:{port} has subscribed");
             }
             catch (Exception e)
             {
@@ -60,8 +63,12 @@ namespace Ingress.Controllers
         {
             var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
 
+            _logger.LogInformation($"{ip}:{HttpContext.Connection.RemotePort} attempting to route to {serviceType}");
+
             if (ip is null)
                 return UnprocessableEntity("No Remote Ip Address");
+
+            ip = ip.Split(':').Last();
 
             var port = HttpContext.Connection.RemotePort.ToString();
 
@@ -77,6 +84,8 @@ namespace Ingress.Controllers
                 _headersUc.AddJsonHeader(routingData);
 
                 _headersUc.AddAuthorizationHeaders(routingData, serviceType);
+
+                _logger.LogInformation($"{ip}:{port} routing to {routingData.Address}");
 
                 return routingData;
             });

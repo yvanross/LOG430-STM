@@ -1,0 +1,14 @@
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ambassador\Ambassador\bin\Debug\net7.0\Ambassador.deps.json
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ambassador\Ambassador\bin\Debug\net7.0\Ambassador.dll
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ambassador\Ambassador\bin\Debug\net7.0\Ambassador.pdb
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ambassador\Ambassador\obj\Debug\net7.0\Ambassador.csproj.AssemblyReference.cache
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ambassador\Ambassador\obj\Debug\net7.0\Ambassador.Properties.Resources.resources
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ambassador\Ambassador\obj\Debug\net7.0\Ambassador.csproj.GenerateResource.cache
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ambassador\Ambassador\obj\Debug\net7.0\Ambassador.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ambassador\Ambassador\obj\Debug\net7.0\Ambassador.AssemblyInfoInputs.cache
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ambassador\Ambassador\obj\Debug\net7.0\Ambassador.AssemblyInfo.cs
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ambassador\Ambassador\obj\Debug\net7.0\Ambassador.csproj.CoreCompileInputs.cache
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ambassador\Ambassador\obj\Debug\net7.0\Ambassador.dll
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ambassador\Ambassador\obj\Debug\net7.0\refint\Ambassador.dll
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ambassador\Ambassador\obj\Debug\net7.0\Ambassador.pdb
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ambassador\Ambassador\obj\Debug\net7.0\ref\Ambassador.dll

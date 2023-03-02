@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata.Ecma335;
+using System.Text;
 using Ambassador.BusinessObjects;
 using Ambassador.BusinessObjects.InterServiceRequests;
 using Newtonsoft.Json;
@@ -20,7 +22,7 @@ namespace Ambassador
             }
             catch (Exception e)
             {
-                var exception = new Exception($"{e.Message} \n Get Routing Data exception: endpoint: {routingRequest.Endpoint}, Target Service: {routingRequest.TargetService}", e.InnerException);
+                var exception = new Exception(GetExceptionMessage(e, $"Get Routing Data exception, endpoint: {routingRequest.Endpoint}, Target Service: {routingRequest.TargetService}"));
 
                 throw exception;
             }
@@ -40,7 +42,7 @@ namespace Ambassador
             }
             catch (Exception e)
             {
-                var exception = new Exception($"{e.Message} \n Post Routing Data exception: endpoint: {routingRequest.Endpoint}, Target Service: {routingRequest.TargetService}" , e.InnerException);
+                var exception = new Exception(GetExceptionMessage(e, $"Post Routing Data exception, endpoint: {routingRequest.Endpoint}, Target Service: {routingRequest.TargetService}"));
 
                 throw exception;
             }
@@ -69,10 +71,32 @@ namespace Ambassador
             }
             catch (Exception e)
             {
-                var exception = new Exception($"{e.Message} \n Ingress Routing Data exception");
+                var exception = new Exception(GetExceptionMessage(e, "Ingress Routing Data exception"));
 
                 throw exception;
             }
+        }
+
+        private string GetExceptionMessage(Exception e, string type)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append($"{e.Message} \n {type} \n\n\t StackTrace: {e.StackTrace}");
+
+            Exception? innerException = e.InnerException;
+
+            int level = 1;
+
+            while (innerException is not null)
+            {
+                sb.Append($"\n\n\t Inner Exception {level}: {e.Message} \n\t StackTrace: {e.StackTrace}");
+
+                level++;
+
+                innerException = innerException.InnerException;
+            }
+
+            return sb.ToString();
         }
     }
 }

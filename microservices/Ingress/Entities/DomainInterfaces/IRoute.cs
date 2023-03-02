@@ -11,4 +11,6 @@ public interface IRoute
     string ServiceType { get; init; }
 
     double Latency { get; set; }
+
+    string HttpRoute { get; }
 }

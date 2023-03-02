@@ -25,14 +25,14 @@ namespace ApplicationLogic.Usecases
             return _repositoryRead.ReadRouteByAddressAndPort(ipAddress, portNumber) is not null;
         }
 
-        public void Subscribe(string name, string ipAddress, string portNumber, string serviceType)
+        public void Subscribe(string serviceAddress, string port, string serviceType)
         {
             _repositoryWrite.Write(new Route()
             {
-                Address = ipAddress,
-                PortNumber = portNumber,
+                Address = serviceAddress,
+                PortNumber = port,
                 ServiceType = serviceType,
-                Id = name 
+                Id = Guid.NewGuid().ToString() 
             });
         }
     }

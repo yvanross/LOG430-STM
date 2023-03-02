@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v7.0": {
       "Monitor/1.0.0": {
         "dependencies": {
-          "Ambassador": "1.0.12",
+          "Ambassador": "1.0.18",
           "ApplicationLogic": "1.0.0",
           "Entities": "1.0.0",
           "Microsoft.AspNetCore.OpenApi": "7.0.3",
@@ -19,17 +19,18 @@
           "Monitor.dll": {}
         }
       },
-      "Ambassador/1.0.12": {
+      "Ambassador/1.0.18": {
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
+          "Microsoft.Extensions.Logging.Abstractions": "7.0.0",
           "Microsoft.Net.Http.Headers": "2.2.8",
           "Newtonsoft.Json": "10.0.3",
           "RestSharp": "108.0.3"
         },
         "runtime": {
           "lib/net7.0/Ambassador.dll": {
-            "assemblyVersion": "1.0.12.0",
-            "fileVersion": "1.0.12.0"
+            "assemblyVersion": "1.0.18.0",
+            "fileVersion": "1.0.18.0"
           }
         }
       },
@@ -71,6 +72,7 @@
         }
       },
       "Microsoft.Extensions.ApiDescription.Server/6.0.5": {},
+      "Microsoft.Extensions.Logging.Abstractions/7.0.0": {},
       "Microsoft.Extensions.Primitives/5.0.1": {},
       "Microsoft.Net.Http.Headers/2.2.8": {
         "dependencies": {
@@ -928,12 +930,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Ambassador/1.0.12": {
+    "Ambassador/1.0.18": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-fFlb3h6PpN7NrrAsSYILQBGLm8to2+yxOm4LDYODIsMHTD1VmuGtjST+mqYlsdFVm3oUKpSGwmntUplypN4CTg==",
-      "path": "ambassador/1.0.12",
-      "hashPath": "ambassador.1.0.12.nupkg.sha512"
+      "sha512": "sha512-D1FZ2KvUXxckK7XqKUtqZCSQMKJYWiLJK/Jw16hGyG0rQhXhTkC0PGflLUCo15OuSvxZpWCcAsbccus7OhLh3g==",
+      "path": "ambassador/1.0.18",
+      "hashPath": "ambassador.1.0.18.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Http.Features/5.0.17": {
       "type": "package",
@@ -962,6 +964,13 @@
       "sha512": "sha512-Ckb5EDBUNJdFWyajfXzUIMRkhf52fHZOQuuZg/oiu8y7zDCVwD0iHhew6MnThjHmevanpxL3f5ci2TtHQEN6bw==",
       "path": "microsoft.extensions.apidescription.server/6.0.5",
       "hashPath": "microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Logging.Abstractions/7.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kmn78+LPVMOWeITUjIlfxUPDsI0R6G0RkeAMBmQxAJ7vBJn4q2dTva7pWi65ceN5vPGjJ9q/Uae2WKgvfktJAw==",
+      "path": "microsoft.extensions.logging.abstractions/7.0.0",
+      "hashPath": "microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512"
     },
     "Microsoft.Extensions.Primitives/5.0.1": {
       "type": "package",

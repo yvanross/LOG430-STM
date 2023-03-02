@@ -1,14 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "NzE41IEKG6yK5u7RI6IlUgg2yWFqjExuzMoO/1bgD7EOubJprrFCFRHA1Fhsf6LA/5/Xm1nXz4njttBeaMq1nw==",
+  "dgSpecHash": "Fcss35EHyLS4dN1Qqc6YAKNJoSQworTPMB/uv/m4px5cX3KMqvqWxFa9DAJrqWIwsi6T+/NZlVfbnsGSV796YA==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\RouteTimeProvider\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.12\\ambassador.1.0.12.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.16\\ambassador.1.0.16.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.codecoverage\\17.3.2\\microsoft.codecoverage.17.3.2.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.csharp\\4.3.0\\microsoft.csharp.4.3.0.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.1\\microsoft.extensions.primitives.5.0.1.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.net.http.headers\\2.2.8\\microsoft.net.http.headers.2.2.8.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.net.test.sdk\\17.3.2\\microsoft.net.test.sdk.17.3.2.nupkg.sha512",

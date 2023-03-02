@@ -13,4 +13,6 @@ public class Route : IRoute
     public required string ServiceType { get; init; }
 
     public double Latency { get; set; }
+
+    public string HttpRoute => $"http://{Address}:{PortNumber}";
 }
