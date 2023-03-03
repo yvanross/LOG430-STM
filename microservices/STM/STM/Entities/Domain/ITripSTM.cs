@@ -16,4 +16,6 @@ public interface ITripSTM
     public StopScheduleSTM? RelevantOrigin { get; set; }
 
     public StopScheduleSTM? RelevantDestination { get; set; }
+
+    public bool FromStaticGtfs { get; set; }
 }

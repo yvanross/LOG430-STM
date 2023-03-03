@@ -70,7 +70,7 @@ public class ItinaryModel
 
         double DeltaHours(DateTime from)
         {
-            var hours = (from - DateTime.UtcNow.Subtract(TimeSpan.FromHours(5))).TotalHours;
+            var hours = (from - DateTime.UtcNow).TotalHours;
             return hours;
         }
 
@@ -119,7 +119,8 @@ public class ItinaryModel
                                     }
                                 }),
                             RelevantOriginStopId = possibleSources[i].ID,
-                            RelevantDestinationStopId = possibleDestinations[j].ID
+                            RelevantDestinationStopId = possibleDestinations[j].ID,
+                            FromStaticGtfs = relevantTripArray[k].FromStaticGtfs
                         };
 
                         possibleTrips.Add(relevantTripArray[k].Id, stmTrip);

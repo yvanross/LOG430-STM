@@ -18,6 +18,15 @@ namespace STM.Use_Cases.Tests
     {
         Itinary itinary = new Itinary();
 
+
+
+        [TestInitialize]
+        public void Setup()
+        {
+            if(STMData.Trips is null)
+                STMData.PrefetchData();
+        }
+
         [TestMethod()]
         public async Task TestController()
         {

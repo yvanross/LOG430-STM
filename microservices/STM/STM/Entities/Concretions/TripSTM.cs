@@ -13,5 +13,7 @@ public class TripSTM : ITripSTM
     public string RelevantDestinationStopId { get; set; }
 
     public StopScheduleSTM? RelevantOrigin { get; set; }
+
     public StopScheduleSTM? RelevantDestination { get; set; }
+    public bool FromStaticGtfs { get; set; } = true;
 }

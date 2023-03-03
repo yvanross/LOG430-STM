@@ -30,8 +30,7 @@ namespace STM.Use_Cases.Tests
 
             Assert.IsNotNull(bus);
 
-            TrackBus track = new TrackBus(bus,
-                logger);
+            TrackBus track = new TrackBus(bus,logger);
 
             await track.PerdiodicCaller();
 

@@ -57,7 +57,7 @@ namespace STM.Controllers
             {
                 throw (new Exception($"No buses were found, logging: \n" +
                                      $"time {DateTime.UtcNow} \n" +
-                                     $"stm stops {STMData.Stops?.Length -1} \n" +
+                                     $"stm stops {STMData.Stops?.Values.Count() -1} \n" +
                                      $"stm trips {STMData.Trips?.Count ?? -1}"));
             }
 

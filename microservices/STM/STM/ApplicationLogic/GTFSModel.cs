@@ -10,10 +10,6 @@ namespace STM.ApplicationLogic;
 
 public class GTFSModel
 {
-    private readonly ILogger? _logger;
-
-    public GTFSModel(ILogger? logger = null) => _logger = logger;
-
     public IEnumerable<(IBus bus, double eta)> GetTimeRelevantBuses(IEnumerable<IBus> buses)
     {
         foreach (var bus in buses)
@@ -26,8 +22,7 @@ public class GTFSModel
     }
 
 
-    public List<IBus> GetVehiculeOnRelevantTrips(ITripSTM[] relevantTrips, IEnumerable<VehiclePosition> feedPositions,
-        ImmutableDictionary<string, TripUpdate> feedTripUpdates)
+    public List<IBus> GetVehiculeOnRelevantTrips(ITripSTM[] relevantTrips, IEnumerable<VehiclePosition> feedPositions, ImmutableDictionary<string, TripUpdate> feedTripUpdates)
     {
         List<IBus> buses = new List<IBus>();
 
@@ -38,7 +33,10 @@ public class GTFSModel
 
         foreach (var vehicle in vehiculesOnTargetTrip)
         {
-            var bus = new Bus();
+            var bus = new Bus()
+            {
+                currentStopIndex = (int)vehicle.CurrentStopSequence
+            };
 
             if (TryConvertGTFSToFriendlyClass(vehicle, relevantTripsDictionary, feedTripUpdates, bus))
             {
@@ -82,7 +80,7 @@ public class GTFSModel
 
         var tripToCopy = relevantTrips[vehicle.Trip.TripId];
 
-        int index = 0;
+        int index = tripToCopy.FromStaticGtfs ? 0 : bus.currentStopIndex;
 
         bus.Trip = new TripSTM()
         {
@@ -116,7 +114,8 @@ public class GTFSModel
             RelevantDestinationStopId = tripToCopy.RelevantDestinationStopId
         };
 
-        bus.currentStopIndex = (int)vehicle.CurrentStopSequence;
+        //todo this logic patch needs fixing
+        bus.currentStopIndex = tripToCopy.FromStaticGtfs ? bus.currentStopIndex : 0;
 
         return true;
     }

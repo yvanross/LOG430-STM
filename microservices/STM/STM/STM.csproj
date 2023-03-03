@@ -27,6 +27,7 @@
   <ItemGroup>
     <Folder Include="ExternalServiceProvider\Proto\" />
     <Folder Include="ApplicationLogic\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
 
   <ItemGroup>

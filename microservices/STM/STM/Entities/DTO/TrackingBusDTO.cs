@@ -42,7 +42,7 @@ public class TrackingBusDTO
     /// </summary>
     public int indexOfDestinationStop { get; set; }
 
-    public string callBack { get; set; }
+    public string? callBack { get; set; }
 
-    public string processID { get; set; }
+    public string? processID { get; set; }
 }

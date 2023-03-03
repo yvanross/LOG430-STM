@@ -47,9 +47,9 @@ public class TrackBus : ChaosDaemon
 
     private DateTime? _crossedFirstStopTime;
 
-    private PeriodicTimer _periodicTimer = new(TimeSpan.FromMinutes(0.25));
+    private PeriodicTimer _periodicTimer = new(TimeSpan.FromSeconds(1));
 
-    private ExternalSTMGateway _externalSTMGateway = new();
+    private StmClient _stmClient = new();
 
     private ILogger? _logger;
 
@@ -136,7 +136,7 @@ public class TrackBus : ChaosDaemon
 
     private async Task Track()
     {
-        var feedPositions = (await _externalSTMGateway.RequestFeedPositions()).ToImmutableDictionary(v=>v.Vehicle.Id);
+        var feedPositions = (await _stmClient.RequestFeedPositions()).ToImmutableDictionary(v=>v.Vehicle.Id);
 
         var liveFeed = feedPositions[_bus.ID];
 
@@ -198,6 +198,10 @@ public class TrackBus : ChaosDaemon
 
     private async Task ProvideUpdate(string message, bool lastCallback = false)
     {
+        _logger?.Log(LogLevel.Information, new EventId(0), message: message);
+
+        if (_callBack is null) return;
+
         var request = new RestRequest(_callBack);
 
         var deltaTime = DeltaTime(_crossedOriginTime).ToString();
@@ -214,10 +218,7 @@ public class TrackBus : ChaosDaemon
 
     private async Task CallBackAndDispose()
     {
-        if (_callBack is not null)
-        {
-            await ProvideUpdate($"Real Time Tracking is done, bus {_bus.Name} has reached the destination in {DeltaTime(_crossedOriginTime)}", true);
-        }
+        await ProvideUpdate($"Real Time Tracking is done, bus {_bus.Name} has reached the destination in {DeltaTime(_crossedOriginTime)}", true);
 
         _logger?.Log(LogLevel.Information, new EventId(5), message: "Disposing");
 
@@ -225,6 +226,6 @@ public class TrackBus : ChaosDaemon
 
         _bus = null;
         _logger = null;
-        _externalSTMGateway = null;
+        _stmClient = null;
     }
 }

@@ -1,16 +1,21 @@
 ﻿using System.Collections.Immutable;
+using Entities.Concretions;
 using Entities.Domain;
 using StaticGTFS;
+using StaticGTFS.Concretions;
 using STM.ApplicationLogic;
 using STM.Controllers;
+using STM.Entities.Concretions;
 using STM.Entities.Domain;
 using STM.ExternalServiceProvider;
+using STM.ExternalServiceProvider.Proto;
+using Position = Entities.Concretions.Position;
 
 namespace STM.Use_Cases
 {
     public class Itinary : ChaosDaemon
     {
-        private ExternalSTMGateway _externalStmGateway = new ExternalSTMGateway();
+        private StmClient _stmClient = new StmClient();
 
         private ILogger? _logger;
 
@@ -24,13 +29,35 @@ namespace STM.Use_Cases
 
                 STMData.PrefetchData();
 
+                var feedTripUpdates = (await _stmClient.RequestFeedTripUpdates()).ToList();
+
+                //todo actually update trip and not just add
+                feedTripUpdates.ForEach(x => STMData.AddTrip(new Trip()
+                {
+                    Id = x.Trip.TripId,
+                    StopSchedules = x.StopTimeUpdate.ToList().ConvertAll(stopTimeU =>
+                    {
+                        if (STMData.Stops!.ContainsKey(stopTimeU.StopId) is false)
+                            STMData.AddStop(new Stop() { ID = stopTimeU.StopId, Position = new Position() });
+
+                        var schedule = (IStopSchedule)new StopSchedule()
+                        {
+                            Stop = STMData.Stops[stopTimeU.StopId],
+                            DepartureTime = (DateTime.UnixEpoch.AddSeconds(stopTimeU.Departure?.Time ?? stopTimeU.Arrival?.Time ?? 0L))
+                        };
+
+                        return schedule;
+                    }),
+                    FromStaticGtfs = false
+                }));
+
                 var relevantTrips = RelevantTripsAndRelevantStops(from, to);
 
                 _logger?.LogInformation($"found {relevantTrips?.Length} relevant trips");
 
                 if ((relevantTrips?.Length ?? 0) < 1) return null;
 
-                var timeRelevantBuses = await RelevantBuses(relevantTrips);
+                var timeRelevantBuses = await RelevantBuses(relevantTrips, feedTripUpdates);
 
                 _logger?.LogInformation($"found {timeRelevantBuses.Length} relevant buses");
 
@@ -51,24 +78,23 @@ namespace STM.Use_Cases
         {
             ItinaryModel itinaryModel = new ItinaryModel(_logger);
 
-            var stopsOrigin = itinaryModel.GetClosestStops(from, STMData.Stops);
-            var stopsTarget = itinaryModel.GetClosestStops(to, STMData.Stops);
+            var stops = STMData.Stops!.Values.ToArray();
+
+            var stopsOrigin = itinaryModel.GetClosestStops(from, stops);
+            var stopsTarget = itinaryModel.GetClosestStops(to, stops);
 
             var relevantTrips = itinaryModel.TripsContainingSourceAndDestination(stopsOrigin, stopsTarget, STMData.Trips);
 
             return relevantTrips;
         }
 
-        private async Task<(IBus bus, double eta)[]> RelevantBuses(ITripSTM[] relevantTrips)
+        private async Task<(IBus bus, double eta)[]> RelevantBuses(ITripSTM[] relevantTrips, List<TripUpdate> feedTripUpdates)
         {
-            GTFSModel gtfsModel = new GTFSModel(_logger);
+            GTFSModel gtfsModel = new GTFSModel();
 
-            var feedPositions = await _externalStmGateway.RequestFeedPositions();
-            
-            var feedTripUpdates = (await _externalStmGateway.RequestFeedTripUpdates())
-                .ToImmutableDictionary(t => t.Trip.TripId);
+            var feedPositions = await _stmClient.RequestFeedPositions();
 
-            var relevantBuses = gtfsModel.GetVehiculeOnRelevantTrips(relevantTrips, feedPositions, feedTripUpdates);
+            var relevantBuses = gtfsModel.GetVehiculeOnRelevantTrips(relevantTrips, feedPositions, feedTripUpdates.ToImmutableDictionary(x=>x.Trip.TripId));
             
             relevantBuses = gtfsModel.GetRelevantOriginAndDestinationForRelevantBuses(relevantBuses);
 
