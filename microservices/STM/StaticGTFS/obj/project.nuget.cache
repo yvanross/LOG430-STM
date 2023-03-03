@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "k+BqVJlgdVv9cxnMtLoU6znIbAG5Vc4AjOdfaX57DawxTiRWS2wmLZX6yrhe2NbM2+0YHL6hq2wYVuI/1F37Hw==",
+  "dgSpecHash": "MeZNpW7F+yibPPsePwrJfkILLFlIz+KI10Nh5G/FdIEOnkSegGVg2oRI8AS6SjAwtOWvnHfz4z2BrsWB/u2Wcg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\StaticGTFS\\StaticGTFS.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\david\\.nuget\\packages\\google.protobuf\\3.22.0\\google.protobuf.3.22.0.nupkg.sha512"
+  ],
   "logs": []
 }

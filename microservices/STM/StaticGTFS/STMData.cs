@@ -1,24 +1,26 @@
 ﻿using System.Collections.Immutable;
 using Entities.Concretions;
 using Entities.Domain;
-using StaticGTFS.Concretions;
+using GTFS.Concretions;
+using GTFS.Interfaces;
+using STM.ExternalServiceProvider.Proto;
 
-namespace StaticGTFS;
+namespace GTFS;
 
 public static class STMData
 {
-    public static ImmutableList<ITrip>? Trips { get; private set; }
-    public static ImmutableDictionary<string, IStop>? Stops { get; private set; }
+    public static ImmutableList<IGTFSTrip>? Trips { get; private set; }
+    public static ImmutableDictionary<string, IStopSTM>? Stops { get; private set; }
 
-    public static void AddTrip(Trip trip)
+    public static void AddTrip(GTFSTrip gtfsTrip)
     {
-        Trips = Trips?.Add(trip);
+        Trips = Trips?.Add(gtfsTrip);
     }
 
-    public static void AddStop(Stop stop)
+    public static void AddStop(IStopSTM igtfsStop)
     {
-        if(Stops?.ContainsKey(stop.ID) is false)
-            Stops = Stops.Add(stop.ID, stop);
+        if(Stops?.ContainsKey(igtfsStop.Id) is false)
+            Stops = Stops.Add(igtfsStop.Id, igtfsStop);
     }
 
     public static void PrefetchData()
@@ -27,7 +29,7 @@ public static class STMData
         {
             var stops = FetchStopData().ToArray();
 
-            Stops = stops.ToImmutableDictionary(x => x.ID ?? Guid.NewGuid().ToString());
+            Stops = stops.ToImmutableDictionary(x => x.Id);
 
             var trips = FetchTripData().ToImmutableDictionary(x => x.Id ?? Guid.NewGuid().ToString());
 
@@ -37,7 +39,33 @@ public static class STMData
         }
     }
 
-    private static IEnumerable<IStop> FetchStopData()
+    public static List<IGTFSTrip> AddRealtimeGTFSData(List<TripUpdate> realtimeGTFS)
+    {
+        var realtimeTrips = new List<IGTFSTrip>();
+
+        realtimeGTFS.ForEach(x => realtimeTrips.Add(new GTFSTrip()
+        {
+            Id = x.Trip.TripId,
+            StopSchedules = x.StopTimeUpdate.ToList().ConvertAll(stopTimeU =>
+            {
+                if (STMData.Stops!.ContainsKey(stopTimeU.StopId) is false)
+                    STMData.AddStop(new StopSTM() { Id = stopTimeU.StopId, Position = new PositionLL() });
+
+                var schedule = (IStopSchedule)new StopSchedule()
+                {
+                    Stop = STMData.Stops[stopTimeU.StopId],
+                    DepartureTime = (DateTime.UnixEpoch.AddSeconds(stopTimeU.Departure?.Time ?? stopTimeU.Arrival?.Time ?? 0L))
+                };
+
+                return schedule;
+            }),
+            FromStaticGtfs = false
+        }));
+
+        return realtimeTrips;
+    }
+
+    private static IEnumerable<IStopSTM> FetchStopData()
     {
         var stopsInfo = DynamicStaticGTFSParser.GetInfo(DataCategory.STOPS);
 
@@ -46,10 +74,10 @@ public static class STMData
             double.TryParse(info.GetValue("stop_lat"), out var lat);
             double.TryParse(info.GetValue("stop_lon"), out var lon);
 
-            yield return new Stop()
+            yield return new StopSTM()
             {
-                ID = info.GetValue("stop_id"),
-                Position = new Position()
+                Id = info.GetValue("stop_id"),
+                Position = new PositionLL()
                 {
                     Latitude = lat,
                     Longitude = lon
@@ -58,24 +86,24 @@ public static class STMData
         }
     }
 
-    private static IEnumerable<ITrip> FetchTripData()
+    private static IEnumerable<IGTFSTrip> FetchTripData()
     {
         var tripsInfo = DynamicStaticGTFSParser.GetInfo(DataCategory.TRIPS);
 
         foreach (var info in tripsInfo)
         {
-            yield return new Trip()
+            yield return new GTFSTrip()
             {
                 Id = info.GetValue("trip_id"),
             };
         }
     }
 
-    private static ImmutableList<ITrip> LinkTripAndStopData(ImmutableDictionary<string, IStop> stops, ImmutableDictionary<string, ITrip> trips)
+    private static ImmutableList<IGTFSTrip> LinkTripAndStopData(ImmutableDictionary<string, IStopSTM> stops, ImmutableDictionary<string, IGTFSTrip> trips)
     {
         var datas = DynamicStaticGTFSParser.GetInfo(DataCategory.STOP_TIMES).ToList();
 
-        var doubledTrips = trips.ToDictionary(keyValuePair => keyValuePair.Key, keyValuePair => new[] { keyValuePair.Value, (ITrip)keyValuePair.Value.Clone(), (ITrip)keyValuePair.Value.Clone() });
+        var doubledTrips = trips.ToDictionary(keyValuePair => keyValuePair.Key, keyValuePair => new[] { keyValuePair.Value, (IGTFSTrip)keyValuePair.Value.Clone(), (IGTFSTrip)keyValuePair.Value.Clone() });
 
         Parallel.ForEach(new [] { 0,1,2}, (day) =>
         {
@@ -86,7 +114,7 @@ public static class STMData
 
                 if (trip is null || tempStop is null) continue;
 
-                IStop stop = new Stop() { ID = tempStop.ID, Position = tempStop.Position };
+                var stop = new StopSTM() { Id = tempStop.Id, Position = tempStop.Position };
 
                 string? HMS = gtfsInfo.GetValue("arrival_time");
 

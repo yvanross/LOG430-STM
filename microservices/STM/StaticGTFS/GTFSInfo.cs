@@ -1,4 +1,4 @@
-﻿namespace StaticGTFS;
+﻿namespace GTFS;
 
 public class GTFSInfo
 {

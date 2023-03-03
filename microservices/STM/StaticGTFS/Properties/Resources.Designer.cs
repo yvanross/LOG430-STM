@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace StaticGTFS.Properties {
+namespace GTFS.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace StaticGTFS.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("StaticGTFS.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GTFS.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -73,15 +73,15 @@ namespace StaticGTFS.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date
-        ///22U-H50U000S-82-S,1,1,1,1,1,0,0,20220613,20220819
-        ///22U-H50U000S-82-SV,0,0,0,0,1,0,0,20220613,20220819
-        ///22U-H54U000S-82-S,1,1,1,1,1,0,0,20220613,20220819
-        ///22U-H55U000S-01-S,1,1,1,1,1,0,0,20220613,20220819
-        ///22U-H55U000S-01-SV,0,0,0,0,1,0,0,20220613,20220819
-        ///22U-H56U000S-80-S,1,1,1,1,1,0,0,20220613,20220819
-        ///22U-H56U000S-80-SV,0,0,0,0,1,0,0,20220613,20220819
-        ///22U-H57U000S-81-S,1,1,1,1,1,0,0,20220613,20220819
-        ///22U-H58U000S [rest of string was truncated]&quot;;.
+        ///22N-H50N000S-80-S,1,1,1,1,1,0,0,20221024,20221223
+        ///22N-H50N000S-80-SV,0,0,0,0,1,0,0,20221024,20221223
+        ///22N-H54N000S-80-S,1,1,1,1,1,0,0,20221024,20221223
+        ///22N-H55N000S-80-S,1,1,1,1,1,0,0,20221024,20221223
+        ///22N-H55N000S-80-SV,0,0,0,0,1,0,0,20221024,20221223
+        ///22N-H56N000S-80-S,1,1,1,1,1,0,0,20221024,20221223
+        ///22N-H56N000S-80-SV,0,0,0,0,1,0,0,20221024,20221223
+        ///22N-H57N000S-82-S,1,1,1,1,1,0,0,20221024,20221223
+        ///22N-H58N000S-86-S,1,1 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string calendar {
             get {
@@ -91,22 +91,23 @@ namespace StaticGTFS.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to service_id,date,exception_type
-        ///22U-H50U000S-82-S,20220624,2
-        ///22U-H50U000S-82-SV,20220624,2
-        ///22U-H50U000S-82-S,20220701,2
-        ///22U-H50U000S-82-SV,20220701,2
-        ///22S-H50S000S-81-S,20220905,2
-        ///22S-H50S000S-81-S,20221010,2
-        ///22U-H54U000S-82-S,20220624,2
-        ///22U-H54U000S-82-S,20220701,2
-        ///22S-H54S000S-81-S,20220905,2
-        ///22S-H54S000S-81-S,20221010,2
-        ///22U-H55U000S-01-S,20220624,2
-        ///22U-H55U000S-01-SV,20220624,2
-        ///22U-H55U000S-01-S,20220701,2
-        ///22U-H55U000S-01-SV,20220701,2
-        ///22S-H55S000S-80-S,20220905,2
-        ///22S-H55S000S-80-S,20221010 [rest of string was truncated]&quot;;.
+        ///23J-H50J000S-82-S,20230227,2
+        ///23J-H50J000S-82-S,20230228,2
+        ///23J-H50J000S-82-S,20230301,2
+        ///23J-H50J000S-82-S,20230302,2
+        ///23J-H50J000S-82-S,20230303,2
+        ///23J-H50J000S-82-SV,20230303,2
+        ///23J-H50J000A-05-A,20230304,2
+        ///23J-H50J000I-04-I,20230305,2
+        ///23J-H54J000S-80-S,20230227,2
+        ///23J-H54J000S-80-S,20230228,2
+        ///23J-H54J000S-80-S,20230301,2
+        ///23J-H54J000S-80-S,20230302,2
+        ///23J-H54J000S-80-S,20230303,2
+        ///23J-H54J000A-00-A,20230304,2
+        ///23J-H54J000I-00-I,20230305,2
+        ///23J-H55J000S-80-S,20230227,2
+        ///23J-H55J000S-80- [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string calendar_dates {
             get {
@@ -116,7 +117,7 @@ namespace StaticGTFS.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to fare_id,price,currency_type,payment_method,transfers,transfer_duration
-        ///13S_747,10.00,CAD,0,,7200
+        ///13S_747,11.00,CAD,0,,7200
         ///13S_REG,3.50,CAD,0,,7200
         ///.
         /// </summary>
@@ -158,7 +159,10 @@ namespace StaticGTFS.Properties {
         ///13S_REG,35,,,
         ///13S_REG,36,,,
         ///13S_REG,37,,,
-        ///13S_REG,39, [rest of string was truncated]&quot;;.
+        ///13S_REG,39,,,
+        ///13S_REG,40,,,
+        ///13S_REG,41,,,
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string fare_rules {
             get {
@@ -168,7 +172,7 @@ namespace StaticGTFS.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to feed_publisher_name,feed_publisher_url,feed_lang,feed_start_date,feed_end_date
-        ///&quot;Société de transport de Montréal&quot;,http://www.stm.info,fr,20220613,20221023
+        ///&quot;Société de transport de Montréal&quot;,http://www.stm.info,fr,20221024,20230326
         ///.
         /// </summary>
         internal static string feed_info {
@@ -184,7 +188,7 @@ namespace StaticGTFS.Properties {
         ///4,STM,4,Jaune,1,http://www.stm.info/fr/infos/reseaux/metro/jaune,FFD900,000000
         ///5,STM,5,Bleue,1,http://www.stm.info/fr/infos/reseaux/metro/bleue,0095E6,000000
         ///10,STM,10,De Lorimier,3,http://www.stm.info/fr/infos/reseaux/bus,009EE0,
-        ///11,STM,11,Par [rest of string was truncated]&quot;;.
+        ///11,STM,11,Parc-du-M [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string routes {
             get {
@@ -208,7 +212,7 @@ namespace StaticGTFS.Properties {
         ///43,10118,Station Angrignon,45.446466,-73.603118,http://www.stm.info/fr/infos/reseaux/metro/angrignon,0,STATION_M118,2
         ///43-01,10118,Station Angrignon,45.446319,-73.603835,,2,STATION_M118,2
         ///STATION_M120,10120,STATION MONK,45.451158,-73.593242,,1,,2
-        ///42,10120,Station Monk,45.451158,-73.593242,http://www.stm.info/fr/infos/reseaux/metro/monk,0, [rest of string was truncated]&quot;;.
+        ///42,10120,Station Monk,45.451158,-73.593242,http://www.stm.info/fr/infos/reseaux/metro/monk,0,STATI [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string stops {
             get {
@@ -218,12 +222,12 @@ namespace StaticGTFS.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to route_id,service_id,trip_id,trip_headsign,direction_id,shape_id,wheelchair_accessible,note_fr,note_en
-        ///4,22S-GLOBAUX-50-S,254107023,STATION BERRI-UQAM,0,40025,1,,
-        ///4,22S-GLOBAUX-50-S,254107024,STATION BERRI-UQAM,0,40025,1,,
-        ///4,22S-GLOBAUX-50-S,254107027,STATION LONGUEUIL–UNIVERSITÉ-DE-SHERBROOKE,1,40024,1,,
-        ///4,22S-GLOBAUX-50-S,254107028,STATION LONGUEUIL–UNIVERSITÉ-DE-SHERBROOKE,1,40024,1,,
-        ///4,22S-GLOBAUX-50-S,254107029,STATION LONGUEUIL–UNIVERSITÉ-DE-SHERBROOKE,1,40024,1,,
-        ///4,22S-GLOBAUX-50-S,254107030,STA [rest of string was truncated]&quot;;.
+        ///4,22N-GLOBAUX-50-S,254182909,STATION BERRI-UQAM,0,40025,1,,
+        ///4,22N-GLOBAUX-50-S,254182910,STATION BERRI-UQAM,0,40025,1,,
+        ///4,22N-GLOBAUX-50-S,254182913,STATION LONGUEUIL–UNIVERSITÉ-DE-SHERBROOKE,1,40024,1,,
+        ///4,22N-GLOBAUX-50-S,254182914,STATION LONGUEUIL–UNIVERSITÉ-DE-SHERBROOKE,1,40024,1,,
+        ///4,22N-GLOBAUX-50-S,254182915,STATION LONGUEUIL–UNIVERSITÉ-DE-SHERBROOKE,1,40024,1,,
+        ///4,22N-GLOBAUX-50-S,254182916,STATION L [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string trips {
             get {

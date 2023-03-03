@@ -1,7 +1,7 @@
 ﻿using System.IO.Compression;
 using System.Text;
 
-namespace StaticGTFS;
+namespace GTFS;
 
 public static class DynamicStaticGTFSParser
 {
@@ -25,16 +25,14 @@ public static class DynamicStaticGTFSParser
 
     private static void FetchStringData(DataCategory dataCategory)
     {
-        var data =
-            StaticGTFS.Properties.Resources.ResourceManager.GetString(dataCategory.ToString().ToLower());
+        var data = Properties.Resources.ResourceManager.GetString(dataCategory.ToString().ToLower());
 
         ParseGTFS(dataCategory, data);
     }
 
     private static void FetchStopTimes()
     {
-        var stopTimes =
-            StaticGTFS.Properties.Resources.ResourceManager.GetObject(DataCategory.STOP_TIMES.ToString().ToLower());
+        var stopTimes = Properties.Resources.ResourceManager.GetObject(DataCategory.STOP_TIMES.ToString().ToLower());
 
         ParseGTFS(DataCategory.STOP_TIMES, DecompressStopTimes(stopTimes));
     }

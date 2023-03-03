@@ -1,6 +1,6 @@
 using System.Reflection;
+using GTFS;
 using Microsoft.OpenApi.Models;
-using StaticGTFS;
 using STM.ExternalServiceProvider;
 
 var builder = WebApplication.CreateBuilder(args);

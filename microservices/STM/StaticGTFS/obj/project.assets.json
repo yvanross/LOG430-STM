@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "Google.Protobuf/3.22.0": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0/Google.Protobuf.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net5.0/Google.Protobuf.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
       "Entities/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
@@ -15,6 +28,29 @@
     }
   },
   "libraries": {
+    "Google.Protobuf/3.22.0": {
+      "sha512": "UE1TRMrBBBmnA8xbqzTvX4sSwn+2W/Xxrs/v5Aws/7C8RD6fY6STi1eAnCu7Ez93oHcPdpyStGnFel/aIB407Q==",
+      "type": "package",
+      "path": "google.protobuf/3.22.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "google.protobuf.3.22.0.nupkg.sha512",
+        "google.protobuf.nuspec",
+        "lib/net45/Google.Protobuf.dll",
+        "lib/net45/Google.Protobuf.pdb",
+        "lib/net45/Google.Protobuf.xml",
+        "lib/net5.0/Google.Protobuf.dll",
+        "lib/net5.0/Google.Protobuf.pdb",
+        "lib/net5.0/Google.Protobuf.xml",
+        "lib/netstandard1.1/Google.Protobuf.dll",
+        "lib/netstandard1.1/Google.Protobuf.pdb",
+        "lib/netstandard1.1/Google.Protobuf.xml",
+        "lib/netstandard2.0/Google.Protobuf.dll",
+        "lib/netstandard2.0/Google.Protobuf.pdb",
+        "lib/netstandard2.0/Google.Protobuf.xml"
+      ]
+    },
     "Entities/1.0.0": {
       "type": "project",
       "path": "../Entities/Entities.csproj",
@@ -23,7 +59,8 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "Entities >= 1.0.0"
+      "Entities >= 1.0.0",
+      "Google.Protobuf >= 3.22.0"
     ]
   },
   "packageFolders": {
@@ -33,9 +70,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\StaticGTFS\\StaticGTFS.csproj",
-      "projectName": "StaticGTFS",
-      "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\StaticGTFS\\StaticGTFS.csproj",
+      "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj",
+      "projectName": "GTFS",
+      "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj",
       "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\StaticGTFS\\obj\\",
       "projectStyle": "PackageReference",
@@ -74,6 +111,12 @@
     "frameworks": {
       "net6.0": {
         "targetAlias": "net6.0",
+        "dependencies": {
+          "Google.Protobuf": {
+            "target": "Package",
+            "version": "[3.22.0, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",

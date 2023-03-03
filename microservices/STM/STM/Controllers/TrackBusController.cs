@@ -1,13 +1,8 @@
-﻿using Entities.Domain;
-using Microsoft.AspNetCore.Http;
+﻿using ApplicationLogic.Use_Cases;
+using Entities.Concretions;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol;
-using StaticGTFS;
-using STM.Entities.Concretions;
-using STM.Entities.Domain;
-using STM.Entities.DTO;
-using STM.ExternalServiceProvider;
-using STM.Use_Cases;
+using STM.DTO;
+using STM.External;
 
 namespace STM.Controllers
 {
@@ -17,7 +12,7 @@ namespace STM.Controllers
     {
         private readonly ILogger<TrackBusController> _logger;
 
-        private List<TrackBus> _busesBeingTracked = new List<TrackBus>();
+        private List<TrackBusUC> _busesBeingTracked = new ();
 
         public TrackBusController(ILogger<TrackBusController> logger)
         {
@@ -38,11 +33,56 @@ namespace STM.Controllers
         {
             _logger.LogInformation("TrackBus endpoint reached");
 
-            var track = new TrackBus(busDTO, _logger);
+            var relevantOrigin = busDTO.OriginStopSchedule;
+            var relevantDestination = busDTO.TargetStopSchedule;
+
+            var stmEta = Convert.ToDouble(busDTO.ETA);
+
+            var bus = new Bus()
+            {
+                Id = busDTO.BusID,
+                Name = busDTO.Name,
+                Trip = new TripSTM()
+                {
+                    RelevantOrigin = new StopScheduleSTM()
+                    {
+                        Index = relevantOrigin.index,
+                        DepartureTime = Convert.ToDateTime(relevantOrigin.DepartureTime),
+                        Stop = new StopSTM()
+                        {
+                            Message = relevantOrigin.Stop.Message,
+                            Id = relevantOrigin.Stop.ID,
+                            Position = new PositionLL()
+                            {
+                                Latitude = Convert.ToDouble(relevantOrigin.Stop.Position.Latitude),
+                                Longitude = Convert.ToDouble(relevantOrigin.Stop.Position.Longitude)
+                            }
+                        }
+                    },
+                    RelevantDestination = new StopScheduleSTM()
+                    {
+                        Index = relevantDestination.index,
+                        DepartureTime = Convert.ToDateTime(relevantDestination.DepartureTime),
+                        Stop = new StopSTM()
+                        {
+                            Message = relevantDestination.Stop.Message,
+                            Id = relevantDestination.Stop.ID,
+                            Position = new PositionLL()
+                            {
+                                Latitude = Convert.ToDouble(relevantDestination.Stop.Position.Latitude),
+                                Longitude = Convert.ToDouble(relevantDestination.Stop.Position.Longitude)
+                            }
+                        }
+                    },
+                    Id = busDTO.TripID,
+                },
+            };
+            var track = new TrackBusUC(bus, stmEta, busDTO.callBack is null ? default : new CallBackClient(busDTO.callBack), new StmClient(), _logger);
 
             _busesBeingTracked.Add(track);
 
-            track.PerdiodicCaller();
+            _ = track.PerdiodicCaller();
         }
     }
 }
+

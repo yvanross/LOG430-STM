@@ -3,7 +3,7 @@ namespace Entities.Domain;
 
 public interface IStopSchedule : ICloneable
 {
-    IStop Stop { get; }
+    IStopSTM Stop { get; set; }
 
-    DateTime DepartureTime { get; }
+    DateTime DepartureTime { get; set; }
 }

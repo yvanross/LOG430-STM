@@ -1,11 +1,11 @@
+using ApplicationLogic.Use_Cases;
 using Entities.Concretions;
+using GTFS;
 using Microsoft.AspNetCore.Mvc;
-using StaticGTFS;
-using STM.Entities.Concretions;
-using STM.Entities.Domain;
-using STM.Entities.DTO;
+using STM.DTO;
+using STM.External;
 using STM.ExternalServiceProvider;
-using STM.Use_Cases;
+using STM.ExternalServiceProvider.Proto;
 
 namespace STM.Controllers
 {
@@ -33,7 +33,7 @@ namespace STM.Controllers
         {
             _logger.LogInformation($"OptimalBus endpoint called with coordinated: from: {fromLatitudeLongitude}; to: {toLatitudeLongitude}");
 
-            Itinary itinary = new Itinary(_logger);
+            var itinary = new ItinaryUC(new StmClient(), _logger);
 
             var fromPositionStrings = fromLatitudeLongitude.Split(',');
             var toPositionStrings = toLatitudeLongitude.Split(',');
@@ -43,11 +43,11 @@ namespace STM.Controllers
             double.TryParse(toPositionStrings[0].Trim(), out var toLatitude);
             double.TryParse(toPositionStrings[1].Trim(), out var toLongitude);
 
-            var tuple = await itinary.GetFastestBus(new Position()
+            var tuple = await itinary.GetFastestBus(new PositionLL()
             {
                 Latitude = fromLatitude,
                 Longitude = fromLongitude
-            }, new Position()
+            }, new PositionLL()
             {
                 Latitude = toLatitude,
                 Longitude = toLongitude
@@ -66,20 +66,18 @@ namespace STM.Controllers
 
             var busDTO = new TrackingBusDTO()
             {
-                BusID = tuple.Value.bus.ID,
-                TripID = tuple.Value.bus.Trip.ID,
+                BusID = tuple.Value.bus.Id,
+                TripID = tuple.Value.bus.Trip.Id,
                 Name = tuple.Value.bus.Name,
                 ETA = tuple.Value.eta.ToString(),
-                indexOfOriginStop = tuple.Value.bus.Trip.RelevantOrigin.Value.index,
-                indexOfDestinationStop = tuple.Value.bus.Trip.RelevantDestination.Value.index,
                 OriginStopSchedule = new StopScheduleDTO()
                 {
-                    index = relevantOrigin.index,
+                    index = relevantOrigin.Index,
                     DepartureTime = relevantOrigin.DepartureTime.ToString(),
                     Stop = new StopDTO()
                     {
                         Message = ((StopSTM)relevantOrigin.Stop).Message,
-                        ID = relevantOrigin.Stop.ID,
+                        ID = relevantOrigin.Stop.Id,
                         Position = new PositionDTO()
                         {
                             Latitude = relevantOrigin.Stop.Position.Latitude.ToString(),
@@ -89,12 +87,12 @@ namespace STM.Controllers
                 },
                 TargetStopSchedule = new StopScheduleDTO()
                 {
-                    index = relevantDestination.index,
+                    index = relevantDestination.Index,
                     DepartureTime = relevantDestination.DepartureTime.ToString(),
                     Stop = new StopDTO()
                     {
                         Message = ((StopSTM)relevantDestination.Stop).Message,
-                        ID = relevantDestination.Stop.ID,
+                        ID = relevantDestination.Stop.Id,
                         Position = new PositionDTO()
                         {
                             Latitude = relevantDestination.Stop.Position.Latitude.ToString(),

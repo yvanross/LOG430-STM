@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STM", "STM\STM.csproj", "{7
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STMTests", "STMTests\STMTests.csproj", "{831BCD23-4A2D-4C21-8E92-EC07ED6D2899}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StaticGTFS", "StaticGTFS\StaticGTFS.csproj", "{06EC355C-C779-4DCF-8722-25EB89F4574A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GTFS", "StaticGTFS\GTFS.csproj", "{06EC355C-C779-4DCF-8722-25EB89F4574A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{A3296EB1-26EC-44B7-90E5-3D17996CBD1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{A3296EB1-26EC-44B7-90E5-3D17996CBD1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationLogic", "ApplicationLogic\ApplicationLogic.csproj", "{8A7D5FB3-20C0-46B9-A335-57964893EE55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{A3296EB1-26EC-44B7-90E5-3D17996CBD1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3296EB1-26EC-44B7-90E5-3D17996CBD1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3296EB1-26EC-44B7-90E5-3D17996CBD1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A7D5FB3-20C0-46B9-A335-57964893EE55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A7D5FB3-20C0-46B9-A335-57964893EE55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A7D5FB3-20C0-46B9-A335-57964893EE55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A7D5FB3-20C0-46B9-A335-57964893EE55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

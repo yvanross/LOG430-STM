@@ -1,19 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using StaticGTFS;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using STM.Entities.Concretions;
+﻿using System.Threading.Tasks;
+using ApplicationLogic.Use_Cases;
+using GTFS;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace STM.Use_Cases.Tests
+namespace STMTests.Use_Cases
 {
     [TestClass()]
     public class PersistenceTest
     {
-        Itinary itinary = new Itinary();
+        ItinaryUC itinary = new (null, null);
 
         [TestMethod()]
         public void TestStaticGTFS()
@@ -38,7 +33,7 @@ namespace STM.Use_Cases.Tests
 
             if (!run) return;
 
-            await TripCompressor.CompressTripFile(@"C:\Users\david\OneDrive\Documents\stop_times");
+            await FileCompressor.CompressTripFile(@"C:\Users\david\OneDrive\Documents\stop_times");
         }
     }
 }
