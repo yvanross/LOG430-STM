@@ -11,4 +11,13 @@ public class StopSTM : IStopSTM
 
     public string Message { get; set; }
 
+    public object Clone()
+    {
+        return new StopSTM()
+        {
+            ID = ID,
+            Position = (IPosition)Position.Clone(),
+            Message = Message
+        };
+    }
 }

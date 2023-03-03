@@ -6,4 +6,12 @@ public struct Position : IPosition
 {
     public double Latitude { get; set; }
     public double Longitude { get; set; }
+    public object Clone()
+    {
+        return new Position()
+        {
+            Latitude = Latitude,
+            Longitude = Longitude
+        };
+    }
 }

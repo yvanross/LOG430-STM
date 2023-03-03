@@ -1,8 +1,8 @@
 ﻿namespace Entities.Domain;
 
-public interface ITrip
+public interface ITrip : ICloneable
 {
-    public string ID { get; init; }
+    public string Id { get; init; }
     
     public List<IStopSchedule> StopSchedules { get; }
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace Entities.Domain;
 
-public interface IStopSchedule
+public interface IStopSchedule : ICloneable
 {
     IStop Stop { get; }
 

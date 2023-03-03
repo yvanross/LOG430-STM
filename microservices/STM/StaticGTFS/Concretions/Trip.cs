@@ -4,6 +4,14 @@ namespace StaticGTFS.Concretions;
 
 public class Trip : ITrip
 {
-    public string ID { get; init; }
+    public string Id { get; init; }
     public List<IStopSchedule> StopSchedules { get; internal set; } = new ();
+    public object Clone()
+    {
+        return new Trip()
+        {
+            Id = Id,
+            StopSchedules = StopSchedules.ConvertAll(sS => (IStopSchedule)sS.Clone())
+        };
+    }
 }

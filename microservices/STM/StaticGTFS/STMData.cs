@@ -7,7 +7,7 @@ namespace StaticGTFS;
 
 public static class STMData
 {
-    public static ImmutableDictionary<string, ITrip>? Trips { get; private set; }
+    public static ImmutableList<ITrip>? Trips { get; private set; }
     public static IStop[]? Stops { get; private set; }
 
     public static void PrefetchData()
@@ -20,11 +20,11 @@ public static class STMData
 
             var stopImmutableDictionary = stops.ToImmutableDictionary(x => x.ID ?? Guid.NewGuid().ToString());
 
-            var trips = FetchTripData().ToImmutableDictionary(x => x.ID ?? Guid.NewGuid().ToString());
+            var trips = FetchTripData().ToImmutableDictionary(x => x.Id ?? Guid.NewGuid().ToString());
 
-            LinkTripAndStopData(stopImmutableDictionary, trips);
+            var immutableTrips = LinkTripAndStopData(stopImmutableDictionary, trips);
 
-            Trips = trips;
+            Trips = immutableTrips;
         }
     }
 
@@ -57,50 +57,57 @@ public static class STMData
         {
             yield return new Trip()
             {
-                ID = info.GetValue("trip_id"),
+                Id = info.GetValue("trip_id"),
             };
         }
     }
 
-    private static void LinkTripAndStopData(ImmutableDictionary<string, IStop> stops, ImmutableDictionary<string, ITrip> trips)
+    private static ImmutableList<ITrip> LinkTripAndStopData(ImmutableDictionary<string, IStop> stops, ImmutableDictionary<string, ITrip> trips)
     {
-        var data = DynamicStaticGTFSParser.GetInfo(DataCategory.STOP_TIMES);
+        var datas = DynamicStaticGTFSParser.GetInfo(DataCategory.STOP_TIMES).ToList();
 
-        for (int i = 0; i < data.Length; i++)
+        var doubledTrips = trips.ToDictionary(keyValuePair => keyValuePair.Key, keyValuePair => new[] { keyValuePair.Value, (ITrip)keyValuePair.Value.Clone(), (ITrip)keyValuePair.Value.Clone() });
+
+        SetTripData(0);
+        SetTripData(1);
+        SetTripData(2);
+
+        void SetTripData(int day)
         {
-            trips.TryGetValue(data[i].GetValue("trip_id") ?? string.Empty, out var trip);
-            stops.TryGetValue(data[i].GetValue("stop_id") ?? string.Empty, out var tempStop);
-
-            IStop stop = new Stop() {ID = tempStop.ID, Position = tempStop.Position};
-            
-            string? HMS = data[i].GetValue("arrival_time");
-
-            DateTime departureTime = DateTime.UnixEpoch;
-            
-            if (HMS != null)
+            foreach (var gtfsInfo in datas)
             {
-                var HMSArray = HMS.Split(":");
+                doubledTrips.TryGetValue(gtfsInfo.GetValue("trip_id") ?? string.Empty, out var trip);
+                stops.TryGetValue(gtfsInfo.GetValue("stop_id") ?? string.Empty, out var tempStop);
 
-                var dateTime = DateTime.UtcNow.Date;
+                if(trip is null || tempStop is null) continue;
 
-                var hours = Convert.ToDouble(HMSArray[0]);
+                IStop stop = new Stop() { ID = tempStop.ID, Position = tempStop.Position };
 
-                dateTime = dateTime.AddHours(hours).AddMinutes(Convert.ToDouble(HMSArray[1])).AddSeconds(Convert.ToDouble(HMSArray[2]));
+                string? HMS = gtfsInfo.GetValue("arrival_time");
 
-                if (DateTime.UtcNow.Hour < 12)
+                DateTime departureTime = DateTime.UnixEpoch;
+
+                if (HMS != null)
                 {
-                    dateTime = dateTime.Day > DateTime.UtcNow.Subtract(new TimeSpan(hours: 4, minutes: 0, seconds: 0)).Day ? dateTime.Subtract(new TimeSpan(hours: 24, minutes: 0, seconds: 0)) : dateTime;
+                    var HMSArray = HMS.Split(":");
+
+                    var dateTime = DateTime.UtcNow.Date;
+
+                    dateTime = dateTime.AddHours(Convert.ToDouble(HMSArray[0])).AddMinutes(Convert.ToDouble(HMSArray[1])).AddSeconds(Convert.ToDouble(HMSArray[2]));
+
+                    dateTime = dateTime.AddDays(day - 1);
+
+                    departureTime = dateTime;
                 }
 
-                //utc-4 to utc
-                departureTime = dateTime.AddHours(4);
+                trip[day].StopSchedules.Add(new StopSchedule()
+                {
+                    Stop = stop,
+                    DepartureTime = departureTime
+                });
             }
-
-            trip?.StopSchedules.Add(new StopSchedule()
-            {
-                Stop = stop,
-                DepartureTime = departureTime
-            });
         }
+
+        return doubledTrips.SelectMany(d => d.Value).ToImmutableList();
     }
 }

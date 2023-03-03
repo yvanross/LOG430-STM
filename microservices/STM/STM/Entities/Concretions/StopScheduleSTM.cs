@@ -9,4 +9,9 @@ public struct StopScheduleSTM : IStopSchedule
     public DateTime DepartureTime { get; internal set; }
 
     public int index { get; set; }
+
+    public object Clone()
+    {
+        return this with { Stop = (IStop)Stop.Clone() };
+    }
 }

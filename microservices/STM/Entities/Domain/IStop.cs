@@ -1,6 +1,6 @@
 ﻿namespace Entities.Domain;
 
-public interface IStop
+public interface IStop : ICloneable
 {
     /// <summary>
     /// Stop TripID

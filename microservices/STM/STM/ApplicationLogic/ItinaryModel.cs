@@ -1,4 +1,5 @@
-﻿using Entities.Concretions;
+﻿using System.Collections.Immutable;
+using Entities.Concretions;
 using Entities.Domain;
 using STM.Entities.Concretions;
 using STM.Entities.Domain;
@@ -61,7 +62,7 @@ public class ItinaryModel
         }
     }
 
-    public ITripSTM[]? TripsContainingSourceAndDestination(IStop[] possibleSources, IStop[] possibleDestinations, IDictionary<string, ITrip>? trips)
+    public ITripSTM[]? TripsContainingSourceAndDestination(IStop[] possibleSources, IStop[] possibleDestinations, ImmutableList<ITrip>? trips)
     {
         var possibleTrips = new Dictionary<string, ITripSTM>();
 
@@ -69,18 +70,19 @@ public class ItinaryModel
 
         double DeltaHours(DateTime from)
         {
-            var hours = (from - DateTime.UtcNow).TotalHours;
+            var hours = (from - DateTime.UtcNow.Subtract(TimeSpan.FromHours(5))).TotalHours;
             return hours;
         }
 
         var relevantTrips = trips?.Where(t =>
         {
+
             bool keep = true;
 
-            if (!t.Value.StopSchedules.Any()) return false;
+            if (!t.StopSchedules.Any()) return false;
 
-            var firstStopTime = DeltaHours(t.Value.StopSchedules[0].DepartureTime);
-            var lastStopTime = DeltaHours(t.Value.StopSchedules[^1].DepartureTime);
+            var firstStopTime = DeltaHours(t.StopSchedules[0].DepartureTime);
+            var lastStopTime = DeltaHours(t.StopSchedules[^1].DepartureTime);
 
             if (firstStopTime is > 1 or < -3)
                 keep = false;
@@ -99,14 +101,14 @@ public class ItinaryModel
             {
                 for (int j = 0; j < possibleDestinations.Length; j++)
                 {
-                    if (relevantTripArray[k].Value.StopSchedules.Any(s => s.Stop.ID.Equals(possibleSources[i].ID)) &&
-                        relevantTripArray[k].Value.StopSchedules.Any(s => s.Stop.ID.Equals(possibleDestinations[j].ID)) &&
-                        !possibleTrips.ContainsKey(relevantTripArray[k].Key))
+                    if (relevantTripArray[k].StopSchedules.Any(s => s.Stop.ID.Equals(possibleSources[i].ID)) &&
+                        relevantTripArray[k].StopSchedules.Any(s => s.Stop.ID.Equals(possibleDestinations[j].ID)) &&
+                        !possibleTrips.ContainsKey(relevantTripArray[k].Id))
                     {
                         var stmTrip = new TripSTM()
                         {
-                            ID = relevantTripArray[k].Value.ID,
-                            StopSchedules = relevantTripArray[k].Value.StopSchedules.ConvertAll(stopSchedule =>
+                            ID = relevantTripArray[k].Id,
+                            StopSchedules = relevantTripArray[k].StopSchedules.ConvertAll(stopSchedule =>
                                 new StopScheduleSTM()
                                 {
                                     DepartureTime = stopSchedule.DepartureTime,
@@ -120,7 +122,7 @@ public class ItinaryModel
                             RelevantDestinationStopId = possibleDestinations[j].ID
                         };
 
-                        possibleTrips.Add(relevantTripArray[k].Key, stmTrip);
+                        possibleTrips.Add(relevantTripArray[k].Id, stmTrip);
 
                         exit = true;
                     }
