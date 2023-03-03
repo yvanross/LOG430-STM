@@ -37,9 +37,9 @@ namespace ApplicationLogic.Usecases
                 }
             });
 
-            dynamic data = JsonConvert.DeserializeObject<ExpandoObject>(res.Content);
+            var time = JsonConvert.DeserializeObject<int>(res.Content);
 
-            return (int)(data?.routes[0].summary.travelTimeInSeconds ?? default);
+            return time;
         }
     }
 }

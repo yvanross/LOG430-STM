@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "btsYh+4s6QhvapdBv00h6OKshdKoLjIP1dleILQCPVLjfzFzvCOsxt82tUy0BOFXJaOhDH+Lqc2OpXznv3DouQ==",
+  "dgSpecHash": "nAUgnE5yFSa/ILAUz3PubCP+tARi5MK8Xr8LlmhP6rd64cW7YUSzJw1TOuzwphNZgf0nH4qAtFQW6ZMz21/ojA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj",
+  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.csharp\\4.3.0\\microsoft.csharp.4.3.0.nupkg.sha512",
@@ -31,6 +31,7 @@
     "C:\\Users\\david\\.nuget\\packages\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\sourcelink.create.commandline\\2.8.2\\sourcelink.create.commandline.2.8.2.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\system.appcontext\\4.3.0\\system.appcontext.4.3.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\system.buffers\\4.5.0\\system.buffers.4.5.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",

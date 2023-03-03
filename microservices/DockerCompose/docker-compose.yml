@@ -1,14 +1,14 @@
-version: '3.9'
+version: '3.8'
 
 x-conf: 
   - ingress_port: &ingress_port "32770:80"
   - env: 
       &env
       #adjust this to fit the address (without the port) of your ingress service
-      - INGRESS_ADDRESS=localhost
+      - INGRESS_ADDRESS=host.docker.internal
 
       #adjust this to fit the address (without the port) of your services
-      - SERVICES_ADDRESS=localhost
+      - SERVICES_ADDRESS=host.docker.internal
      
       - ASPNETCORE_URLS=http://+:80
       
@@ -48,21 +48,6 @@ services:
     depends_on:
       - ingress
 
-  monitor:
-    image: ${DOCKER_REGISTRY-}monitor
-    build:
-      context: ../
-      dockerfile: Monitor/Monitor/Dockerfile
-    container_name: Monitor
-    environment:
-      *env
-    ports:
-        - "32772:80"
-    volumes:
-      *vol
-    depends_on:
-      - ingress
-
   tripcomparator:
     image: ${DOCKER_REGISTRY-}tripcomparator
     build:
@@ -72,7 +57,7 @@ services:
     environment:
       *env
     ports:
-        - "32773:80"
+        - "32772:80"
     volumes:
       *vol
     depends_on:

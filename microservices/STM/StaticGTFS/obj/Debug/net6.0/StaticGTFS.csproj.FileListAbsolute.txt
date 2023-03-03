@@ -1,0 +1,17 @@
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\bin\Debug\net6.0\StaticGTFS.deps.json
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\bin\Debug\net6.0\StaticGTFS.dll
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\bin\Debug\net6.0\StaticGTFS.pdb
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\bin\Debug\net6.0\Entities.dll
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\bin\Debug\net6.0\Entities.pdb
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\obj\Debug\net6.0\StaticGTFS.csproj.AssemblyReference.cache
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\obj\Debug\net6.0\StaticGTFS.Properties.Resources.resources
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\obj\Debug\net6.0\StaticGTFS.csproj.GenerateResource.cache
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\obj\Debug\net6.0\StaticGTFS.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\obj\Debug\net6.0\StaticGTFS.AssemblyInfoInputs.cache
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\obj\Debug\net6.0\StaticGTFS.AssemblyInfo.cs
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\obj\Debug\net6.0\StaticGTFS.csproj.CoreCompileInputs.cache
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\obj\Debug\net6.0\StaticGTFS.csproj.CopyComplete
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\obj\Debug\net6.0\StaticGTFS.dll
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\obj\Debug\net6.0\refint\StaticGTFS.dll
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\obj\Debug\net6.0\StaticGTFS.pdb
+C:\Users\david\LOG430-STM\microservices\STM\StaticGTFS\obj\Debug\net6.0\ref\StaticGTFS.dll

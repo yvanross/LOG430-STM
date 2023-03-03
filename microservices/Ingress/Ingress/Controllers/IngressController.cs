@@ -41,7 +41,9 @@ namespace Ingress.Controllers
 
                 if (string.IsNullOrEmpty(port)) throw new Exception("Source port couldn't be determined");
 
-                _subscriptionUC.Subscribe(serviceType, serviceAddress, port);
+                _logger.LogInformation($"Calling port: {port}");
+
+                _subscriptionUC.Subscribe(serviceAddress, port, serviceType);
 
                 _logger.LogInformation($"{serviceType} from {serviceAddress}:{port} has subscribed");
             }
@@ -61,20 +63,6 @@ namespace Ingress.Controllers
         [ActionName(nameof(RouteByServiceType))]
         public ActionResult<RoutingData> RouteByServiceType(string serviceType)
         {
-            var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
-
-            _logger.LogInformation($"{ip}:{HttpContext.Connection.RemotePort} attempting to route to {serviceType}");
-
-            if (ip is null)
-                return UnprocessableEntity("No Remote Ip Address");
-
-            ip = ip.Split(':').Last();
-
-            var port = HttpContext.Connection.RemotePort.ToString();
-
-            if(_subscriptionUC.CheckIfServiceIsSubscribed(ip, port))
-                return Unauthorized("Subscribe your service before making routing requests");
-
             return Try.WithConsequence(() =>
             {
                 var address = _routingUC.RouteByDestinationType(serviceType);
@@ -85,7 +73,7 @@ namespace Ingress.Controllers
 
                 _headersUc.AddAuthorizationHeaders(routingData, serviceType);
 
-                _logger.LogInformation($"{ip}:{port} routing to {routingData.Address}");
+                _logger.LogInformation($"routing service to {routingData.Address}");
 
                 return routingData;
             });

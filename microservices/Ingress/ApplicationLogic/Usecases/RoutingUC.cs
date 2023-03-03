@@ -20,11 +20,6 @@ public class RoutingUC
         if (serviceRoute is null)
             throw new Exception("service route was not found");
 
-        return serviceRoute.HttpRoute;
-    }
-
-    public async Task a()
-    {
-        
+        return serviceRoute.IsHttp ? serviceRoute.HttpRoute : serviceRoute.HttpsRoute;
     }
 }

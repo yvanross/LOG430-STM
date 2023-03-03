@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v7.0": {
       "ApplicationLogicTests/1.0.0": {
         "dependencies": {
-          "Ambassador": "1.0.18",
+          "Ambassador": "1.0.29",
           "MSTest.TestAdapter": "2.2.10",
           "MSTest.TestFramework": "2.2.10",
           "Microsoft.NET.Test.Sdk": "17.3.2",
@@ -1176,7 +1176,7 @@
           "System.Xml.ReaderWriter": "4.3.0"
         }
       },
-      "Ambassador/1.0.18": {
+      "Ambassador/1.0.29": {
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
           "Microsoft.Extensions.Logging.Abstractions": "7.0.0",
@@ -1911,7 +1911,7 @@
       "path": "system.xml.xmldocument/4.3.0",
       "hashPath": "system.xml.xmldocument.4.3.0.nupkg.sha512"
     },
-    "Ambassador/1.0.18": {
+    "Ambassador/1.0.29": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

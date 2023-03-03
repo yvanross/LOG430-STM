@@ -8,11 +8,15 @@ public class Route : IRoute
 
     public required string Address { get; init; }
     
-    public required string PortNumber { get; init; }
+    public required string Port { get; init; }
 
     public required string ServiceType { get; init; }
 
     public double Latency { get; set; }
 
-    public string HttpRoute => $"http://{Address}:{PortNumber}";
+    public bool IsHttp { get; init; } = true;
+
+    public string HttpRoute => $"http://{Address}" + (string.IsNullOrEmpty(Port) ? string.Empty : $":{Port}");
+
+    public string HttpsRoute => $"https://{Address}" + (string.IsNullOrEmpty(Port) ? string.Empty : $":{Port}");
 }

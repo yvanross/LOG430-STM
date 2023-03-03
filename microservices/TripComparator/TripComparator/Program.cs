@@ -55,7 +55,7 @@ namespace TripComparator
 
         public AmbassadorService(ILogger<AmbassadorService> logger)
         {
-            _registration.Register(ServiceTypes.Monitor.ToString(), logger);
+            _registration.Register(ServiceTypes.ComparateurTrajet.ToString(), logger);
         }
     }
 }

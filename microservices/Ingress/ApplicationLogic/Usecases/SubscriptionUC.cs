@@ -30,7 +30,7 @@ namespace ApplicationLogic.Usecases
             _repositoryWrite.Write(new Route()
             {
                 Address = serviceAddress,
-                PortNumber = port,
+                Port = port,
                 ServiceType = serviceType,
                 Id = Guid.NewGuid().ToString() 
             });

@@ -15,12 +15,9 @@ namespace PLACEHOLDER.Controllers
 
         private readonly TravelUC _travelUc = new ();
 
-        private static readonly RegistrationUC _registration = new();
-
         public RouteTimeController(ILogger<RouteTimeController> logger)
         {
             _logger = logger;
-            _registration.Register(ServiceTypes.RouteTimeProvider.ToString(), logger);
         }
 
         [HttpGet]

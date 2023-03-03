@@ -1,10 +1,14 @@
-﻿namespace Ambassador.BusinessObjects;
+﻿using Microsoft.Extensions.Logging;
 
-internal static class EnvironmentVariables
+namespace Ambassador.BusinessObjects;
+
+public static class EnvironmentVariables
 {
+    internal static ILogger? Logger;
+
     internal static string IngressAddress => 
         "http://" + Environment.GetEnvironmentVariable("INGRESS_ADDRESS") + ":" +
         Environment.GetEnvironmentVariable("INGRESS_PORT");
-    
-    internal static string ServiceAddress => Environment.GetEnvironmentVariable("SERVICES_ADDRESS");
+
+    public static string ServiceAddress => Environment.GetEnvironmentVariable("SERVICES_ADDRESS")!;
 }

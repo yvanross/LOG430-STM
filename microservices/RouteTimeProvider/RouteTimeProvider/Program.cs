@@ -55,7 +55,7 @@ namespace PLACEHOLDER
 
         public AmbassadorService(ILogger<AmbassadorService> logger)
         {
-            _registration.Register(ServiceTypes.Monitor.ToString(), logger);
+            _registration.Register(ServiceTypes.RouteTimeProvider.ToString(), logger);
         }
     }
 }

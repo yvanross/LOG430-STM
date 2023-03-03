@@ -1,0 +1,36 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "7ec0799a-ae68-4471-a691-13f7f4b06053": {
+      "ProjectGuid": "7ec0799a-ae68-4471-a691-13f7f4b06053",
+      "DisplayName": "STM",
+      "ColorIndex": 0
+    },
+    "831bcd23-4a2d-4c21-8e92-ec07ed6d2899": {
+      "ProjectGuid": "831bcd23-4a2d-4c21-8e92-ec07ed6d2899",
+      "DisplayName": "STMTests",
+      "ColorIndex": 1
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "06ec355c-c779-4dcf-8722-25eb89f4574a": {
+      "ProjectGuid": "06ec355c-c779-4dcf-8722-25eb89f4574a",
+      "DisplayName": "StaticGTFS",
+      "ColorIndex": 2
+    },
+    "49b704a2-e5a2-4408-b6a9-987e1607c968": {
+      "ProjectGuid": "49b704a2-e5a2-4408-b6a9-987e1607c968",
+      "DisplayName": "DataAccess",
+      "ColorIndex": 3
+    },
+    "a3296eb1-26ec-44b7-90e5-3d17996cbd1b": {
+      "ProjectGuid": "a3296eb1-26ec-44b7-90e5-3d17996cbd1b",
+      "DisplayName": "Entities",
+      "ColorIndex": 4
+    }
+  },
+  "NextColorIndex": 5
+}

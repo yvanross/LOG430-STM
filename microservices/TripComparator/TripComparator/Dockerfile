@@ -7,7 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["Nuget/Ambassador.1.1.0.nupkg", "TripComparator/"]
+COPY ["Nuget/Ambassador.*.nupkg", "TripComparator/"]
 COPY ["TripComparator/TripComparator/nuget.config", ""]
 COPY ["TripComparator/TripComparator/TripComparator.csproj", "TripComparator/"]
 COPY ["TripComparator/ApplicationLogic/ApplicationLogic.csproj", "ApplicationLogic/"]

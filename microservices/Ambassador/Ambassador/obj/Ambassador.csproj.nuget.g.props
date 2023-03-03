@@ -13,6 +13,9 @@
     <SourceRoot Include="C:\Users\david\.nuget\packages\" />
     <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
   </ItemGroup>
+  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)sourcelink.create.commandline\2.8.2\build\SourceLink.Create.CommandLine.props" Condition="Exists('$(NuGetPackageRoot)sourcelink.create.commandline\2.8.2\build\SourceLink.Create.CommandLine.props')" />
+  </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <PkgNewtonsoft_Json Condition=" '$(PkgNewtonsoft_Json)' == '' ">C:\Users\david\.nuget\packages\newtonsoft.json\10.0.3</PkgNewtonsoft_Json>
   </PropertyGroup>

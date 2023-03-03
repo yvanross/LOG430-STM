@@ -55,8 +55,9 @@ namespace Ingress
             writeModel.Write(new Route()
             {
                 Address = "api.tomtom.com",
-                PortNumber = string.Empty,
+                Port = string.Empty,
                 Id = "TomtomService",
+                IsHttp = false,
                 ServiceType = ServiceTypes.Tomtom.ToString()
             });
         }

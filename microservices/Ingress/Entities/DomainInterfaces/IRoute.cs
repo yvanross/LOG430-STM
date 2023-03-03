@@ -6,11 +6,15 @@ public interface IRoute
 
     string Address { get; init; }
 
-    string PortNumber { get; init; }
+    string Port { get; init; }
 
     string ServiceType { get; init; }
 
     double Latency { get; set; }
 
+    bool IsHttp { get; init; }
+
     string HttpRoute { get; }
+    
+    string HttpsRoute { get; }
 }

@@ -1,4 +1,5 @@
 ﻿using Ambassador.Properties;
+using Microsoft.Extensions.Logging;
 using RestSharp;
 
 namespace Ambassador.BusinessObjects;
@@ -11,15 +12,24 @@ internal class IngressRoutingRequest
 
     internal async Task<RoutingData> Execute()
     {
-        var request = new RestRequest(Resources.RouteByServiceType_Endpoint);
+        try
+        {
+            var request = new RestRequest(Resources.RouteByServiceType_Endpoint);
 
-        request.AddQueryParameter("serviceType", TargetService);
+            request.AddQueryParameter("serviceType", TargetService);
 
-        var response = await IngressClient.ExecuteGetAsync<RoutingData>(request);
+            var response = await IngressClient.ExecuteGetAsync<RoutingData>(request);
 
-        response.ThrowIfError();
+            response.ThrowIfError();
 
-        return response.Data!;
+            return response.Data!;
+        }
+        catch (Exception e)
+        {
+            EnvironmentVariables.Logger?.LogError("Data received from Ingress was problematic");
+
+            throw;
+        }
     }
 
 }

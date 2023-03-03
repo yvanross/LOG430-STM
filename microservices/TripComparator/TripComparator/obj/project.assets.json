@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net7.0": {
-      "Ambassador/1.0.19": {
+      "Ambassador/1.0.23": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
@@ -1727,7 +1727,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "Ambassador": "1.0.19"
+          "Ambassador": "1.0.23"
         },
         "compile": {
           "bin/placeholder/ApplicationLogic.dll": {}
@@ -1739,13 +1739,13 @@
     }
   },
   "libraries": {
-    "Ambassador/1.0.19": {
-      "sha512": "xjVAefDKJ854Ipr0CohDaM5/pfIcP3ZPOfeo8qu2VLWKjDQCac4X3FPJE+J7izD/0/BZ7i7XnjQdcYJOi8ri8Q==",
+    "Ambassador/1.0.23": {
+      "sha512": "EPOmCjbY4wvRVWQrddHyHc23LTSvAknwSJ9WODqFuZa/DX2ksNvTSgd25AvDffSQxCRWLvWDBEpdNuAdi3+guQ==",
       "type": "package",
-      "path": "ambassador/1.0.19",
+      "path": "ambassador/1.0.23",
       "files": [
         ".nupkg.metadata",
-        "ambassador.1.0.19.nupkg.sha512",
+        "ambassador.1.0.23.nupkg.sha512",
         "ambassador.nuspec",
         "lib/net7.0/Ambassador.dll"
       ]
@@ -6161,7 +6161,7 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "Ambassador >= 1.0.19",
+      "Ambassador >= 1.0.23",
       "ApplicationLogic >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 7.0.3",
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.17.2",
@@ -6175,11 +6175,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\TripComparator\\TripComparator.csproj",
+      "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\TripComparator\\TripComparator\\TripComparator.csproj",
       "projectName": "TripComparator",
-      "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\TripComparator\\TripComparator.csproj",
+      "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\TripComparator\\TripComparator\\TripComparator.csproj",
       "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\TripComparator\\obj\\",
+      "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\TripComparator\\TripComparator\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -6194,17 +6194,15 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Nuget": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://nuget.pkg.github.com/DavidDaniel18/index.json": {},
-        "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
+        "C:\\Users\\david\\LOG430-STM\\microservices\\Nuget": {},
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj": {
-              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj"
+            "C:\\Users\\david\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj": {
+              "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj"
             }
           }
         }
@@ -6221,7 +6219,7 @@
         "dependencies": {
           "Ambassador": {
             "target": "Package",
-            "version": "[1.0.19, )"
+            "version": "[1.0.23, )"
           },
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",

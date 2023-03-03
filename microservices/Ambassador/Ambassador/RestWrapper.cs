@@ -3,6 +3,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using Ambassador.BusinessObjects;
 using Ambassador.BusinessObjects.InterServiceRequests;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -22,7 +23,9 @@ namespace Ambassador
             }
             catch (Exception e)
             {
-                var exception = new Exception(GetExceptionMessage(e, $"Get Routing Data exception, endpoint: {routingRequest.Endpoint}, Target Service: {routingRequest.TargetService}"));
+                var exception = GetExceptionMessage(e, $"Get Routing Data exception, endpoint: {routingRequest.Endpoint}, Target Service: {routingRequest.TargetService}");
+
+                EnvironmentVariables.Logger?.LogError(exception.Message);
 
                 throw exception;
             }
@@ -42,7 +45,9 @@ namespace Ambassador
             }
             catch (Exception e)
             {
-                var exception = new Exception(GetExceptionMessage(e, $"Post Routing Data exception, endpoint: {routingRequest.Endpoint}, Target Service: {routingRequest.TargetService}"));
+                var exception = GetExceptionMessage(e, $"Post Routing Data exception, endpoint: {routingRequest.Endpoint}, Target Service: {routingRequest.TargetService}");
+
+                EnvironmentVariables.Logger?.LogError(exception.Message);
 
                 throw exception;
             }
@@ -71,13 +76,15 @@ namespace Ambassador
             }
             catch (Exception e)
             {
-                var exception = new Exception(GetExceptionMessage(e, "Ingress Routing Data exception"));
+                var exception = GetExceptionMessage(e, "Ingress Routing Data exception");
+                
+                EnvironmentVariables.Logger?.LogError(exception.Message);
 
                 throw exception;
             }
         }
 
-        private string GetExceptionMessage(Exception e, string type)
+        private Exception GetExceptionMessage(Exception e, string type)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -96,7 +103,7 @@ namespace Ambassador
                 innerException = innerException.InnerException;
             }
 
-            return sb.ToString();
+            return new Exception(sb.ToString());
         }
     }
 }

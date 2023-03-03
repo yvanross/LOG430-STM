@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Dynamic;
+using Ambassador.BusinessObjects;
 using ApplicationLogic.Extensions;
 using Entities.BusinessObjects;
 using Entities.DomainInterfaces;
@@ -15,7 +16,7 @@ namespace Monitor.Docker;
 /// </summary>
 public class LocalDockerClient : IEnvironmentClient
 {
-    private readonly RestClient _dockerClient = new ("http://localhost:2375/");
+    private readonly RestClient _dockerClient = new ($"http://{EnvironmentVariables.ServiceAddress}:2375");
 
     public async Task<List<Microservice>> GetRunningServices()
     {
@@ -31,13 +32,17 @@ public class LocalDockerClient : IEnvironmentClient
 
             foreach (var container in expando)
             {
+                dynamic? port = (container.Ports as List<object>)?.FirstOrDefault(x => ((IDictionary<string, object>)x).ContainsKey("PublicPort"));
+
+                string? publicPort = port?.PublicPort.ToString();
+
                 microservices.Add(new Microservice()
                 {
                     Id = container.Id,
                     Name = ((container.Names as List<object>)?.FirstOrDefault()?.ToString())?[1..] ?? string.Empty,
                     ImageName = container.Image,
                     Status = container.Status,
-                    Port = container.Ports[1].PublicPort.ToString(),
+                    Port = publicPort!
                 });
             }
 

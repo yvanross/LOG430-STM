@@ -16,11 +16,13 @@ public class RegistrationUC
     {
         try
         {
+            EnvironmentVariables.Logger = logger;
+
             logger?.LogInformation($"Attempting to subscribe service as {serviceType} to Ingress");
 
-            var ingressAddress = EnvironmentVariables.IngressAddress;
+            string ingressAddress = EnvironmentVariables.IngressAddress;
 
-            var serviceAddress = EnvironmentVariables.ServiceAddress;
+            string serviceAddress = EnvironmentVariables.ServiceAddress;
 
             // Read the contents of the metadata endpoint file
             var metadataEndpoint = "/proc/self/cgroup";
@@ -50,10 +52,10 @@ public class RegistrationUC
             request.AddQueryParameter("containerId", containerId);
 
             var response = await client.ExecuteAsync(request);
-
+            
             response.ThrowIfError();
 
-            logger?.LogInformation($"Subscription {response.StatusCode}, {response.StatusDescription} ");
+            logger?.LogInformation($"Subscription {response.StatusDescription} ");
         }
         catch (Exception e)
         {

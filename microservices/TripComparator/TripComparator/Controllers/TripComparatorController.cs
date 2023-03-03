@@ -16,12 +16,9 @@ namespace TripComparator.Controllers
 
         private readonly CompareTimesUC compareTimesUc = new();
 
-        private static readonly RegistrationUC _registration = new();
-
         public TripComparatorController(ILogger<TripComparatorController> logger)
         {
             _logger = logger;
-            _registration.Register(ServiceTypes.ComparateurTrajet.ToString(), logger);
         }
 
         [HttpGet]

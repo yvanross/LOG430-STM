@@ -1,0 +1,1227 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>STM</name>
+    </assembly>
+    <members>
+        <member name="M:STM.Controllers.STMOptimalBusController.Get(System.String,System.String)">
+            <remarks>
+            Find optimal STM bus to travel between two coordinates
+            </remarks>
+            <param name="fromLatitudeLongitude">Latitude, longitude of the first stop</param>
+            <param name="toLatitudeLongitude">Latitude, longitude of the last stop</param>
+            <returns>
+            Json containing the ID of the bus, its trip ID, its name, the ETA, the first and last stops of the trip 
+            </returns>
+        </member>
+        <member name="M:STM.Controllers.TrackBusController.Post(STM.Entities.DTO.TrackingBusDTO)">
+            <remarks>
+            Allows the real-time tracking of a bus. Call-Back will be issued once the bus reached its target destination
+            </remarks>
+            <param name="busID">TripID of the bus to track</param>
+            <param name="tripID">TripID of the trip taken by the bus to track</param>
+            <param name="originStopID">ID of the stop at which to begin tracking the bus</param>
+            <param name="targetStopID">ID of the stop at which to stop tracking the bus</param>
+            <param name="callback">Address to call once the tracking is complete</param>
+            <returns>Number of real time seconds the bus took to travel from origin to target destinations</returns>
+        </member>
+        <member name="P:STM.Entities.Domain.IStopSTM.ID">
+            <summary>
+            Stop TripID
+            </summary>
+        </member>
+        <member name="P:STM.Entities.Domain.IStopSTM.Position">
+            <summary>
+            Stop Position in Latitude Longitude
+            </summary>
+        </member>
+        <member name="P:STM.Entities.DTO.TrackingBusDTO.Name">
+            <summary>
+            Number of the bus (aka 107)
+            </summary>
+        </member>
+        <member name="P:STM.Entities.DTO.TrackingBusDTO.BusID">
+            <summary>
+            TripID of the bus
+            </summary>
+        </member>
+        <member name="P:STM.Entities.DTO.TrackingBusDTO.TripID">
+            <summary>
+            TripID of the bus
+            </summary>
+        </member>
+        <member name="P:STM.Entities.DTO.TrackingBusDTO.ETA">
+            <summary>
+            Estimated Time of Arrival
+            </summary>
+        </member>
+        <member name="P:STM.Entities.DTO.TrackingBusDTO.OriginStopSchedule">
+            <summary>
+            First stop of the bus trip
+            </summary>
+        </member>
+        <member name="P:STM.Entities.DTO.TrackingBusDTO.TargetStopSchedule">
+            <summary>
+            Last stop of the bus trip
+            </summary>
+        </member>
+        <member name="P:STM.Entities.DTO.TrackingBusDTO.indexOfOriginStop">
+            <summary>
+            First stop of the bus trip
+            </summary>
+        </member>
+        <member name="P:STM.Entities.DTO.TrackingBusDTO.indexOfDestinationStop">
+            <summary>
+            Last stop of the bus trip
+            </summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.GtfsRealtimeReflection">
+            <summary>Holder for reflection information generated from gtfs-realtime.proto</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.GtfsRealtimeReflection.Descriptor">
+            <summary>File descriptor for gtfs-realtime.proto</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.FeedMessage">
+            <summary>
+            The contents of a feed message.
+            A feed is a continuous stream of feed messages. Each message in the stream is
+            obtained as a response to an appropriate HTTP GET request.
+            A realtime feed is always defined with relation to an existing GTFS feed.
+            All the entity ids are resolved with respect to the GTFS feed.
+            Note that "required" and "optional" as stated in this file refer to Protocol
+            Buffer cardinality, not semantic cardinality.  See reference.md at
+            https://github.com/google/transit/tree/master/gtfs-realtime for field
+            semantic cardinality.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.FeedMessage.HeaderFieldNumber">
+            <summary>Field number for the "header" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.FeedMessage.Header">
+            <summary>
+            Metadata about this feed and feed message.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.FeedMessage.EntityFieldNumber">
+            <summary>Field number for the "entity" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.FeedMessage.Entity">
+            <summary>
+            Contents of the feed.
+            </summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.FeedHeader">
+            <summary>
+            Metadata about a feed, included in feed messages.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.FeedHeader.GtfsRealtimeVersionFieldNumber">
+            <summary>Field number for the "gtfs_realtime_version" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.FeedHeader.GtfsRealtimeVersion">
+            <summary>
+            Version of the feed specification.
+            The current version is 2.0.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.FeedHeader.HasGtfsRealtimeVersion">
+            <summary>Gets whether the "gtfs_realtime_version" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.FeedHeader.ClearGtfsRealtimeVersion">
+            <summary>Clears the value of the "gtfs_realtime_version" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.FeedHeader.IncrementalityFieldNumber">
+            <summary>Field number for the "incrementality" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.FeedHeader.HasIncrementality">
+            <summary>Gets whether the "incrementality" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.FeedHeader.ClearIncrementality">
+            <summary>Clears the value of the "incrementality" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.FeedHeader.TimestampFieldNumber">
+            <summary>Field number for the "timestamp" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.FeedHeader.Timestamp">
+            <summary>
+            This timestamp identifies the moment when the content of this feed has been
+            created (in server time). In POSIX time (i.e., number of seconds since
+            January 1st 1970 00:00:00 UTC).
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.FeedHeader.HasTimestamp">
+            <summary>Gets whether the "timestamp" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.FeedHeader.ClearTimestamp">
+            <summary>Clears the value of the "timestamp" field</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.FeedHeader.Types">
+            <summary>Container for nested types declared in the FeedHeader message type.</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.FeedHeader.Types.Incrementality">
+            <summary>
+            Determines whether the current fetch is incremental.  Currently,
+            DIFFERENTIAL mode is unsupported and behavior is unspecified for feeds
+            that use this mode.  There are discussions on the GTFS Realtime mailing
+            list around fully specifying the behavior of DIFFERENTIAL mode and the
+            documentation will be updated when those discussions are finalized.
+            </summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.FeedEntity">
+            <summary>
+            A definition (or update) of an entity in the transit feed.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.FeedEntity.IdFieldNumber">
+            <summary>Field number for the "id" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.FeedEntity.Id">
+            <summary>
+            The ids are used only to provide incrementality support. The id should be
+            unique within a FeedMessage. Consequent FeedMessages may contain
+            FeedEntities with the same id. In case of a DIFFERENTIAL update the new
+            FeedEntity with some id will replace the old FeedEntity with the same id
+            (or delete it - see is_deleted below).
+            The actual GTFS entities (e.g. stations, routes, trips) referenced by the
+            feed must be specified by explicit selectors (see EntitySelector below for
+            more info).
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.FeedEntity.HasId">
+            <summary>Gets whether the "id" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.FeedEntity.ClearId">
+            <summary>Clears the value of the "id" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.FeedEntity.IsDeletedFieldNumber">
+            <summary>Field number for the "is_deleted" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.FeedEntity.IsDeleted">
+            <summary>
+            Whether this entity is to be deleted. Relevant only for incremental
+            fetches.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.FeedEntity.HasIsDeleted">
+            <summary>Gets whether the "is_deleted" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.FeedEntity.ClearIsDeleted">
+            <summary>Clears the value of the "is_deleted" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.FeedEntity.TripUpdateFieldNumber">
+            <summary>Field number for the "trip_update" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.FeedEntity.TripUpdate">
+            <summary>
+            Data about the entity itself. Exactly one of the following fields must be
+            present (unless the entity is being deleted).
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.FeedEntity.VehicleFieldNumber">
+            <summary>Field number for the "vehicle" field.</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.FeedEntity.AlertFieldNumber">
+            <summary>Field number for the "alert" field.</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.TripUpdate">
+             <summary>
+             Realtime update of the progress of a vehicle along a trip.
+             Depending on the value of ScheduleRelationship, a TripUpdate can specify:
+             - A trip that proceeds along the schedule.
+             - A trip that proceeds along a route but has no fixed schedule.
+             - A trip that have been added or removed with regard to schedule.
+            
+             The updates can be for future, predicted arrival/departure events, or for
+             past events that already occurred.
+             Normally, updates should get more precise and more certain (see
+             uncertainty below) as the events gets closer to current time.
+             Even if that is not possible, the information for past events should be
+             precise and certain. In particular, if an update points to time in the past
+             but its update's uncertainty is not 0, the client should conclude that the
+             update is a (wrong) prediction and that the trip has not completed yet.
+            
+             Note that the update can describe a trip that is already completed.
+             To this end, it is enough to provide an update for the last stop of the trip.
+             If the time of that is in the past, the client will conclude from that that
+             the whole trip is in the past (it is possible, although inconsequential, to
+             also provide updates for preceding stops).
+             This option is most relevant for a trip that has completed ahead of schedule,
+             but according to the schedule, the trip is still proceeding at the current
+             time. Removing the updates for this trip could make the client assume
+             that the trip is still proceeding.
+             Note that the feed provider is allowed, but not required, to purge past
+             updates - this is one case where this would be practically useful.
+             </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripUpdate.TripFieldNumber">
+            <summary>Field number for the "trip" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.Trip">
+            <summary>
+            The Trip that this message applies to. There can be at most one
+            TripUpdate entity for each actual trip instance.
+            If there is none, that means there is no prediction information available.
+            It does *not* mean that the trip is progressing according to schedule.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripUpdate.VehicleFieldNumber">
+            <summary>Field number for the "vehicle" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.Vehicle">
+            <summary>
+            Additional information on the vehicle that is serving this trip.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripUpdate.StopTimeUpdateFieldNumber">
+            <summary>Field number for the "stop_time_update" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.StopTimeUpdate">
+             <summary>
+             Updates to StopTimes for the trip (both future, i.e., predictions, and in
+             some cases, past ones, i.e., those that already happened).
+             The updates must be sorted by stop_sequence, and apply for all the
+             following stops of the trip up to the next specified one.
+            
+             Example 1:
+             For a trip with 20 stops, a StopTimeUpdate with arrival delay and departure
+             delay of 0 for stop_sequence of the current stop means that the trip is
+             exactly on time.
+            
+             Example 2:
+             For the same trip instance, 3 StopTimeUpdates are provided:
+             - delay of 5 min for stop_sequence 3
+             - delay of 1 min for stop_sequence 8
+             - delay of unspecified duration for stop_sequence 10
+             This will be interpreted as:
+             - stop_sequences 3,4,5,6,7 have delay of 5 min.
+             - stop_sequences 8,9 have delay of 1 min.
+             - stop_sequences 10,... have unknown delay.
+             </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripUpdate.TimestampFieldNumber">
+            <summary>Field number for the "timestamp" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.Timestamp">
+            <summary>
+            Moment at which the vehicle's real-time progress was measured. In POSIX
+            time (i.e., the number of seconds since January 1st 1970 00:00:00 UTC).
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.HasTimestamp">
+            <summary>Gets whether the "timestamp" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TripUpdate.ClearTimestamp">
+            <summary>Clears the value of the "timestamp" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripUpdate.DelayFieldNumber">
+            <summary>Field number for the "delay" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.Delay">
+             <summary>
+             The current schedule deviation for the trip.  Delay should only be
+             specified when the prediction is given relative to some existing schedule
+             in GTFS.
+            
+             Delay (in seconds) can be positive (meaning that the vehicle is late) or
+             negative (meaning that the vehicle is ahead of schedule). Delay of 0
+             means that the vehicle is exactly on time.
+            
+             Delay information in StopTimeUpdates take precedent of trip-level delay
+             information, such that trip-level delay is only propagated until the next
+             stop along the trip with a StopTimeUpdate delay value specified.
+            
+             Feed providers are strongly encouraged to provide a TripUpdate.timestamp
+             value indicating when the delay value was last updated, in order to
+             evaluate the freshness of the data.
+            
+             NOTE: This field is still experimental, and subject to change. It may be
+             formally adopted in the future.
+             </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.HasDelay">
+            <summary>Gets whether the "delay" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TripUpdate.ClearDelay">
+            <summary>Clears the value of the "delay" field</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.TripUpdate.Types">
+            <summary>Container for nested types declared in the TripUpdate message type.</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeEvent">
+             <summary>
+             Timing information for a single predicted event (either arrival or
+             departure).
+             Timing consists of delay and/or estimated time, and uncertainty.
+             - delay should be used when the prediction is given relative to some
+               existing schedule in GTFS.
+             - time should be given whether there is a predicted schedule or not. If
+               both time and delay are specified, time will take precedence
+               (although normally, time, if given for a scheduled trip, should be
+               equal to scheduled time in GTFS + delay).
+            
+             Uncertainty applies equally to both time and delay.
+             The uncertainty roughly specifies the expected error in true delay (but
+             note, we don't yet define its precise statistical meaning). It's possible
+             for the uncertainty to be 0, for example for trains that are driven under
+             computer timing control.
+             </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeEvent.DelayFieldNumber">
+            <summary>Field number for the "delay" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeEvent.Delay">
+            <summary>
+            Delay (in seconds) can be positive (meaning that the vehicle is late) or
+            negative (meaning that the vehicle is ahead of schedule). Delay of 0
+            means that the vehicle is exactly on time.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeEvent.HasDelay">
+            <summary>Gets whether the "delay" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeEvent.ClearDelay">
+            <summary>Clears the value of the "delay" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeEvent.TimeFieldNumber">
+            <summary>Field number for the "time" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeEvent.Time">
+            <summary>
+            Event as absolute time.
+            In Unix time (i.e., number of seconds since January 1st 1970 00:00:00
+            UTC).
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeEvent.HasTime">
+            <summary>Gets whether the "time" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeEvent.ClearTime">
+            <summary>Clears the value of the "time" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeEvent.UncertaintyFieldNumber">
+            <summary>Field number for the "uncertainty" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeEvent.Uncertainty">
+            <summary>
+            If uncertainty is omitted, it is interpreted as unknown.
+            If the prediction is unknown or too uncertain, the delay (or time) field
+            should be empty. In such case, the uncertainty field is ignored.
+            To specify a completely certain prediction, set its uncertainty to 0.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeEvent.HasUncertainty">
+            <summary>Gets whether the "uncertainty" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeEvent.ClearUncertainty">
+            <summary>Clears the value of the "uncertainty" field</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate">
+            <summary>
+            Realtime update for arrival and/or departure events for a given stop on a
+            trip. Updates can be supplied for both past and future events.
+            The producer is allowed, although not required, to drop past events.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.StopSequenceFieldNumber">
+            <summary>Field number for the "stop_sequence" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.StopSequence">
+            <summary>
+            Must be the same as in stop_times.txt in the corresponding GTFS feed.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.HasStopSequence">
+            <summary>Gets whether the "stop_sequence" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.ClearStopSequence">
+            <summary>Clears the value of the "stop_sequence" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.StopIdFieldNumber">
+            <summary>Field number for the "stop_id" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.StopId">
+            <summary>
+            Must be the same as in stops.txt in the corresponding GTFS feed.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.HasStopId">
+            <summary>Gets whether the "stop_id" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.ClearStopId">
+            <summary>Clears the value of the "stop_id" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.ArrivalFieldNumber">
+            <summary>Field number for the "arrival" field.</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.DepartureFieldNumber">
+            <summary>Field number for the "departure" field.</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.ScheduleRelationshipFieldNumber">
+            <summary>Field number for the "schedule_relationship" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.HasScheduleRelationship">
+            <summary>Gets whether the "schedule_relationship" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.ClearScheduleRelationship">
+            <summary>Clears the value of the "schedule_relationship" field</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.Types">
+            <summary>Container for nested types declared in the StopTimeUpdate message type.</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.Types.ScheduleRelationship">
+            <summary>
+            The relation between this StopTime and the static schedule.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.Types.ScheduleRelationship.Scheduled">
+            <summary>
+            The vehicle is proceeding in accordance with its static schedule of
+            stops, although not necessarily according to the times of the schedule.
+            At least one of arrival and departure must be provided. If the schedule
+            for this stop contains both arrival and departure times then so must
+            this update.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.Types.ScheduleRelationship.Skipped">
+            <summary>
+            The stop is skipped, i.e., the vehicle will not stop at this stop.
+            Arrival and departure are optional.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripUpdate.Types.StopTimeUpdate.Types.ScheduleRelationship.NoData">
+            <summary>
+            No data is given for this stop. The main intention for this value is to
+            give the predictions only for part of a trip, i.e., if the last update
+            for a trip has a NO_DATA specifier, then StopTimes for the rest of the
+            stops in the trip are considered to be unspecified as well.
+            Neither arrival nor departure should be supplied.
+            </summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.VehiclePosition">
+            <summary>
+            Realtime positioning information for a given vehicle.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.TripFieldNumber">
+            <summary>Field number for the "trip" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehiclePosition.Trip">
+            <summary>
+            The Trip that this vehicle is serving.
+            Can be empty or partial if the vehicle can not be identified with a given
+            trip instance.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.VehicleFieldNumber">
+            <summary>Field number for the "vehicle" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehiclePosition.Vehicle">
+            <summary>
+            Additional information on the vehicle that is serving this trip.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.PositionFieldNumber">
+            <summary>Field number for the "position" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehiclePosition.Position">
+            <summary>
+            Current position of this vehicle.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.CurrentStopSequenceFieldNumber">
+            <summary>Field number for the "current_stop_sequence" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehiclePosition.CurrentStopSequence">
+            <summary>
+            The stop sequence index of the current stop. The meaning of
+            current_stop_sequence (i.e., the stop that it refers to) is determined by
+            current_status.
+            If current_status is missing IN_TRANSIT_TO is assumed.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehiclePosition.HasCurrentStopSequence">
+            <summary>Gets whether the "current_stop_sequence" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.VehiclePosition.ClearCurrentStopSequence">
+            <summary>Clears the value of the "current_stop_sequence" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.StopIdFieldNumber">
+            <summary>Field number for the "stop_id" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehiclePosition.StopId">
+            <summary>
+            Identifies the current stop. The value must be the same as in stops.txt in
+            the corresponding GTFS feed.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehiclePosition.HasStopId">
+            <summary>Gets whether the "stop_id" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.VehiclePosition.ClearStopId">
+            <summary>Clears the value of the "stop_id" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.CurrentStatusFieldNumber">
+            <summary>Field number for the "current_status" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehiclePosition.CurrentStatus">
+            <summary>
+            The exact status of the vehicle with respect to the current stop.
+            Ignored if current_stop_sequence is missing.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehiclePosition.HasCurrentStatus">
+            <summary>Gets whether the "current_status" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.VehiclePosition.ClearCurrentStatus">
+            <summary>Clears the value of the "current_status" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.TimestampFieldNumber">
+            <summary>Field number for the "timestamp" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehiclePosition.Timestamp">
+            <summary>
+            Moment at which the vehicle's position was measured. In POSIX time
+            (i.e., number of seconds since January 1st 1970 00:00:00 UTC).
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehiclePosition.HasTimestamp">
+            <summary>Gets whether the "timestamp" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.VehiclePosition.ClearTimestamp">
+            <summary>Clears the value of the "timestamp" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.CongestionLevelFieldNumber">
+            <summary>Field number for the "congestion_level" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehiclePosition.HasCongestionLevel">
+            <summary>Gets whether the "congestion_level" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.VehiclePosition.ClearCongestionLevel">
+            <summary>Clears the value of the "congestion_level" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.OccupancyStatusFieldNumber">
+            <summary>Field number for the "occupancy_status" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehiclePosition.HasOccupancyStatus">
+            <summary>Gets whether the "occupancy_status" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.VehiclePosition.ClearOccupancyStatus">
+            <summary>Clears the value of the "occupancy_status" field</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.VehiclePosition.Types">
+            <summary>Container for nested types declared in the VehiclePosition message type.</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.Types.VehicleStopStatus.IncomingAt">
+            <summary>
+            The vehicle is just about to arrive at the stop (on a stop
+            display, the vehicle symbol typically flashes).
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.Types.VehicleStopStatus.StoppedAt">
+            <summary>
+            The vehicle is standing at the stop.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.Types.VehicleStopStatus.InTransitTo">
+            <summary>
+            The vehicle has departed and is in transit to the next stop.
+            </summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.VehiclePosition.Types.CongestionLevel">
+            <summary>
+            Congestion level that is affecting this vehicle.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.Types.CongestionLevel.SevereCongestion">
+            <summary>
+            People leaving their cars.
+            </summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.VehiclePosition.Types.OccupancyStatus">
+            <summary>
+            The degree of passenger occupancy of the vehicle. This field is still
+            experimental, and subject to change. It may be formally adopted in the
+            future.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.Types.OccupancyStatus.Empty">
+            <summary>
+            The vehicle is considered empty by most measures, and has few or no
+            passengers onboard, but is still accepting passengers.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.Types.OccupancyStatus.ManySeatsAvailable">
+            <summary>
+            The vehicle has a relatively large percentage of seats available.
+            What percentage of free seats out of the total seats available is to be
+            considered large enough to fall into this category is determined at the
+            discretion of the producer.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.Types.OccupancyStatus.FewSeatsAvailable">
+            <summary>
+            The vehicle has a relatively small percentage of seats available.
+            What percentage of free seats out of the total seats available is to be
+            considered small enough to fall into this category is determined at the
+            discretion of the feed producer.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.Types.OccupancyStatus.StandingRoomOnly">
+            <summary>
+            The vehicle can currently accommodate only standing passengers.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.Types.OccupancyStatus.CrushedStandingRoomOnly">
+            <summary>
+            The vehicle can currently accommodate only standing passengers
+            and has limited space for them.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.Types.OccupancyStatus.Full">
+            <summary>
+            The vehicle is considered full by most measures, but may still be
+            allowing passengers to board.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehiclePosition.Types.OccupancyStatus.NotAcceptingPassengers">
+            <summary>
+            The vehicle is not accepting additional passengers.
+            </summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.Alert">
+            <summary>
+            An alert, indicating some sort of incident in the public transit network.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.Alert.ActivePeriodFieldNumber">
+            <summary>Field number for the "active_period" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Alert.ActivePeriod">
+            <summary>
+            Time when the alert should be shown to the user. If missing, the
+            alert will be shown as long as it appears in the feed.
+            If multiple ranges are given, the alert will be shown during all of them.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.Alert.InformedEntityFieldNumber">
+            <summary>Field number for the "informed_entity" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Alert.InformedEntity">
+            <summary>
+            Entities whose users we should notify of this alert.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.Alert.CauseFieldNumber">
+            <summary>Field number for the "cause" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Alert.HasCause">
+            <summary>Gets whether the "cause" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.Alert.ClearCause">
+            <summary>Clears the value of the "cause" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.Alert.EffectFieldNumber">
+            <summary>Field number for the "effect" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Alert.HasEffect">
+            <summary>Gets whether the "effect" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.Alert.ClearEffect">
+            <summary>Clears the value of the "effect" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.Alert.UrlFieldNumber">
+            <summary>Field number for the "url" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Alert.Url">
+            <summary>
+            The URL which provides additional information about the alert.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.Alert.HeaderTextFieldNumber">
+            <summary>Field number for the "header_text" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Alert.HeaderText">
+            <summary>
+            Alert header. Contains a short summary of the alert text as plain-text.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.Alert.DescriptionTextFieldNumber">
+            <summary>Field number for the "description_text" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Alert.DescriptionText">
+            <summary>
+            Full description for the alert as plain-text. The information in the
+            description should add to the information of the header.
+            </summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.Alert.Types">
+            <summary>Container for nested types declared in the Alert message type.</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.Alert.Types.Cause">
+            <summary>
+            Cause of this alert.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.Alert.Types.Cause.OtherCause">
+            <summary>
+            Not machine-representable.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.Alert.Types.Cause.Strike">
+            <summary>
+            Public transit agency employees stopped working.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.Alert.Types.Cause.Demonstration">
+            <summary>
+            People are blocking the streets.
+            </summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.Alert.Types.Effect">
+            <summary>
+            What is the effect of this problem on the affected entity.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.Alert.Types.Effect.SignificantDelays">
+            <summary>
+            We don't care about INsignificant delays: they are hard to detect, have
+            little impact on the user, and would clutter the results as they are too
+            frequent.
+            </summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.TimeRange">
+            <summary>
+            A time interval. The interval is considered active at time 't' if 't' is
+            greater than or equal to the start time and less than the end time.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TimeRange.StartFieldNumber">
+            <summary>Field number for the "start" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TimeRange.Start">
+            <summary>
+            Start time, in POSIX time (i.e., number of seconds since January 1st 1970
+            00:00:00 UTC).
+            If missing, the interval starts at minus infinity.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TimeRange.HasStart">
+            <summary>Gets whether the "start" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TimeRange.ClearStart">
+            <summary>Clears the value of the "start" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TimeRange.EndFieldNumber">
+            <summary>Field number for the "end" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TimeRange.End">
+            <summary>
+            End time, in POSIX time (i.e., number of seconds since January 1st 1970
+            00:00:00 UTC).
+            If missing, the interval ends at plus infinity.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TimeRange.HasEnd">
+            <summary>Gets whether the "end" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TimeRange.ClearEnd">
+            <summary>Clears the value of the "end" field</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.Position">
+            <summary>
+            A position.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.Position.LatitudeFieldNumber">
+            <summary>Field number for the "latitude" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Position.Latitude">
+            <summary>
+            Degrees North, in the WGS-84 coordinate system.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Position.HasLatitude">
+            <summary>Gets whether the "latitude" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.Position.ClearLatitude">
+            <summary>Clears the value of the "latitude" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.Position.LongitudeFieldNumber">
+            <summary>Field number for the "longitude" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Position.Longitude">
+            <summary>
+            Degrees East, in the WGS-84 coordinate system.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Position.HasLongitude">
+            <summary>Gets whether the "longitude" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.Position.ClearLongitude">
+            <summary>Clears the value of the "longitude" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.Position.BearingFieldNumber">
+            <summary>Field number for the "bearing" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Position.Bearing">
+            <summary>
+            Bearing, in degrees, clockwise from North, i.e., 0 is North and 90 is East.
+            This can be the compass bearing, or the direction towards the next stop
+            or intermediate location.
+            This should not be direction deduced from the sequence of previous
+            positions, which can be computed from previous data.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Position.HasBearing">
+            <summary>Gets whether the "bearing" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.Position.ClearBearing">
+            <summary>Clears the value of the "bearing" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.Position.OdometerFieldNumber">
+            <summary>Field number for the "odometer" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Position.Odometer">
+            <summary>
+            Odometer value, in meters.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Position.HasOdometer">
+            <summary>Gets whether the "odometer" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.Position.ClearOdometer">
+            <summary>Clears the value of the "odometer" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.Position.SpeedFieldNumber">
+            <summary>Field number for the "speed" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Position.Speed">
+            <summary>
+            Momentary speed measured by the vehicle, in meters per second.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.Position.HasSpeed">
+            <summary>Gets whether the "speed" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.Position.ClearSpeed">
+            <summary>Clears the value of the "speed" field</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.TripDescriptor">
+            <summary>
+            A descriptor that identifies an instance of a GTFS trip, or all instances of
+            a trip along a route.
+            - To specify a single trip instance, the trip_id (and if necessary,
+              start_time) is set. If route_id is also set, then it should be same as one
+              that the given trip corresponds to.
+            - To specify all the trips along a given route, only the route_id should be
+              set. Note that if the trip_id is not known, then stop sequence ids in
+              TripUpdate are not sufficient, and stop_ids must be provided as well. In
+              addition, absolute arrival/departure times must be provided.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripDescriptor.TripIdFieldNumber">
+            <summary>Field number for the "trip_id" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripDescriptor.TripId">
+            <summary>
+            The trip_id from the GTFS feed that this selector refers to.
+            For non frequency-based trips, this field is enough to uniquely identify
+            the trip. For frequency-based trip, start_time and start_date might also be
+            necessary.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripDescriptor.HasTripId">
+            <summary>Gets whether the "trip_id" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TripDescriptor.ClearTripId">
+            <summary>Clears the value of the "trip_id" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripDescriptor.RouteIdFieldNumber">
+            <summary>Field number for the "route_id" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripDescriptor.RouteId">
+            <summary>
+            The route_id from the GTFS that this selector refers to.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripDescriptor.HasRouteId">
+            <summary>Gets whether the "route_id" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TripDescriptor.ClearRouteId">
+            <summary>Clears the value of the "route_id" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripDescriptor.DirectionIdFieldNumber">
+            <summary>Field number for the "direction_id" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripDescriptor.DirectionId">
+            <summary>
+            The direction_id from the GTFS feed trips.txt file, indicating the
+            direction of travel for trips this selector refers to. This field is
+            still experimental, and subject to change. It may be formally adopted in
+            the future.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripDescriptor.HasDirectionId">
+            <summary>Gets whether the "direction_id" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TripDescriptor.ClearDirectionId">
+            <summary>Clears the value of the "direction_id" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripDescriptor.StartTimeFieldNumber">
+            <summary>Field number for the "start_time" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripDescriptor.StartTime">
+            <summary>
+            The initially scheduled start time of this trip instance.
+            When the trip_id corresponds to a non-frequency-based trip, this field
+            should either be omitted or be equal to the value in the GTFS feed. When
+            the trip_id corresponds to a frequency-based trip, the start_time must be
+            specified for trip updates and vehicle positions. If the trip corresponds
+            to exact_times=1 GTFS record, then start_time must be some multiple
+            (including zero) of headway_secs later than frequencies.txt start_time for
+            the corresponding time period. If the trip corresponds to exact_times=0,
+            then its start_time may be arbitrary, and is initially expected to be the
+            first departure of the trip. Once established, the start_time of this
+            frequency-based trip should be considered immutable, even if the first
+            departure time changes -- that time change may instead be reflected in a
+            StopTimeUpdate.
+            Format and semantics of the field is same as that of
+            GTFS/frequencies.txt/start_time, e.g., 11:15:35 or 25:15:35.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripDescriptor.HasStartTime">
+            <summary>Gets whether the "start_time" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TripDescriptor.ClearStartTime">
+            <summary>Clears the value of the "start_time" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripDescriptor.StartDateFieldNumber">
+            <summary>Field number for the "start_date" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripDescriptor.StartDate">
+            <summary>
+            The scheduled start date of this trip instance.
+            Must be provided to disambiguate trips that are so late as to collide with
+            a scheduled trip on a next day. For example, for a train that departs 8:00
+            and 20:00 every day, and is 12 hours late, there would be two distinct
+            trips on the same time.
+            This field can be provided but is not mandatory for schedules in which such
+            collisions are impossible - for example, a service running on hourly
+            schedule where a vehicle that is one hour late is not considered to be
+            related to schedule anymore.
+            In YYYYMMDD format.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripDescriptor.HasStartDate">
+            <summary>Gets whether the "start_date" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TripDescriptor.ClearStartDate">
+            <summary>Clears the value of the "start_date" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripDescriptor.ScheduleRelationshipFieldNumber">
+            <summary>Field number for the "schedule_relationship" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TripDescriptor.HasScheduleRelationship">
+            <summary>Gets whether the "schedule_relationship" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TripDescriptor.ClearScheduleRelationship">
+            <summary>Clears the value of the "schedule_relationship" field</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.TripDescriptor.Types">
+            <summary>Container for nested types declared in the TripDescriptor message type.</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.TripDescriptor.Types.ScheduleRelationship">
+            <summary>
+            The relation between this trip and the static schedule. If a trip is done
+            in accordance with temporary schedule, not reflected in GTFS, then it
+            shouldn't be marked as SCHEDULED, but likely as ADDED.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripDescriptor.Types.ScheduleRelationship.Scheduled">
+            <summary>
+            Trip that is running in accordance with its GTFS schedule, or is close
+            enough to the scheduled trip to be associated with it.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripDescriptor.Types.ScheduleRelationship.Added">
+            <summary>
+            An extra trip that was added in addition to a running schedule, for
+            example, to replace a broken vehicle or to respond to sudden passenger
+            load.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripDescriptor.Types.ScheduleRelationship.Unscheduled">
+            <summary>
+            A trip that is running with no schedule associated to it, for example, if
+            there is no schedule at all.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TripDescriptor.Types.ScheduleRelationship.Canceled">
+            <summary>
+            A trip that existed in the schedule but was removed.
+            </summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.VehicleDescriptor">
+            <summary>
+            Identification information for the vehicle performing the trip.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehicleDescriptor.IdFieldNumber">
+            <summary>Field number for the "id" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehicleDescriptor.Id">
+            <summary>
+            Internal system identification of the vehicle. Should be unique per
+            vehicle, and can be used for tracking the vehicle as it proceeds through
+            the system.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehicleDescriptor.HasId">
+            <summary>Gets whether the "id" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.VehicleDescriptor.ClearId">
+            <summary>Clears the value of the "id" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehicleDescriptor.LabelFieldNumber">
+            <summary>Field number for the "label" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehicleDescriptor.Label">
+            <summary>
+            User visible label, i.e., something that must be shown to the passenger to
+            help identify the correct vehicle.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehicleDescriptor.HasLabel">
+            <summary>Gets whether the "label" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.VehicleDescriptor.ClearLabel">
+            <summary>Clears the value of the "label" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.VehicleDescriptor.LicensePlateFieldNumber">
+            <summary>Field number for the "license_plate" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehicleDescriptor.LicensePlate">
+            <summary>
+            The license plate of the vehicle.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.VehicleDescriptor.HasLicensePlate">
+            <summary>Gets whether the "license_plate" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.VehicleDescriptor.ClearLicensePlate">
+            <summary>Clears the value of the "license_plate" field</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.EntitySelector">
+            <summary>
+            A selector for an entity in a GTFS feed.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.EntitySelector.AgencyIdFieldNumber">
+            <summary>Field number for the "agency_id" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.EntitySelector.AgencyId">
+            <summary>
+            The values of the fields should correspond to the appropriate fields in the
+            GTFS feed.
+            At least one specifier must be given. If several are given, then the
+            matching has to apply to all the given specifiers.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.EntitySelector.HasAgencyId">
+            <summary>Gets whether the "agency_id" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.EntitySelector.ClearAgencyId">
+            <summary>Clears the value of the "agency_id" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.EntitySelector.RouteIdFieldNumber">
+            <summary>Field number for the "route_id" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.EntitySelector.HasRouteId">
+            <summary>Gets whether the "route_id" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.EntitySelector.ClearRouteId">
+            <summary>Clears the value of the "route_id" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.EntitySelector.RouteTypeFieldNumber">
+            <summary>Field number for the "route_type" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.EntitySelector.RouteType">
+            <summary>
+            corresponds to route_type in GTFS.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.EntitySelector.HasRouteType">
+            <summary>Gets whether the "route_type" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.EntitySelector.ClearRouteType">
+            <summary>Clears the value of the "route_type" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.EntitySelector.TripFieldNumber">
+            <summary>Field number for the "trip" field.</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.EntitySelector.StopIdFieldNumber">
+            <summary>Field number for the "stop_id" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.EntitySelector.HasStopId">
+            <summary>Gets whether the "stop_id" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.EntitySelector.ClearStopId">
+            <summary>Clears the value of the "stop_id" field</summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.TranslatedString">
+            <summary>
+            An internationalized message containing per-language versions of a snippet of
+            text or a URL.
+            One of the strings from a message will be picked up. The resolution proceeds
+            as follows:
+            1. If the UI language matches the language code of a translation,
+               the first matching translation is picked.
+            2. If a default UI language (e.g., English) matches the language code of a
+               translation, the first matching translation is picked.
+            3. If some translation has an unspecified language code, that translation is
+               picked.
+            </summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TranslatedString.TranslationFieldNumber">
+            <summary>Field number for the "translation" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TranslatedString.Translation">
+            <summary>
+            At least one translation must be provided.
+            </summary>
+        </member>
+        <member name="T:STM.ExternalServiceProvider.Proto.TranslatedString.Types">
+            <summary>Container for nested types declared in the TranslatedString message type.</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TranslatedString.Types.Translation.TextFieldNumber">
+            <summary>Field number for the "text" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TranslatedString.Types.Translation.Text">
+            <summary>
+            A UTF-8 string containing the message.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TranslatedString.Types.Translation.HasText">
+            <summary>Gets whether the "text" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TranslatedString.Types.Translation.ClearText">
+            <summary>Clears the value of the "text" field</summary>
+        </member>
+        <member name="F:STM.ExternalServiceProvider.Proto.TranslatedString.Types.Translation.LanguageFieldNumber">
+            <summary>Field number for the "language" field.</summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TranslatedString.Types.Translation.Language">
+            <summary>
+            BCP-47 language code. Can be omitted if the language is unknown or if
+            no i18n is done at all for the feed. At most one translation is
+            allowed to have an unspecified language tag.
+            </summary>
+        </member>
+        <member name="P:STM.ExternalServiceProvider.Proto.TranslatedString.Types.Translation.HasLanguage">
+            <summary>Gets whether the "language" field is set</summary>
+        </member>
+        <member name="M:STM.ExternalServiceProvider.Proto.TranslatedString.Types.Translation.ClearLanguage">
+            <summary>Clears the value of the "language" field</summary>
+        </member>
+    </members>
+</doc>

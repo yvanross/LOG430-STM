@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Fcss35EHyLS4dN1Qqc6YAKNJoSQworTPMB/uv/m4px5cX3KMqvqWxFa9DAJrqWIwsi6T+/NZlVfbnsGSV796YA==",
+  "dgSpecHash": "3HxeEV+MX9Rz+gH0ZrVsltDmRrgepqlImVeoH7B7X+m02+DMBsV1bWM+7AWCvveoMJYeYHoKuDVx/B6b7/rn0g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\RouteTimeProvider\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
+  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.16\\ambassador.1.0.16.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.29\\ambassador.1.0.29.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.codecoverage\\17.3.2\\microsoft.codecoverage.17.3.2.nupkg.sha512",

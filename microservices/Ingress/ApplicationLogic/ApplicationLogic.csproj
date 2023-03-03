@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ambassador" Version="1.0.12" />
+    <PackageReference Include="Ambassador" Version="1.0.26" />
     <PackageReference Include="Docker.DotNet" Version="3.125.13" />
   </ItemGroup>
 

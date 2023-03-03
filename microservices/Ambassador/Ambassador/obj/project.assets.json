@@ -379,6 +379,16 @@
           }
         }
       },
+      "SourceLink.Create.CommandLine/2.8.2": {
+        "type": "package",
+        "build": {
+          "build/SourceLink.Create.CommandLine.props": {},
+          "build/SourceLink.Create.CommandLine.targets": {}
+        },
+        "buildMultiTargeting": {
+          "buildCrossTargeting/SourceLink.Create.CommandLine.props": {}
+        }
+      },
       "System.AppContext/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -2131,6 +2141,23 @@
         "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
         "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.nuspec",
         "runtimes/ubuntu.16.10-x64/native/System.Security.Cryptography.Native.OpenSsl.so"
+      ]
+    },
+    "SourceLink.Create.CommandLine/2.8.2": {
+      "sha512": "loftHQHyhybMXz4dDRpiIxyMVxKPMmHHyIfEBx/biO2cdfnojWUnosq4tQFYucPbgLnCH0fcQuOMFVKzDGTmjg==",
+      "type": "package",
+      "path": "sourcelink.create.commandline/2.8.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/SourceLink.Create.CommandLine.props",
+        "build/SourceLink.Create.CommandLine.targets",
+        "build/net461/SourceLink.Create.CommandLine.dll",
+        "build/netstandard1.4/SourceLink.Create.CommandLine.deps.json",
+        "build/netstandard1.4/SourceLink.Create.CommandLine.dll",
+        "buildCrossTargeting/SourceLink.Create.CommandLine.props",
+        "sourcelink.create.commandline.2.8.2.nupkg.sha512",
+        "sourcelink.create.commandline.nuspec"
       ]
     },
     "System.AppContext/4.3.0": {
@@ -5585,7 +5612,8 @@
       "Microsoft.Extensions.Logging.Abstractions >= 7.0.0",
       "Microsoft.Net.Http.Headers >= 2.2.8",
       "Newtonsoft.Json >= 10.0.3",
-      "RestSharp >= 108.0.3"
+      "RestSharp >= 108.0.3",
+      "SourceLink.Create.CommandLine >= 2.8.2"
     ]
   },
   "packageFolders": {
@@ -5593,13 +5621,13 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "1.0.23",
+    "version": "1.0.29",
     "restore": {
-      "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj",
+      "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj",
       "projectName": "Ambassador",
-      "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj",
+      "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj",
       "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ambassador\\Ambassador\\obj\\",
+      "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -5614,10 +5642,8 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Nuget": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://nuget.pkg.github.com/DavidDaniel18/index.json": {},
-        "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
+        "C:\\Users\\david\\LOG430-STM\\microservices\\Nuget": {},
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
@@ -5654,6 +5680,11 @@
           "RestSharp": {
             "target": "Package",
             "version": "[108.0.3, )"
+          },
+          "SourceLink.Create.CommandLine": {
+            "suppressParent": "All",
+            "target": "Package",
+            "version": "[2.8.2, )"
           }
         },
         "imports": [

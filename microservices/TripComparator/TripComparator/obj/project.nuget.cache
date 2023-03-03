@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "7k9gq45nz6OWmKLQ5qQIXVdZBJreNRLwE4oDj8CinxUnqQkdW5yrW2liNyB9gxXjEBAkiuGCFzTAFlLO1fr3ww==",
+  "dgSpecHash": "CHOQk51YOOx/BEr2dtKGLdbbk6SSGdKbW4rX5dfzcsXXtLxzk0cEOhyCfC2hcq9cacUkWBSLTpBZnI9y6FNFJQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\TripComparator\\TripComparator.csproj",
+  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\TripComparator\\TripComparator\\TripComparator.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.19\\ambassador.1.0.19.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.23\\ambassador.1.0.23.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.3\\microsoft.aspnetcore.openapi.7.0.3.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.csharp\\4.3.0\\microsoft.csharp.4.3.0.nupkg.sha512",

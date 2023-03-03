@@ -13,7 +13,7 @@ public class RepositoryRead : IRepositoryRead
 
     public IRoute? ReadRouteByAddressAndPort(string address, string port)
     {
-        return RouteCache.RegisteredRoutes.SingleOrDefault(route => route.Address.Equals(address) && route.PortNumber.Equals(port));
+        return RouteCache.RegisteredRoutes.SingleOrDefault(route => route.Address.Equals(address) && route.Port.Equals(port));
     }
 
     public IRoute? ReadRouteByType(string serviceType)

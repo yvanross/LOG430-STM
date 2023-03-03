@@ -214,3 +214,4 @@ C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvi
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\ApplicationLogicTests\obj\Debug\net7.0\ApplicationLogicTests.pdb
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\ApplicationLogicTests\obj\Debug\net7.0\ApplicationLogicTests.genruntimeconfig.cache
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\ApplicationLogicTests\obj\Debug\net7.0\ref\ApplicationLogicTests.dll
+C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.Extensions.Logging.Abstractions.dll
