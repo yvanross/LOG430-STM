@@ -11,7 +11,7 @@ namespace STMTests.Use_Cases
     [TestClass()]
     public class TrackingTest
     {
-        ItinaryUC itinary = new (null, new StmDataStub(), null);
+        ItineraryUC _itinerary = new (null, new StmDataStub(), null);
 
         [TestMethod()]
         public async Task TrackBusesETSToPeelSherbrooke()
@@ -27,7 +27,7 @@ namespace STMTests.Use_Cases
 
             Assert.IsNotNull(bus);
 
-            trackBusController.Post(bus);
+            trackBusController.Post(bus.Value);
         }
 
         [TestMethod()]
@@ -46,7 +46,7 @@ namespace STMTests.Use_Cases
 
             Assert.IsNotNull(bus);
 
-            trackBusController.Post(bus);
+            trackBusController.Post(bus.Value);
         }
 
     }

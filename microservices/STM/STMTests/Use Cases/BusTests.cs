@@ -14,7 +14,7 @@ namespace STMTests.Use_Cases
     [TestClass()]
     public class BusTests
     {
-        ItinaryUC _itinaryUc = new ItinaryUC(new StmClient(), new StmData(), null);
+        ItineraryUC _itineraryUc = new ItineraryUC(new StmClient(), new StmData(), null);
 
         [TestMethod()]
         public async Task TestController()
@@ -29,7 +29,7 @@ namespace STMTests.Use_Cases
         [TestMethod()]
         public async Task GetBusesETSToPeelSherbrooke()
         {
-            var valueTuple = await _itinaryUc.GetFastestBus(new PositionLL()
+            var valueTuple = await _itineraryUc.GetFastestBus(new PositionLL()
             {
                 Latitude = 45.495408,
                 Longitude = -73.562918
@@ -48,7 +48,7 @@ namespace STMTests.Use_Cases
         [TestMethod()]
         public async Task GetBusesPeelSherbrookeToOlympicStadium()
         {
-            var valueTuple = await _itinaryUc.GetFastestBus(new PositionLL()
+            var valueTuple = await _itineraryUc.GetFastestBus(new PositionLL()
             {
                 Latitude = 45.50146231405799,
                 Longitude = -73.5769508553735
@@ -66,7 +66,7 @@ namespace STMTests.Use_Cases
         [TestMethod()]
         public async Task GetBusesSTLaurentToJarryPark()
         {
-            var valueTuple = await _itinaryUc.GetFastestBus(new PositionLL()
+            var valueTuple = await _itineraryUc.GetFastestBus(new PositionLL()
             {
                 Latitude = 45.545520,
                 Longitude = -73.654904
@@ -82,7 +82,7 @@ namespace STMTests.Use_Cases
         [TestMethod()]
         public async Task TestFromTimeComparator()
         {
-            var valueTuple = await _itinaryUc.GetFastestBus(new PositionLL()
+            var valueTuple = await _itineraryUc.GetFastestBus(new PositionLL()
             {
                 Latitude = 45.501784,
                 Longitude = -73.576553
@@ -98,7 +98,7 @@ namespace STMTests.Use_Cases
         [TestMethod()] 
         public async Task GetBusImpossibleTripCoordinate0()
         {
-            var valueTuple = await _itinaryUc.GetFastestBus(new PositionLL()
+            var valueTuple = await _itineraryUc.GetFastestBus(new PositionLL()
             {
                 Latitude = 0,
                 Longitude = 0
@@ -114,7 +114,7 @@ namespace STMTests.Use_Cases
         [TestMethod()]
         public async Task GetBusImpossibleTripCoordinatesNull()
         {
-            var valueTuple = await _itinaryUc.GetFastestBus(new PositionLL(), new PositionLL());
+            var valueTuple = await _itineraryUc.GetFastestBus(new PositionLL(), new PositionLL());
 
             Assert.IsNull(valueTuple?.bus);
         }
@@ -122,7 +122,7 @@ namespace STMTests.Use_Cases
         [TestMethod()]
         public async Task GetBusImpossibleWrongCoordinates()
         {
-            var valueTuple = await _itinaryUc.GetFastestBus(new PositionLL()
+            var valueTuple = await _itineraryUc.GetFastestBus(new PositionLL()
             {
                 Latitude = 46.50146231405799,
                 Longitude = -73.5769508553735

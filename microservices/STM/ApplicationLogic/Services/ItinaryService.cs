@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Entities.Concretions;
 using Entities.Domain;
@@ -20,7 +21,7 @@ public class ItinaryService
         _stmData = stmData;
     }
 
-    public IStopSTM[]? GetClosestStops(IPosition position, IStopSTM[]? stops, int RadiusForBusStopSelection = 50)
+    public Dictionary<string, IStopSTM> GetClosestStops(IPosition position, IStopSTM[]? stops, int RadiusForBusStopSelection = 50)
     {
         int recursions = 0;
 
@@ -46,7 +47,7 @@ public class ItinaryService
             closestStops.AddRange(GetOtherNearbyStops(RadiusForBusStopSelection));
         }
         
-        return closestStops.ToArray();
+        return closestStops.ToDictionary(cs=>cs.Id);
 
         List<IStopSTM> GetOtherNearbyStops(int radiusForBusStopSelection)
         {
@@ -70,48 +71,42 @@ public class ItinaryService
             return recursions > 100 ||
                    otherStops.Count > 15 ?
                     otherStops :
-                    GetOtherNearbyStops(radiusForBusStopSelection + 50);
+                    GetOtherNearbyStops(radiusForBusStopSelection + 10);
         }
     }
 
-    public ImmutableDictionary<string, ITripSTM> TripsContainingSourceAndDestination(IStopSTM[] possibleSources, IStopSTM[] possibleDestinations)
+    public ImmutableDictionary<string, ITripSTM> TripsContainingSourceAndDestination(Dictionary<string, IStopSTM> possibleSources, Dictionary<string, IStopSTM> possibleDestinations)
     {
-        var relevantTripArray = _stmData.GetTrips()?.Values.Where(FilterTripsTimeThatAreNotRelevant).ToArray();
+        var trips = _stmData.GetTrips();
+
+        var relevantTripArray = trips?.Values.Where(FilterTripsTimeThatAreNotRelevant).ToArray();
 
         var possibleTrips = relevantTripArray?.AsParallel().AsUnordered().Select((trip, _) =>
         {
             ITripSTM? toReturn = null;
 
-            Parallel.For(0, possibleSources.Length, (i, _) =>
+            if (trip.StopSchedules.FirstOrDefault(s => possibleSources.ContainsKey(s.Stop.Id)) is {} sourceStop &&
+                trip.StopSchedules.FirstOrDefault(s => possibleDestinations.ContainsKey(s.Stop.Id)) is { } destinationStop)
             {
-                for (int j = 0; j < possibleDestinations.Length; j++)
+                var stmTrip = new TripSTM()
                 {
-                    if (trip.StopSchedules.Any(s => s.Stop.Id.Equals(possibleSources[i].Id)) &&
-                        trip.StopSchedules.Any(s => s.Stop.Id.Equals(possibleDestinations[j].Id)))
-                    {
-                        var stmTrip = new TripSTM()
+                    Id = trip.Id,
+                    StopSchedules = trip.StopSchedules.ConvertAll(stopSchedule =>
+                        new StopScheduleSTM()
                         {
-                            Id = trip.Id,
-                            StopSchedules = trip.StopSchedules.ConvertAll(stopSchedule =>
-                                new StopScheduleSTM()
-                                {
-                                    DepartureTime = stopSchedule.DepartureTime,
-                                    Stop = new StopSTM()
-                                    {
-                                        Id = stopSchedule.Stop.Id,
-                                        Position = stopSchedule.Stop.Position,
-                                    }
-                                }),
-                            RelevantOriginStopId = possibleSources[i].Id,
-                            RelevantDestinationStopId = possibleDestinations[j].Id,
-                        };
+                            DepartureTime = stopSchedule.DepartureTime,
+                            Stop = new StopSTM()
+                            {
+                                Id = stopSchedule.Stop.Id,
+                                Position = stopSchedule.Stop.Position,
+                            }
+                        }),
+                    RelevantOriginStopId = sourceStop.Stop.Id,
+                    RelevantDestinationStopId = destinationStop.Stop.Id,
+                };
 
-                        toReturn = stmTrip;
-                        return;
-                    }
-                }
-
-            });
+                toReturn = stmTrip;
+            }
 
             return toReturn;
         }).OfType<ITripSTM>().ToImmutableDictionary(x=>x.Id);
@@ -120,11 +115,10 @@ public class ItinaryService
 
         bool FilterTripsTimeThatAreNotRelevant(IGTFSTrip t)
         {
-            bool keep = false;
+            var keep = false;
 
             if (!t.StopSchedules.Any()) return false;
 
-            var firstStopTime = DeltaHours(t.StopSchedules[0].DepartureTime);
             var lastStopTime = DeltaHours(t.StopSchedules[^1].DepartureTime);
 
             if(lastStopTime > 0) 

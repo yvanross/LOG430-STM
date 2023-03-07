@@ -136,13 +136,10 @@ public class StmData : IgtfsDataSource
 
                 var dateTime = DateTime.UtcNow.Date;
 
-                dateTime = dateTime.AddHours(Convert.ToDouble(HMSArray[0])).AddMinutes(Convert.ToDouble(HMSArray[1])).AddSeconds(Convert.ToDouble(HMSArray[2]));
+                dateTime = dateTime.AddHours(Convert.ToDouble(HMSArray[0])).AddMinutes(Convert.ToDouble(HMSArray[1])).AddSeconds(Convert.ToDouble(HMSArray[2])).AddHours(5);
 
-                //horaire est sur 28h
-                if (DateTime.UtcNow.Date.Equals(dateTime.Date) is false)
-                {
+                if(dateTime.Date > DateTime.UtcNow.Date.AddDays(1))
                     dateTime = dateTime.AddDays(-1);
-                }
 
                 departureTime = dateTime;
             }

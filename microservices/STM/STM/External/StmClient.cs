@@ -1,4 +1,5 @@
-﻿using ApplicationLogic.Extensions;
+﻿using System.Collections.Immutable;
+using ApplicationLogic.Extensions;
 using ApplicationLogic.Interfaces;
 using Google.Protobuf;
 using RestSharp;
@@ -12,7 +13,8 @@ public class StmClient : IStmClient
 
     private static readonly RestClient _stmClient = new ("https://api.stm.info/pub/od/gtfs-rt/ic/v2");
 
-    private static Dictionary<string, (VehiclePosition VehiclePosition, DateTime DateTime)> _feedpositons { get; } = new();
+    private static ImmutableDictionary<string, (VehiclePosition VehiclePosition, DateTime DateTime)> _feedPositions = 
+        ImmutableDictionary<string, (VehiclePosition VehiclePosition, DateTime DateTime)>.Empty;
 
     static StmClient()
     {
@@ -21,36 +23,39 @@ public class StmClient : IStmClient
 
     public static async Task BeginProducingFeedPositions()
     {
-        while (true)
+        _ = await Try.WithConsequenceAsync<Task>(async () =>
         {
-            await Task.Delay(1000);
+            while (true)
+            {
+                var positions = await UpdateFeedPositions();
 
-            var positions = await UpdateFeedPositions();
+                var vehiclePositionAndTimeUpdatedList = positions.ToList()
+                    .ConvertAll(p => new ValueTuple<VehiclePosition, DateTime>(p, DateTime.UtcNow));
 
-            var vehiclePositionAndTimeUpdatedList = positions.ToList()
-                .ConvertAll(p => new ValueTuple<VehiclePosition, DateTime>(p, DateTime.UtcNow));
+                AddOrUpdateEntries(vehiclePositionAndTimeUpdatedList);
 
-            AddOrUpdateEntries(vehiclePositionAndTimeUpdatedList);
+                RemoveOldEntries();
 
-            RemoveOldEntries();
-        }
+                await Task.Delay(TimeSpan.FromSeconds(15));
+            }
+        }, retryCount:int.MaxValue);
 
         void AddOrUpdateEntries(IEnumerable<(VehiclePosition, DateTime)> vehiclePositionAndTimeUpdatedList)
         {
             foreach (var vp in vehiclePositionAndTimeUpdatedList.Select(v => (VehiclePosition: v, v.Item1.Vehicle.Id)))
             {
-                if (_feedpositons.ContainsKey(vp.Id))
-                    _feedpositons[vp.Id] = vp.VehiclePosition;
-                else
-                    _feedpositons.Add(vp.Id, vp.VehiclePosition);
+                if (_feedPositions.ContainsKey(vp.Id))
+                    _feedPositions = _feedPositions.Remove(vp.Id);
+
+                _feedPositions = _feedPositions.Add(vp.Id, vp.VehiclePosition);
             }
         }
 
         void RemoveOldEntries()
         {
-            foreach (var tuple in _feedpositons)
+            foreach (var tuple in _feedPositions)
                 if (tuple.Value.DateTime.Subtract(DateTime.UtcNow) > TimeSpan.FromHours(1))
-                    _feedpositons.Remove(tuple.Key);
+                    _feedPositions = _feedPositions.Remove(tuple.Key);
         }
     }
 
@@ -73,7 +78,7 @@ public class StmClient : IStmClient
 
     public IEnumerable<VehiclePosition> RequestFeedPositions()
     {
-        return _feedpositons.Select(fp=>fp.Value.VehiclePosition).ToList();
+        return _feedPositions.Select(fp=>fp.Value.VehiclePosition).ToList();
     }
 
     public async Task<IEnumerable<TripUpdate>> RequestFeedTripUpdates()

@@ -1,5 +1,9 @@
+using System.Collections.Generic;
+using System.Globalization;
+using ApplicationLogic.Extensions;
 using ApplicationLogic.Use_Cases;
 using Entities.Concretions;
+using Entities.Domain;
 using GTFS;
 using Microsoft.AspNetCore.Mvc;
 using STM.DTO;
@@ -29,82 +33,87 @@ namespace STM.Controllers
         /// Json containing the ID of the bus, its trip ID, its name, the ETA, the first and last stops of the trip 
         /// </returns>
         [HttpGet(Name = "GetBestBus")]
-        public async Task<TrackingBusDTO> Get(string fromLatitudeLongitude, string toLatitudeLongitude)
+        public async Task<ActionResult<IEnumerable<TrackingBusDTO>>> Get(string fromLatitudeLongitude, string toLatitudeLongitude)
         {
             _logger.LogInformation($"OptimalBus endpoint called with coordinated: from: {fromLatitudeLongitude}; to: {toLatitudeLongitude}");
 
-            var stmData = new StmData();
+            var (fromLatitude, fromLongitude, toLatitude, toLongitude) = ParseParams();
 
-            var itinary = new ItinaryUC(new StmClient(), stmData, _logger);
+            var busTuples = await Try.WithConsequenceAsync(GetBuses, retryCount: 3);
 
-            var fromPositionStrings = fromLatitudeLongitude.Split(',');
-            var toPositionStrings = toLatitudeLongitude.Split(',');
+            if (busTuples is null) return UnprocessableEntity("No real time data on buses were found for the selected coordinates");
 
-            double.TryParse(fromPositionStrings[0].Trim(), out var fromLatitude);
-            double.TryParse(fromPositionStrings[1].Trim(), out var fromLongitude);
-            double.TryParse(toPositionStrings[0].Trim(), out var toLatitude);
-            double.TryParse(toPositionStrings[1].Trim(), out var toLongitude);
+            return FormatToDto(busTuples).ToList();
 
-            var tuple = await itinary.GetFastestBus(new PositionLL()
+            async Task<(IBus bus, double eta)[]?> GetBuses()
             {
-                Latitude = fromLatitude,
-                Longitude = fromLongitude
-            }, new PositionLL()
-            {
-                Latitude = toLatitude,
-                Longitude = toLongitude
-            });
+                var stmData = new StmData();
 
-            if (tuple == null)
-            {
-                throw (new Exception($"No buses were found, logging: \n" +
-                                     $"time {DateTime.UtcNow} \n" +
-                                     $"stm stops {stmData.GetStops()?.Values.Count() -1} \n" +
-                                     $"stm trips {stmData.GetStops()?.Count ?? -1}"));
+                var itineraryUc = new ItineraryUC(new StmClient(), stmData, _logger);
+
+                var busesAndEtas = await itineraryUc.GetFastestBus(new PositionLL() { Latitude = fromLatitude, Longitude = fromLongitude }, new PositionLL() { Latitude = toLatitude, Longitude = toLongitude });
+
+                return busesAndEtas;
             }
 
-            var relevantOrigin = tuple.Value.bus.Trip.RelevantOrigin.Value;
-            var relevantDestination = tuple.Value.bus.Trip.RelevantDestination.Value;
-
-            var busDTO = new TrackingBusDTO()
+            IEnumerable<TrackingBusDTO> FormatToDto((IBus bus, double eta)[] valueTuples)
             {
-                BusID = tuple.Value.bus.Id,
-                TripID = tuple.Value.bus.Trip.Id,
-                Name = tuple.Value.bus.Name,
-                ETA = tuple.Value.eta.ToString(),
-                OriginStopSchedule = new StopScheduleDTO()
+                foreach (var tuple in valueTuples)
                 {
-                    index = relevantOrigin.Index,
-                    DepartureTime = relevantOrigin.DepartureTime.ToString(),
-                    Stop = new StopDTO()
-                    {
-                        Message = ((StopSTM)relevantOrigin.Stop).Message,
-                        ID = relevantOrigin.Stop.Id,
-                        Position = new PositionDTO()
-                        {
-                            Latitude = relevantOrigin.Stop.Position.Latitude.ToString(),
-                            Longitude = relevantOrigin.Stop.Position.Longitude.ToString(),
-                        }
-                    }
-                },
-                TargetStopSchedule = new StopScheduleDTO()
-                {
-                    index = relevantDestination.Index,
-                    DepartureTime = relevantDestination.DepartureTime.ToString(),
-                    Stop = new StopDTO()
-                    {
-                        Message = ((StopSTM)relevantDestination.Stop).Message,
-                        ID = relevantDestination.Stop.Id,
-                        Position = new PositionDTO()
-                        {
-                            Latitude = relevantDestination.Stop.Position.Latitude.ToString(),
-                            Longitude = relevantDestination.Stop.Position.Longitude.ToString(),
-                        }
-                    }
-                },
-            };
+                    var relevantOrigin = tuple.bus!.Trip.RelevantOrigin!.Value;
+                    var relevantDestination = tuple.bus.Trip.RelevantDestination!.Value;
 
-            return busDTO;
+                    var busDTO = new TrackingBusDTO()
+                    {
+                        BusID = tuple.bus.Id,
+                        TripID = tuple.bus.Trip.Id,
+                        Name = tuple.bus.Name,
+                        ETA = tuple.eta.ToString(),
+                        OriginStopSchedule = new StopScheduleDTO()
+                        {
+                            index = relevantOrigin.Index,
+                            DepartureTime = relevantOrigin.DepartureTime.ToString(CultureInfo.InvariantCulture),
+                            Stop = new StopDTO()
+                            {
+                                Message = ((StopSTM)relevantOrigin.Stop).Message, ID = relevantOrigin.Stop.Id,
+                                Position = new PositionDTO()
+                                {
+                                    Latitude = relevantOrigin.Stop.Position.Latitude.ToString(CultureInfo.InvariantCulture),
+                                    Longitude = relevantOrigin.Stop.Position.Longitude.ToString(CultureInfo.InvariantCulture),
+                                }
+                            }
+                        },
+                        TargetStopSchedule = new StopScheduleDTO()
+                        {
+                            index = relevantDestination.Index,
+                            DepartureTime = relevantDestination.DepartureTime.ToString(CultureInfo.InvariantCulture),
+                            Stop = new StopDTO()
+                            {
+                                Message = ((StopSTM)relevantDestination.Stop).Message, ID = relevantDestination.Stop.Id,
+                                Position = new PositionDTO()
+                                {
+                                    Latitude = relevantDestination.Stop.Position.Latitude.ToString(CultureInfo.InvariantCulture),
+                                    Longitude = relevantDestination.Stop.Position.Longitude.ToString(CultureInfo.InvariantCulture),
+                                }
+                            }
+                        },
+                    };
+
+                    yield return busDTO;
+                }
+            }
+
+            (double fromLatitude, double fromLongitude, double toLatitude, double toLongitude) ParseParams()
+            {
+                var fromPositionStrings = fromLatitudeLongitude.Split(',');
+                var toPositionStrings = toLatitudeLongitude.Split(',');
+
+                double.TryParse(fromPositionStrings[0].Trim(), out var result);
+                double.TryParse(fromPositionStrings[1].Trim(), out var d);
+                double.TryParse(toPositionStrings[0].Trim(), out var toLatitude1);
+                double.TryParse(toPositionStrings[1].Trim(), out var toLongitude1);
+                return (result, d, toLatitude1, toLongitude1);
+            }
         }
     }
 }

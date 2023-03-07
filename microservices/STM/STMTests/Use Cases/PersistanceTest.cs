@@ -9,7 +9,7 @@ namespace STMTests.Use_Cases
     [TestClass()]
     public class PersistenceTest
     {
-        ItinaryUC itinary = new (null, new StmDataStub(), null);
+        ItineraryUC _itinerary = new (null, new StmDataStub(), null);
 
         [TestMethod()]
         public void TestStaticGTFS()

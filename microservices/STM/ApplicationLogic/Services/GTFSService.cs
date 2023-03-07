@@ -13,7 +13,7 @@ public class GTFSService
         {
             if (bus.Trip.RelevantOrigin?.DepartureTime > DateTime.UtcNow && bus.Trip.RelevantDestination?.DepartureTime > DateTime.UtcNow && bus.Trip.RelevantOrigin?.DepartureTime < bus.Trip.RelevantDestination?.DepartureTime)
             {
-                yield return new (bus, (bus.Trip.RelevantOrigin.Value.DepartureTime.AddHours(4) - DateTime.UtcNow).TotalSeconds);
+                yield return new (bus, (bus.Trip.RelevantOrigin.Value.DepartureTime - DateTime.UtcNow).TotalSeconds);
             }
         }
     }
@@ -26,7 +26,8 @@ public class GTFSService
             .Where(vehiclePosition => relevantTrips.ContainsKey(vehiclePosition.Trip.TripId))
             .Select(vehiclePosition => 
                 (VehiclePosition: vehiclePosition,
-                Trip: relevantTrips[vehiclePosition.Trip.TripId]));
+                Trip: relevantTrips[vehiclePosition.Trip.TripId]))
+            .ToList();
 
         foreach (var vehicle in vehiclesAndTrips.Select(x=>x.VehiclePosition))
         {
