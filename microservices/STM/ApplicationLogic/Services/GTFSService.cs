@@ -45,7 +45,7 @@ public class GTFSService
         {
             Id = vehicle.Vehicle.Id,
             Name = vehicle.Trip.RouteId,
-            currentStopIndex = (int)vehicle.CurrentStopSequence,
+            StopIndexAtComputationTime = (int)vehicle.CurrentStopSequence,
             Position = new PositionLL()
             {
                 Longitude = vehicle.Position.Longitude,

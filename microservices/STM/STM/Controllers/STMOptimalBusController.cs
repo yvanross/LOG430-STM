@@ -69,6 +69,7 @@ namespace STM.Controllers
                         TripID = tuple.bus.Trip.Id,
                         Name = tuple.bus.Name,
                         ETA = tuple.eta.ToString(),
+                        StopIndexAtTimeOfProcessing = tuple.bus.StopIndexAtComputationTime,
                         OriginStopSchedule = new StopScheduleDTO()
                         {
                             index = relevantOrigin.Index,

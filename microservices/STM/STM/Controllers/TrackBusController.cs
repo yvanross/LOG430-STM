@@ -42,6 +42,7 @@ namespace STM.Controllers
             {
                 Id = busDTO.BusID,
                 Name = busDTO.Name,
+                StopIndexAtComputationTime = busDTO.StopIndexAtTimeOfProcessing,
                 Trip = new TripSTM()
                 {
                     RelevantOrigin = new StopScheduleSTM()

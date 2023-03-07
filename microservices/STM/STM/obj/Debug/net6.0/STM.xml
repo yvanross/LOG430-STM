@@ -45,6 +45,11 @@
             Estimated Time of Arrival
             </summary>
         </member>
+        <member name="P:STM.DTO.TrackingBusDTO.StopIndexAtTimeOfProcessing">
+            <summary>
+            Estimated Time of Arrival
+            </summary>
+        </member>
         <member name="P:STM.DTO.TrackingBusDTO.OriginStopSchedule">
             <summary>
             First stop of the bus trip

@@ -7,7 +7,7 @@ public interface IBus
 
     string Name { get; set; }
 
-    int currentStopIndex { get; set; }
+    int StopIndexAtComputationTime { get; set; }
 
     IPosition Position { get; set; }
 

@@ -24,7 +24,7 @@ public class TrackBusUC
     private uint? _currentStopIndex;
 
     //predictions
-    private DateTime? _lastCheckPoint;
+    private DateTime? _lastCheckPoint = DateTime.UtcNow;
     //
 
     private DateTime? _crossedOriginTime;
@@ -75,20 +75,13 @@ public class TrackBusUC
 
         var liveFeed = feedPositions[_bus.Id];
 
-        if (_bus.Trip.FromStaticGtfs is false)
-            liveFeed.CurrentStopSequence -= (uint)_bus.currentStopIndex;
+        _currentStopIndex = liveFeed.CurrentStopSequence - Convert.ToUInt32(_bus.StopIndexAtComputationTime);
 
-        _firstStopIndexRecorded ??= liveFeed.CurrentStopSequence;
-
-        if (_currentStopIndex is null || liveFeed.CurrentStopSequence > _currentStopIndex)
-        {
-            _currentStopIndex = liveFeed.CurrentStopSequence;
-            _lastCheckPoint = DateTime.UtcNow;
-        }
+        _firstStopIndexRecorded ??= _currentStopIndex;
 
         if (!HasPassedOriginStop)
         {
-            if (liveFeed.CurrentStopSequence >= _originStopIndex)
+            if (_currentStopIndex >= _originStopIndex)
             {
                 HasPassedOriginStop = true;
 
@@ -106,7 +99,7 @@ public class TrackBusUC
         }
         else if (!HasPassedTargetStop)
         {
-            if (liveFeed.CurrentStopSequence >= _targetStopIndex)
+            if (_currentStopIndex >= _targetStopIndex)
             {
                 HasPassedTargetStop = true;
 

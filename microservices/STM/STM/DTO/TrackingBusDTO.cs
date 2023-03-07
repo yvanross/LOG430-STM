@@ -23,6 +23,11 @@ public class TrackingBusDTO
     public string ETA { get; set; }
 
     /// <summary>
+    /// Estimated Time of Arrival
+    /// </summary>
+    public int StopIndexAtTimeOfProcessing { get; set; }
+
+    /// <summary>
     /// First stop of the bus trip
     /// </summary>
     public StopScheduleDTO? OriginStopSchedule { get; set; }

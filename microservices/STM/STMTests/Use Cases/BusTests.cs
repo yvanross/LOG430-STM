@@ -81,23 +81,39 @@ namespace STMTests.Use_Cases
         }
 
         [TestMethod()]
-        public async Task TestFromTimeComparator()
+        public async Task GetBusesReneLevesque()
         {
             var valueTuple = await _itineraryUc.GetFastestBus(new PositionLL()
             {
-                Latitude = 45.501784,
-                Longitude = -73.576553
+                Latitude = 45.49739613164703,
+                Longitude = -73.57152386654649
             }, new PositionLL()
             {
-                Latitude = 45.504731,
-                Longitude = -73.573677
+                Latitude = 45.49999809124717,
+                Longitude = -73.56902941233237
+            });
+
+            Assert.IsNotNull(valueTuple?.First().bus);
+        }
+
+        [TestMethod()]
+        public async Task GetAvenueDuParc()
+        {
+            var valueTuple = await _itineraryUc.GetFastestBus(new PositionLL()
+            {
+                Latitude = 45.51199388170343,
+                Longitude = -73.57865273764862
+            }, new PositionLL()
+            {
+                Latitude = 45.51684531041917,
+                Longitude = -73.58915451596351
             });
 
             Assert.IsNotNull(valueTuple?.First().bus);
         }
 
         [TestMethod()] 
-        public async Task GetBusImpossibleTripCoordinate0()
+        public async Task GetBusImpossibleTripCoordinate()
         {
             var valueTuple = await _itineraryUc.GetFastestBus(new PositionLL()
             {
