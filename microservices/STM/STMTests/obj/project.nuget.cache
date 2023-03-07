@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "A9aY94K6r6ukOkBByk7buYAgPCWN7pQ9MfogSRscM8SxWjpYq40njJ5/cQlXBx8LRsXPUU8nRx1dSyACzbJfVg==",
+  "dgSpecHash": "GQDVdDWwjaFJH2FelH8RdWdaBhde2coKbEnm5O1eEITN03VfwdOBUVgNfurSwthx3u67B49+MnaZ9/d4PQV3WA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\STMTests\\STMTests.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\STM\\STMTests\\STMTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ApplicationLogic.Use_Cases;
 using Microsoft.Extensions.Logging;
@@ -27,7 +28,7 @@ namespace STMTests.Use_Cases
 
             Assert.IsNotNull(bus);
 
-            trackBusController.Post(bus.Value);
+            trackBusController.Post(bus.Value.First());
         }
 
         [TestMethod()]
@@ -46,7 +47,7 @@ namespace STMTests.Use_Cases
 
             Assert.IsNotNull(bus);
 
-            trackBusController.Post(bus.Value);
+            trackBusController.Post(bus.Value.First());
         }
 
     }

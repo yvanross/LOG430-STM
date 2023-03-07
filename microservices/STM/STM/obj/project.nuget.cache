@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "QxWsLWX6Ib5sZXRRYZGV7S572GpkJNcAWrHnLwTxg3dvtBrY9RZgFYf2XLWaTDQ+mE8cDTRRFFqeLDasp9fGcg==",
+  "dgSpecHash": "LZze2aghHyABImS4esPGuDM7LGEQ3LnL0WKST6y1cqGdpMR7NTUCPtcppIDIXu9dI/Tnl2iNVmQDHijWnN4ltQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\STM\\STM.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\STM\\STM\\STM.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",

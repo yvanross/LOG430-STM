@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using ApplicationLogic.Use_Cases;
 using Entities.Concretions;
 using GTFS;
@@ -39,10 +40,10 @@ namespace STMTests.Use_Cases
                 Longitude = -73.576517
             });
 
-            Assert.IsNotNull(valueTuple?.bus);
+            Assert.IsNotNull(valueTuple?.First().bus);
             
-            Assert.IsNotNull(valueTuple?.bus.Trip.RelevantOrigin?.Index > 0);
-            Assert.IsNotNull(valueTuple?.bus.Trip.RelevantDestination?.Index > 0);
+            Assert.IsNotNull(valueTuple?.First().bus.Trip.RelevantOrigin?.Index > 0);
+            Assert.IsNotNull(valueTuple?.First().bus.Trip.RelevantDestination?.Index > 0);
         }
 
         [TestMethod()]
@@ -58,9 +59,9 @@ namespace STMTests.Use_Cases
                 Longitude = -73.56423906516093
             });
 
-            Assert.IsNotNull(valueTuple?.bus);
+            Assert.IsNotNull(valueTuple?.First().bus);
 
-            Assert.IsTrue(valueTuple.Value.bus.Name.Equals("24") || valueTuple.Value.bus.Name.Equals("356"));
+            Assert.IsTrue(valueTuple.First().bus.Name.Equals("24") || valueTuple.First().bus.Name.Equals("356"));
         }
 
         [TestMethod()]
@@ -76,7 +77,7 @@ namespace STMTests.Use_Cases
                 Longitude = -73.627113
             });
             
-            Assert.IsNotNull(valueTuple?.bus);
+            Assert.IsNotNull(valueTuple?.First().bus);
         }
 
         [TestMethod()]
@@ -92,7 +93,7 @@ namespace STMTests.Use_Cases
                 Longitude = -73.573677
             });
 
-            Assert.IsNotNull(valueTuple?.bus);
+            Assert.IsNotNull(valueTuple?.First().bus);
         }
 
         [TestMethod()] 
@@ -108,7 +109,7 @@ namespace STMTests.Use_Cases
                 Longitude = 0
             });
 
-            Assert.IsNull(valueTuple?.bus);
+            Assert.IsNull(valueTuple?.First().bus);
         }
 
         [TestMethod()]
@@ -116,7 +117,7 @@ namespace STMTests.Use_Cases
         {
             var valueTuple = await _itineraryUc.GetFastestBus(new PositionLL(), new PositionLL());
 
-            Assert.IsNull(valueTuple?.bus);
+            Assert.IsNull(valueTuple?.First().bus);
         }
 
         [TestMethod()]
@@ -132,7 +133,7 @@ namespace STMTests.Use_Cases
                 Longitude = -73.56423906516093
             });
 
-            Assert.IsNull(valueTuple?.bus);
+            Assert.IsNull(valueTuple?.First().bus);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace STMTests.Use_Cases
         [TestMethod()]
         public async Task CreateNewCompressedFile()
         {
-            bool run = false;
+            bool run = true;
 
             if (!run) return;
 
