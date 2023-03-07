@@ -33,7 +33,9 @@ namespace STM.Controllers
         {
             _logger.LogInformation($"OptimalBus endpoint called with coordinated: from: {fromLatitudeLongitude}; to: {toLatitudeLongitude}");
 
-            var itinary = new ItinaryUC(new StmClient(), _logger);
+            var stmData = new StmData();
+
+            var itinary = new ItinaryUC(new StmClient(), stmData, _logger);
 
             var fromPositionStrings = fromLatitudeLongitude.Split(',');
             var toPositionStrings = toLatitudeLongitude.Split(',');
@@ -57,8 +59,8 @@ namespace STM.Controllers
             {
                 throw (new Exception($"No buses were found, logging: \n" +
                                      $"time {DateTime.UtcNow} \n" +
-                                     $"stm stops {STMData.Stops?.Values.Count() -1} \n" +
-                                     $"stm trips {STMData.Trips?.Count ?? -1}"));
+                                     $"stm stops {stmData.GetStops()?.Values.Count() -1} \n" +
+                                     $"stm trips {stmData.GetStops()?.Count ?? -1}"));
             }
 
             var relevantOrigin = tuple.Value.bus.Trip.RelevantOrigin.Value;

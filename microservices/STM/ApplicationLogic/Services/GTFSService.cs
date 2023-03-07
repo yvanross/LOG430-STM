@@ -13,93 +13,65 @@ public class GTFSService
         {
             if (bus.Trip.RelevantOrigin?.DepartureTime > DateTime.UtcNow && bus.Trip.RelevantDestination?.DepartureTime > DateTime.UtcNow && bus.Trip.RelevantOrigin?.DepartureTime < bus.Trip.RelevantDestination?.DepartureTime)
             {
-                yield return new (bus, (bus.Trip.RelevantOrigin.Value.DepartureTime - DateTime.UtcNow).TotalSeconds);
+                yield return new (bus, (bus.Trip.RelevantOrigin.Value.DepartureTime.AddHours(4) - DateTime.UtcNow).TotalSeconds);
             }
         }
     }
 
-
-    public List<IBus> GetVehiculeOnRelevantTrips(ITripSTM[] relevantTrips, IEnumerable<VehiclePosition> feedPositions, ImmutableDictionary<string, TripUpdate> feedTripUpdates)
+    public List<IBus> GetVehicleOnRelevantTrips(ImmutableDictionary<string, ITripSTM> relevantTrips, IEnumerable<VehiclePosition> feedPositions)
     {
         List<IBus> buses = new List<IBus>();
 
-        var vehiculesOnTargetTrip = feedPositions.Where(v => relevantTrips.Any(t => t.Id.Equals(v.Trip.TripId)));
+        var vehiclesAndTrips = feedPositions
+            .Where(vehiclePosition => relevantTrips.ContainsKey(vehiclePosition.Trip.TripId))
+            .Select(vehiclePosition => 
+                (VehiclePosition: vehiclePosition,
+                Trip: relevantTrips[vehiclePosition.Trip.TripId]));
 
-        var relevantTripsDictionary = relevantTrips.Where(relevantTrip =>
-            vehiculesOnTargetTrip.Any(relevantVehicule => relevantVehicule.Trip.TripId.Equals(relevantTrip.Id))).DistinctBy(x=>x.Id).ToDictionary(relevantTrip => relevantTrip.Id);
-
-        foreach (var vehicle in vehiculesOnTargetTrip)
+        foreach (var vehicle in vehiclesAndTrips.Select(x=>x.VehiclePosition))
         {
-            var bus = new Bus()
-            {
-                currentStopIndex = (int)vehicle.CurrentStopSequence
-            };
+            var bus = ConvertGtfsToFriendlyClass(vehicle, vehiclesAndTrips.Select(x => x.Trip).ToDictionary(x => x.Id));
 
-            if (TryConvertGTFSToFriendlyClass(vehicle, relevantTripsDictionary, feedTripUpdates, bus))
-            {
-                buses.Add(bus);
-            }
+            buses.Add(bus);
         }
+
         return buses;
     }
 
-    private bool TryConvertGTFSToFriendlyClass(VehiclePosition vehicle, Dictionary<string, ITripSTM> relevantTrips, IDictionary<string, TripUpdate> tripUpdates, IBus bus)
+    private IBus ConvertGtfsToFriendlyClass(VehiclePosition vehicle, Dictionary<string, ITripSTM> relevantTrips)
     {
-        bus.Position = new PositionLL()
+        var bus = new Bus()
         {
-            Longitude = vehicle.Position.Longitude,
-            Latitude = vehicle.Position.Latitude
-        };
-
-        bus.Id = vehicle.Vehicle.Id;
-        bus.Name = vehicle.Trip.RouteId;
-
-        tripUpdates.TryGetValue(vehicle.Trip.TripId, out var updatedTrip);
-
-        var updatedStopTimes = updatedTrip?.StopTimeUpdate.ToImmutableDictionary(t => t?.StopId ?? string.Empty);
-
-        Func<IStopSTM,(DateTime? updatedStopTime, string message)?> GetDepartureTime = (IStopSTM t) =>
-        {
-            if (updatedStopTimes != null)
+            Id = vehicle.Vehicle.Id,
+            Name = vehicle.Trip.RouteId,
+            currentStopIndex = (int)vehicle.CurrentStopSequence,
+            Position = new PositionLL()
             {
-                updatedStopTimes.TryGetValue(t.Id, out var stopTimeUpdate);
-
-                if (stopTimeUpdate != null)
-                {
-                    var tuple = this.GetDepartureTime(stopTimeUpdate);
-
-                    return tuple;
-                } 
+                Longitude = vehicle.Position.Longitude,
+                Latitude = vehicle.Position.Latitude
             }
 
-            return null;
         };
+        
+        var relevantTrip = relevantTrips[vehicle.Trip.TripId];
 
-        var tripToCopy = relevantTrips[vehicle.Trip.TripId];
-
-        int index = 0;
+        var index = 0;
 
         bus.Trip = new TripSTM()
         {
-            Id = tripToCopy.Id,
-            StopSchedules = tripToCopy.StopSchedules.ConvertAll(t =>
+            Id = relevantTrip.Id,
+
+            StopSchedules = relevantTrip.StopSchedules.ConvertAll(t =>
             {
-                StopScheduleSTM stopScheduleStm = new StopScheduleSTM();
-
-                var tuple = GetDepartureTime((IStopSTM)t.Stop);
-
-                if (tuple?.updatedStopTime is not null)
+                StopScheduleSTM stopScheduleStm = new StopScheduleSTM
                 {
-                    stopScheduleStm.DepartureTime = tuple.Value.updatedStopTime.Value;
-                }
-
-                stopScheduleStm.Index = index;
-
-                stopScheduleStm.Stop = new StopSTM()
-                {
-                    Id = t.Stop.Id,
-                    Position = t.Stop.Position,
-                    Message = tuple?.message ?? "state is empty, probably using static time"
+                    DepartureTime = t.DepartureTime,
+                    Index = index,
+                    Stop = new StopSTM()
+                    {
+                        Id = t.Stop.Id,
+                        Position = t.Stop.Position,
+                    }
                 };
 
                 index++;
@@ -107,33 +79,16 @@ public class GTFSService
                 return stopScheduleStm;
             }),
             
-            RelevantOriginStopId = tripToCopy.RelevantOriginStopId,
-            RelevantDestinationStopId = tripToCopy.RelevantDestinationStopId
+            RelevantOriginStopId = relevantTrip.RelevantOriginStopId,
+            RelevantDestinationStopId = relevantTrip.RelevantDestinationStopId
         };
 
-        bus.currentStopIndex = tripToCopy.FromStaticGtfs ? bus.currentStopIndex : 0;
-
-        return true;
-    }
-
-    private (DateTime? scheduledStopTime, string stopState) GetDepartureTime(TripUpdate.Types.StopTimeUpdate stopTimeUpdate)
-    {
-        var time = stopTimeUpdate?.Departure?.Time ?? 0;
-
-        if (time < 10000)
-            time = stopTimeUpdate?.Arrival?.Time ?? 0;
-
-        DateTime? dateTime = null;
-
-        if (time > 10000)
-            dateTime = DateTimeOffset.FromUnixTimeSeconds(time).UtcDateTime;
-
-        return new(dateTime, stopTimeUpdate.ScheduleRelationship.ToString());
+        return bus;
     }
 
     public List<IBus> GetRelevantOriginAndDestinationForRelevantBuses(List<IBus> relevantBuses)
     {
-        List<IBus> filteredBuses = new List<IBus>();
+        var filteredBuses = new List<IBus>();
 
         foreach (var bus in relevantBuses)
         {
@@ -143,39 +98,13 @@ public class GTFSService
                 
                 if (bus.Trip.RelevantOrigin is null && stopSchedule.Stop.Id.Equals(bus.Trip.RelevantOriginStopId))
                 {
-                    var timeValidStop = RecursiveValidStopFinder(bus.Trip.StopSchedules, index);
-
-                    if (timeValidStop is not null)
-                    {
-                        var stop = (StopScheduleSTM)timeValidStop?.stop;
-
-                        stop.Index = timeValidStop.Value.index;
-
-                        bus.Trip.RelevantOrigin = stop;
-                        bus.Trip.RelevantOriginStopId = timeValidStop?.stop.Stop.Id;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    bus.Trip.RelevantOrigin = stopSchedule;
+                    bus.Trip.RelevantOriginStopId = stopSchedule.Stop.Id;
                 }
                 else if (bus.Trip.RelevantOrigin is not null && bus.Trip.RelevantDestination is null && stopSchedule.Stop.Id.Equals(bus.Trip.RelevantDestinationStopId))
                 {
-                    var timeValidStop = RecursiveValidStopFinder(bus.Trip.StopSchedules, index);
-
-                    if (timeValidStop is not null)
-                    {
-                        var stop = (StopScheduleSTM)timeValidStop?.stop;
-
-                        stop.Index = timeValidStop.Value.index;
-
-                        bus.Trip.RelevantDestination = stop;
-                        bus.Trip.RelevantDestinationStopId = timeValidStop?.stop.Stop.Id;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    bus.Trip.RelevantDestination = stopSchedule;
+                    bus.Trip.RelevantDestinationStopId = stopSchedule.Stop.Id;
                 }
             }
 
@@ -186,35 +115,5 @@ public class GTFSService
         }
 
         return filteredBuses;
-    }
-
-    private (IStopSchedule stop, int depth, int index)? RecursiveValidStopFinder(IList<StopScheduleSTM> stopSchedules, int index, int depth = 0)
-    {
-        const int MaxDepth = 4;
-
-        if (depth < MaxDepth && index >= 0 && index < stopSchedules.Count &&
-            stopSchedules[index] is IStopSchedule iStopSchedule)
-        {
-            if (iStopSchedule.DepartureTime < DateTime.UtcNow)
-            {
-                var earlierStop = RecursiveValidStopFinder(stopSchedules, --index, ++depth);
-                var laterStop = RecursiveValidStopFinder(stopSchedules, ++index, ++depth);
-
-                var best = (earlierStop?.depth ?? int.MaxValue) < (laterStop?.depth ?? int.MaxValue) ? earlierStop : laterStop;
-
-                if ((best?.depth ?? int.MaxValue) < int.MaxValue)
-                {
-                    ((StopSTM)best.Value.stop.Stop).Message += $", this is not the originally intended stop, it is {best.Value.depth} before or after it";
-
-                    return best;
-                }
-
-                return null;
-            }
-            
-            return new(stopSchedules[index], depth, index);
-        }
-
-        return null;
     }
 }

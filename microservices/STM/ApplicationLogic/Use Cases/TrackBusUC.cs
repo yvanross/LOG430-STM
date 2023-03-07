@@ -71,7 +71,7 @@ public class TrackBusUC
 
     private async Task Track()
     {
-        var feedPositions = (await _stmClient.RequestFeedPositions()).ToImmutableDictionary(v=>v.Vehicle.Id);
+        var feedPositions = _stmClient.RequestFeedPositions().ToImmutableDictionary(v=>v.Vehicle.Id);
 
         var liveFeed = feedPositions[_bus.Id];
 

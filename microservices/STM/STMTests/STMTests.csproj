@@ -22,4 +22,8 @@
     <ProjectReference Include="..\STM\STM.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Stub\" />
+  </ItemGroup>
+
 </Project>

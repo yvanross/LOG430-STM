@@ -4,7 +4,7 @@ namespace ApplicationLogic.Interfaces;
 
 public interface IStmClient
 {
-    public Task<IEnumerable<VehiclePosition>> RequestFeedPositions();
+    public IEnumerable<VehiclePosition> RequestFeedPositions();
 
     public Task<IEnumerable<TripUpdate>> RequestFeedTripUpdates();
 }

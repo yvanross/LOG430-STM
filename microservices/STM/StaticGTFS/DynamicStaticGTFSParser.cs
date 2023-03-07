@@ -74,7 +74,7 @@ public static class DynamicStaticGTFSParser
                 {
                     gtfsInfo[i - 1] ??= new GTFSInfo();
 
-                    gtfsInfo[i - 1].info.Add(tags[j], fields[j]);
+                    gtfsInfo[i - 1].Info.Add(tags[j], fields[j]);
                 }
             }
         }

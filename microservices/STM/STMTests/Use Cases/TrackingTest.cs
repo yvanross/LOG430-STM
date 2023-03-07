@@ -4,13 +4,14 @@ using ApplicationLogic.Use_Cases;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using STM.Controllers;
+using STMTests.Stub;
 
 namespace STMTests.Use_Cases
 {
     [TestClass()]
     public class TrackingTest
     {
-        ItinaryUC itinary = new (null, null);
+        ItinaryUC itinary = new (null, new StmDataStub(), null);
 
         [TestMethod()]
         public async Task TrackBusesETSToPeelSherbrooke()

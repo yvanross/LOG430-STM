@@ -2,13 +2,14 @@
 using ApplicationLogic.Use_Cases;
 using GTFS;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using STMTests.Stub;
 
 namespace STMTests.Use_Cases
 {
     [TestClass()]
     public class PersistenceTest
     {
-        ItinaryUC itinary = new (null, null);
+        ItinaryUC itinary = new (null, new StmDataStub(), null);
 
         [TestMethod()]
         public void TestStaticGTFS()

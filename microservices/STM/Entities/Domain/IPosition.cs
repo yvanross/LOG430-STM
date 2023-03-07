@@ -1,6 +1,6 @@
 ﻿namespace Entities.Domain;
 
-public interface IPosition : ICloneable
+public interface IPosition
 {
     /// <summary>
     /// Latitude coordinate

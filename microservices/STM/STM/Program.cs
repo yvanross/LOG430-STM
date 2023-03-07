@@ -33,7 +33,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-STMData.PrefetchData();
+new StmData().PrefetchData();
 
 app.UseHttpsRedirection();
 

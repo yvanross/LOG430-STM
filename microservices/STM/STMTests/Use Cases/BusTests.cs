@@ -2,23 +2,19 @@
 using ApplicationLogic.Use_Cases;
 using Entities.Concretions;
 using GTFS;
+using GTFS.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using STM.Controllers;
+using STM.External;
+using STMTests.Stub;
 
 namespace STMTests.Use_Cases
 {
     [TestClass()]
     public class BusTests
     {
-        ItinaryUC _itinaryUc = new ItinaryUC(null, null);
-
-        [TestInitialize]
-        public void Setup()
-        {
-            if(STMData.Trips is null)
-                STMData.PrefetchData();
-        }
+        ItinaryUC _itinaryUc = new ItinaryUC(new StmClient(), new StmData(), null);
 
         [TestMethod()]
         public async Task TestController()

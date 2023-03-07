@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 using Entities.Concretions;
 using Entities.Domain;
 using GTFS;
@@ -11,13 +12,18 @@ public class ItinaryService
 {
     private ILogger? _logger;
 
-    public ItinaryService(ILogger? logger)
+    private readonly IgtfsDataSource _stmData;
+
+    public ItinaryService(ILogger? logger, IgtfsDataSource stmData)
     {
         _logger = logger;
+        _stmData = stmData;
     }
 
     public IStopSTM[]? GetClosestStops(IPosition position, IStopSTM[]? stops, int RadiusForBusStopSelection = 50)
     {
+        int recursions = 0;
+
         double minDistance = 1000;
 
         IStopSTM? closestStop = null;
@@ -50,7 +56,7 @@ public class ItinaryService
             {
                 var temp = DistanceInMeters(closestStop.Position, stops[i].Position);
 
-                var relativeMinDistance = minDistance * 1.1;
+                var relativeMinDistance = minDistance * 2;
 
                 if ((relativeMinDistance > temp && relativeMinDistance < (radiusForBusStopSelection * 2)) ||
                     radiusForBusStopSelection > temp)
@@ -59,45 +65,24 @@ public class ItinaryService
                 }
             }
 
-            return otherStops.Count > 4 ? otherStops : GetOtherNearbyStops(radiusForBusStopSelection + 25);
+            recursions++;
+
+            return recursions > 100 ||
+                   otherStops.Count > 15 ?
+                    otherStops :
+                    GetOtherNearbyStops(radiusForBusStopSelection + 50);
         }
     }
 
-    public ITripSTM[] TripsContainingSourceAndDestination(IStopSTM[] possibleSources, IStopSTM[] possibleDestinations, List<IGTFSTrip>? trips)
+    public ImmutableDictionary<string, ITripSTM> TripsContainingSourceAndDestination(IStopSTM[] possibleSources, IStopSTM[] possibleDestinations)
     {
-        bool exit = false;
+        var relevantTripArray = _stmData.GetTrips()?.Values.Where(FilterTripsTimeThatAreNotRelevant).ToArray();
 
-        double DeltaHours(DateTime from)
+        var possibleTrips = relevantTripArray?.AsParallel().AsUnordered().Select((trip, _) =>
         {
-            var hours = (from - DateTime.UtcNow).TotalHours;
-            return hours;
-        }
+            ITripSTM? toReturn = null;
 
-        bool FilterTripsTimeThatAreNotRelevant(IGTFSTrip t)
-        {
-            bool keep = true;
-
-            if (!t.StopSchedules.Any()) return false;
-
-            var firstStopTime = DeltaHours(t.StopSchedules[0].DepartureTime);
-            var lastStopTime = DeltaHours(t.StopSchedules[^1].DepartureTime);
-
-            if (firstStopTime is > 1 or < -3) keep = false;
-
-            if (lastStopTime is > 4 or < 0) keep = false;
-
-            return keep;
-        }
-
-        var relevantRealtimeTrips = trips?.Where(FilterTripsTimeThatAreNotRelevant).ToList();
-        
-        var relevantStaticTrips = STMData.Trips?.Where(FilterTripsTimeThatAreNotRelevant).ToList();
-
-        var relevantTripArray = relevantStaticTrips.Concat(relevantRealtimeTrips).ToList();
-
-        var possibleTrips = relevantTripArray?.AsParallel().Select((trip, _) =>
-        {
-            for (int i = 0; i < possibleSources.Length; i++)
+            Parallel.For(0, possibleSources.Length, (i, _) =>
             {
                 for (int j = 0; j < possibleDestinations.Length; j++)
                 {
@@ -119,18 +104,40 @@ public class ItinaryService
                                 }),
                             RelevantOriginStopId = possibleSources[i].Id,
                             RelevantDestinationStopId = possibleDestinations[j].Id,
-                            FromStaticGtfs = trip.FromStaticGtfs
                         };
 
-                        return stmTrip;
+                        toReturn = stmTrip;
+                        return;
                     }
                 }
-            }
 
-            return null;
-        }).OfType<ITripSTM>().ToArray();
+            });
+
+            return toReturn;
+        }).OfType<ITripSTM>().ToImmutableDictionary(x=>x.Id);
 
         return possibleTrips!;
+
+        bool FilterTripsTimeThatAreNotRelevant(IGTFSTrip t)
+        {
+            bool keep = false;
+
+            if (!t.StopSchedules.Any()) return false;
+
+            var firstStopTime = DeltaHours(t.StopSchedules[0].DepartureTime);
+            var lastStopTime = DeltaHours(t.StopSchedules[^1].DepartureTime);
+
+            if(lastStopTime > 0) 
+                keep = true;
+
+            return keep;
+        }
+
+        double DeltaHours(DateTime from)
+        {
+            var hours = (from - DateTime.UtcNow).TotalHours;
+            return hours;
+        }
     }
 
     private double DistanceInMeters(IPosition a, IPosition b)
@@ -161,7 +168,4 @@ public class ItinaryService
     }
 
     public double ToRad(double degree) => degree * (Math.PI / 180);
-
-    public double Relative(double rad) => rad > 0 ? rad : (2 * Math.PI) - Math.Abs(rad);
-
 }

@@ -4,9 +4,9 @@ public class GTFSInfo
 {
     public string? GetValue(string tag)
     {
-        info.TryGetValue(tag, out var value);
+        Info.TryGetValue(tag, out var value);
         return value;
     }
 
-    internal Dictionary<string, string> info = new Dictionary<string, string>();
+    public Dictionary<string, string> Info = new Dictionary<string, string>();
 }

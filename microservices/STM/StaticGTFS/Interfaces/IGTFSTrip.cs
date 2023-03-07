@@ -1,12 +1,11 @@
-﻿using Entities.Domain;
+﻿using System.Collections.Immutable;
+using Entities.Domain;
 
 namespace GTFS.Interfaces;
 
-public interface IGTFSTrip : ICloneable
+public interface IGTFSTrip
 {
     public string Id { get; init; }
 
-    public List<IStopSchedule> StopSchedules { get; }
-
-    public bool FromStaticGtfs { get; init; }
+    public List<IStopSchedule> StopSchedules { get; set; }
 }

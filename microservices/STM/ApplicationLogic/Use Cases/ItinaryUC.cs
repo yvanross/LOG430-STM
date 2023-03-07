@@ -17,9 +17,12 @@ namespace ApplicationLogic.Use_Cases
 
         private readonly ILogger? _logger;
 
-        public ItinaryUC(IStmClient client, ILogger? logger)
+        private readonly IgtfsDataSource _stmData;
+
+        public ItinaryUC(IStmClient client, IgtfsDataSource igtfsDataSource, ILogger? logger)
         {
             _client = client;
+            _stmData = igtfsDataSource;
             _logger = logger;
         }
 
@@ -27,19 +30,19 @@ namespace ApplicationLogic.Use_Cases
         {
             try
             {
-                STMData.PrefetchData();
+                _stmData.PrefetchData();
 
                 var feedTripUpdates = (await _client.RequestFeedTripUpdates()).ToList();
 
-                var realtimeTrips = STMData.AddRealtimeGTFSData(feedTripUpdates);
+                _stmData.ApplyTripUpdatesToDataSet(feedTripUpdates);
 
-                var relevantTrips = RelevantTripsAndRelevantStops(from, to, realtimeTrips);
+                var relevantTrips = RelevantTripsAndRelevantStops(from, to);
 
-                _logger?.LogInformation($"found {relevantTrips?.Length} relevant trips");
+                _logger?.LogInformation($"found {relevantTrips?.Count} relevant trips");
 
-                if ((relevantTrips?.Length ?? 0) < 1) return null;
+                if ((relevantTrips?.Count ?? 0) < 1) return null;
 
-                var timeRelevantBuses = await RelevantBuses(relevantTrips, feedTripUpdates);
+                var timeRelevantBuses = await RelevantBuses(relevantTrips);
 
                 _logger?.LogInformation($"found {timeRelevantBuses.Length} relevant buses");
 
@@ -56,27 +59,27 @@ namespace ApplicationLogic.Use_Cases
             }
         }
 
-        private ITripSTM[]? RelevantTripsAndRelevantStops(IPosition from, IPosition to, List<IGTFSTrip> tripsCopy)
+        private ImmutableDictionary<string, ITripSTM> RelevantTripsAndRelevantStops(IPosition from, IPosition to)
         {
-            var itinaryService = new ItinaryService(_logger);
+            var itinaryService = new ItinaryService(_logger, _stmData);
 
-            var stops = STMData.Stops!.Values.ToArray();
+            var stops = _stmData.GetStops()!.Values.ToArray();
 
             var stopsOrigin = itinaryService.GetClosestStops(from, stops);
             var stopsTarget = itinaryService.GetClosestStops(to, stops);
 
-            var relevantTrips = itinaryService.TripsContainingSourceAndDestination(stopsOrigin, stopsTarget, tripsCopy);
+            var relevantTrips = itinaryService.TripsContainingSourceAndDestination(stopsOrigin, stopsTarget);
 
             return relevantTrips;
         }
 
-        private async Task<(IBus bus, double eta)[]> RelevantBuses(ITripSTM[] relevantTrips, List<TripUpdate> feedTripUpdates)
+        private async Task<(IBus bus, double eta)[]> RelevantBuses(ImmutableDictionary<string, ITripSTM>? relevantTrips)
         {
             GTFSService gtfsService = new GTFSService();
 
-            var feedPositions = await _client.RequestFeedPositions();
+            var feedPositions = _client.RequestFeedPositions();
 
-            var relevantBuses = gtfsService.GetVehiculeOnRelevantTrips(relevantTrips, feedPositions, feedTripUpdates.ToImmutableDictionary(x=>x.Trip.TripId));
+            var relevantBuses = gtfsService.GetVehicleOnRelevantTrips(relevantTrips, feedPositions);
             
             relevantBuses = gtfsService.GetRelevantOriginAndDestinationForRelevantBuses(relevantBuses);
 
