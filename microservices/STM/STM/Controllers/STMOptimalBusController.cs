@@ -5,16 +5,18 @@ using ApplicationLogic.Use_Cases;
 using Entities.Concretions;
 using Entities.Domain;
 using GTFS;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using STM.DTO;
+using STM.Dto;
 using STM.External;
 using STM.ExternalServiceProvider;
 using STM.ExternalServiceProvider.Proto;
 
 namespace STM.Controllers
 {
+    [EnableCors("AllowOrigin")]
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     public class STMOptimalBusController : ControllerBase
     {
         private readonly ILogger<STMOptimalBusController> _logger;
@@ -32,8 +34,9 @@ namespace STM.Controllers
         /// <returns>
         /// Json containing the ID of the bus, its trip ID, its name, the ETA, the first and last stops of the trip 
         /// </returns>
-        [HttpGet(Name = "GetBestBus")]
-        public async Task<ActionResult<IEnumerable<TrackingBusDTO>>> Get(string fromLatitudeLongitude, string toLatitudeLongitude)
+        [HttpGet] 
+        [ActionName(nameof(GetBestBus))]
+        public async Task<ActionResult<IEnumerable<BusDto>>> GetBestBus(string fromLatitudeLongitude, string toLatitudeLongitude)
         {
             _logger.LogInformation($"OptimalBus endpoint called with coordinated: from: {fromLatitudeLongitude}; to: {toLatitudeLongitude}");
 
@@ -56,42 +59,42 @@ namespace STM.Controllers
                 return busesAndEtas;
             }
 
-            IEnumerable<TrackingBusDTO> FormatToDto((IBus bus, double eta)[] valueTuples)
+            IEnumerable<BusDto> FormatToDto((IBus bus, double eta)[] valueTuples)
             {
                 foreach (var tuple in valueTuples)
                 {
                     var relevantOrigin = tuple.bus!.Trip.RelevantOrigin!.Value;
                     var relevantDestination = tuple.bus.Trip.RelevantDestination!.Value;
 
-                    var busDTO = new TrackingBusDTO()
+                    var busDTO = new BusDto()
                     {
-                        BusID = tuple.bus.Id,
-                        TripID = tuple.bus.Trip.Id,
+                        BusId = tuple.bus.Id,
+                        TripId = tuple.bus.Trip.Id,
                         Name = tuple.bus.Name,
                         ETA = tuple.eta.ToString(),
                         StopIndexAtTimeOfProcessing = tuple.bus.StopIndexAtComputationTime,
-                        OriginStopSchedule = new StopScheduleDTO()
+                        OriginStopSchedule = new StopScheduleDto()
                         {
                             index = relevantOrigin.Index,
                             DepartureTime = relevantOrigin.DepartureTime.ToString(CultureInfo.InvariantCulture),
-                            Stop = new StopDTO()
+                            Stop = new StopDto()
                             {
                                 Message = ((StopSTM)relevantOrigin.Stop).Message, ID = relevantOrigin.Stop.Id,
-                                Position = new PositionDTO()
+                                Position = new PositionDto()
                                 {
                                     Latitude = relevantOrigin.Stop.Position.Latitude.ToString(CultureInfo.InvariantCulture),
                                     Longitude = relevantOrigin.Stop.Position.Longitude.ToString(CultureInfo.InvariantCulture),
                                 }
                             }
                         },
-                        TargetStopSchedule = new StopScheduleDTO()
+                        TargetStopSchedule = new StopScheduleDto()
                         {
                             index = relevantDestination.Index,
                             DepartureTime = relevantDestination.DepartureTime.ToString(CultureInfo.InvariantCulture),
-                            Stop = new StopDTO()
+                            Stop = new StopDto()
                             {
                                 Message = ((StopSTM)relevantDestination.Stop).Message, ID = relevantDestination.Stop.Id,
-                                Position = new PositionDTO()
+                                Position = new PositionDto()
                                 {
                                     Latitude = relevantDestination.Stop.Position.Latitude.ToString(CultureInfo.InvariantCulture),
                                     Longitude = relevantDestination.Stop.Position.Longitude.ToString(CultureInfo.InvariantCulture),

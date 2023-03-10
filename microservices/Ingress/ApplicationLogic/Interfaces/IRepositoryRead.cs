@@ -1,12 +1,15 @@
-﻿using Entities.DomainInterfaces;
+﻿using System.Collections.Immutable;
+using Entities.DomainInterfaces;
 
 namespace ApplicationLogic.Interfaces;
 
 public interface IRepositoryRead
 {
-    public IRoute? ReadRouteById(string name);
+    public IService? ReadServiceById(Guid name);
 
-    public IRoute? ReadRouteByAddressAndPort(string address, string port);
+    public IService? ReadServiceByAddressAndPort(string address, string port);
 
-    public IRoute? ReadRouteByType(string serviceType);
+    public ImmutableList<IService>? ReadServiceByType(string serviceType);
+
+    public ImmutableList<IService>? GetAllServices();
 }

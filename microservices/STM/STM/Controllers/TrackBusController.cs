@@ -1,18 +1,22 @@
-﻿using ApplicationLogic.Use_Cases;
+﻿using System.Collections.Immutable;
+using ApplicationLogic.Use_Cases;
 using Entities.Concretions;
+using Entities.Domain;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using STM.DTO;
+using STM.Dto;
 using STM.External;
 
 namespace STM.Controllers
 {
+    [EnableCors("AllowOrigin")]
     [ApiController]
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     public class TrackBusController : ControllerBase
     {
         private readonly ILogger<TrackBusController> _logger;
 
-        private List<TrackBusUC> _busesBeingTracked = new ();
+        private static ImmutableDictionary<string, TrackBusUC> _busesBeingTracked = ImmutableDictionary<string, TrackBusUC>.Empty;
 
         public TrackBusController(ILogger<TrackBusController> logger)
         {
@@ -22,14 +26,15 @@ namespace STM.Controllers
         /// <remarks>
         /// Allows the real-time tracking of a bus. Call-Back will be issued once the bus reached its target destination
         /// </remarks>
-        /// <param name="busID">TripID of the bus to track</param>
-        /// <param name="tripID">TripID of the trip taken by the bus to track</param>
+        /// <param name="busID">TripId of the bus to track</param>
+        /// <param name="tripID">TripId of the trip taken by the bus to track</param>
         /// <param name="originStopID">ID of the stop at which to begin tracking the bus</param>
         /// <param name="targetStopID">ID of the stop at which to stop tracking the bus</param>
         /// <param name="callback">Address to call once the tracking is complete</param>
         /// <returns>Number of real time seconds the bus took to travel from origin to target destinations</returns>
-        [HttpPost(Name = "Track Bus")]
-        public void Post(TrackingBusDTO busDTO)
+        [HttpPost]
+        [ActionName(nameof(BeginTracking))]
+        public IActionResult BeginTracking(BusDto busDTO)
         {
             _logger.LogInformation("TrackBus endpoint reached");
 
@@ -40,11 +45,12 @@ namespace STM.Controllers
 
             var bus = new Bus()
             {
-                Id = busDTO.BusID,
+                Id = busDTO.BusId,
                 Name = busDTO.Name,
                 StopIndexAtComputationTime = busDTO.StopIndexAtTimeOfProcessing,
                 Trip = new TripSTM()
                 {
+                    Id = busDTO.TripId,
                     RelevantOrigin = new StopScheduleSTM()
                     {
                         Index = relevantOrigin.index,
@@ -75,14 +81,35 @@ namespace STM.Controllers
                             }
                         }
                     },
-                    Id = busDTO.TripID,
                 },
             };
-            var track = new TrackBusUC(bus, stmEta, busDTO.callBack is null ? default : new CallBackClient(busDTO.callBack), new StmClient(), _logger);
 
-            _busesBeingTracked.Add(track);
+            var track = new TrackBusUC(bus, stmEta, new StmClient(), _logger);
 
-            _ = track.PerdiodicCaller();
+            _busesBeingTracked = _busesBeingTracked.Add(bus.Id, track);
+
+            return Accepted();
+        }
+
+        [HttpGet]
+        [ActionName(nameof(GetTrackingUpdate))]
+        public ActionResult<IBusTracking> GetTrackingUpdate([FromQuery] string busId)
+        {
+            if (_busesBeingTracked.ContainsKey(busId))
+            {
+                var update = _busesBeingTracked[busId].GetUpdate();
+
+                if (update is null)
+                {
+                    _busesBeingTracked.Remove(busId);
+
+                    return NoContent();
+                }
+
+                return new ActionResult<IBusTracking>(update);
+            }
+
+            return NoContent();
         }
     }
 }

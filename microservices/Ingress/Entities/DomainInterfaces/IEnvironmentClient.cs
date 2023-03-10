@@ -4,7 +4,7 @@ namespace Entities.DomainInterfaces;
 
 public interface IEnvironmentClient
 {
-    public Task<List<Microservice>> GetRunningServices();
+    public Task<List<ContainerInfo>> GetRunningServices();
 
     public Task<string> GetContainerLogs(string containerId);
 

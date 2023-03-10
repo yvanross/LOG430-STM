@@ -61,6 +61,24 @@ namespace Ambassador.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 9c934c68-b9ea-413c-badb-77c66c7383cf.
+        /// </summary>
+        internal static string Authorization {
+            get {
+                return ResourceManager.GetString("Authorization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ingress/Heartbeat.
+        /// </summary>
+        internal static string HeartBeat_Endpoint {
+            get {
+                return ResourceManager.GetString("HeartBeat_Endpoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ingress/RouteByServiceType.
         /// </summary>
         internal static string RouteByServiceType_Endpoint {

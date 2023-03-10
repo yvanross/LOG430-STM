@@ -1,4 +1,5 @@
-﻿using ApplicationLogic.Interfaces;
+﻿using System.Collections.Immutable;
+using ApplicationLogic.Interfaces;
 using Entities.DomainInterfaces;
 using Ingress.Cache;
 
@@ -6,18 +7,30 @@ namespace Ingress.Repository;
 
 public class RepositoryRead : IRepositoryRead
 {
-    public IRoute? ReadRouteById(string id)
+    private readonly string _http;
+
+    public RepositoryRead(string http)
     {
-        return RouteCache.RegisteredRoutes.SingleOrDefault(route => route.Id.Equals(id));
+        _http = http;
     }
 
-    public IRoute? ReadRouteByAddressAndPort(string address, string port)
+    public IService? ReadServiceById(Guid id)
     {
-        return RouteCache.RegisteredRoutes.SingleOrDefault(route => route.Address.Equals(address) && route.Port.Equals(port));
+        return RouteCache.GetServices(_http)?.SingleOrDefault(route => route.Id.Equals(id));
     }
 
-    public IRoute? ReadRouteByType(string serviceType)
+    public IService? ReadServiceByAddressAndPort(string address, string port)
     {
-        return RouteCache.RegisteredRoutes.SingleOrDefault(route => route.ServiceType.Equals(serviceType));
+        return RouteCache.GetServices(_http)?.SingleOrDefault(route => route.Address.Equals(address) && route.Port.Equals(port));
+    }
+
+    public ImmutableList<IService>? ReadServiceByType(string serviceType)
+    {
+        return RouteCache.GetServices(_http)?.Where(route => route.ServiceType.Equals(serviceType)).ToImmutableList();
+    }
+
+    public ImmutableList<IService>? GetAllServices()
+    {
+        return RouteCache.GetServices(_http);
     }
 }

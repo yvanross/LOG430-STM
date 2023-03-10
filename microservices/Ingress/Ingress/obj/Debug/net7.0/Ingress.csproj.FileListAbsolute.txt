@@ -81,3 +81,6 @@ C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingres
 C:\Users\david\LOG430-STM\microservices\Ingress\Ingress\bin\Debug\net7.0\nuget.config
 C:\Users\david\LOG430-STM\microservices\Ingress\Ingress\bin\Debug\net7.0\Docker.DotNet.dll
 C:\Users\david\LOG430-STM\microservices\Ingress\Ingress\bin\Debug\net7.0\Newtonsoft.Json.dll
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingress\obj\Debug\net7.0\Ingress.Properties.Resources.resources
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingress\obj\Debug\net7.0\Ingress.csproj.GenerateResource.cache
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ingress\Ingress\obj\Debug\net7.0\Ingress.MvcApplicationPartsAssemblyInfo.cs

@@ -2,7 +2,6 @@
 using Ambassador;
 using Entities.BusinessObjects;
 using Ingress.Repository;
-using Route = Entities.BusinessObjects.Route;
 
 namespace Ingress
 {
@@ -40,6 +39,10 @@ namespace Ingress
 
             app.UseAuthorization();
 
+            app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), appBuilder =>
+            {
+                appBuilder.UseMiddleware<>();
+            });
 
             app.MapControllers();
 
@@ -52,7 +55,7 @@ namespace Ingress
         {
             var writeModel = new RepositoryWrite();
 
-            writeModel.Write(new Route()
+            writeModel.Write(new Service()
             {
                 Address = "api.tomtom.com",
                 Port = string.Empty,

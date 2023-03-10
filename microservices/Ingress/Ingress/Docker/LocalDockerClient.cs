@@ -16,9 +16,9 @@ namespace Monitor.Docker;
 /// </summary>
 public class LocalDockerClient : IEnvironmentClient
 {
-    private readonly RestClient _dockerClient = new ($"http://{EnvironmentVariables.ServiceAddress}:2375");
+    private readonly RestClient _dockerClient = new ($"http://localhost:2375");
 
-    public async Task<List<Microservice>> GetRunningServices()
+    public async Task<List<ContainerInfo>> GetRunningServices()
     {
         return await Try.WithConsequenceAsync(async () =>
         {
@@ -28,7 +28,7 @@ public class LocalDockerClient : IEnvironmentClient
 
             dynamic expando = JsonConvert.DeserializeObject<List<ExpandoObject>>(res.Content);
 
-            List<Microservice> microservices = new();
+            List<ContainerInfo> microservices = new();
 
             foreach (var container in expando)
             {
@@ -36,7 +36,7 @@ public class LocalDockerClient : IEnvironmentClient
 
                 string? publicPort = port?.PublicPort.ToString();
 
-                microservices.Add(new Microservice()
+                microservices.Add(new ContainerInfo()
                 {
                     Id = container.Id,
                     Name = ((container.Names as List<object>)?.FirstOrDefault()?.ToString())?[1..] ?? string.Empty,

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 using ApplicationLogic.Interfaces;
-using ApplicationLogic.Services;
+using ApplicationLogic.Services.Itinerary;
 using Entities.Concretions;
 using Entities.Domain;
 using GTFS;
@@ -61,7 +61,7 @@ namespace ApplicationLogic.Use_Cases
 
         private ImmutableDictionary<string, ITripSTM> RelevantTripsAndRelevantStops(IPosition from, IPosition to)
         {
-            var itinaryService = new ItinaryService(_logger, _stmData);
+            var itinaryService = new ItineraryService(_logger, _stmData);
 
             var stops = _stmData.GetStops()!.Values.ToArray();
 

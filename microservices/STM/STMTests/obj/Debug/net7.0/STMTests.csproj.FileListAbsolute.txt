@@ -338,3 +338,4 @@ C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\STM\STMTests\b
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\STM\STMTests\obj\Debug\net7.0\STMTests.csproj.CopyComplete
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\STM\STMTests\obj\Debug\net7.0\STMTests.genruntimeconfig.cache
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\STM\STMTests\obj\Debug\net7.0\ref\STMTests.dll
+C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\STM\STMTests\bin\Debug\net7.0\Ambassador.dll

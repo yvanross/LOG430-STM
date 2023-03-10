@@ -1,10 +1,8 @@
-﻿using Entities.Domain;
+﻿namespace STM.Dto;
 
-namespace STM.DTO;
-
-public class StopScheduleDTO
+public class StopScheduleDto
 {
-    public StopDTO? Stop { get; set; } = new StopDTO();
+    public StopDto? Stop { get; set; } = new ();
 
     public string? DepartureTime { get; set; }
 

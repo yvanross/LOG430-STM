@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ApplicationLogic.Services;
 using Entities.BusinessObjects;
 using Entities.DomainInterfaces;
 
@@ -12,23 +13,31 @@ namespace ApplicationLogic.Usecases
     {
         private readonly IEnvironmentClient _client;
 
-        public MonitorUc(IEnvironmentClient client)
+        private readonly HeartBeatService _heartbeatService;
+
+        public MonitorUc(IEnvironmentClient client, HeartBeatService heartbeatService)
         {
             _client = client;
+            _heartbeatService = heartbeatService;
         }
 
-        public async Task<List<Microservice>> GetRunningMicroservices()
+        public void ReceiveHeartBeat(Guid sender)
+        {
+            _heartbeatService.Acknowledge(sender);
+        }
+
+        public async Task<List<ContainerInfo>> GetRunningMicroservices()
         {
             return await _client.GetRunningServices();
         }
 
-        public async Task<string> GetPort(string containerId)
+        public async Task<ContainerInfo> GetPort(string containerId)
         {
             var runningServices = await _client.GetRunningServices();
 
             var targetService = runningServices.SingleOrDefault(rs => rs.Id.Equals(containerId));
 
-            return targetService?.Port ?? string.Empty;
+            return targetService;
         }
 
         public async Task IncreaseByOneNumberOfInstances(string containerId, string newContainerName)

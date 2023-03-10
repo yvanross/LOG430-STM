@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ambassador.Dto;
 using ApplicationLogic.Interfaces;
 using Entities.BusinessObjects;
 
@@ -22,17 +23,17 @@ namespace ApplicationLogic.Usecases
 
         public bool CheckIfServiceIsSubscribed(string ipAddress, string portNumber)
         {
-            return _repositoryRead.ReadRouteByAddressAndPort(ipAddress, portNumber) is not null;
+            return _repositoryRead.ReadServiceByAddressAndPort(ipAddress, portNumber) is not null;
         }
 
-        public void Subscribe(string serviceAddress, string port, string serviceType)
+        public void Subscribe(SubscriptionDto subscriptionDto, ContainerInfo container)
         {
-            _repositoryWrite.Write(new Route()
+            _repositoryWrite.Write(new Service()
             {
-                Address = serviceAddress,
-                Port = port,
-                ServiceType = serviceType,
-                Id = Guid.NewGuid().ToString() 
+                Id = subscriptionDto.ServiceId,
+                ContainerInfo = container,
+                Address = subscriptionDto.ServiceAddress,
+                ServiceType = subscriptionDto.ServiceType,
             });
         }
     }

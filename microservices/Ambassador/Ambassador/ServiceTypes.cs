@@ -7,7 +7,6 @@ public enum ServiceTypes
     Monitor,
     Meteo,
     ComparateurTrajet,
-    ChaosMonkey,
     Tomtom,
     Stm,
     ImpactEcologique,

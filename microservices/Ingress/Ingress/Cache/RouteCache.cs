@@ -6,15 +6,38 @@ namespace Ingress.Cache;
 
 internal static class RouteCache
 {
-    internal static ImmutableList<IRoute> RegisteredRoutes { get; private set; } = ImmutableList<IRoute>.Empty;
+    //The portainer Address is the key
+    private static ImmutableDictionary<string, ImmutableList<IService>> RegisteredServices { get; set; } = ImmutableDictionary<string, ImmutableList<IService>>.Empty;
 
-    internal static void AddRoute(IRoute route)
+    internal static ImmutableList<IService>? GetServices(string http)
     {
-        RegisteredRoutes = RegisteredRoutes.RemoveAll(TryMatchRoute);
+        return GetHostedServices(http);
+    }
 
-        RegisteredRoutes = RegisteredRoutes.Add(route);
+    internal static void AddOrUpdateService(IService service)
+    {
+        var services = GetHostedServices(service.Address);
 
-        bool TryMatchRoute(IRoute registeredRoute)
-         => registeredRoute.HttpRoute.Equals(route.HttpRoute);
+        services = services.RemoveAll(TryMatchRoute);
+
+        services = services.Add(service);
+
+        SetHostedServices(service.Address, services);
+
+        bool TryMatchRoute(IService registeredRoute)
+         => registeredRoute.HttpRoute.Equals(service.HttpRoute) || registeredRoute.Id.Equals(service.Id);
+    }
+
+    private static void SetHostedServices(string http, ImmutableList<IService> services)
+    {
+        RegisteredServices = RegisteredServices.Remove(http);
+        RegisteredServices = RegisteredServices.Add(http, services);
+    }
+
+    private static ImmutableList<IService>? GetHostedServices(string http)
+    {
+        RegisteredServices.TryGetValue(http, out var services);
+
+        return services;
     }
 }   

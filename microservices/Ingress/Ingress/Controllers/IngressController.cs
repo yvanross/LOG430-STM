@@ -1,9 +1,10 @@
-using Ambassador.BusinessObjects;
+﻿using Ambassador.BusinessObjects;
+using ApplicationLogic.Services;
 using ApplicationLogic.Usecases;
-using Docker.DotNet;
 using Ingress.Extensions;
 using Ingress.Repository;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Monitor.Docker;
 
@@ -11,41 +12,34 @@ namespace Ingress.Controllers
 {
     [EnableCors("AllowOrigin")]
     [ApiController]
-    [Route("[controller]/[action]")]
+    [Route("[controller]/{source}/[action]")]
     public class IngressController : ControllerBase
     {
-        private readonly SubscriptionUC _subscriptionUC = new (new RepositoryWrite(), new RepositoryRead());
+        private readonly RoutingUC _routingUC;
 
-        private readonly RoutingUC _routingUC = new (new RepositoryRead());
-        
-        private readonly MonitorUc _monitorUc = new (new LocalDockerClient());
-        
-        private readonly HeadersUC _headersUc = new ();
+        private readonly MonitorUc _monitorUc;
 
-        private readonly ILogger<IngressController> _logger;
+        private readonly HeadersUC _headersUc = new();
 
-        public IngressController(ILogger<IngressController> logger)
+        private readonly ILogger<SubscriptionController> _logger;
+
+        public IngressController(ILogger<SubscriptionController> logger, string source)
         {
             _logger = logger;
+
+            var readModel = new RepositoryRead(source);
+
+            _routingUC = new(readModel);
+            _monitorUc = new(new LocalDockerClient(), new HeartBeatService(readModel, new RepositoryWrite()));
         }
 
         [HttpPut]
-        [ActionName(nameof(Subscribe))]
-        public async Task<IActionResult> Subscribe(string serviceType, string serviceAddress, string containerId)
+        [ActionName(nameof(HeartBeat))]
+        public async Task<IActionResult> HeartBeat(Guid serviceId)
         {
             try
             {
-                _logger.LogInformation($"{serviceType} attempting to subscribe");
 
-                var port = await _monitorUc.GetPort(containerId);
-
-                if (string.IsNullOrEmpty(port)) throw new Exception("Source port couldn't be determined");
-
-                _logger.LogInformation($"Calling port: {port}");
-
-                _subscriptionUC.Subscribe(serviceAddress, port, serviceType);
-
-                _logger.LogInformation($"{serviceType} from {serviceAddress}:{port} has subscribed");
             }
             catch (Exception e)
             {

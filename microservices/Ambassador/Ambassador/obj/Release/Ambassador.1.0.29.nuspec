@@ -16,7 +16,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="C:\Users\david\LOG430-STM\microservices\Ambassador\Ambassador\bin\Release\net7.0\Ambassador.pdb" target="lib\net7.0\Ambassador.pdb" />
-    <file src="C:\Users\david\LOG430-STM\microservices\Ambassador\Ambassador\bin\Release\net7.0\Ambassador.dll" target="lib\net7.0\Ambassador.dll" />
+    <file src="C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ambassador\Ambassador\bin\Release\net7.0\Ambassador.pdb" target="lib\net7.0\Ambassador.pdb" />
+    <file src="C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\Ambassador\Ambassador\bin\Release\net7.0\Ambassador.dll" target="lib\net7.0\Ambassador.dll" />
   </files>
 </package>

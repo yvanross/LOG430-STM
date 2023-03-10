@@ -4,5 +4,5 @@ namespace ApplicationLogic.Interfaces;
 
 public interface IRepositoryWrite
 {
-    void Write(IRoute route);
+    void Write(IService service);
 }

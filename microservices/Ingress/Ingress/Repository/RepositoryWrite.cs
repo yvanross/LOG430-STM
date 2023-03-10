@@ -6,8 +6,8 @@ namespace Ingress.Repository;
 
 public class RepositoryWrite : IRepositoryWrite
 {
-    public void Write(IRoute route)
+    public void Write(IService service)
     {
-        RouteCache.AddRoute(route);
+        RouteCache.AddOrUpdateService(service);
     }
 }

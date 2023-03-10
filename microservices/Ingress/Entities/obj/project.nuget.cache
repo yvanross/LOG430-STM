@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "4KlwxoNIS3R1sQycKyKCMb3nL9/BvsKK3cP6FGBeDivgtrI7wwn7hrl4FG4WKGYGLgJbRh1lzEjIrseRTrrg6g==",
+  "dgSpecHash": "XDv5WDCKtDPN/Br+6QPirIzql83EwL/L17uBJU9xn7bGCeTRWzwcC7gKaH30n4DIRXLShjTMGuN2hesC3QTVnA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Entities\\Entities.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ingress\\Entities\\Entities.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

@@ -8,7 +8,7 @@
     ".NETCoreApp,Version=v7.0": {
       "TripComparator/1.0.0": {
         "dependencies": {
-          "Ambassador": "1.0.23",
+          "Ambassador": "1.0.29",
           "ApplicationLogic": "1.0.0",
           "Microsoft.AspNetCore.OpenApi": "7.0.3",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.17.2",
@@ -18,7 +18,7 @@
           "TripComparator.dll": {}
         }
       },
-      "Ambassador/1.0.23": {
+      "Ambassador/1.0.29": {
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
           "Microsoft.Extensions.Logging.Abstractions": "7.0.0",
@@ -28,8 +28,8 @@
         },
         "runtime": {
           "lib/net7.0/Ambassador.dll": {
-            "assemblyVersion": "1.0.23.0",
-            "fileVersion": "1.0.23.0"
+            "assemblyVersion": "1.0.29.0",
+            "fileVersion": "1.0.29.0"
           }
         }
       },
@@ -910,7 +910,7 @@
       },
       "ApplicationLogic/1.0.0": {
         "dependencies": {
-          "Ambassador": "1.0.23"
+          "Ambassador": "1.0.29"
         },
         "runtime": {
           "ApplicationLogic.dll": {}
@@ -924,12 +924,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Ambassador/1.0.23": {
+    "Ambassador/1.0.29": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-EPOmCjbY4wvRVWQrddHyHc23LTSvAknwSJ9WODqFuZa/DX2ksNvTSgd25AvDffSQxCRWLvWDBEpdNuAdi3+guQ==",
-      "path": "ambassador/1.0.23",
-      "hashPath": "ambassador.1.0.23.nupkg.sha512"
+      "sha512": "sha512-/Mae9EEc42LBlha5OwDxrDwaMKZJq427wamcrmQbgLsaZmju+h6Ys1Z+2CFaXy5tznjmRKmFF4OYaU3hXCMlog==",
+      "path": "ambassador/1.0.29",
+      "hashPath": "ambassador.1.0.29.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Http.Features/5.0.17": {
       "type": "package",

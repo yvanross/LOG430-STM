@@ -30,7 +30,7 @@ public class PortainerClient : IEnvironmentClient
         _password = password;
     }
 
-    public async Task<List<Microservice>> GetRunningServices()
+    public async Task<List<ContainerInfo>> GetRunningServices()
     {
         if (string.IsNullOrEmpty(_environmentId))
             _environmentId = await GetEnvironmentId();
@@ -45,11 +45,11 @@ public class PortainerClient : IEnvironmentClient
 
             dynamic expando = JsonConvert.DeserializeObject<List<ExpandoObject>>(res.Content);
 
-            List<Microservice> microservices = new();
+            List<ContainerInfo> microservices = new();
 
             foreach (var container in expando)
             {
-                microservices.Add(new Microservice()
+                microservices.Add(new ContainerInfo()
                 {
                     Id = container.Id,
                     Name = ((container.Names as List<object>)?.FirstOrDefault()?.ToString())?[1..] ?? string.Empty,

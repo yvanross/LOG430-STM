@@ -14,48 +14,48 @@
             Json containing the ID of the bus, its trip ID, its name, the ETA, the first and last stops of the trip 
             </returns>
         </member>
-        <member name="M:STM.Controllers.TrackBusController.Post(STM.DTO.TrackingBusDTO)">
+        <member name="M:STM.Controllers.TrackBusController.BeginTracking(STM.Dto.BusDto)">
             <remarks>
             Allows the real-time tracking of a bus. Call-Back will be issued once the bus reached its target destination
             </remarks>
-            <param name="busID">TripID of the bus to track</param>
-            <param name="tripID">TripID of the trip taken by the bus to track</param>
+            <param name="busID">TripId of the bus to track</param>
+            <param name="tripID">TripId of the trip taken by the bus to track</param>
             <param name="originStopID">ID of the stop at which to begin tracking the bus</param>
             <param name="targetStopID">ID of the stop at which to stop tracking the bus</param>
             <param name="callback">Address to call once the tracking is complete</param>
             <returns>Number of real time seconds the bus took to travel from origin to target destinations</returns>
         </member>
-        <member name="P:STM.DTO.TrackingBusDTO.Name">
+        <member name="P:STM.Dto.BusDto.Name">
             <summary>
             Number of the bus (aka 107)
             </summary>
         </member>
-        <member name="P:STM.DTO.TrackingBusDTO.BusID">
+        <member name="P:STM.Dto.BusDto.BusId">
             <summary>
-            TripID of the bus
+            TripId of the bus
             </summary>
         </member>
-        <member name="P:STM.DTO.TrackingBusDTO.TripID">
+        <member name="P:STM.Dto.BusDto.TripId">
             <summary>
-            TripID of the bus
+            TripId of the bus
             </summary>
         </member>
-        <member name="P:STM.DTO.TrackingBusDTO.ETA">
-            <summary>
-            Estimated Time of Arrival
-            </summary>
-        </member>
-        <member name="P:STM.DTO.TrackingBusDTO.StopIndexAtTimeOfProcessing">
+        <member name="P:STM.Dto.BusDto.ETA">
             <summary>
             Estimated Time of Arrival
             </summary>
         </member>
-        <member name="P:STM.DTO.TrackingBusDTO.OriginStopSchedule">
+        <member name="P:STM.Dto.BusDto.StopIndexAtTimeOfProcessing">
+            <summary>
+            Estimated Time of Arrival
+            </summary>
+        </member>
+        <member name="P:STM.Dto.BusDto.OriginStopSchedule">
             <summary>
             First stop of the bus trip
             </summary>
         </member>
-        <member name="P:STM.DTO.TrackingBusDTO.TargetStopSchedule">
+        <member name="P:STM.Dto.BusDto.TargetStopSchedule">
             <summary>
             Last stop of the bus trip
             </summary>

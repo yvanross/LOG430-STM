@@ -1,13 +1,10 @@
-﻿using Entities.Concretions;
-using Entities.Domain;
+﻿namespace STM.Dto;
 
-namespace STM.DTO;
-
-public class StopDTO
+public class StopDto
 {
     public string ID { get; set; }
 
-    public PositionDTO Position { get; set; } = new PositionDTO();
+    public PositionDto Position { get; set; } = new PositionDto();
 
     public string Message { get; set; }
 

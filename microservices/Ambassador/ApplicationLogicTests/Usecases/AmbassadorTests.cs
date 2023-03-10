@@ -1,14 +1,14 @@
 ﻿using Ambassador;
-using Ambassador.Usecases;
+using Ambassador.BusinessObjects.InterServiceRequests;
+using Ambassador.Controllers;
+using Ambassador.Health;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ApplicationLogicTests.Usecases
 {
     [TestClass()]
     public class AmbassadorTests
-    { 
-        private readonly RegistrationUC _registrationUc = new ();
-
+    {
         [TestInitialize]
         public void Init()
         {
@@ -16,9 +16,15 @@ namespace ApplicationLogicTests.Usecases
         }
 
         [TestMethod()]
-        public async Task SubscribtionTest()
+        public async Task SubscriptionTest()
         {
-            await _registrationUc.Register(ServiceTypes.Monitor.ToString(), default);
+            await RegistrationController.Register("test", default);
+        }
+
+        [TestMethod()]
+        public async Task GetTest()
+        {
+            await RegistrationController.Register("test", default);
         }
     }
 }

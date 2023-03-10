@@ -225,7 +225,7 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0"
+          "net7.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
@@ -234,8 +234,8 @@
           "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0": {
-            "targetAlias": "net6.0",
+          "net7.0": {
+            "targetAlias": "net7.0",
             "projectReferences": {
               "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\STM\\ApplicationLogic\\ApplicationLogic.csproj": {
                 "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\STM\\ApplicationLogic\\ApplicationLogic.csproj"
@@ -250,9 +250,13 @@
         }
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net7.0": {
+          "targetAlias": "net7.0",
           "dependencies": {
+            "Ambassador": {
+              "target": "Package",
+              "version": "[1.0.30, )"
+            },
             "Google.Protobuf": {
               "target": "Package",
               "version": "[3.22.0, )"

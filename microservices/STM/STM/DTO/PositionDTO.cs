@@ -1,6 +1,6 @@
-﻿namespace STM.DTO;
+﻿namespace STM.Dto;
 
-public class PositionDTO
+public class PositionDto
 {
     public string Latitude { get; set; }
     public string Longitude { get; set; }

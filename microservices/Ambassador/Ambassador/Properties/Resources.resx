@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Authorization" xml:space="preserve">
+    <value>9c934c68-b9ea-413c-badb-77c66c7383cf</value>
+  </data>
+  <data name="HeartBeat_Endpoint" xml:space="preserve">
+    <value>Ingress/Heartbeat</value>
+  </data>
   <data name="RouteByServiceType_Endpoint" xml:space="preserve">
     <value>Ingress/RouteByServiceType</value>
   </data>

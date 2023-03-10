@@ -15,10 +15,10 @@ public class RoutingUC
 
     public string RouteByDestinationType(string serviceType)
     {
-        var serviceRoute = _repositoryRead.ReadRouteByType(serviceType);
+        var serviceRoute = _repositoryRead.ReadServiceByType(serviceType);
 
         if (serviceRoute is null)
-            throw new Exception("service route was not found");
+            throw new Exception("service service was not found");
 
         return serviceRoute.IsHttp ? serviceRoute.HttpRoute : serviceRoute.HttpsRoute;
     }

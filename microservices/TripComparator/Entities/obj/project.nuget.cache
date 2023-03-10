@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "AfCeUe+/WzZ/WSATFnEotP2OzwUJYAja8BRhnx2Ag+prLapmdSFc33VZyws7uKlu/ilPYPaW35nFp9jNFulYfQ==",
+  "dgSpecHash": "IvI8gBS1aQ64RcyufjmSsMVysu01S+OaUOAYRKh6wSryIqLe2UivkcvgCox+7R3pdd2ALDD5k2AIil7DQNTY9A==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\TripComparator\\Entities\\Entities.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\Entities\\Entities.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

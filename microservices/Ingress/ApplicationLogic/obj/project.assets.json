@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net7.0": {
-      "Ambassador/1.0.26": {
+      "Ambassador/1.0.32": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
@@ -12,10 +12,14 @@
           "RestSharp": "108.0.3"
         },
         "compile": {
-          "lib/net7.0/Ambassador.dll": {}
+          "lib/net7.0/Ambassador.dll": {
+            "related": ".pdb"
+          }
         },
         "runtime": {
-          "lib/net7.0/Ambassador.dll": {}
+          "lib/net7.0/Ambassador.dll": {
+            "related": ".pdb"
+          }
         }
       },
       "Docker.DotNet/3.125.13": {
@@ -169,15 +173,16 @@
     }
   },
   "libraries": {
-    "Ambassador/1.0.26": {
-      "sha512": "pGJeoghZkFS1jKnZREOVVQvig/Uc+SdnvhZ67OGDyPuh7ozy/XzxURNU6+DH+Obo0TmsqQczCxXLIZR+xjHckg==",
+    "Ambassador/1.0.32": {
+      "sha512": "V+fwSwCMEPZ6QoIq6TlrlAwMIgeuBMudq4yO9oUy8WDMTiWwIEt+EyUNEikO7Chkk9hskb52oe78C2oUCWF6eA==",
       "type": "package",
-      "path": "ambassador/1.0.26",
+      "path": "ambassador/1.0.32",
       "files": [
         ".nupkg.metadata",
-        "ambassador.1.0.26.nupkg.sha512",
+        "ambassador.1.0.32.nupkg.sha512",
         "ambassador.nuspec",
-        "lib/net7.0/Ambassador.dll"
+        "lib/net7.0/Ambassador.dll",
+        "lib/net7.0/Ambassador.pdb"
       ]
     },
     "Docker.DotNet/3.125.13": {
@@ -468,7 +473,7 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "Ambassador >= 1.0.26",
+      "Ambassador >= 1.0.32",
       "Docker.DotNet >= 3.125.13",
       "Entities >= 1.0.0"
     ]
@@ -480,11 +485,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
+      "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
       "projectName": "ApplicationLogic",
-      "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
+      "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
       "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\obj\\",
+      "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ingress\\ApplicationLogic\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -499,15 +504,16 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Users\\david\\LOG430-STM\\microservices\\Nuget": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Nuget": {},
+        "https://api.nuget.org/v3/index.json": {},
+        "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Entities\\Entities.csproj": {
-              "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Entities\\Entities.csproj"
+            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ingress\\Entities\\Entities.csproj": {
+              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ingress\\Entities\\Entities.csproj"
             }
           }
         }
@@ -524,7 +530,7 @@
         "dependencies": {
           "Ambassador": {
             "target": "Package",
-            "version": "[1.0.26, )"
+            "version": "[1.0.32, )"
           },
           "Docker.DotNet": {
             "target": "Package",
