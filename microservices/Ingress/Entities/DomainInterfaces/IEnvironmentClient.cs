@@ -1,4 +1,5 @@
 ﻿using Entities.BusinessObjects;
+using Ingress.Interfaces;
 
 namespace Entities.DomainInterfaces;
 
@@ -8,10 +9,9 @@ public interface IEnvironmentClient
 
     public Task<string> GetContainerLogs(string containerId);
 
-    public Task IncreaseByOneNumberOfInstances(string containerId, string newContainerName);
+    public Task IncreaseByOneNumberOfInstances(IContainerConfigName dynamicContainerConfigName, string newContainerName);
     
     public Task RemoveContainerInstance(string containerId);
 
-    //todo error from the school portainer for some reason
-    //public Task<string> GetContainerCpuUsage();
+    Task<IContainerConfigName> GetContainerConfig(string containerId);
 }

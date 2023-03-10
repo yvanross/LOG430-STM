@@ -1,5 +1,6 @@
 ﻿using ApplicationLogic.Interfaces;
 using Entities.DomainInterfaces;
+using System.Linq;
 
 namespace ApplicationLogic.Services;
 
@@ -18,9 +19,11 @@ public class LoadBalancingService
     {
         var containerId = string.Empty;
 
-        var services = _readModel.ReadServiceByType(service.ServiceType);
+        var containerConfig = _readModel.GetContainerModel(service.ServiceType);
 
-        if(services.IsEmpty is false)
-        _environmentClient.IncreaseByOneNumberOfInstances(services.firs)
+        if (containerConfig is not null)
+        {
+            _environmentClient.IncreaseByOneNumberOfInstances(containerConfig, $"{containerId}_{Guid.NewGuid()}");
+        }
     }
 }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "iJrHf9rbUoDhwbzYcDJtivt87oQY83ZwHtp2ZOukY5X/R1NvgjQ4DFJyjsDXPmW+v4RIdh+Pf2yaQQ1cQTLQPw==",
+  "dgSpecHash": "sQnN6Mu682o14epLPzURwKQseJb6U8c1hfDbFefa/eSS0o986I0Fc7pG+lM7lsHJYVOp5KkqsgfczC6q+RK+Ew==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj",
+  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.csharp\\4.3.0\\microsoft.csharp.4.3.0.nupkg.sha512",

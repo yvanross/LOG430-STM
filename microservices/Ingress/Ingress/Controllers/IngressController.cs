@@ -30,7 +30,7 @@ namespace Ingress.Controllers
             var readModel = new RepositoryRead(source);
 
             _routingUC = new(readModel);
-            _monitorUc = new(new LocalDockerClient(), new HeartBeatService(readModel, new RepositoryWrite()));
+            _monitorUc = new(new LocalDockerClient(), new HeartBeatService(readModel, new RepositoryWrite(), new LocalDockerClient()));
         }
 
         [HttpPut]

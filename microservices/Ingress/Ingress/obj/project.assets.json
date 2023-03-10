@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net7.0": {
-      "Ambassador/1.0.32": {
+      "Ambassador/1.0.33": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
@@ -3275,7 +3275,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "Ambassador": "1.0.32",
+          "Ambassador": "1.0.33",
           "Docker.DotNet": "3.125.13",
           "Entities": "1.0.0"
         },
@@ -3299,13 +3299,13 @@
     }
   },
   "libraries": {
-    "Ambassador/1.0.32": {
-      "sha512": "V+fwSwCMEPZ6QoIq6TlrlAwMIgeuBMudq4yO9oUy8WDMTiWwIEt+EyUNEikO7Chkk9hskb52oe78C2oUCWF6eA==",
+    "Ambassador/1.0.33": {
+      "sha512": "+R26eq09zEeqettujiJ7XWaC/vH9A1rfBrTgGarhlCmEzlpuzakuZBgPzUGBuQsMDR+TTmD1pwqdyr/ujxW7bA==",
       "type": "package",
-      "path": "ambassador/1.0.32",
+      "path": "ambassador/1.0.33",
       "files": [
         ".nupkg.metadata",
-        "ambassador.1.0.32.nupkg.sha512",
+        "ambassador.1.0.33.nupkg.sha512",
         "ambassador.nuspec",
         "lib/net7.0/Ambassador.dll",
         "lib/net7.0/Ambassador.pdb"
@@ -9928,7 +9928,7 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "Ambassador >= 1.0.32",
+      "Ambassador >= 1.0.33",
       "ApplicationLogic >= 1.0.0",
       "Docker.DotNet >= 3.125.13",
       "Microsoft.AspNetCore.OpenApi >= 7.0.3",
@@ -9945,11 +9945,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ingress\\Ingress\\Ingress.csproj",
+      "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Ingress\\Ingress.csproj",
       "projectName": "Ingress",
-      "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ingress\\Ingress\\Ingress.csproj",
+      "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Ingress\\Ingress.csproj",
       "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ingress\\Ingress\\obj\\",
+      "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Ingress\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -9964,16 +9964,15 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Nuget": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
+        "C:\\Users\\david\\LOG430-STM\\microservices\\Nuget": {},
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj": {
-              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj"
+            "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj": {
+              "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj"
             }
           }
         }
@@ -9990,7 +9989,7 @@
         "dependencies": {
           "Ambassador": {
             "target": "Package",
-            "version": "[1.0.32, )"
+            "version": "[1.0.33, )"
           },
           "Docker.DotNet": {
             "target": "Package",

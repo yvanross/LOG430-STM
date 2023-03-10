@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "y+0/ZVpPMSzf3IUsMse5WD6a4V5yiDHSDpOyIyn8+/FBZUzhoRkwTWqm1KxFmTwAXoeISgfXailE+w3wSRgGyQ==",
+  "dgSpecHash": "zWXBSz4KbE4ys+siJm6VGgtldFnRs49iHhqiJ3Ef4QgqV9E1BtkNzpvBgGKB4JeLFI5uoimeNsi9Unufej7BvA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
+  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.32\\ambassador.1.0.32.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.33\\ambassador.1.0.33.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\docker.dotnet\\3.125.13\\docker.dotnet.3.125.13.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",

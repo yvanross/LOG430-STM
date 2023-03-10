@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "9kTD/SJwVcFLtZcYW0TQD3lxxOZHg0s2KXlnizRJYqId+4N2tMxSbbE9ZM4VoAKhQ7je3kwcjFrn6x12wKNzVA==",
+  "dgSpecHash": "W/Ql5u0EaaujXXxInQxWtnnKDWn1U3x1RsVndlpMb5ZsJHeydzIvbUL2RBRtNydx9mrr7yfa9fO3iVEbjfeygA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Ambassador\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
+  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ambassador\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",

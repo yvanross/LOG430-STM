@@ -1,8 +1,14 @@
 ﻿using Entities.DomainInterfaces;
+using Ingress.Interfaces;
 
 namespace ApplicationLogic.Interfaces;
 
 public interface IRepositoryWrite
 {
-    void Write(IService service);
+    void WriteService(IService service);
+    
+    void RemoveService(IService service);
+
+    void UpdateContainerModel(IService service, IContainerConfigName containerConfigName);
+
 }

@@ -1,15 +1,19 @@
 ﻿using System.Collections.Immutable;
+using Entities.BusinessObjects;
 using Entities.DomainInterfaces;
+using Ingress.Interfaces;
 
 namespace ApplicationLogic.Interfaces;
 
 public interface IRepositoryRead
 {
-    public IService? ReadServiceById(Guid name);
+    IService? ReadServiceById(Guid name);
 
-    public IService? ReadServiceByAddressAndPort(string address, string port);
+    IService? ReadServiceByAddressAndPort(string address, string port);
 
-    public ImmutableList<IService>? ReadServiceByType(string serviceType);
+    ImmutableList<IService>? ReadServiceByType(string serviceType);
 
-    public ImmutableList<IService>? GetAllServices();
+    ImmutableList<IService>? GetAllServices();
+
+    IContainerConfigName? GetContainerModel(string serviceType);
 }

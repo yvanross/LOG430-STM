@@ -4,6 +4,7 @@ using Ambassador.BusinessObjects;
 using ApplicationLogic.Extensions;
 using Entities.BusinessObjects;
 using Entities.DomainInterfaces;
+using Ingress.Interfaces;
 using Microsoft.Net.Http.Headers;
 using Monitor.Portainer;
 using Newtonsoft.Json;
@@ -16,7 +17,7 @@ namespace Monitor.Docker;
 /// </summary>
 public class LocalDockerClient : IEnvironmentClient
 {
-    private readonly RestClient _dockerClient = new ($"http://localhost:2375");
+    private readonly RestClient _dockerClient = new ($"http://host.docker.internal:2375");
 
     public async Task<List<ContainerInfo>> GetRunningServices()
     {
@@ -55,17 +56,11 @@ public class LocalDockerClient : IEnvironmentClient
         throw new NotImplementedException();
     }
 
-    public async Task IncreaseByOneNumberOfInstances(string containerId, string newContainerName)
+    public async Task<IContainerConfigName> GetContainerConfig(string containerId)
     {
-        var services = await GetRunningServices();
-
-        var service = services.SingleOrDefault(s => s.Id.Equals(containerId));
-
-        if (service is null) throw new Exception("Service with container Id was not found");
-
         var containerData = await Try.WithConsequenceAsync<(dynamic Config, dynamic HostConfig)>(async () =>
             {
-                var request = new RestRequest($"containers/{service.Id}/json", Method.Get);
+                var request = new RestRequest($"containers/{containerId}/json", Method.Get);
 
                 var res = await _dockerClient.ExecuteAsync(request);
 
@@ -75,16 +70,22 @@ public class LocalDockerClient : IEnvironmentClient
             },
             retryCount: 2);
 
-        var newId = await Try.WithConsequenceAsync<string>(async () =>
+        var dynamicConfig = containerData.Config;
+
+        dynamicConfig.HostConfig = containerData.HostConfig;
+
+        return dynamicConfig;
+    }
+
+    public async Task IncreaseByOneNumberOfInstances(IContainerConfigName dynamicContainerConfigName, string newContainerName)
+    {
+        dynamicContainerConfigName.Name = newContainerName;
+
+            var newId = await Try.WithConsequenceAsync<string>(async () =>
             {
                 var request = new RestRequest($"containers/create?name={newContainerName}", Method.Post);
 
-                var body = containerData.Config;
-
-                body.Name = newContainerName;
-                body.HostConfig = containerData.HostConfig;
-
-                request.AddJsonBody((object)body);
+                request.AddJsonBody((object)dynamicContainerConfigName);
 
                 var res = await _dockerClient.ExecuteAsync(request);
 

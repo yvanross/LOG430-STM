@@ -55,7 +55,7 @@ namespace Ingress
         {
             var writeModel = new RepositoryWrite();
 
-            writeModel.Write(new Service()
+            writeModel.WriteService(new Service()
             {
                 Address = "api.tomtom.com",
                 Port = string.Empty,
