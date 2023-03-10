@@ -2,6 +2,7 @@
 using ApplicationLogic.Extensions;
 using Entities.BusinessObjects;
 using Entities.DomainInterfaces;
+using Ingress.Interfaces;
 using Microsoft.Net.Http.Headers;
 using Microsoft.VisualBasic;
 using Newtonsoft.Json;
@@ -84,6 +85,11 @@ public class PortainerClient : IEnvironmentClient
         onFailure: async (_, _) => _jwt = $"bearer {await GetAuthorization()}");
     }
 
+    public Task IncreaseByOneNumberOfInstances(IContainerConfigName dynamicContainerConfigName, string newContainerName)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task IncreaseByOneNumberOfInstances(string containerId, string newContainerName)
     {
         var services = await GetRunningServices();
@@ -131,6 +137,11 @@ public class PortainerClient : IEnvironmentClient
 
             return 0;
         }, retryCount: _retryCount);
+    }
+
+    public Task<IContainerConfigName> GetContainerConfig(string containerId)
+    {
+        throw new NotImplementedException();
     }
 
     private async Task<string> GetAuthorization()

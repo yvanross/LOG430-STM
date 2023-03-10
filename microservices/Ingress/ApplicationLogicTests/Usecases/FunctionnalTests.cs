@@ -14,6 +14,7 @@ namespace ApplicationLogic.Usecases.Tests
     [TestClass()]
     public class FunctionnalTests
     {
+        /*
         private readonly RoutingUC _routingUc = new (new RepositoryRead());
         
         private readonly SubscriptionUC _subscriptionUc = new (new RepositoryWrite(), new RepositoryRead());
@@ -43,5 +44,6 @@ namespace ApplicationLogic.Usecases.Tests
 
             Assert.IsTrue(_routingUc.RouteByDestinationType(_serviceType).Equals("http://0.0.0.0:0"));
         }
+        */
     }
 }

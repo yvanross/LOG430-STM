@@ -7,18 +7,18 @@ namespace Ingress.Repository;
 
 public class RepositoryWrite : IRepositoryWrite
 {
-    public void WriteService(IService service)
+    public void WriteService(IServiceInstance serviceInstance)
     {
-        RouteCache.AddOrUpdateService(service);
+        RouteCache.AddOrUpdateService(serviceInstance);
     }
 
-    public void RemoveService(IService service)
+    public void RemoveService(IServiceInstance serviceInstance)
     {
-        RouteCache.RemoveService(service);
+        RouteCache.RemoveService(serviceInstance);
     }
 
-    public void UpdateContainerModel(IService service, IContainerConfigName containerConfigName)
+    public void UpdateServiceType(IServiceInstance serviceInstance, IServiceType containerConfigName)
     {
-        RouteCache.UpdateContainerModel(service, containerConfigName);
+        RouteCache.UpdateContainerModel(serviceInstance, containerConfigName);
     }
 }

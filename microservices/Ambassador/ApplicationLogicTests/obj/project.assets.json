@@ -1984,7 +1984,7 @@
           "lib/netstandard1.3/System.Xml.XmlDocument.dll": {}
         }
       },
-      "Ambassador/1.0.33": {
+      "Ambassador/1.0.35": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
@@ -7043,7 +7043,7 @@
         "system.xml.xmldocument.nuspec"
       ]
     },
-    "Ambassador/1.0.33": {
+    "Ambassador/1.0.35": {
       "type": "project",
       "path": "../Ambassador/Ambassador.csproj",
       "msbuildProject": "../Ambassador/Ambassador.csproj"
@@ -7051,7 +7051,7 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "Ambassador >= 1.0.33",
+      "Ambassador >= 1.0.35",
       "MSTest.TestAdapter >= 2.2.10",
       "MSTest.TestFramework >= 2.2.10",
       "Microsoft.NET.Test.Sdk >= 17.3.2",

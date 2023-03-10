@@ -26,7 +26,7 @@ namespace Ingress.Controllers
         {
             _logger = logger;
 
-            _monitorUc = new(new LocalDockerClient(), new HeartBeatService(new RepositoryRead(source), new RepositoryWrite()));
+            _monitorUc = new(new LocalDockerClient(), new RepositoryRead(source), new RepositoryWrite());
         }
 
         [HttpPut]
@@ -43,7 +43,7 @@ namespace Ingress.Controllers
 
                 _logger.LogInformation($"Calling port: {container.Port}");
 
-                _subscriptionUc.Subscribe(subscriptionDto, container);
+                await _subscriptionUc.Subscribe(subscriptionDto, container);
 
                 _logger.LogInformation($"{subscriptionDto.ServiceType} from {subscriptionDto.ServiceAddress}:{container.Port} has subscribed");
             }

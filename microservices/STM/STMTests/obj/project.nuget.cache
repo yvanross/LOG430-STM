@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "GxTug2nS23GjoJS/lc+fZb3naXtrshuy3Chrma5cJUUSvasXE0DWW3dqhn+n0v5jnTBudEqI7B2mwSFGbJdu7w==",
+  "dgSpecHash": "d4IDEcaS3mhcitqRGLD+mN/RLK8cPvua6CYjI50AXKkexTrK/sHUNffBAgO749F/xc14zleb9LEbn9PCThOYnA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\STM\\STMTests\\STMTests.csproj",
+  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\STMTests\\STMTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.30\\ambassador.1.0.30.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",

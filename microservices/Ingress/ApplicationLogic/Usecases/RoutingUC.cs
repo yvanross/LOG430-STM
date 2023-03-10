@@ -1,4 +1,7 @@
-﻿using ApplicationLogic.Interfaces;
+﻿using Ambassador;
+using Ambassador.BusinessObjects;
+using ApplicationLogic.Interfaces;
+using ApplicationLogic.Services;
 using Docker.DotNet;
 using Entities.DomainInterfaces;
 
@@ -8,18 +11,29 @@ public class RoutingUC
 {
     private IRepositoryRead _repositoryRead;
 
-    public RoutingUC(IRepositoryRead repositoryRead)
+    private ResourceManagementService _resourceManagementService;
+
+    public RoutingUC(IRepositoryRead repositoryRead, IEnvironmentClient environment)
     {
         _repositoryRead = repositoryRead;
+        _resourceManagementService = new ResourceManagementService(environment);
     }
 
-    public string RouteByDestinationType(string serviceType)
+    public IEnumerable<RoutingData> RouteByDestinationType(string type, LoadBalancingMode mode)
     {
-        var serviceRoute = _repositoryRead.ReadServiceByType(serviceType);
+        var serviceRoute = _repositoryRead.ReadServiceByType(type);
 
         if (serviceRoute is null)
-            throw new Exception("service service was not found");
+            throw new Exception("service was not found");
 
-        return serviceRoute.IsHttp ? serviceRoute.HttpRoute : serviceRoute.HttpsRoute;
+        var targets = _resourceManagementService.LoadBalancing(serviceRoute, mode);
+
+        foreach (var target in targets)
+        {
+            yield return new RoutingData()
+            {
+                Address = target.IsHttp ? target.HttpRoute : target.HttpsRoute
+            };
+        }
     }
 }

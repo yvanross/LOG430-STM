@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net7.0": {
-      "Ambassador/1.0.33": {
+      "Ambassador/1.0.35": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
@@ -3275,7 +3275,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "Ambassador": "1.0.33",
+          "Ambassador": "1.0.35",
           "Docker.DotNet": "3.125.13",
           "Entities": "1.0.0"
         },
@@ -3299,13 +3299,13 @@
     }
   },
   "libraries": {
-    "Ambassador/1.0.33": {
-      "sha512": "+R26eq09zEeqettujiJ7XWaC/vH9A1rfBrTgGarhlCmEzlpuzakuZBgPzUGBuQsMDR+TTmD1pwqdyr/ujxW7bA==",
+    "Ambassador/1.0.35": {
+      "sha512": "5pqlkjBhDeIWTGwodXOmBf6Y9eamuqscJxzv/BC2ldxVcDD15yE3EybprLkSyp6mMaFItYSsd40AZGO419BADQ==",
       "type": "package",
-      "path": "ambassador/1.0.33",
+      "path": "ambassador/1.0.35",
       "files": [
         ".nupkg.metadata",
-        "ambassador.1.0.33.nupkg.sha512",
+        "ambassador.1.0.35.nupkg.sha512",
         "ambassador.nuspec",
         "lib/net7.0/Ambassador.dll",
         "lib/net7.0/Ambassador.pdb"
@@ -9928,7 +9928,7 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "Ambassador >= 1.0.33",
+      "Ambassador >= 1.0.35",
       "ApplicationLogic >= 1.0.0",
       "Docker.DotNet >= 3.125.13",
       "Microsoft.AspNetCore.OpenApi >= 7.0.3",
@@ -9989,7 +9989,7 @@
         "dependencies": {
           "Ambassador": {
             "target": "Package",
-            "version": "[1.0.33, )"
+            "version": "[1.0.35, )"
           },
           "Docker.DotNet": {
             "target": "Package",

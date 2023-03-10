@@ -5,10 +5,10 @@ namespace ApplicationLogic.Interfaces;
 
 public interface IRepositoryWrite
 {
-    void WriteService(IService service);
+    void WriteService(IServiceInstance serviceInstance);
     
-    void RemoveService(IService service);
+    void RemoveService(IServiceInstance serviceInstance);
 
-    void UpdateContainerModel(IService service, IContainerConfigName containerConfigName);
+    void UpdateServiceType(IServiceInstance serviceInstance, IServiceType containerConfigName);
 
 }

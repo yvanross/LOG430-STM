@@ -10,7 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ambassador" Version="1.0.33" />
+    <Compile Remove="MiddleWares\**" />
+    <Content Remove="MiddleWares\**" />
+    <EmbeddedResource Remove="MiddleWares\**" />
+    <None Remove="MiddleWares\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ambassador" Version="1.0.35" />
     <PackageReference Include="Docker.DotNet" Version="3.125.13" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.3" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />
@@ -25,7 +32,6 @@
 
   <ItemGroup>
     <Folder Include="Extensions\" />
-    <Folder Include="MiddleWares\" />
   </ItemGroup>
 
   <ItemGroup>

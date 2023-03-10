@@ -7,13 +7,15 @@ namespace ApplicationLogic.Interfaces;
 
 public interface IRepositoryRead
 {
-    IService? ReadServiceById(Guid name);
+    IServiceInstance? ReadServiceById(Guid name);
 
-    IService? ReadServiceByAddressAndPort(string address, string port);
+    IServiceInstance? ReadServiceByAddressAndPort(string address, string port);
 
-    ImmutableList<IService>? ReadServiceByType(string serviceType);
+    ImmutableList<IServiceInstance>? ReadServiceByType(string serviceType);
 
-    ImmutableList<IService>? GetAllServices();
+    ImmutableList<IServiceInstance>? GetAllServices();
 
-    IContainerConfigName? GetContainerModel(string serviceType);
+    IScheduler? GetScheduler();
+
+    IServiceType? GetServiceType(string serviceType);
 }

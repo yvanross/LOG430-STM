@@ -1,4 +1,5 @@
-﻿using Ambassador.BusinessObjects;
+﻿using Ambassador;
+using Ambassador.BusinessObjects;
 using ApplicationLogic.Services;
 using ApplicationLogic.Usecases;
 using Ingress.Extensions;
@@ -28,9 +29,11 @@ namespace Ingress.Controllers
             _logger = logger;
 
             var readModel = new RepositoryRead(source);
+            var writeModel = new RepositoryWrite();
+            var environmentClient = new LocalDockerClient();
 
-            _routingUC = new(readModel);
-            _monitorUc = new(new LocalDockerClient(), new HeartBeatService(readModel, new RepositoryWrite(), new LocalDockerClient()));
+            _routingUC = new(readModel, environmentClient);
+            _monitorUc = new(environmentClient, readModel, writeModel);
         }
 
         [HttpPut]
@@ -39,7 +42,7 @@ namespace Ingress.Controllers
         {
             try
             {
-
+                _monitorUc.ReceiveHeartBeat(serviceId);
             }
             catch (Exception e)
             {
@@ -55,21 +58,22 @@ namespace Ingress.Controllers
 
         [HttpGet]
         [ActionName(nameof(RouteByServiceType))]
-        public ActionResult<RoutingData> RouteByServiceType(string serviceType)
+        public ActionResult<IEnumerable<RoutingData>> RouteByServiceType(string serviceType, LoadBalancingMode mode)
         {
             return Try.WithConsequence(() =>
             {
-                var address = _routingUC.RouteByDestinationType(serviceType);
+                var routingDatas = _routingUC.RouteByDestinationType(serviceType, mode).ToList();
 
-                var routingData = new RoutingData() { Address = address };
+                foreach (var routingData in routingDatas)
+                {
+                    _headersUc.AddJsonHeader(routingData);
 
-                _headersUc.AddJsonHeader(routingData);
+                    _headersUc.AddAuthorizationHeaders(routingData, serviceType);
 
-                _headersUc.AddAuthorizationHeaders(routingData, serviceType);
+                    _logger.LogInformation($"routing service to {routingData.Address}");
+                }
 
-                _logger.LogInformation($"routing service to {routingData.Address}");
-
-                return routingData;
+                return routingDatas;
             });
         }
     }

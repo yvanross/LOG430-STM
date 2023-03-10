@@ -39,11 +39,6 @@ namespace Ingress
 
             app.UseAuthorization();
 
-            app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), appBuilder =>
-            {
-                appBuilder.UseMiddleware<>();
-            });
-
             app.MapControllers();
 
             CreateDefaultRoutes();
@@ -55,14 +50,21 @@ namespace Ingress
         {
             var writeModel = new RepositoryWrite();
 
-            writeModel.WriteService(new Service()
+            writeModel.UpdateServiceType(new ServiceInstance()
             {
                 Address = "api.tomtom.com",
-                Port = string.Empty,
-                Id = "TomtomService",
+                ContainerInfo = new ContainerInfo()
+                {
+                    Id = "tomtom",
+                    ImageName = "noImage",
+                    Name = "TomtomService",
+                    Port = string.Empty,
+                    Status = "notAContainer"
+                },
+                Id = Guid.NewGuid(),
                 IsHttp = false,
-                ServiceType = ServiceTypes.Tomtom.ToString()
-            });
+                Type = ServiceTypes.Tomtom.ToString()
+            }, default);
         }
     }
 }

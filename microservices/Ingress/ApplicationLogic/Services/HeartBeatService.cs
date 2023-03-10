@@ -14,10 +14,6 @@ public class HeartBeatService
 
     private readonly IEnvironmentClient _environmentClient;
 
-    private static readonly PeriodicTimer PeriodicTimer = new(TimeSpan.FromMilliseconds(0.5));
-    
-    private static Task? _clock;
-
     private readonly ConcurrentQueue<Guid> _potentiallyDeadServices = new ();
 
     public HeartBeatService(IRepositoryRead readModel, IRepositoryWrite writeModel, IEnvironmentClient environmentClient)
@@ -26,8 +22,9 @@ public class HeartBeatService
         _writeModel = writeModel;
         _environmentClient = environmentClient;
 
-        if (_clock is null)
-            _clock = BeginProcessingHeartbeats();
+        if (readModel.GetScheduler() is not { } scheduler) throw new NullReferenceException("Scheduler was null");
+
+        scheduler.TryAddTask(BeginProcessingHeartbeats);
     }
 
     public void Acknowledge(Guid id)
@@ -42,38 +39,35 @@ public class HeartBeatService
         }
     }
 
-    internal async Task BeginProcessingHeartbeats()
+    private async Task BeginProcessingHeartbeats()
     {
-        while (await PeriodicTimer.WaitForNextTickAsync().ConfigureAwait(false))
+        await Try.WithConsequenceAsync(() =>
         {
-            await Try.WithConsequenceAsync(() =>
+            var routes = _readModel.GetAllServices();
+
+            while (_potentiallyDeadServices.IsEmpty is false)
             {
-                var routes = _readModel.GetAllServices();
+                _potentiallyDeadServices.TryDequeue(out var idToAudit);
 
-                while (_potentiallyDeadServices.IsEmpty is false)
+                var serviceToAudit = _readModel.ReadServiceById(idToAudit);
+
+                if (serviceToAudit is not null && serviceToAudit.LastHeartbeat >= DateTime.UtcNow.AddSeconds(-1))
                 {
-                    _potentiallyDeadServices.TryDequeue(out var idToAudit);
+                    _writeModel.RemoveService(serviceToAudit);
 
-                    var serviceToAudit = _readModel.ReadServiceById(idToAudit);
+                    _ = _environmentClient.RemoveContainerInstance(serviceToAudit.ContainerInfo.Id);
 
-                    if (serviceToAudit is not null && serviceToAudit.LastHeartbeat >= DateTime.UtcNow.AddSeconds(-1))
-                    {
-                        _writeModel.RemoveService(serviceToAudit);
+                    var serviceType = _readModel.GetServiceType(serviceToAudit.Type);
 
-                        _ = _environmentClient.RemoveContainerInstance(serviceToAudit.ContainerInfo.Id);
+                    if (serviceType is null) continue;
 
-                        var containerConfig = _readModel.GetContainerModel(serviceToAudit.ServiceType);
-
-                        if (containerConfig is null) continue;
-                        
-                        _ = _environmentClient.IncreaseByOneNumberOfInstances(containerConfig, $"{serviceToAudit.ContainerInfo.Name}_{Guid.NewGuid()}");
-                    }
+                    _ = _environmentClient.IncreaseByOneNumberOfInstances(serviceType.ContainerConfig, $"{serviceToAudit.ContainerInfo.Name}_{Guid.NewGuid()}");
                 }
+            }
 
-                routes?.Where(r => r.LastHeartbeat <= DateTime.UtcNow.AddSeconds(-0.5)).ToList().ForEach(service => _potentiallyDeadServices.Enqueue(service.Id));
+            routes?.Where(r => r.LastHeartbeat <= DateTime.UtcNow.AddSeconds(-0.5)).ToList().ForEach(service => _potentiallyDeadServices.Enqueue(service.Id));
 
-                return Task.FromResult(Task.FromResult(0));
-            }, retryCount: int.MaxValue);
-        }
+            return Task.FromResult(Task.FromResult(0));
+        }, retryCount: int.MaxValue);
     }
 }

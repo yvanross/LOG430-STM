@@ -51,7 +51,7 @@
           "dependencies": {
             "Ambassador": {
               "target": "Package",
-              "version": "[1.0.33, )"
+              "version": "[1.0.35, )"
             },
             "Docker.DotNet": {
               "target": "Package",

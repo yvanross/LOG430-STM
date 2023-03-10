@@ -8,5 +8,7 @@ public class ServiceRoutingRequest
 
     public List<NameValue> Params { get; set; } = new();
 
+    public LoadBalancingMode Mode { get; set; } = LoadBalancingMode.RoundRobin;
+
     protected ServiceRoutingRequest() { }
 }

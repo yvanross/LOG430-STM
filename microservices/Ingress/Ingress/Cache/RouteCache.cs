@@ -10,87 +10,113 @@ namespace Ingress.Cache;
 internal static class RouteCache
 {
     //The portainer Address is the key
-    private static ImmutableDictionary<string, ImmutableList<IService>> ServicesByPortainerAddress { get; set; } = ImmutableDictionary<string, ImmutableList<IService>>.Empty;
+    private static ImmutableDictionary<string, ImmutableList<IServiceInstance>> ServicesByPortainerAddress { get; set; } = ImmutableDictionary<string, ImmutableList<IServiceInstance>>.Empty;
     
     //The portainer Address is the key
-    private static ImmutableDictionary<string, ImmutableDictionary<string, IContainerConfigName>> ContainerConfigByServiceTypeByPortainerAddress { get; set; } = ImmutableDictionary<string, ImmutableDictionary<string, IContainerConfigName>>.Empty;
+    private static ImmutableDictionary<string, ImmutableDictionary<string, IServiceType>> ServiceTypeConfigByServiceTypeByPortainerAddress { get; set; } = ImmutableDictionary<string, ImmutableDictionary<string, IServiceType>>.Empty;
 
-    internal static ImmutableList<IService>? GetServices(string http)
+    //The portainer Address is the key
+    private static ImmutableDictionary<string, IScheduler> SchedulerByPortainerAddress { get; set; } = ImmutableDictionary<string, IScheduler>.Empty;
+
+    internal static ImmutableList<IServiceInstance>? GetServices(string http)
     {
         return GetHostedServices(http);
     }
 
-    internal static ImmutableDictionary<string, IContainerConfigName>? GetContainerModels(string http)
+    internal static ImmutableDictionary<string, IServiceType>? GetContainerModels(string http)
     {
         return GetRegisteredContainerModels(http);
     }
 
-    internal static void AddOrUpdateService(IService service)
+    internal static IScheduler? GetScheduler(string http)
     {
-        var services = GetHostedServices(service.Address);
-        
+        return GetRegisteredScheduler(http);
+    }
+
+    internal static void AddOrUpdateService(IServiceInstance serviceInstance)
+    {
+        var services = GetHostedServices(serviceInstance.Address);
+
+        if (services is null)
+        {
+            services = ImmutableList<IServiceInstance>.Empty;
+
+            ServicesByPortainerAddress = ServicesByPortainerAddress.Add(serviceInstance.Address, services);
+            SchedulerByPortainerAddress = SchedulerByPortainerAddress.Add(serviceInstance.Address, new Scheduler());
+        }
+
+        services = services.RemoveAll(TryMatchService);
+
+        services = services.Add(serviceInstance);
+
+        SetHostedServices(serviceInstance.Address, services);
+
+        bool TryMatchService(IServiceInstance registeredRoute)
+         => registeredRoute.HttpRoute.Equals(serviceInstance.HttpRoute) || registeredRoute.Id.Equals(serviceInstance.Id);
+    }
+
+    internal static void UpdateContainerModel(IServiceInstance serviceInstance, IServiceType containerConfig)
+    {
+        var containerModels = GetRegisteredContainerModels(serviceInstance.Address);
+
+        if (containerModels is null)
+        {
+            containerModels = ImmutableDictionary<string, IServiceType>.Empty;
+
+            ServiceTypeConfigByServiceTypeByPortainerAddress = ServiceTypeConfigByServiceTypeByPortainerAddress.Add(serviceInstance.Address, containerModels);
+        }
+
+        containerModels = containerModels.Remove(serviceInstance.Type);
+
+        containerModels = containerModels.Add(serviceInstance.Type, containerConfig);
+
+        SetRegisteredContainerModel(serviceInstance.Address, containerModels);
+    }
+
+    internal static void RemoveService(IServiceInstance serviceInstance)
+    {
+        var services = GetHostedServices(serviceInstance.Address);
+
         if (services is null) return;
 
         services = services.RemoveAll(TryMatchService);
 
-        services = services.Add(service);
+        SetHostedServices(serviceInstance.Address, services);
 
-        SetHostedServices(service.Address, services);
-
-        bool TryMatchService(IService registeredRoute)
-         => registeredRoute.HttpRoute.Equals(service.HttpRoute) || registeredRoute.Id.Equals(service.Id);
+        bool TryMatchService(IServiceInstance registeredRoute)
+            => registeredRoute.HttpRoute.Equals(serviceInstance.HttpRoute) || registeredRoute.Id.Equals(serviceInstance.Id);
     }
 
-    internal static void UpdateContainerModel(IService service, IContainerConfigName containerConfig)
-    {
-        var containerModels = GetRegisteredContainerModels(service.Address);
-
-        if (containerModels is null) return;
-
-        containerModels = containerModels.Remove(service.ServiceType);
-
-        containerModels = containerModels.Add(service.ServiceType, containerConfig);
-
-        SetRegisteredContainerModel(service.Address, containerModels);
-    }
-
-    internal static void RemoveService(IService service)
-    {
-        var services = GetHostedServices(service.Address);
-
-        if (services is null) return;
-
-        services = services.RemoveAll(TryMatchService);
-
-        SetHostedServices(service.Address, services);
-
-        bool TryMatchService(IService registeredRoute)
-            => registeredRoute.HttpRoute.Equals(service.HttpRoute) || registeredRoute.Id.Equals(service.Id);
-    }
-
-    private static void SetHostedServices(string http, ImmutableList<IService> services)
+    private static void SetHostedServices(string http, ImmutableList<IServiceInstance> services)
     {
         ServicesByPortainerAddress = ServicesByPortainerAddress.Remove(http);
         ServicesByPortainerAddress = ServicesByPortainerAddress.Add(http, services);
     }
 
-    private static ImmutableList<IService>? GetHostedServices(string http)
+    private static ImmutableList<IServiceInstance>? GetHostedServices(string http)
     {
         ServicesByPortainerAddress.TryGetValue(http, out var services);
 
         return services;
     }
 
-    private static void SetRegisteredContainerModel(string http, ImmutableDictionary<string, IContainerConfigName> containerModels)
+    private static void SetRegisteredContainerModel(string http, ImmutableDictionary<string, IServiceType> containerModels)
     {
-        ContainerConfigByServiceTypeByPortainerAddress = ContainerConfigByServiceTypeByPortainerAddress.Remove(http);
-        ContainerConfigByServiceTypeByPortainerAddress = ContainerConfigByServiceTypeByPortainerAddress.Add(http, containerModels);
+        ServiceTypeConfigByServiceTypeByPortainerAddress = ServiceTypeConfigByServiceTypeByPortainerAddress.Remove(http);
+        ServiceTypeConfigByServiceTypeByPortainerAddress = ServiceTypeConfigByServiceTypeByPortainerAddress.Add(http, containerModels);
     }
 
-    private static ImmutableDictionary<string, IContainerConfigName>? GetRegisteredContainerModels(string http)
+    private static ImmutableDictionary<string, IServiceType>? GetRegisteredContainerModels(string http)
     {
-        ContainerConfigByServiceTypeByPortainerAddress.TryGetValue(http, out var services);
+        ServiceTypeConfigByServiceTypeByPortainerAddress.TryGetValue(http, out var services);
 
         return services;
+    }
+
+    private static IScheduler? GetRegisteredScheduler(string http)
+    {
+        SchedulerByPortainerAddress.TryGetValue(http, out var scheduler);
+
+        return scheduler;
     }
 }   

@@ -7,7 +7,7 @@ public class SubscriptionDto
     public string ContainerId { get; }
     public Guid ServiceId { get; }
     public bool AutoScaleInstances { get; }
-    private int MinimumNumberOfInstances { get; }
+    public int MinimumNumberOfInstances { get; }
 
     public SubscriptionDto(string serviceType, string serviceAddress, string containerId, Guid serviceId,
         bool autoScaleInstances, int minimumNumberOfInstances)

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "EcPfVi8g/6n3/La04i+zXT31dPj9zHfw6RHNIAZLZ8aqw2nCKEozyDTzdVMfBQnoXZN9uhHWwzITFwiNbm78ow==",
+  "dgSpecHash": "YTtLn0WJg8jd+Qu/vsOMehswVE4gxhnxtQIh/I6v5wS6i8tBUQdMYqcR1GdfgFFyvxNKixwMpoi/+tsnyOPUQg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\STM\\ApplicationLogic\\ApplicationLogic.csproj",
+  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\ApplicationLogic\\ApplicationLogic.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\google.protobuf\\3.22.0\\google.protobuf.3.22.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\7.0.0\\microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",

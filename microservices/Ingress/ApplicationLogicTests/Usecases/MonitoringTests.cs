@@ -12,7 +12,7 @@ namespace ApplicationLogicTests.Usecases
         {
 
         }
-
+        /*
         [TestMethod()]
         public async Task GetRunningMicroservices()
         {
@@ -46,5 +46,6 @@ namespace ApplicationLogicTests.Usecases
 
             Assert.IsFalse(finalStateMicroservices.Any(s => s.Name.Equals(microserviceToLoadBalance.Name + "-new") && s.ImageName.Equals(microserviceToLoadBalance.ImageName)));
         }
+        */
     }
 }

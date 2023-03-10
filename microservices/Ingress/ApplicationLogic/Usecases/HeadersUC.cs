@@ -19,6 +19,7 @@ public class HeadersUC
             Value = "application/json"
         });
     }
+
     public void AddAuthorizationHeaders(RoutingData data, string serviceType)
     {
         if (serviceType.Equals(ServiceTypes.Tomtom.ToString()))

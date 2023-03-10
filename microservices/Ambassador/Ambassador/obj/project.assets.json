@@ -5621,7 +5621,7 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "1.0.33",
+    "version": "1.0.35",
     "restore": {
       "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj",
       "projectName": "Ambassador",

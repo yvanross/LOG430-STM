@@ -12,11 +12,11 @@ namespace ApplicationLogic.Usecases
 {
     public class SubscriptionUC
     {
-        private IRepositoryWrite _repositoryWrite;
+        private readonly IRepositoryWrite _repositoryWrite;
         
-        private IRepositoryRead _repositoryRead;
+        private readonly IRepositoryRead _repositoryRead;
 
-        private IEnvironmentClient _environmentClient;
+        private readonly IEnvironmentClient _environmentClient;
 
         public SubscriptionUC(IRepositoryWrite repositoryWrite, IRepositoryRead repositoryRead, IEnvironmentClient environmentClient)
         {
@@ -32,24 +32,28 @@ namespace ApplicationLogic.Usecases
 
         public async Task Subscribe(SubscriptionDto subscriptionDto, ContainerInfo container)
         {
-            var newService = new Service()
+            var newService = new ServiceInstance()
             {
                 Id = subscriptionDto.ServiceId,
                 ContainerInfo = container,
                 Address = subscriptionDto.ServiceAddress,
-                ServiceType = subscriptionDto.ServiceType,
+                Type = subscriptionDto.ServiceType,
             };
 
-            //missing logic to sent a minimum number of containers of a certain type
-            if (subscriptionDto.AutoScaleInstances)
+            var containerConfig = await _environmentClient.GetContainerConfig(container.Id);
+
+            if (containerConfig is null)
+                throw new Exception("container Config was null");
+
+            var serviceType = new ServiceType()
             {
-                var containerConfig = await _environmentClient.GetContainerConfig(container.Id);
+                ContainerConfig = containerConfig,
+                Type = subscriptionDto.ServiceType,
+                AutoScaleInstances = subscriptionDto.AutoScaleInstances,
+                MinimumNumberOfInstances = subscriptionDto.MinimumNumberOfInstances
+            };
 
-                if (containerConfig is null)
-                    throw new Exception("container Config was null");
-
-                _repositoryWrite.UpdateContainerModel(newService, containerConfig);
-            }
+            _repositoryWrite.UpdateServiceType(newService, serviceType);
 
             _repositoryWrite.WriteService(newService);
         }
