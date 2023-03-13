@@ -1,20 +1,25 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["STM/STM.csproj", "STM/"]
+COPY ["Nuget/Ambassador.*.nupkg", "STM/"]
+COPY ["STM/STM/nuget.config", ""]
+COPY ["STM/STM/STM.csproj", "STM/"]
+COPY ["STM/ApplicationLogic/ApplicationLogic.csproj", "ApplicationLogic/"]
+COPY ["STM/StaticGTFS/GTFS.csproj", "ApplicationLogic/"]
+COPY ["STM/Entities/Entities.csproj", "Entities/"]
 RUN dotnet restore "STM/STM.csproj"
 COPY . .
 WORKDIR "/src/STM"
-RUN dotnet build "STM.csproj" -c Release -o /app/build
+RUN dotnet build "STM/STM.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "STM.csproj" -c Release -o /app/publish
+RUN dotnet publish "STM/STM.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

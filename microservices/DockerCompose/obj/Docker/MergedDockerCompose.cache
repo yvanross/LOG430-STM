@@ -1,8 +1,8 @@
-name: dockercompose10051751824383297984
+name: dockercompose1041557551265095097
 services:
   ingress:
     build:
-      context: C:\Users\david\LOG430-STM\microservices
+      context: C:\Users\david\Documents\GitHub\LOG430-STM\microservices
       dockerfile: Ingress/Ingress/Dockerfile
     container_name: Ingress
     environment:
@@ -33,7 +33,7 @@ services:
         create_host_path: true
   routetimeprovider:
     build:
-      context: C:\Users\david\LOG430-STM\microservices
+      context: C:\Users\david\Documents\GitHub\LOG430-STM\microservices
       dockerfile: RouteTimeProvider/RouteTimeProvider/Dockerfile
     container_name: RouteTimeProvider
     depends_on:
@@ -65,9 +65,43 @@ services:
       read_only: true
       bind:
         create_host_path: true
+  stm:
+    build:
+      context: C:\Users\david\Documents\GitHub\LOG430-STM\microservices
+      dockerfile: STM/STM/Dockerfile
+    container_name: STM
+    depends_on:
+      ingress:
+        condition: service_started
+    environment:
+      ASPNETCORE_URLS: http://+:80
+      INGRESS_ADDRESS: host.docker.internal
+      INGRESS_PORT: "32770"
+      SERVICES_ADDRESS: host.docker.internal
+    image: stm
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      published: "32773"
+      protocol: tcp
+    volumes:
+    - type: bind
+      source: C:\Users\david\AppData\Roaming/Microsoft/UserSecrets
+      target: /root/.microsoft/usersecrets
+      read_only: true
+      bind:
+        create_host_path: true
+    - type: bind
+      source: C:\Users\david\AppData\Roaming/ASP.NET/Https
+      target: /root/.aspnet/https
+      read_only: true
+      bind:
+        create_host_path: true
   tripcomparator:
     build:
-      context: C:\Users\david\LOG430-STM\microservices
+      context: C:\Users\david\Documents\GitHub\LOG430-STM\microservices
       dockerfile: TripComparator/TripComparator/Dockerfile
     container_name: TripComparator
     depends_on:
@@ -101,7 +135,7 @@ services:
         create_host_path: true
 networks:
   default:
-    name: dockercompose10051751824383297984_default
+    name: dockercompose1041557551265095097_default
 x-conf:
 - ingress_port: 32770:80
 - env:

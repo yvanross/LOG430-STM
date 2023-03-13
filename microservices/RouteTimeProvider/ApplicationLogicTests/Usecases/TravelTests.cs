@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ambassador;
+using Ambassador.Controllers;
 using Ambassador.Usecases;
 
 namespace ApplicationLogic.Usecases.Tests
@@ -13,14 +14,12 @@ namespace ApplicationLogic.Usecases.Tests
     [TestClass()]
     public class TravelTests
     {
-        private static readonly RegistrationUC _registration = new();
-        
         private static readonly TravelUC _travelUc = new();
 
         [TestInitialize]
         public void Init()
         {
-            _registration.Register(ServiceTypes.RouteTimeProvider.ToString(), default);
+            RegistrationController.Register(ServiceTypes.RouteTimeProvider.ToString(), default);
         }
 
         [TestMethod()]

@@ -13,7 +13,7 @@ public static class RegistrationController
     private static IngressRoutingUC _ingressRoutingUc = new();
 
     /// <summary>
-    /// Registers this service in the Ingress
+    /// Registers this service in the IngressController
     /// </summary>
     /// <param name="serviceType"> For load balancing make sure your image in docker compose has the same name as this parameter </param>
     /// <returns></returns>
@@ -26,7 +26,7 @@ public static class RegistrationController
 
         await Try.WithConsequenceAsync(async () =>
         {
-            logger?.LogInformation($"Attempting to subscribe service as {serviceType} to Ingress");
+            logger?.LogInformation($"Attempting to subscribe service as {serviceType} to IngressController");
 
             var response = await _ingressRoutingUc.Register(serviceType, autoScaleInstances, minimumNumberOfInstances);
 
@@ -43,7 +43,7 @@ public static class RegistrationController
             {
                 logger?.LogError(
                 $"{e.Message}\n {e.StackTrace} \n" +
-                $"Ingress address: {ContainerService.IngressAddress} \n" +
+                $"IngressController address: {ContainerService.IngressAddress} \n" +
                 $"Service address: {ContainerService.ServiceAddress}");
                 
                 return Task.CompletedTask;

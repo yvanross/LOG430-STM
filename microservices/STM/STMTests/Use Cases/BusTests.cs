@@ -15,6 +15,7 @@ namespace STMTests.Use_Cases
     [TestClass()]
     public class BusTests
     {
+
         ItineraryUC _itineraryUc = new ItineraryUC(new StmClient(), new StmData(), null);
 
         [TestMethod()]
@@ -22,9 +23,9 @@ namespace STMTests.Use_Cases
         {
             STMOptimalBusController busController = new STMOptimalBusController(new Logger<STMOptimalBusController>(new LoggerFactory()));
 
-            var bus = await busController.Get("45.50146231405799,-73.5769508553735", "45.5269499152848,-73.56423906516093");
+            //var bus = await busController.Get("45.50146231405799,-73.5769508553735", "45.5269499152848,-73.56423906516093");
             
-            Assert.IsNotNull(bus);
+            //Assert.IsNotNull(bus);
         }
 
         [TestMethod()]

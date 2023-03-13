@@ -22,11 +22,18 @@ namespace Ingress.Controllers
 
         private readonly ILogger<SubscriptionController> _logger;
 
-        public SubscriptionController(ILogger<SubscriptionController> logger, string source)
+        public SubscriptionController(ILogger<SubscriptionController> logger, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
 
-            _monitorUc = new(new LocalDockerClient(), new RepositoryRead(source), new RepositoryWrite());
+            var source = httpContextAccessor.HttpContext!.GetRouteValue("source")!.ToString();
+
+            var _readModel = new RepositoryRead(source);
+            var _writeModel = new RepositoryWrite();
+            var _environmentClient = new LocalDockerClient(logger);
+
+            _subscriptionUc = new SubscriptionUC(_writeModel, _readModel, _environmentClient);
+            _monitorUc = new(_environmentClient, _readModel, _writeModel);
         }
 
         [HttpPut]
@@ -44,6 +51,8 @@ namespace Ingress.Controllers
                 _logger.LogInformation($"Calling port: {container.Port}");
 
                 await _subscriptionUc.Subscribe(subscriptionDto, container);
+
+                _monitorUc.TryScheduleHeartBeatOnScheduler();
 
                 _logger.LogInformation($"{subscriptionDto.ServiceType} from {subscriptionDto.ServiceAddress}:{container.Port} has subscribed");
             }

@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "s1zErKfAkcpCRCFdf/tFGWrkVdUUh4D1a1VYrNaj8mwIwaljAmOd8/nOC38neE/65B58O5Ay2jfnesuqD8mKmw==",
+  "dgSpecHash": "Wyt3Mgo56MIPP4m0RsQJAKwd3i5w+1WhCT4YtHbCTgkzpYmL3dzJRLisZlFJH61XiV7982XiMQSSyqJWYsE4Yw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.29\\ambassador.1.0.29.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.60\\ambassador.1.0.60.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.csharp\\4.3.0\\microsoft.csharp.4.3.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
@@ -96,16 +96,5 @@
     "C:\\Users\\david\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "ApplicationLogic depends on Ambassador (>= 1.0.23) but Ambassador 1.0.23 was not found. An approximate best match of Ambassador 1.0.29 was resolved.",
-      "libraryId": "Ambassador",
-      "targetGraphs": [
-        "net7.0"
-      ]
-    }
-  ]
+  "logs": []
 }

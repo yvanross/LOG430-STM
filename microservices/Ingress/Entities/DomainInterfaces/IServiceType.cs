@@ -10,5 +10,5 @@ public interface IServiceType
 
     int MinimumNumberOfInstances { get; set; }
 
-    IContainerConfigName ContainerConfig { get; set; }
+    IContainerConfig ContainerConfig { get; set; }
 }

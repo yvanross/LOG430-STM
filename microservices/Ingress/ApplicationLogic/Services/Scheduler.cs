@@ -6,7 +6,7 @@ namespace Entities.BusinessObjects;
 
 public class Scheduler : IScheduler
 {
-    private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(0.5));
+    private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(500));
 
     private ImmutableDictionary<string, Func<Task>> _tasks = ImmutableDictionary<string, Func<Task>>.Empty;
 
@@ -17,10 +17,7 @@ public class Scheduler : IScheduler
 
     public void TryAddTask(Func<Task> func)
     {
-        if (_tasks.ContainsKey(func.Method.Name) is false)
-        {
-            _tasks = _tasks.Add(func.Method.Name, func);
-        }
+        ImmutableInterlocked.TryAdd(ref _tasks, func.Method.Name, func);
     }
 
     private async Task BeginScheduling()
@@ -29,12 +26,12 @@ public class Scheduler : IScheduler
         {
             foreach (var func in _tasks.Select(kv=>kv.Value))
             {
-                await Try.WithConsequenceAsync(() =>
+                await Try.WithConsequenceAsync(async () =>
                 {
-                    _ = func();
+                    await func();
 
-                    return Task.FromResult(Task.FromResult(0));
-                }, retryCount: int.MaxValue);
+                    return Task.CompletedTask;
+                });
             }
         }
     }

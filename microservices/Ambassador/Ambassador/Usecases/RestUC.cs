@@ -1,6 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Channels;
 using Ambassador.BusinessObjects;
 using Ambassador.BusinessObjects.InterServiceRequests;
 using Ambassador.Health;
@@ -14,73 +18,88 @@ namespace Ambassador.Usecases
     {
         private IngressRoutingUC _ingressRoutingUc = new ();
 
-        internal async Task<RestResponse> Get(GetRoutingRequest routingRequest)
+        internal async Task<ChannelReader<RestResponse>> Get(GetRoutingRequest routingRequest)
         {
-            try
-            {
-                var restTooling = await GetDestinationRoutingData(routingRequest, Method.Get);
+            var destinationRoutingDatas = await GetDestinationRoutingData(routingRequest, Method.Get);
 
-                var res = await restTooling.client.ExecuteAsync(restTooling.request);
+            var channel = Channel.CreateUnbounded<RestResponse>();
 
-                return res;
-            }
-            catch (Exception e)
-            {
-                var exception = GetExceptionMessage(e, $"Get Routing Data exception, endpoint: {routingRequest.Endpoint}, Target Service: {routingRequest.TargetService}");
+            var tasks = destinationRoutingDatas.ConvertAll(routingData => 
+                routingData.client.ExecuteAsync(routingData.request)
+                .ContinueWith(task =>
+                {
+                    if (task.Result.IsSuccessStatusCode)
+                        return channel.Writer.WriteAsync(task.Result);
 
-                ContainerService.Logger?.LogError(exception.Message);
+                    ContainerService.Logger?.LogInformation(task.Exception?.Message);
+                    return ValueTask.CompletedTask;
+                }));
 
-                throw exception;
-            }
+            _ = Task.WhenAll(tasks).ContinueWith(_=>channel.Writer.Complete()).ConfigureAwait(false);
+
+            return channel.Reader;
         }
 
-        internal async Task<RestResponse> Post<T>(PostRoutingRequest<T> routingRequest) where T : class
+        internal async Task<ChannelReader<RestResponse>> Post<T>(PostRoutingRequest<T> routingRequest) where T : class
         {
-            try
-            {
-                var restTooling = await GetDestinationRoutingData(routingRequest, Method.Post);
+            var destinationRoutingDatas = await GetDestinationRoutingData(routingRequest, Method.Post);
 
-                restTooling.request.AddJsonBody(routingRequest.Payload);
+            destinationRoutingDatas.ForEach(tuple => tuple.request.AddJsonBody(routingRequest.Payload));
+            
+            var channel = Channel.CreateUnbounded<RestResponse>();
 
-                var res = await restTooling.client.ExecuteAsync(restTooling.request);
+            var tasks = destinationRoutingDatas.ConvertAll(routingData =>
+                routingData.client.ExecuteAsync(routingData.request)
+                    .ContinueWith(task =>
+                    {
+                        if (task.Result.IsSuccessStatusCode)
+                            return channel.Writer.WriteAsync(task.Result);
 
-                return res;
-            }
-            catch (Exception e)
-            {
-                var exception = GetExceptionMessage(e, $"Post Routing Data exception, endpoint: {routingRequest.Endpoint}, Target Service: {routingRequest.TargetService}");
+                        ContainerService.Logger?.LogInformation(task.Exception?.Message);
+                        return ValueTask.CompletedTask;
+                    }));
 
-                ContainerService.Logger?.LogError(exception.Message);
+            _ = Task.WhenAll(tasks).ContinueWith(_ => channel.Writer.Complete()).ConfigureAwait(false);
 
-                throw exception;
-            }
+            return channel.Reader;
         }
 
-        private async Task<(RestClient client, RestRequest request)> GetDestinationRoutingData(ServiceRoutingRequest routingRequest, Method method)
+        private async Task<List<(RestClient client, RestRequest request)>> GetDestinationRoutingData(ServiceRoutingRequest routingRequest, Method method)
         {
             try
             {
-                var routingData = await _ingressRoutingUc.GetServiceRoutingData(routingRequest.TargetService);
+                var routingInfos = await _ingressRoutingUc.GetServiceRoutingData(routingRequest.TargetService, routingRequest.Mode);
 
-                var client = new RestClient(routingData.Address);
+                var routingData = DecorateRequest(routingInfos).ToList();
 
-                var request = new RestRequest(routingRequest.Endpoint, method);
-
-                routingData.IngressAddedHeaders.ForEach(header => request.AddHeader(header.Name, header.Value));
-
-                routingData.IngressAddedQueryParams.ForEach(queryParams => request.AddQueryParameter(queryParams.Name, queryParams.Value));
-
-                routingRequest.Params.ForEach(param => request.AddQueryParameter(param.Name, param.Value));
-
-                return (client, request);
+                return routingData;
             }
             catch (Exception e)
             {
-                var exception = GetExceptionMessage(e, "Ingress Routing Data exception");
+                var exception = GetExceptionMessage(e, "IngressController Routing Data exception");
 
                 ContainerService.Logger?.LogError(exception.Message);
 
                 throw exception;
+            }
+
+            IEnumerable<(RestClient client, RestRequest request)> DecorateRequest(IEnumerable<RoutingData> routingInfos)
+            {
+                foreach (var routingInfo in routingInfos)
+                {
+                    var client = new RestClient(routingInfo.Address);
+
+                    var request = new RestRequest(routingRequest.Endpoint, method);
+
+                    routingInfo.IngressAddedHeaders.ForEach(header => request.AddHeader(header.Name, header.Value));
+
+                    routingInfo.IngressAddedQueryParams.ForEach(queryParams =>
+                        request.AddQueryParameter(queryParams.Name, queryParams.Value));
+
+                    routingRequest.Params.ForEach(param => request.AddQueryParameter(param.Name, param.Value));
+
+                    yield return (client, request);
+                }
             }
         }
 

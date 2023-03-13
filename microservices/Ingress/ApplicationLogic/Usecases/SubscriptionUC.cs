@@ -5,7 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Ambassador.Dto;
 using ApplicationLogic.Interfaces;
+using ApplicationLogic.Services;
+using Entities;
 using Entities.BusinessObjects;
+using Entities.BusinessObjects.States;
 using Entities.DomainInterfaces;
 
 namespace ApplicationLogic.Usecases
@@ -18,16 +21,14 @@ namespace ApplicationLogic.Usecases
 
         private readonly IEnvironmentClient _environmentClient;
 
+        private readonly ResourceManagementService _resourceManagementService;
+
         public SubscriptionUC(IRepositoryWrite repositoryWrite, IRepositoryRead repositoryRead, IEnvironmentClient environmentClient)
         {
             _repositoryWrite = repositoryWrite;
             _repositoryRead = repositoryRead;
             _environmentClient = environmentClient;
-        }
-
-        public bool CheckIfServiceIsSubscribed(string ipAddress, string portNumber)
-        {
-            return _repositoryRead.ReadServiceByAddressAndPort(ipAddress, portNumber) is not null;
+            _resourceManagementService = new ResourceManagementService(environmentClient, repositoryRead, repositoryWrite);
         }
 
         public async Task Subscribe(SubscriptionDto subscriptionDto, ContainerInfo container)
@@ -39,6 +40,8 @@ namespace ApplicationLogic.Usecases
                 Address = subscriptionDto.ServiceAddress,
                 Type = subscriptionDto.ServiceType,
             };
+
+            newService.ServiceStatus = new ReadyState(newService);
 
             var containerConfig = await _environmentClient.GetContainerConfig(container.Id);
 

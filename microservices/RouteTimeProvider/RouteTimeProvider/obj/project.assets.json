@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net7.0": {
-      "Ambassador/1.0.29": {
+      "Ambassador/1.0.60": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
@@ -1731,7 +1731,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "Ambassador": "1.0.29"
+          "Ambassador": "1.0.60"
         },
         "compile": {
           "bin/placeholder/ApplicationLogic.dll": {}
@@ -1743,13 +1743,13 @@
     }
   },
   "libraries": {
-    "Ambassador/1.0.29": {
-      "sha512": "/Mae9EEc42LBlha5OwDxrDwaMKZJq427wamcrmQbgLsaZmju+h6Ys1Z+2CFaXy5tznjmRKmFF4OYaU3hXCMlog==",
+    "Ambassador/1.0.60": {
+      "sha512": "5sPKnmjsIu20t62QEumJ6EuPDN5JMUdhGidOLDlWMrbb1eXnDCDN5SXIdK/+uE9xGO7YHBF46HF7zQkYAVt1wg==",
       "type": "package",
-      "path": "ambassador/1.0.29",
+      "path": "ambassador/1.0.60",
       "files": [
         ".nupkg.metadata",
-        "ambassador.1.0.29.nupkg.sha512",
+        "ambassador.1.0.60.nupkg.sha512",
         "ambassador.nuspec",
         "lib/net7.0/Ambassador.dll",
         "lib/net7.0/Ambassador.pdb"
@@ -6166,7 +6166,7 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "Ambassador >= 1.0.29",
+      "Ambassador >= 1.0.60",
       "ApplicationLogic >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 7.0.3",
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.17.2",
@@ -6180,11 +6180,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\RouteTimeProvider\\RouteTimeProvider.csproj",
+      "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\RouteTimeProvider\\RouteTimeProvider.csproj",
       "projectName": "RouteTimeProvider",
-      "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\RouteTimeProvider\\RouteTimeProvider.csproj",
+      "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\RouteTimeProvider\\RouteTimeProvider.csproj",
       "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\RouteTimeProvider\\obj\\",
+      "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\RouteTimeProvider\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -6199,15 +6199,16 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Users\\david\\LOG430-STM\\microservices\\Nuget": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Nuget": {},
+        "https://api.nuget.org/v3/index.json": {},
+        "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogic\\ApplicationLogic.csproj": {
-              "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogic\\ApplicationLogic.csproj"
+            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogic\\ApplicationLogic.csproj": {
+              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogic\\ApplicationLogic.csproj"
             }
           }
         }
@@ -6224,7 +6225,7 @@
         "dependencies": {
           "Ambassador": {
             "target": "Package",
-            "version": "[1.0.29, )"
+            "version": "[1.0.60, )"
           },
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",

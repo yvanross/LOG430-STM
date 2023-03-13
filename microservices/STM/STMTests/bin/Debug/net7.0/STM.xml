@@ -4,7 +4,7 @@
         <name>STM</name>
     </assembly>
     <members>
-        <member name="M:STM.Controllers.STMOptimalBusController.Get(System.String,System.String)">
+        <member name="M:STM.Controllers.STMOptimalBusController.GetBestBus(System.String,System.String)">
             <remarks>
             Find optimal STM bus to travel between two coordinates
             </remarks>

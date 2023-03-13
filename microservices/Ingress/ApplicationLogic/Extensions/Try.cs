@@ -2,7 +2,7 @@
 
 public static class Try
 {
-    public static async Task<T> WithConsequenceAsync<T>(Func<Task<T>> todo, Func<Exception, int, Task>? onFailure = null, int retryCount = 0)
+    public static async Task<T> WithConsequenceAsync<T>(Func<Task<T>> todo, Func<Exception, int, Task>? onFailure = null, int retryCount = 0, bool autoThrow = true)
     {
         var retry = 0;
 

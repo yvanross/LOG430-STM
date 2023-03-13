@@ -22,7 +22,7 @@ namespace STMTests.Use_Cases
             
             TrackBusController trackBusController = new TrackBusController(logger2);
 
-            var bus = await busController.Get("45.50146231405799,-73.5769508553735", "45.5269499152848,-73.56423906516093");
+            var bus = await busController.GetBestBus("45.50146231405799,-73.5769508553735", "45.5269499152848,-73.56423906516093");
 
             Assert.IsNotNull(bus);
 
@@ -39,7 +39,7 @@ namespace STMTests.Use_Cases
 
             TrackBusController trackBusController = new TrackBusController(logger2);
 
-            var bus = await busController.Get("45.495408,-73.562918", "45.501875,-73.576517");
+            var bus = await busController.GetBestBus("45.495408,-73.562918", "45.501875,-73.576517");
 
             Assert.IsNotNull(bus);
 

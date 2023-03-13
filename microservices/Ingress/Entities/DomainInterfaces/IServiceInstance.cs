@@ -6,7 +6,7 @@ public interface IServiceInstance
 {
     Guid Id { get; init; }
 
-    ContainerInfo ContainerInfo { get; init; }
+    ContainerInfo? ContainerInfo { get; init; }
 
     string Address { get; init; }
 
@@ -15,6 +15,8 @@ public interface IServiceInstance
     DateTime LastHeartbeat { get; set; }
 
     bool IsHttp { get; init; }
+
+    IServiceState? ServiceStatus { get; set; }
 
     string HttpRoute { get; }
     

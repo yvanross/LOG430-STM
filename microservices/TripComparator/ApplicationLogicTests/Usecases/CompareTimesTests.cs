@@ -1,4 +1,5 @@
 ﻿using Ambassador;
+using Ambassador.Controllers;
 using Ambassador.Usecases;
 using ApplicationLogic.Usecases;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -8,14 +9,12 @@ namespace ApplicationLogicTests.Usecases
     [TestClass()]
     public class CompareTimesTests
     {
-        private static readonly RegistrationUC _registration = new();
-
         private static readonly CompareTimesUC _compareTimesUc = new();
 
         [TestInitialize]
         public void Init()
         {
-            _registration.Register(ServiceTypes.ComparateurTrajet.ToString(), default);
+            RegistrationController.Register(ServiceTypes.ComparateurTrajet.ToString(), default);
         }
 
         [TestMethod()]

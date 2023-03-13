@@ -1,5 +1,6 @@
 
 using Ambassador;
+using Ambassador.Controllers;
 using Ambassador.Usecases;
 
 namespace PLACEHOLDER
@@ -51,11 +52,9 @@ namespace PLACEHOLDER
 
     public class AmbassadorService
     {
-        private readonly RegistrationUC _registration = new();
-
         public AmbassadorService(ILogger<AmbassadorService> logger)
         {
-            _registration.Register(ServiceTypes.RouteTimeProvider.ToString(), logger);
+            RegistrationController.Register(ServiceTypes.RouteTimeProvider.ToString(), logger);
         }
     }
 }

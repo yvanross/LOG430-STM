@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "YudnGu/KqDEiiyE16bT69A+7MbR7WGmUDjoBzOzoU6nLFYirwRgxv2ItuJQXq8FcixDRTxiCVlCT8YT6MJ+GKw==",
+  "dgSpecHash": "tVtvU/+NsaOsJpzHWB/ojCOAa8tYWuL1Qs4gFODTZetgPI2u1bo5p7RU25qA0h4Fo2ZMtHu+k2mBcIDbj3R3/g==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\TripComparator\\TripComparator.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\TripComparator\\TripComparator.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.29\\ambassador.1.0.29.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.60\\ambassador.1.0.60.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.3\\microsoft.aspnetcore.openapi.7.0.3.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.csharp\\4.3.0\\microsoft.csharp.4.3.0.nupkg.sha512",
@@ -104,16 +104,5 @@
     "C:\\Users\\david\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "TripComparator depends on Ambassador (>= 1.0.23) but Ambassador 1.0.23 was not found. An approximate best match of Ambassador 1.0.29 was resolved.",
-      "libraryId": "Ambassador",
-      "targetGraphs": [
-        "net7.0"
-      ]
-    }
-  ]
+  "logs": []
 }

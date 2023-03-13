@@ -11,7 +11,7 @@ x-conf:
       - SERVICES_ADDRESS=host.docker.internal
      
       - ASPNETCORE_URLS=http://+:80
-      
+
       #this needs to match with ingress_port
       - INGRESS_PORT=32770
   - vol:
@@ -62,5 +62,20 @@ services:
       *vol
     depends_on:
       - ingress
+
+  stm:
+    image: ${DOCKER_REGISTRY-}stm
+    build:
+        context: ../
+        dockerfile: STM/STM/Dockerfile
+    container_name: STM
+    environment:
+        *env
+    ports:
+        - "32773:80"
+    volumes:
+        *vol
+    depends_on:
+        - ingress
 
 

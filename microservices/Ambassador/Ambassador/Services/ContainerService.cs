@@ -5,7 +5,28 @@ namespace Ambassador.Health;
 
 internal class ContainerService
 {
-    internal static readonly Guid ServiceId = Guid.NewGuid();
+    private static Guid? _serviceId = null;
+
+    internal static Guid ServiceId
+    {
+        get
+        {
+            if (_serviceId is not null) return _serviceId.Value;
+            
+            if (Environment.GetEnvironmentVariable("ID") is { } stringId)
+            {
+                Guid.TryParse(stringId, out var id);
+                
+                _serviceId = id;
+
+                return _serviceId.Value;
+            }
+
+            _serviceId = Guid.NewGuid();
+
+            return _serviceId.Value;
+        }
+    }
 
     internal static ILogger? Logger;
 
@@ -15,7 +36,11 @@ internal class ContainerService
 
     internal static string ServiceAddress => Environment.GetEnvironmentVariable("SERVICES_ADDRESS")!;
 
-    internal static readonly int RetryCount = 5;
+    internal static readonly int RetryCount = 10;
+
+    internal static string SubscriptionController = "Subscription";
+    
+    internal static string IngressController = "Ingress";
 
     internal static async Task<string> GetContainerId()
     {
@@ -32,11 +57,16 @@ internal class ContainerService
 
         if (containerId is null)
         {
-            Logger?.LogError("Unable to determine the container ID. Service not connected to Ingress");
+            Logger?.LogError("Unable to determine the container ID. Service not connected to IngressController");
 
             throw new NullReferenceException("container id was null");
         }
 
         return containerId;
+    }
+
+    internal static string FormatIngressRequest(string controller, string endpoint)
+    {
+        return $"{controller}/{ServiceAddress}/{endpoint}";
     }
 }

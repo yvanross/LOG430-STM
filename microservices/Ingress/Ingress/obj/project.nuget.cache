@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "nS0nGpxcag99/0g1uCwmmQKao2BgAq5au818wBjRBzwAvA4NBBVTbcQvV1vB/eCIHZzlwn90fnPNer26Wnc1yw==",
+  "dgSpecHash": "RLKZxIOQJ+q5CG3SC8z75vaPZXn967qWLVFGr2fj8RW18H2TxvP7zM26spZPTpvJYXW/8a6KA3cZbIK+q+iPyQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\Ingress\\Ingress.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.35\\ambassador.1.0.35.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.60\\ambassador.1.0.60.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\docker.dotnet\\3.125.13\\docker.dotnet.3.125.13.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",

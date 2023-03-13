@@ -6,12 +6,14 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v7.0": {
-      "Ambassador/1.0.15": {
+      "Ambassador/1.0.60": {
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
+          "Microsoft.Extensions.Logging.Abstractions": "7.0.0",
           "Microsoft.Net.Http.Headers": "2.2.8",
           "Newtonsoft.Json": "10.0.3",
-          "RestSharp": "108.0.3"
+          "RestSharp": "108.0.3",
+          "SourceLink.Create.CommandLine": "2.8.2"
         },
         "runtime": {
           "Ambassador.dll": {}
@@ -47,6 +49,14 @@
           "System.Runtime.Extensions": "4.3.0",
           "System.Runtime.InteropServices": "4.3.0",
           "System.Threading": "4.3.0"
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions/7.0.0": {
+        "runtime": {
+          "lib/net7.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.0.22.51805"
+          }
         }
       },
       "Microsoft.Extensions.Primitives/5.0.1": {
@@ -198,6 +208,7 @@
       "runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
       "runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
       "runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
+      "SourceLink.Create.CommandLine/2.8.2": {},
       "System.AppContext/4.3.0": {
         "dependencies": {
           "System.Runtime": "4.3.0"
@@ -861,7 +872,7 @@
     }
   },
   "libraries": {
-    "Ambassador/1.0.15": {
+    "Ambassador/1.0.60": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -879,6 +890,13 @@
       "sha512": "sha512-P+MBhIM0YX+JqROuf7i306ZLJEjQYA9uUyRDE+OqwUI5sh41e2ZbPQV3LfAPh+29cmceE1pUffXsGfR4eMY3KA==",
       "path": "microsoft.csharp/4.3.0",
       "hashPath": "microsoft.csharp.4.3.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Logging.Abstractions/7.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kmn78+LPVMOWeITUjIlfxUPDsI0R6G0RkeAMBmQxAJ7vBJn4q2dTva7pWi65ceN5vPGjJ9q/Uae2WKgvfktJAw==",
+      "path": "microsoft.extensions.logging.abstractions/7.0.0",
+      "hashPath": "microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512"
     },
     "Microsoft.Extensions.Primitives/5.0.1": {
       "type": "package",
@@ -1047,6 +1065,13 @@
       "sha512": "sha512-VB5cn/7OzUfzdnC8tqAIMQciVLiq2epm2NrAm1E9OjNRyG4lVhfR61SMcLizejzQP8R8Uf/0l5qOIbUEi+RdEg==",
       "path": "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl/4.3.0",
       "hashPath": "runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512"
+    },
+    "SourceLink.Create.CommandLine/2.8.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-loftHQHyhybMXz4dDRpiIxyMVxKPMmHHyIfEBx/biO2cdfnojWUnosq4tQFYucPbgLnCH0fcQuOMFVKzDGTmjg==",
+      "path": "sourcelink.create.commandline/2.8.2",
+      "hashPath": "sourcelink.create.commandline.2.8.2.nupkg.sha512"
     },
     "System.AppContext/4.3.0": {
       "type": "package",

@@ -1,5 +1,6 @@
 
 using Ambassador;
+using Ambassador.Controllers;
 using Ambassador.Usecases;
 
 namespace TripComparator
@@ -51,11 +52,9 @@ namespace TripComparator
 
     public class AmbassadorService
     {
-        private readonly RegistrationUC _registration = new();
-
         public AmbassadorService(ILogger<AmbassadorService> logger)
         {
-            _registration.Register(ServiceTypes.ComparateurTrajet.ToString(), logger);
+            RegistrationController.Register(ServiceTypes.ComparateurTrajet.ToString(), logger);
         }
     }
 }

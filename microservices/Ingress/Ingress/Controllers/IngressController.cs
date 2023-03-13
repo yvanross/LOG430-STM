@@ -13,10 +13,10 @@ namespace Ingress.Controllers
 {
     [EnableCors("AllowOrigin")]
     [ApiController]
-    [Route("[controller]/{source}/[action]")]
+    [Route("[controller]/{Source}/[action]")]
     public class IngressController : ControllerBase
     {
-        private readonly RoutingUC _routingUC;
+        private readonly RoutingUC _routingUc;
 
         private readonly MonitorUc _monitorUc;
 
@@ -24,25 +24,27 @@ namespace Ingress.Controllers
 
         private readonly ILogger<SubscriptionController> _logger;
 
-        public IngressController(ILogger<SubscriptionController> logger, string source)
+        public IngressController(ILogger<SubscriptionController> logger, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
 
+            var source = httpContextAccessor.HttpContext!.GetRouteValue("source")!.ToString();
+
             var readModel = new RepositoryRead(source);
             var writeModel = new RepositoryWrite();
-            var environmentClient = new LocalDockerClient();
+            var environmentClient = new LocalDockerClient(logger);
 
-            _routingUC = new(readModel, environmentClient);
+            _routingUc = new(readModel, writeModel, environmentClient);
             _monitorUc = new(environmentClient, readModel, writeModel);
         }
 
-        [HttpPut]
+        [HttpPost]
         [ActionName(nameof(HeartBeat))]
-        public async Task<IActionResult> HeartBeat(Guid serviceId)
+        public IActionResult HeartBeat(Guid serviceId)
         {
             try
             {
-                _monitorUc.ReceiveHeartBeat(serviceId);
+                _monitorUc.Acknowledge(serviceId);
             }
             catch (Exception e)
             {
@@ -62,7 +64,7 @@ namespace Ingress.Controllers
         {
             return Try.WithConsequence(() =>
             {
-                var routingDatas = _routingUC.RouteByDestinationType(serviceType, mode).ToList();
+                var routingDatas = _routingUc.RouteByDestinationType(serviceType, mode).ToList();
 
                 foreach (var routingData in routingDatas)
                 {

@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "J/k/91xPQzdzJz+qjjN6kZ1GPrCshLS2EF9w+OUXecTKwMt+D6zakkCzQNnNgacM844MVka8DYEUY9g9idOgHA==",
+  "dgSpecHash": "ZdH01jWJ1EN6hPraUf5lGdhljUzauvKP91aH9HbeAdKVvsHjX/AYigunQ2VhVRV79PG7NnmxUNEiwnLivXP+xQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.35\\ambassador.1.0.35.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.60\\ambassador.1.0.60.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\docker.dotnet\\3.125.13\\docker.dotnet.3.125.13.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

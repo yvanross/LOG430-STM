@@ -12,7 +12,7 @@ internal class IngressRoutingUC
 {
     private protected static RestClient IngressClient { get; } = new(ContainerService.IngressAddress);
 
-    private static HeartBeatService _heartBeatService = new(SendHeartbeat);
+    private static HeartBeatService _heartBeatService = new();
 
     internal async Task<RestResponse> Register(string serviceType, bool autoScaleInstances, int minimumNumberOfInstances)
     {
@@ -22,35 +22,39 @@ internal class IngressRoutingUC
 
         var client = new RestClient(ingressAddress);
 
-        var request = new RestRequest(Resources.SubscribeToIngress_Endpoint, Method.Put);
+        var request = new RestRequest(ContainerService.FormatIngressRequest(ContainerService.SubscriptionController, Resources.SubscribeToIngress_Endpoint), Method.Put);
+
+        ContainerService.Logger?.LogInformation($"Subscribing to {ingressAddress}/{ContainerService.FormatIngressRequest(ContainerService.SubscriptionController, Resources.SubscribeToIngress_Endpoint)}");
 
         SubscriptionDto subscriptionDto = new (
             serviceType,
             serviceAddress,
             await ContainerService.GetContainerId(),
-            ContainerService.ServiceId, autoScaleInstances,
+            ContainerService.ServiceId, 
+            autoScaleInstances,
             minimumNumberOfInstances);
 
         request.AddBody(JsonConvert.SerializeObject(subscriptionDto));
 
-        request.AddHeader(KnownHeaders.Authorization, Resources.Authorization);
-
         var response = await client.ExecuteAsync(request);
+
+        if(response.IsSuccessStatusCode) 
+            _heartBeatService.TryBeginSendingHeartbeats(SendHeartbeat);
 
         return response;
     }
 
-    internal async Task<RoutingData?> GetServiceRoutingData(string targetService)
+    internal async Task<IEnumerable<RoutingData>> GetServiceRoutingData(string targetService, LoadBalancingMode routingRequestMode)
     {
         try
         {
-            var request = new RestRequest(Resources.RouteByServiceType_Endpoint);
+            var request = new RestRequest(ContainerService.FormatIngressRequest(ContainerService.IngressController, Resources.RouteByServiceType_Endpoint));
 
             request.AddQueryParameter("serviceType", targetService);
+            
+            request.AddQueryParameter("mode", routingRequestMode);
 
-            request.AddHeader(KnownHeaders.Authorization, Resources.Authorization);
-
-            var response = await IngressClient.ExecuteGetAsync<RoutingData>(request);
+            var response = await IngressClient.ExecuteGetAsync<IEnumerable<RoutingData>>(request);
 
             response.ThrowIfError();
 
@@ -58,7 +62,7 @@ internal class IngressRoutingUC
         }
         catch (Exception)
         {
-            ContainerService.Logger?.LogError("Data received from Ingress was problematic");
+            ContainerService.Logger?.LogError("Data received from IngressController was problematic");
 
             throw;
         }
@@ -80,12 +84,24 @@ internal class IngressRoutingUC
 
     private static async Task SendHeartbeat()
     {
-        var request = new RestRequest(Resources.HeartBeat_Endpoint, Method.Post);
+        try
+        {
+            var request = new RestRequest(ContainerService.FormatIngressRequest(ContainerService.IngressController, Resources.HeartBeat_Endpoint), Method.Post);
 
-        request.AddQueryParameter("serviceId", ContainerService.ServiceId);
+            request.AddQueryParameter("serviceId", ContainerService.ServiceId);
 
-        var response = await IngressClient.ExecutePostAsync(request);
+            var response = await IngressClient.ExecutePostAsync(request);
 
-        response.ThrowIfError();
+            response.ThrowIfError();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+
+            ContainerService.Logger?.LogError("HeartBeat failed");
+
+            throw;
+        }
+        
     }
 }

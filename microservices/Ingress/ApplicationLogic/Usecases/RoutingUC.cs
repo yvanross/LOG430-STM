@@ -2,7 +2,7 @@
 using Ambassador.BusinessObjects;
 using ApplicationLogic.Interfaces;
 using ApplicationLogic.Services;
-using Docker.DotNet;
+using Entities;
 using Entities.DomainInterfaces;
 
 namespace ApplicationLogic.Usecases;
@@ -13,14 +13,18 @@ public class RoutingUC
 
     private ResourceManagementService _resourceManagementService;
 
-    public RoutingUC(IRepositoryRead repositoryRead, IEnvironmentClient environment)
+    private const string TomtomUrl = "https://api.tomtom.com";
+
+    public RoutingUC(IRepositoryRead repositoryRead, IRepositoryWrite repositoryWrite, IEnvironmentClient environment)
     {
         _repositoryRead = repositoryRead;
-        _resourceManagementService = new ResourceManagementService(environment);
+        _resourceManagementService = new ResourceManagementService(environment, repositoryRead, repositoryWrite);
     }
 
     public IEnumerable<RoutingData> RouteByDestinationType(string type, LoadBalancingMode mode)
     {
+        if (type.Equals(ServiceTypes.Tomtom.ToString())){ yield return new RoutingData() { Address = TomtomUrl }; yield break; }
+
         var serviceRoute = _repositoryRead.ReadServiceByType(type);
 
         if (serviceRoute is null)

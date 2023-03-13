@@ -70,7 +70,7 @@ namespace Ambassador.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ingress/Heartbeat.
+        ///   Looks up a localized string similar to HeartBeat.
         /// </summary>
         internal static string HeartBeat_Endpoint {
             get {
@@ -79,7 +79,7 @@ namespace Ambassador.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ingress/RouteByServiceType.
+        ///   Looks up a localized string similar to RouteByServiceType.
         /// </summary>
         internal static string RouteByServiceType_Endpoint {
             get {
@@ -88,7 +88,7 @@ namespace Ambassador.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ingress/Subscribe.
+        ///   Looks up a localized string similar to Subscribe.
         /// </summary>
         internal static string SubscribeToIngress_Endpoint {
             get {

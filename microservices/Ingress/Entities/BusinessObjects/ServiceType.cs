@@ -11,5 +11,5 @@ public class ServiceType : IServiceType
 
     public int MinimumNumberOfInstances { get; set; }
 
-    public IContainerConfigName ContainerConfig { get; set; }
+    public IContainerConfig ContainerConfig { get; set; }
 }

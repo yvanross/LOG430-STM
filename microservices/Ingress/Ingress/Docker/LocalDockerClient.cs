@@ -1,14 +1,19 @@
 ﻿using System.Collections;
+using System.Diagnostics;
 using System.Dynamic;
+using System.Runtime.CompilerServices;
 using Ambassador.BusinessObjects;
-using ApplicationLogic.Extensions;
+using Docker.DotNet;
+using Docker.DotNet.Models;
 using Entities.BusinessObjects;
 using Entities.DomainInterfaces;
+using Ingress.Extensions;
 using Ingress.Interfaces;
 using Microsoft.Net.Http.Headers;
 using Monitor.Portainer;
 using Newtonsoft.Json;
 using RestSharp;
+using Try = ApplicationLogic.Extensions.Try;
 
 namespace Monitor.Docker;
 
@@ -17,103 +22,148 @@ namespace Monitor.Docker;
 /// </summary>
 public class LocalDockerClient : IEnvironmentClient
 {
-    private readonly RestClient _dockerClient = new ($"http://host.docker.internal:2375");
+    private readonly DockerClient _dockerClient = new DockerClientConfiguration(new Uri("http://host.docker.internal:2375")).CreateClient();
 
-    public async Task<List<ContainerInfo>> GetRunningServices()
+    private readonly ILogger _logger;
+
+    public LocalDockerClient(ILogger logger)
     {
+        _logger = logger;
+    }
+
+    public async Task<List<ContainerInfo>> GetRunningServices(string[]? statuses = default)
+    {
+        statuses ??= new [] { "running" };
+
         return await Try.WithConsequenceAsync(async () =>
         {
-            var request = new RestRequest("containers/json", Method.Get);
-
-            var res = await _dockerClient.ExecuteAsync(request);
-
-            dynamic expando = JsonConvert.DeserializeObject<List<ExpandoObject>>(res.Content);
+            var containers = await _dockerClient.Containers.ListContainersAsync(new ContainersListParameters()
+            {
+                Filters = new Dictionary<string, IDictionary<string, bool>>()
+                {
+                    { "status", statuses.ToDictionary(k => k, v => true) }
+                }
+            });
 
             List<ContainerInfo> microservices = new();
 
-            foreach (var container in expando)
+            foreach (var container in containers)
             {
-                dynamic? port = (container.Ports as List<object>)?.FirstOrDefault(x => ((IDictionary<string, object>)x).ContainsKey("PublicPort"));
-
-                string? publicPort = port?.PublicPort.ToString();
+                var publicPort = container.Ports.First(p=>p.PrivatePort.Equals(80)).PublicPort.ToString();
 
                 microservices.Add(new ContainerInfo()
                 {
-                    Id = container.Id,
-                    Name = ((container.Names as List<object>)?.FirstOrDefault()?.ToString())?[1..] ?? string.Empty,
+                    Id = container.ID,
+                    Name = container.Names?.FirstOrDefault()?[1..] ?? string.Empty,
                     ImageName = container.Image,
                     Status = container.Status,
-                    Port = publicPort!
+                    Port = publicPort
                 });
             }
 
             return microservices;
-        }, retryCount: 2);
+        }, retryCount: 5, autoThrow:false);
     }
 
-    public Task<string> GetContainerLogs(string containerId)
+    public async Task<MultiplexedStream> GetContainerLogs(string containerId)
     {
-        throw new NotImplementedException();
+        return await _dockerClient.Containers.GetContainerLogsAsync(containerId, true, new ContainerLogsParameters());
     }
 
-    public async Task<IContainerConfigName> GetContainerConfig(string containerId)
+    public async Task<IContainerConfig> GetContainerConfig(string containerId)
     {
-        var containerData = await Try.WithConsequenceAsync<(dynamic Config, dynamic HostConfig)>(async () =>
-            {
-                var request = new RestRequest($"containers/{containerId}/json", Method.Get);
+        var containerData = await Try.WithConsequenceAsync(async () =>
+        {
+           var container = await _dockerClient.Containers.InspectContainerAsync(containerId);
 
-                var res = await _dockerClient.ExecuteAsync(request);
+           return container;
+        },
+        retryCount: 5);
 
-                dynamic expando = JsonConvert.DeserializeObject<ExpandoObject>(res.Content);
-
-                return (expando.Config, expando.HostConfig);
-            },
-            retryCount: 2);
-
-        var dynamicConfig = containerData.Config;
-
-        dynamicConfig.HostConfig = containerData.HostConfig;
-
-        return dynamicConfig;
+        return new ContainerConfig()
+        {
+            Config = containerData
+        };
     }
 
-    public async Task IncreaseByOneNumberOfInstances(IContainerConfigName dynamicContainerConfigName, string newContainerName)
+    public async Task IncreaseByOneNumberOfInstances(IContainerConfig containerConfig, string newContainerName, Guid id)
     {
-        dynamicContainerConfigName.Name = newContainerName;
-
-            var newId = await Try.WithConsequenceAsync<string>(async () =>
-            {
-                var request = new RestRequest($"containers/create?name={newContainerName}", Method.Post);
-
-                request.AddJsonBody((object)dynamicContainerConfigName);
-
-                var res = await _dockerClient.ExecuteAsync(request);
-
-                dynamic expando = JsonConvert.DeserializeObject<ExpandoObject>(res.Content);
-
-                return expando.Id;
-            },
-            retryCount: 2);
-
         await Try.WithConsequenceAsync(async () =>
+        {
+            var env = (List<string>)containerConfig.Config.Config.Env;
+
+            env.RemoveAll(e => e.ToString().StartsWith("ID="));
+
+            env.Add($"ID={id}");
+
+            var exposedPorts = GetPortBindings();
+            
+            containerConfig.Config.HostConfig.AutoRemove = true;
+            containerConfig.Config.HostConfig.PortBindings = exposedPorts;
+
+
+            var containerResponse = await _dockerClient.Containers.CreateContainerAsync(new CreateContainerParameters
             {
-                var request = new RestRequest($"containers/{newId}/start", Method.Post);
-
-                var res = await _dockerClient.ExecuteAsync(request);
-
-                return 0;
+                HostConfig = containerConfig.Config.HostConfig,
+                Env = env,
+                Image = containerConfig.Config.Image,
+                Name = newContainerName,
+                ExposedPorts = new Dictionary<string, EmptyStruct>() { {exposedPorts.Keys.First(), new EmptyStruct()} } 
             });
+
+            _ =await _dockerClient.Containers.StartContainerAsync(containerResponse.ID, new ContainerStartParameters());
+
+            return Task.CompletedTask;
+        },
+        retryCount: 5, onFailure: async (_, _) => await GarbageCollection());
+
+        await GarbageCollection();
+
+        async Task GarbageCollection()
+        {
+            await Try.WithConsequenceAsync(async () =>
+            {
+                var containersToRemove = await GetRunningServices(new[] { "exited", "dead" });
+
+                await Parallel
+                    .ForEachAsync(containersToRemove, async (toKill, _) => await RemoveContainerInstance(toKill.Id))
+                    .ConfigureAwait(false);
+
+                return Task.CompletedTask;
+            },
+            retryCount: 2, onFailure: (e, _) =>
+            {
+                _logger.LogInformation(e.Message + "\n" + e.InnerException);
+                return Task.CompletedTask;
+            });
+        }
     }
 
     public async Task RemoveContainerInstance(string containerId)
     {
-        await Try.WithConsequenceAsync(async () =>
+        try
         {
-            var request = new RestRequest($"containers/{containerId}", Method.Delete);
+            await _dockerClient.Containers.RemoveContainerAsync(containerId, new ContainerRemoveParameters() { Force = true });
+        }
+        catch
+        {
+            // ignored
+        }
+    }
 
-            await _dockerClient.ExecuteAsync(request);
-
-            return 0;
-        }, retryCount: 2);
+    [MethodImpl(MethodImplOptions.NoOptimization)]
+    private IDictionary<string, IList<PortBinding>> GetPortBindings()
+    {
+        return new Dictionary<string, IList<PortBinding>>
+        {
+            { "80/tcp", new List<PortBinding>
+                {
+                    new()
+                    {
+                        HostPort = Random.Shared.Next(40000, 50000).ToString()
+                    }
+                }
+            }
+        };
     }
 }

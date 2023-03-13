@@ -1,5 +1,6 @@
 ﻿using System.Dynamic;
 using ApplicationLogic.Extensions;
+using Docker.DotNet;
 using Entities.BusinessObjects;
 using Entities.DomainInterfaces;
 using Ingress.Interfaces;
@@ -66,8 +67,14 @@ public class PortainerClient : IEnvironmentClient
         onFailure: async (_, _) => _jwt = $"bearer {await GetAuthorization()}");
     }
 
-    public async Task<string> GetContainerLogs(string containerId)
+    public Task<List<ContainerInfo>> GetRunningServices(string[]? statuses = default)
     {
+        throw new NotImplementedException();
+    }
+
+    public async Task<MultiplexedStream> GetContainerLogs(string containerId)
+    {
+        /*
         if (string.IsNullOrEmpty(_environmentId))
             _environmentId = await GetEnvironmentId();
 
@@ -83,9 +90,12 @@ public class PortainerClient : IEnvironmentClient
         },
         retryCount: _retryCount,
         onFailure: async (_, _) => _jwt = $"bearer {await GetAuthorization()}");
+        */
+        return null;
     }
 
-    public Task IncreaseByOneNumberOfInstances(IContainerConfigName dynamicContainerConfigName, string newContainerName)
+    public Task IncreaseByOneNumberOfInstances(IContainerConfig containerConfig, string newContainerName,
+        Guid id)
     {
         throw new NotImplementedException();
     }
@@ -139,7 +149,7 @@ public class PortainerClient : IEnvironmentClient
         }, retryCount: _retryCount);
     }
 
-    public Task<IContainerConfigName> GetContainerConfig(string containerId)
+    public Task<IContainerConfig> GetContainerConfig(string containerId)
     {
         throw new NotImplementedException();
     }

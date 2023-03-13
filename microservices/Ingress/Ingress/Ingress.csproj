@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ambassador" Version="1.0.35" />
+    <PackageReference Include="Ambassador" Version="1.0.60" />
     <PackageReference Include="Docker.DotNet" Version="3.125.13" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.3" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />

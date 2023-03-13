@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\ApplicationLogicTests\\ApplicationLogicTests.csproj": {}
+    "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogicTests\\ApplicationLogicTests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\ApplicationLogicTests\\ApplicationLogicTests.csproj": {
+    "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogicTests\\ApplicationLogicTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
+        "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
         "projectName": "ApplicationLogicTests",
-        "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
+        "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
         "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\ApplicationLogicTests\\obj\\",
+        "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogicTests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -26,7 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Nuget": {},
+          "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Nuget": {},
           "https://api.nuget.org/v3/index.json": {},
           "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
         },
@@ -34,8 +34,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj": {
-                "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj"
+              "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj": {
+                "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj"
               }
             }
           }
@@ -87,14 +87,14 @@
         }
       }
     },
-    "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj": {
+    "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj",
+        "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj",
         "projectName": "ApplicationLogic",
-        "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj",
+        "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj",
         "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\TripComparator\\ApplicationLogic\\obj\\",
+        "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogic\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -109,7 +109,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Nuget": {},
+          "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Nuget": {},
           "https://api.nuget.org/v3/index.json": {},
           "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
         },
@@ -131,7 +131,7 @@
           "dependencies": {
             "Ambassador": {
               "target": "Package",
-              "version": "[1.0.23, )"
+              "version": "[1.0.60, )"
             }
           },
           "imports": [

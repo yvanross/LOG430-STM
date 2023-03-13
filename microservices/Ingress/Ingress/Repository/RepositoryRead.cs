@@ -49,4 +49,14 @@ public class RepositoryRead : IRepositoryRead
 
         return containerConfig;
     }
+
+    public List<IServiceType>? GetAllServiceTypes()
+    {
+        return RouteCache.GetContainerModels(_http)?.Values.ToList();
+    }
+
+    public string GetAddress()
+    {
+        return _http;
+    }
 }

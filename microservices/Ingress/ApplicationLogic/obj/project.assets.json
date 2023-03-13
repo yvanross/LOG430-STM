@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net7.0": {
-      "Ambassador/1.0.35": {
+      "Ambassador/1.0.60": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
@@ -163,6 +163,9 @@
       "Entities/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Docker.DotNet": "3.125.13"
+        },
         "compile": {
           "bin/placeholder/Entities.dll": {}
         },
@@ -173,13 +176,13 @@
     }
   },
   "libraries": {
-    "Ambassador/1.0.35": {
-      "sha512": "5pqlkjBhDeIWTGwodXOmBf6Y9eamuqscJxzv/BC2ldxVcDD15yE3EybprLkSyp6mMaFItYSsd40AZGO419BADQ==",
+    "Ambassador/1.0.60": {
+      "sha512": "5sPKnmjsIu20t62QEumJ6EuPDN5JMUdhGidOLDlWMrbb1eXnDCDN5SXIdK/+uE9xGO7YHBF46HF7zQkYAVt1wg==",
       "type": "package",
-      "path": "ambassador/1.0.35",
+      "path": "ambassador/1.0.60",
       "files": [
         ".nupkg.metadata",
-        "ambassador.1.0.35.nupkg.sha512",
+        "ambassador.1.0.60.nupkg.sha512",
         "ambassador.nuspec",
         "lib/net7.0/Ambassador.dll",
         "lib/net7.0/Ambassador.pdb"
@@ -473,7 +476,7 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "Ambassador >= 1.0.35",
+      "Ambassador >= 1.0.60",
       "Docker.DotNet >= 3.125.13",
       "Entities >= 1.0.0"
     ]
@@ -504,7 +507,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM-Template\\microservices\\Nuget": {},
+        "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Nuget": {},
         "https://api.nuget.org/v3/index.json": {},
         "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
       },
@@ -530,7 +533,7 @@
         "dependencies": {
           "Ambassador": {
             "target": "Package",
-            "version": "[1.0.35, )"
+            "version": "[1.0.60, )"
           },
           "Docker.DotNet": {
             "target": "Package",

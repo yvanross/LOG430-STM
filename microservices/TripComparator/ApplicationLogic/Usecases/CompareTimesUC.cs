@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Ambassador.BusinessObjects;
+using Ambassador.Controllers;
 
 namespace ApplicationLogic.Usecases
 {
@@ -16,9 +17,7 @@ namespace ApplicationLogic.Usecases
     {
         public async Task<int> CompareBusAndCarTime(string startingCoordinates, string destinationCoordinates)
         {
-            var restWrapper = new RestWrapper();
-
-            var res = await restWrapper.Get(new GetRoutingRequest()
+            var res = await RestController.Get(new GetRoutingRequest()
             {
                 TargetService = ServiceTypes.RouteTimeProvider.ToString(),
                 Endpoint = $"RouteTime/Get",
@@ -34,12 +33,18 @@ namespace ApplicationLogic.Usecases
                         Name = "destinationCoordinates",
                         Value = destinationCoordinates
                     },
-                }
+                },
+                Mode = LoadBalancingMode.Broadcast
             });
 
-            var time = JsonConvert.DeserializeObject<int>(res.Content);
+            var times = new List<int>();
 
-            return time;
+            await foreach (var result in res!.ReadAllAsync())
+            {
+                times.Add(JsonConvert.DeserializeObject<int>(result.Content));
+            }
+
+            return (int)times.Average();
         }
     }
 }

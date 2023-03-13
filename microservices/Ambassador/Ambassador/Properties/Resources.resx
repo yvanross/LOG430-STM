@@ -121,12 +121,12 @@
     <value>9c934c68-b9ea-413c-badb-77c66c7383cf</value>
   </data>
   <data name="HeartBeat_Endpoint" xml:space="preserve">
-    <value>Ingress/Heartbeat</value>
+    <value>HeartBeat</value>
   </data>
   <data name="RouteByServiceType_Endpoint" xml:space="preserve">
-    <value>Ingress/RouteByServiceType</value>
+    <value>RouteByServiceType</value>
   </data>
   <data name="SubscribeToIngress_Endpoint" xml:space="preserve">
-    <value>Ingress/Subscribe</value>
+    <value>Subscribe</value>
   </data>
 </root>

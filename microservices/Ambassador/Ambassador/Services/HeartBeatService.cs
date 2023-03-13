@@ -6,13 +6,13 @@ namespace Ambassador.Health;
 
 internal class HeartBeatService
 {
-    private static readonly PeriodicTimer PeriodicTimer = new(TimeSpan.FromMilliseconds(250));
+    private static readonly PeriodicTimer PeriodicTimer = new(TimeSpan.FromSeconds(1));
 
     private static Task? _clock ;
 
-    private readonly Func<Task>? _sendHeartbeat;
+    private Func<Task>? _sendHeartbeat;
 
-    internal HeartBeatService(Func<Task> sendHeartbeat)
+    internal void TryBeginSendingHeartbeats(Func<Task> sendHeartbeat)
     {
         if (_clock is null)
         {

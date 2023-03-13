@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net7.0": {
-      "Ambassador/1.0.30": {
+      "Ambassador/1.0.57": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
@@ -1646,7 +1646,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "Ambassador": "1.0.30",
+          "Ambassador": "1.0.57",
           "ApplicationLogic": "1.0.0",
           "Google.Protobuf": "3.22.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.3",
@@ -1667,13 +1667,13 @@
     }
   },
   "libraries": {
-    "Ambassador/1.0.30": {
-      "sha512": "XkhBP35UMO1nMikaC/rQxQlyMAl35gBo6f5BMkRS7NTAwdQH8dcq+7nCaGfQCtXdlKBFJQWTaGHOwbWe2t8qKA==",
+    "Ambassador/1.0.57": {
+      "sha512": "CNn7TZg6bxdfHoM5rgkiiaXH2GA2ovk4dWaUwUTUPa1fImojLapjQmXv6qboroNNHA7WHZEbG4hvYe8drrOaAA==",
       "type": "package",
-      "path": "ambassador/1.0.30",
+      "path": "ambassador/1.0.57",
       "files": [
         ".nupkg.metadata",
-        "ambassador.1.0.30.nupkg.sha512",
+        "ambassador.1.0.57.nupkg.sha512",
         "ambassador.nuspec",
         "lib/net7.0/Ambassador.dll",
         "lib/net7.0/Ambassador.pdb"
@@ -5036,11 +5036,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\STMTests\\STMTests.csproj",
+      "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\STMTests\\STMTests.csproj",
       "projectName": "STMTests",
-      "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\STMTests\\STMTests.csproj",
+      "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\STMTests\\STMTests.csproj",
       "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\STMTests\\obj\\",
+      "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\STMTests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -5055,18 +5055,19 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Users\\david\\LOG430-STM\\microservices\\Nuget": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Nuget": {},
+        "https://api.nuget.org/v3/index.json": {},
+        "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj": {
-              "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj"
+            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj": {
+              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj"
             },
-            "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\STM\\STM.csproj": {
-              "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\STM\\STM.csproj"
+            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\STM\\STM.csproj": {
+              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\STM\\STM.csproj"
             }
           }
         }

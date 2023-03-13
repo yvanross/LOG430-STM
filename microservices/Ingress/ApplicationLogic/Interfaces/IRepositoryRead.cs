@@ -18,4 +18,8 @@ public interface IRepositoryRead
     IScheduler? GetScheduler();
 
     IServiceType? GetServiceType(string serviceType);
+   
+    List<IServiceType>? GetAllServiceTypes();
+    
+    string GetAddress();
 }

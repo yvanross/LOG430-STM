@@ -36,8 +36,6 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-new StmData().PrefetchData();
-
 app.UseHttpsRedirection();
 
 app.UseCors();
@@ -49,12 +47,14 @@ var logger = app.Services.GetRequiredService<ILogger<AmbassadorService>>();
 
 _ = new AmbassadorService(logger);
 
+new StmData().PrefetchData();
+
 app.Run();
 
 public class AmbassadorService
 {
     public AmbassadorService(ILogger<AmbassadorService> logger)
     {
-        RegistrationController.Register(ServiceTypes.ComparateurTrajet.ToString(), logger);
+        RegistrationController.Register(ServiceTypes.Stm.ToString(), logger);
     }
 }

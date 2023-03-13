@@ -1984,7 +1984,7 @@
           "lib/netstandard1.3/System.Xml.XmlDocument.dll": {}
         }
       },
-      "Ambassador/1.0.35": {
+      "Ambassador/1.0.60": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
@@ -7043,7 +7043,7 @@
         "system.xml.xmldocument.nuspec"
       ]
     },
-    "Ambassador/1.0.35": {
+    "Ambassador/1.0.60": {
       "type": "project",
       "path": "../Ambassador/Ambassador.csproj",
       "msbuildProject": "../Ambassador/Ambassador.csproj"
@@ -7051,7 +7051,7 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "Ambassador >= 1.0.35",
+      "Ambassador >= 1.0.60",
       "MSTest.TestAdapter >= 2.2.10",
       "MSTest.TestFramework >= 2.2.10",
       "Microsoft.NET.Test.Sdk >= 17.3.2",
@@ -7065,11 +7065,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\Ambassador\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
+      "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ambassador\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
       "projectName": "ApplicationLogicTests",
-      "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ambassador\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
+      "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ambassador\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
       "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ambassador\\ApplicationLogicTests\\obj\\",
+      "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ambassador\\ApplicationLogicTests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -7084,15 +7084,16 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Users\\david\\LOG430-STM\\microservices\\Nuget": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Nuget": {},
+        "https://api.nuget.org/v3/index.json": {},
+        "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\david\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj": {
-              "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj"
+            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj": {
+              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj"
             }
           }
         }
