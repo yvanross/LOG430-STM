@@ -6,88 +6,64 @@ using System.Threading.Tasks;
 using ApplicationLogic.Extensions;
 using ApplicationLogic.Interfaces;
 using ApplicationLogic.Services;
-using Entities.BusinessObjects;
+using Entities.BusinessObjects.Live;
 using Entities.BusinessObjects.States;
-using Entities.DomainInterfaces;
+using Entities.DomainInterfaces.ResourceManagement;
 
 namespace ApplicationLogic.Usecases
 {
     public class MonitorUc
     {
-        private readonly IEnvironmentClient _client;
-
         private readonly IRepositoryRead _readModel;
-
-        private readonly IRepositoryWrite _writeModel;
 
         private readonly ResourceManagementService _resourceManagementService;
 
         public MonitorUc(IEnvironmentClient client, IRepositoryRead readModel, IRepositoryWrite writeModel)
         {
-            _client = client;
             _readModel = readModel;
-            _writeModel = writeModel;
 
-            _resourceManagementService = new ResourceManagementService(_client, readModel, writeModel);
+            _resourceManagementService = new ResourceManagementService(client, readModel, writeModel);
         }
 
-        public void TryScheduleHeartBeatOnScheduler()
+        public void TryScheduleStateProcessingOnScheduler()
         {
             if (_readModel.GetScheduler() is not { } scheduler) throw new NullReferenceException("Scheduler was null");
 
-            scheduler.TryAddTask(BeginProcessingHeartbeats);
+            scheduler.TryAddTask(BeginProcessingPodStates);
         }
 
-        public void Acknowledge(Guid id)
-        {
-            var route = _readModel.ReadServiceById(id);
-
-            if (route is not null)
-            {
-                route.LastHeartbeat = DateTime.UtcNow;
-            }
-        }
-
-        private async Task BeginProcessingHeartbeats()
+        private async Task BeginProcessingPodStates()
         {
             await Try.WithConsequenceAsync(async () =>
             {
-                var routes = _readModel.GetAllServices();
+                var routes = _readModel.GetAllPods();
 
                 //if empty or null
                 if ((routes?.Any() ?? true) is false) return Task.CompletedTask;
 
-                var unknownStateRoutes = routes!.Where(service =>
+                var unknownPodStates = routes!.Where(pod =>
                 {
-                    service.ServiceStatus?.EvaluateState();
-                    return service.ServiceStatus is UnknownState;
+                    pod.ServiceInstances.ForEach(service => service.ServiceStatus?.EvaluateState());
+
+                    return pod.ServiceInstances.Any(service => service.ServiceStatus is UnknownState);
                 }).ToList();
 
-                foreach (var route in unknownStateRoutes)
+                foreach (var podInstance in unknownPodStates)
                 {
-                    var minNumberOfInstances = _readModel.GetServiceType(route.Type)!.MinimumNumberOfInstances;
+                    var minNumberOfInstances = _readModel.GetPodType(podInstance.Type)!.MinimumNumberOfInstances;
 
-                    if (_readModel.ReadServiceByType(route.Type)!.Count > minNumberOfInstances)
+                    if (_readModel.GetServiceInstances(podInstance.Type)!.Count > minNumberOfInstances)
                     {
-                        await _resourceManagementService.RemoveServiceInstance(route).ConfigureAwait(false);
+                        await _resourceManagementService.RemovePodInstance(podInstance).ConfigureAwait(false);
                     }
                     else
                     {
-                        await _resourceManagementService.ReplaceServiceInstance(route).ConfigureAwait(false);
+                        await _resourceManagementService.ReplacePodInstance(podInstance).ConfigureAwait(false);
                     }
                 }
 
                 return Task.CompletedTask;
-            }, retryCount: int.MaxValue);
-        }
-
-        public async Task<ContainerInfo> GetPort(string containerId)
-        {
-            var runningServices = await _client.GetRunningServices();
-
-            var targetService = runningServices.SingleOrDefault(rs => rs.Id.Equals(containerId));
-
-            return targetService;
+            }, retryCount: 5);
         }
     }
 }

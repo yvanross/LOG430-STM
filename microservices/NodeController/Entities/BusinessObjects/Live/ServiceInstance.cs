@@ -1,17 +1,21 @@
-﻿using Entities.BusinessObjects.States;
-using Entities.DomainInterfaces;
+﻿using System.Security.Cryptography.X509Certificates;
+using Entities.BusinessObjects.States;
+using Entities.DomainInterfaces.Live;
+using Entities.DomainInterfaces.ResourceManagement;
 
-namespace Entities.BusinessObjects;
+namespace Entities.BusinessObjects.Live;
 
 public class ServiceInstance : IServiceInstance
 {
-    public required Guid Id { get; init; }
-    
-    public required ContainerInfo? ContainerInfo { get; init; }
+    public required string Id { get; init; }
+
+    public required ContainerInfo? ContainerInfo { get; set; }
 
     public required string Address { get; init; }
-    
+
     public required string Type { get; init; }
+
+    public required string PodId { get; set; }
 
     public DateTime LastHeartbeat { get; set; } = DateTime.UtcNow;
 
@@ -22,5 +26,9 @@ public class ServiceInstance : IServiceInstance
     public string HttpRoute => $"http://{Address}" + (string.IsNullOrEmpty(ContainerInfo?.Port) ? string.Empty : $":{ContainerInfo.Port}");
 
     public string HttpsRoute => $"https://{Address}" + (string.IsNullOrEmpty(ContainerInfo?.Port) ? string.Empty : $":{ContainerInfo.Port}");
-
+    
+    public bool Equals(IServiceInstance? other)
+    {
+        return Id.Equals(other?.Id);
+    }
 }

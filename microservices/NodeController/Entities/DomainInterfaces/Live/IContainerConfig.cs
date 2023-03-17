@@ -1,6 +1,6 @@
 ﻿using Docker.DotNet.Models;
 
-namespace Entities.DomainInterfaces;
+namespace Entities.DomainInterfaces.Live;
 
 public interface IContainerConfig
 {

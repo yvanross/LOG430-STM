@@ -1,4 +1,4 @@
-﻿using Entities.DomainInterfaces;
+﻿using Entities.DomainInterfaces.Live;
 
 namespace Entities.BusinessObjects.States;
 

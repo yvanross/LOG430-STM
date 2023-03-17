@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApplicationLogic\ApplicationLogic.csproj" />
-    <ProjectReference Include="..\Ingress\NodeController.csproj" />
   </ItemGroup>
 
 </Project>

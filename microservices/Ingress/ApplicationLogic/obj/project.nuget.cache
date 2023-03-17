@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "idKW5ljM392g37vboj0AWshtk6iKXSPKapQJcW0n1UIazJ8Vc2TWIYEsPfhrpm2gmdC61IMtAgu06xma3ZpBjA==",
+  "dgSpecHash": "sisFEHTwWKgokJKTykQiSv+kdqdlAverPoYz1ySKGJ5C9wkZzihcvGlOXkO5w6OpkPqkCJDPLPyVf4voUr9jlg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
+  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.60\\ambassador.1.0.60.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\docker.dotnet\\3.125.13\\docker.dotnet.3.125.13.nupkg.sha512",

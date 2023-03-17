@@ -1,9 +1,6 @@
-﻿using System.Net;
-using Ambassador;
+﻿using Ambassador;
 using Ambassador.BusinessObjects;
 using Microsoft.Net.Http.Headers;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ApplicationLogic.Usecases;
 

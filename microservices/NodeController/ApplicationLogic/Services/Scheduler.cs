@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 using ApplicationLogic.Extensions;
-using Entities.DomainInterfaces;
+using Entities.DomainInterfaces.ResourceManagement;
 
 namespace ApplicationLogic.Services;
 

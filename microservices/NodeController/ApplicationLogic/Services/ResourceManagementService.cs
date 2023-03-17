@@ -1,13 +1,10 @@
 ﻿using System.Collections.Immutable;
 using ApplicationLogic.Interfaces;
-using Entities.DomainInterfaces;
-using System.Linq;
 using Ambassador;
-using ApplicationLogic.Extensions;
-using Entities;
-using Entities.BusinessObjects;
-using System.ComponentModel;
 using Entities.BusinessObjects.States;
+using Entities.DomainInterfaces.Live;
+using Entities.DomainInterfaces.ResourceManagement;
+using Entities.BusinessObjects.Live;
 
 namespace ApplicationLogic.Services;
 
@@ -25,73 +22,127 @@ public class ResourceManagementService
         _readModel = readModel;
         _writeModel = writeModel;
 
-        _readModel.GetScheduler()?.TryAddTask(MatchInstanceDemandOnServices);
+        _readModel.GetScheduler()?.TryAddTask(MatchInstanceDemandOnPods);
     }
 
 
-    private async Task MatchInstanceDemandOnServices()
+    private async Task MatchInstanceDemandOnPods()
     {
-        var serviceTypes = _readModel.GetAllServiceTypes();
+        var podTypes = _readModel.GetAllPodTypes();
 
-        if (serviceTypes is not null)
+        if (podTypes is not null)
         {
-            foreach (var serviceType in serviceTypes)
+            foreach (var podType in podTypes)
             {
-                while (_readModel.ReadServiceByType(serviceType.Type)?.Count < serviceType.MinimumNumberOfInstances)
+                while (_readModel.GetPodInstances(podType.Type)?.Count < podType.MinimumNumberOfInstances)
                 {
-                    await IncreaseNumberOfInstances(serviceType.Type).ConfigureAwait(false);
+                    await IncreaseNumberOfPodInstances(podType.Type).ConfigureAwait(false);
                 }
             }
         }
     }
 
-    public async Task RemoveServiceInstance(IServiceInstance serviceInstance)
+    public async Task RemovePodInstance(IPodInstance podInstance)
     {
-        _writeModel.RemoveService(serviceInstance);
+        _writeModel.TryRemovePod(podInstance);
 
-        if (serviceInstance.ContainerInfo != null)
-            await _environmentClient.RemoveContainerInstance(serviceInstance.ContainerInfo.Id);
-    }
-
-    public async Task ReplaceServiceInstance(IServiceInstance serviceInstance)
-    {
-        _writeModel.RemoveService(serviceInstance);
-
-        if (serviceInstance.ContainerInfo != null)
-            await _environmentClient.RemoveContainerInstance(serviceInstance.ContainerInfo.Id);
-
-        serviceInstance.ServiceStatus = new LaunchedState(serviceInstance);
-
-        _writeModel.WriteService(serviceInstance);
-
-        var serviceType = _readModel.GetServiceType(serviceInstance.Type);
-
-        await _environmentClient.IncreaseByOneNumberOfInstances(serviceType.ContainerConfig, $"{serviceType.Type}-{Random.Shared.Next(0, int.MaxValue)}", serviceInstance.Id);
-    }
-
-    public async Task IncreaseNumberOfInstances(string type)
-    {
-        var serviceType = _readModel.GetServiceType(type);
-
-        if (serviceType is not null)
+        foreach (var serviceInstance in podInstance.ServiceInstances)
         {
-            var id = Guid.NewGuid();
+            if (serviceInstance.ContainerInfo is not null)
+                await _environmentClient.RemoveContainerInstance(serviceInstance.ContainerInfo.Id);
+        }
+        
+    }
 
-            if(_readModel.ReadServiceById(id) is {} service) _writeModel.RemoveService(service);
+    public async Task ReplacePodInstance(IPodInstance podInstance)
+    {
+        await RemovePodInstance(podInstance);
 
-            var newServiceInstance = new ServiceInstance()
+        podInstance.Id = Guid.NewGuid().ToString();
+
+        try
+        {
+            foreach (var serviceInstance in podInstance.ServiceInstances)
             {
-                Address = _readModel.GetAddress(),
-                Id = id,
-                ContainerInfo = default,
-                Type = serviceType.Type,
+                serviceInstance.ServiceStatus = new LaunchedState(serviceInstance);
+
+                var serviceType = _readModel.GetServiceType(serviceInstance.Type);
+
+                serviceInstance.PodId = podInstance.Id;
+
+                if (serviceType is not null)
+                    await _environmentClient.IncreaseByOneNumberOfInstances(serviceType.ContainerConfig, $"{serviceType.Type}-{Random.Shared.Next(0, int.MaxValue)}", serviceInstance.Id, serviceInstance.PodId);
+            }
+        }
+        finally
+        {
+            _writeModel.AddOrUpdatePod(podInstance);
+        }
+    }
+
+    public async Task IncreaseNumberOfPodInstances(string type)
+    {
+        var podType = _readModel.GetPodType(type);
+
+        if (podType is not null)
+        {
+            var newPodInstance = CreateNewPodInstance();
+
+            try
+            {
+                foreach (var newServiceInstance in newPodInstance.ServiceInstances)
+                {
+                    newServiceInstance.ServiceStatus = new LaunchedState(newServiceInstance);
+
+                    var serviceType = _readModel.GetServiceType(newServiceInstance.Type);
+
+                    if (serviceType is not null)
+                    {
+                        var newContainerName = $"{newServiceInstance!.Type}-{Random.Shared.Next(0, int.MaxValue)}";
+
+                        var creationInfo = await _environmentClient.IncreaseByOneNumberOfInstances(serviceType.ContainerConfig, newContainerName, newServiceInstance.Id, newServiceInstance.PodId);
+
+                        var containerInfo = await _environmentClient.GetContainerInfo(creationInfo!.ID);
+
+                        newServiceInstance.ContainerInfo = containerInfo.CuratedInfo;
+                    }
+                }
+
+                _writeModel.AddOrUpdatePod(newPodInstance);
+            }
+            catch
+            {
+                await RemovePodInstance(newPodInstance);
+            }
+        }
+
+        PodInstance CreateNewPodInstance()
+        {
+            var serviceInstances = new List<IServiceInstance>();
+
+            var newPodId = Guid.NewGuid().ToString();
+
+            foreach (var serviceType in podType.ServiceTypes)
+            {
+                var newServiceId = Guid.NewGuid().ToString();
+
+                serviceInstances.Add(new ServiceInstance()
+                {
+                    Address = _readModel.GetAddress(),
+                    Id = newServiceId,
+                    ContainerInfo = default,
+                    Type = serviceType.Type,
+                    PodId = newPodId
+                });
+            }
+
+            var newPodInstance = new PodInstance()
+            {
+                Id = newPodId,
+                ServiceInstances = serviceInstances.ToImmutableList(),
+                Type = podType.Type,
             };
-
-            newServiceInstance.ServiceStatus = new LaunchedState(newServiceInstance);
-
-            _writeModel.WriteService(newServiceInstance);
-
-            await _environmentClient.IncreaseByOneNumberOfInstances(serviceType.ContainerConfig, $"{serviceType?.Type}-{Random.Shared.Next(0,int.MaxValue)}", id);
+            return newPodInstance;
         }
     }
 

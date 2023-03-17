@@ -1,13 +1,14 @@
-﻿using Entities.DomainInterfaces;
+﻿using Entities.DomainInterfaces.Live;
+using Entities.DomainInterfaces.Planned;
 
 namespace ApplicationLogic.Interfaces;
 
 public interface IRepositoryWrite
 {
-    void WriteService(IServiceInstance serviceInstance);
+    void AddOrUpdatePod(IPodInstance podInstance);
     
-    void RemoveService(IServiceInstance serviceInstance);
+    void TryRemovePod(IPodInstance podInstance);
 
-    void UpdateServiceType(IServiceInstance serviceInstance, IServiceType containerConfigName);
+    void AddOrUpdatePodType(IPodType podType);
 
 }

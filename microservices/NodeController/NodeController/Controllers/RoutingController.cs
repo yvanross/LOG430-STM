@@ -1,18 +1,18 @@
 ﻿using Ambassador;
 using Ambassador.BusinessObjects;
+using ApplicationLogic.Extensions;
 using ApplicationLogic.Usecases;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NodeController.Docker;
-using NodeController.Extensions;
 using NodeController.Repository;
 
 namespace NodeController.Controllers
 {
     [EnableCors("AllowOrigin")]
     [ApiController]
-    [Route("[controller]/{Source}/[action]")]
-    public class IngressController : ControllerBase
+    [Route("[controller]/[action]")]
+    public class RoutingController : ControllerBase
     {
         private readonly RoutingUC _routingUc;
 
@@ -20,15 +20,13 @@ namespace NodeController.Controllers
 
         private readonly HeadersUC _headersUc = new();
 
-        private readonly ILogger<SubscriptionController> _logger;
+        private readonly ILogger<RoutingController> _logger;
 
-        public IngressController(ILogger<SubscriptionController> logger, IHttpContextAccessor httpContextAccessor)
+        public RoutingController(ILogger<RoutingController> logger)
         {
             _logger = logger;
 
-            var source = httpContextAccessor.HttpContext!.GetRouteValue("source")!.ToString();
-
-            var readModel = new RepositoryRead(source);
+            var readModel = new RepositoryRead(HostInfo.ServiceAddress);
             var writeModel = new RepositoryWrite();
             var environmentClient = new LocalDockerClient(logger);
 
@@ -36,31 +34,11 @@ namespace NodeController.Controllers
             _monitorUc = new(environmentClient, readModel, writeModel);
         }
 
-        [HttpPost]
-        [ActionName(nameof(HeartBeat))]
-        public IActionResult HeartBeat(Guid serviceId)
-        {
-            try
-            {
-                _monitorUc.Acknowledge(serviceId);
-            }
-            catch (Exception e)
-            {
-                var errorMessage = $"{e.Message} \n \t{e.StackTrace}";
-
-                _logger.LogError(errorMessage);
-
-                return Problem(errorMessage);
-            }
-
-            return Ok();
-        }
-
         [HttpGet]
         [ActionName(nameof(RouteByServiceType))]
         public ActionResult<IEnumerable<RoutingData>> RouteByServiceType(string serviceType, LoadBalancingMode mode)
         {
-            return Try.WithConsequence(() =>
+            return Ok(Try.WithConsequenceAsync(() =>
             {
                 var routingDatas = _routingUc.RouteByDestinationType(serviceType, mode).ToList();
 
@@ -73,8 +51,8 @@ namespace NodeController.Controllers
                     _logger.LogInformation($"routing service to {routingData.Address}");
                 }
 
-                return routingDatas;
-            });
+                return Task.FromResult(routingDatas);
+            }, retryCount: 2));
         }
     }
 }

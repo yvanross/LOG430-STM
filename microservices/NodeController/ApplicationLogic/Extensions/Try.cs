@@ -2,13 +2,13 @@
 
 public static class Try
 {
-    public static async Task<T> WithConsequenceAsync<T>(Func<Task<T>> todo, Func<Exception, int, Task>? onFailure = null, int retryCount = 0, bool autoThrow = true)
+    public static async Task<T?> WithConsequenceAsync<T>(Func<Task<T>> todo, Func<Exception, int, Task>? onFailure = null, int retryCount = 0, bool autoThrow = true)
     {
         var retry = 0;
 
         return await SafeAction(todo, onFailure);
 
-        async Task<T> SafeAction(Func<Task<T>> func, Func<Exception, int, Task>? onFailure = null)
+        async Task<T?> SafeAction(Func<Task<T>> func, Func<Exception, int, Task>? onFailure = null)
         {
             try
             {
@@ -28,7 +28,10 @@ public static class Try
                     return await SafeAction(func, onFailure);
                 }
 
-                throw;
+                if(autoThrow)
+                    throw;
+
+                return await Task.FromResult(default(T));
             }
         }
     }

@@ -1,8 +1,12 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Collections.Concurrent;
+using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 using Docker.DotNet;
 using Docker.DotNet.Models;
-using Entities.BusinessObjects;
-using Entities.DomainInterfaces;
+using Entities.BusinessObjects.Live;
+using Entities.DomainInterfaces.Live;
+using Entities.DomainInterfaces.Planned;
+using Entities.DomainInterfaces.ResourceManagement;
 using Try = ApplicationLogic.Extensions.Try;
 
 namespace NodeController.Docker;
@@ -12,7 +16,7 @@ namespace NodeController.Docker;
 /// </summary>
 public class LocalDockerClient : IEnvironmentClient
 {
-    private readonly DockerClient _dockerClient = new DockerClientConfiguration(new Uri("http://host.docker.internal:2375")).CreateClient();
+    private static DockerClient _dockerClient = new DockerClientConfiguration(new Uri($"http://{HostInfo.ServiceAddress}:2375")).CreateClient();
 
     private readonly ILogger _logger;
 
@@ -21,7 +25,7 @@ public class LocalDockerClient : IEnvironmentClient
         _logger = logger;
     }
 
-    public async Task<List<ContainerInfo>> GetRunningServices(string[]? statuses = default)
+    public async Task<ImmutableList<string>?> GetRunningServices(string[]? statuses = default)
     {
         statuses ??= new [] { "running" };
 
@@ -35,23 +39,7 @@ public class LocalDockerClient : IEnvironmentClient
                 }
             });
 
-            List<ContainerInfo> microservices = new();
-
-            foreach (var container in containers)
-            {
-                var publicPort = container.Ports.First(p=>p.PrivatePort.Equals(80)).PublicPort.ToString();
-
-                microservices.Add(new ContainerInfo()
-                {
-                    Id = container.ID,
-                    Name = container.Names?.FirstOrDefault()?[1..] ?? string.Empty,
-                    ImageName = container.Image,
-                    Status = container.Status,
-                    Port = publicPort
-                });
-            }
-
-            return microservices;
+            return containers.Select(c=>c.ID).ToImmutableList();
         }, retryCount: 5, autoThrow:false);
     }
 
@@ -60,31 +48,57 @@ public class LocalDockerClient : IEnvironmentClient
         return await _dockerClient.Containers.GetContainerLogsAsync(containerId, true, new ContainerLogsParameters());
     }
 
-    public async Task<IContainerConfig> GetContainerConfig(string containerId)
+    public async Task<(ContainerInfo CuratedInfo, IContainerConfig RawConfig)> GetContainerInfo(string containerId)
     {
-        var containerData = await Try.WithConsequenceAsync(async () =>
+        return await Try.WithConsequenceAsync(async () =>
         {
-           var container = await _dockerClient.Containers.InspectContainerAsync(containerId);
+            var container = await _dockerClient.Containers.InspectContainerAsync(containerId);
 
-           return container;
+            var labels = container.Config.Labels
+                .Where(kv => Enum.TryParse(typeof(ServiceLabelsEnum), kv.Key, true, out _))
+                .ToList()
+                .ConvertAll(kv => 
+                    new KeyValuePair<ServiceLabelsEnum, string>(
+                        (ServiceLabelsEnum)Enum.Parse(typeof(ServiceLabelsEnum), kv.Key, true),
+                        kv.Value));
+
+            var labelDict = new ConcurrentDictionary<ServiceLabelsEnum, string>(labels);
+
+            return (
+            CuratedInfo: new ContainerInfo()
+            {
+                Id = container.ID,
+                Name = container.Name[1..] ?? string.Empty,
+                ImageName = container.Image,
+                Status = container.State.Status,
+                Port = container.HostConfig.PortBindings["80/tcp"].First(p=>string.IsNullOrEmpty(p.HostPort) is false).HostPort,
+                Labels = labelDict
+            }, 
+            RawConfig: new ContainerConfig()
+            {
+                Config = container
+            });
         },
         retryCount: 5);
-
-        return new ContainerConfig()
-        {
-            Config = containerData
-        };
     }
 
-    public async Task IncreaseByOneNumberOfInstances(IContainerConfig containerConfig, string newContainerName, Guid id)
+    public async Task<CreateContainerResponse?> IncreaseByOneNumberOfInstances(IContainerConfig containerConfig, string newContainerName, string serviceId, string podId)
     {
-        await Try.WithConsequenceAsync(async () =>
+        CreateContainerResponse? containerResponse = null;
+
+        return await Try.WithConsequenceAsync(async () =>
         {
             var env = (List<string>)containerConfig.Config.Config.Env;
 
             env.RemoveAll(e => e.ToString().StartsWith("ID="));
 
-            env.Add($"ID={id}");
+            env.Add($"ID={serviceId}");
+
+            var labels = (List<string>)containerConfig.Config.Config.Labels;
+
+            env.RemoveAll(e => e.ToString().StartsWith("POD_ID="));
+
+            env.Add($"POD_ID={podId}");
 
             var exposedPorts = GetPortBindings();
             
@@ -92,7 +106,7 @@ public class LocalDockerClient : IEnvironmentClient
             containerConfig.Config.HostConfig.PortBindings = exposedPorts;
 
 
-            var containerResponse = await _dockerClient.Containers.CreateContainerAsync(new CreateContainerParameters
+            containerResponse = await _dockerClient.Containers.CreateContainerAsync(new CreateContainerParameters
             {
                 HostConfig = containerConfig.Config.HostConfig,
                 Env = env,
@@ -103,30 +117,29 @@ public class LocalDockerClient : IEnvironmentClient
 
             _ =await _dockerClient.Containers.StartContainerAsync(containerResponse.ID, new ContainerStartParameters());
 
-            return Task.CompletedTask;
-        },
-        retryCount: 5, onFailure: async (_, _) => await GarbageCollection());
-
-        await GarbageCollection();
-
-        async Task GarbageCollection()
-        {
-            await Try.WithConsequenceAsync(async () =>
+            return containerResponse;
+        }, 
+            onFailure: async (_, _) =>
             {
-                var containersToRemove = await GetRunningServices(new[] { "exited", "dead" });
-
-                await Parallel
-                    .ForEachAsync(containersToRemove, async (toKill, _) => await RemoveContainerInstance(toKill.Id))
-                    .ConfigureAwait(false);
-
-                return Task.CompletedTask;
+                if(containerResponse is not null)
+                    await RemoveContainerInstance(containerResponse.ID).ConfigureAwait(false);
             },
-            retryCount: 2, onFailure: (e, _) =>
-            {
-                _logger.LogInformation(e.Message + "\n" + e.InnerException);
-                return Task.CompletedTask;
-            });
-        }
+            autoThrow: false,
+            retryCount: 5);
+    }
+
+    public async Task GarbageCollection()
+    {
+        await Try.WithConsequenceAsync(async () =>
+        {
+            var containersToRemove = await GetRunningServices(new[] { "exited", "dead" });
+
+            await Parallel
+                .ForEachAsync(containersToRemove, async (toKill, _) => await RemoveContainerInstance(toKill))
+                .ConfigureAwait(false);
+
+            return Task.CompletedTask;
+        });
     }
 
     public async Task RemoveContainerInstance(string containerId)

@@ -1,6 +1,9 @@
 ﻿using System.Collections.Immutable;
 using ApplicationLogic.Interfaces;
 using Entities.DomainInterfaces;
+using Entities.DomainInterfaces.Live;
+using Entities.DomainInterfaces.Planned;
+using Entities.DomainInterfaces.ResourceManagement;
 using NodeController.Cache;
 
 namespace NodeController.Repository;
@@ -14,43 +17,70 @@ public class RepositoryRead : IRepositoryRead
         _http = http;
     }
 
-    public IServiceInstance? ReadServiceById(Guid id)
+    public IPodInstance? GetPodOfService(IServiceInstance serviceInstance)
     {
-        return RouteCache.GetServices(_http)?.SingleOrDefault(route => route.Id.Equals(id));
+        return RouteCache.GetPodInstances()
+            .SingleOrDefault(pod => pod.ServiceInstances.Any(s => s.Equals(serviceInstance)));
     }
 
-    public IServiceInstance? ReadServiceByAddressAndPort(string address, string port)
+    public IPodInstance? GetPodById(string id)
     {
-        return RouteCache.GetServices(_http)?.SingleOrDefault(route => route.Address.Equals(address) && route.ContainerInfo.Port.Equals(port));
+        return RouteCache.GetPodInstances().SingleOrDefault(pod => pod.Id.Equals(id));
     }
 
-    public ImmutableList<IServiceInstance>? ReadServiceByType(string serviceType)
+    public ImmutableList<IPodInstance> GetPodInstances(string podType)
     {
-        return RouteCache.GetServices(_http)?.Where(route => route.Type.Equals(serviceType)).ToImmutableList();
+        return RouteCache.GetPodInstances().Where(pod => pod.Type.Equals(podType)).ToImmutableList();
     }
 
-    public ImmutableList<IServiceInstance>? GetAllServices()
+    public ImmutableList<IPodInstance> GetAllPods()
     {
-        return RouteCache.GetServices(_http);
+        return RouteCache.GetPodInstances();
     }
 
-    public IScheduler? GetScheduler()
+    public ImmutableList<IPodType> GetAllPodTypes()
     {
-        return RouteCache.GetScheduler(_http);
+        return RouteCache.GetPodTypes().Select(podType => podType.Value).ToImmutableList();
+    }
+
+    public IPodType? GetPodType(string podType)
+    {
+        return RouteCache.GetPodTypes().Select(kv => kv.Value).SingleOrDefault(pt => pt.Type.Equals(podType));
+    }
+
+    public IServiceInstance? GetServiceById(Guid id)
+    {
+        return RouteCache.GetPodInstances()
+            .SelectMany(pod => pod.ServiceInstances).SingleOrDefault(service => service.Id.Equals(id));
+    }
+
+    public ImmutableList<IServiceInstance> GetServiceInstances(string serviceType)
+    {
+        return RouteCache.GetPodInstances()
+            .SelectMany(pod => pod.ServiceInstances).Where(service => service.Type.Equals(serviceType)).ToImmutableList();
+    }
+
+    public ImmutableList<IServiceInstance> GetAllServices()
+    {
+        return RouteCache.GetPodInstances()
+            .SelectMany(pod => pod.ServiceInstances).ToImmutableList();
+    }
+
+    public ImmutableList<IServiceType> GetAllServiceTypes()
+    {
+        return RouteCache.GetPodTypes()
+            .SelectMany(pod => pod.Value.ServiceTypes).DistinctBy(serviceType => serviceType.Type).ToImmutableList();
     }
 
     public IServiceType? GetServiceType(string serviceType)
     {
-        IServiceType containerConfig = default;
-
-        RouteCache.GetContainerModels(_http)?.TryGetValue(serviceType, out containerConfig);
-
-        return containerConfig;
+        return RouteCache.GetPodTypes()
+            .SelectMany(pod => pod.Value.ServiceTypes).FirstOrDefault(st => st.Type.Equals(serviceType));
     }
 
-    public List<IServiceType>? GetAllServiceTypes()
+    public IScheduler GetScheduler()
     {
-        return RouteCache.GetContainerModels(_http)?.Values.ToList();
+        return RouteCache.GetScheduler();
     }
 
     public string GetAddress()

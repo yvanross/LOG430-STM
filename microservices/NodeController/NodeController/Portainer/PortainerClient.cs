@@ -1,8 +1,11 @@
-﻿using System.Dynamic;
+﻿using System.Collections.Immutable;
+using System.Dynamic;
 using ApplicationLogic.Extensions;
 using Docker.DotNet;
-using Entities.BusinessObjects;
-using Entities.DomainInterfaces;
+using Docker.DotNet.Models;
+using Entities.BusinessObjects.Live;
+using Entities.DomainInterfaces.Live;
+using Entities.DomainInterfaces.ResourceManagement;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using RestSharp;
@@ -18,7 +21,7 @@ public class PortainerClient : IEnvironmentClient
     private readonly string _username;
     private readonly string _password;
 
-    private string _environmentId = string.Empty;
+    private string? _environmentId = string.Empty;
 
     private const int _retryCount = 3;
 
@@ -30,7 +33,7 @@ public class PortainerClient : IEnvironmentClient
         _password = password;
     }
 
-    public async Task<List<ContainerInfo>> GetRunningServices()
+    public async Task<List<ContainerInfo>?> GetRunningServices()
     {
         if (string.IsNullOrEmpty(_environmentId))
             _environmentId = await GetEnvironmentId();
@@ -45,7 +48,7 @@ public class PortainerClient : IEnvironmentClient
 
             dynamic expando = JsonConvert.DeserializeObject<List<ExpandoObject>>(res.Content);
 
-            List<ContainerInfo> microservices = new();
+            List<ContainerInfo>? microservices = new();
 
             foreach (var container in expando)
             {
@@ -65,7 +68,13 @@ public class PortainerClient : IEnvironmentClient
         onFailure: async (_, _) => _jwt = $"bearer {await GetAuthorization()}");
     }
 
-    public Task<List<ContainerInfo>> GetRunningServices(string[]? statuses = default)
+    public Task<ImmutableList<string>?> GetRunningServices(string[]? statuses = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<CreateContainerResponse?> IncreaseByOneNumberOfInstances(IContainerConfig containerConfig, string newContainerName, string serviceId,
+        string podId)
     {
         throw new NotImplementedException();
     }
@@ -92,7 +101,8 @@ public class PortainerClient : IEnvironmentClient
         return null;
     }
 
-    public Task IncreaseByOneNumberOfInstances(IContainerConfig containerConfig, string newContainerName,
+    public Task<CreateContainerResponse?> IncreaseByOneNumberOfInstances(IContainerConfig containerConfig,
+        string newContainerName,
         Guid id)
     {
         throw new NotImplementedException();
@@ -147,12 +157,22 @@ public class PortainerClient : IEnvironmentClient
         }, retryCount: _retryCount);
     }
 
+    public Task<(ContainerInfo CuratedInfo, IContainerConfig RawConfig)> GetContainerInfo(string containerId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task GarbageCollection()
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<IContainerConfig> GetContainerConfig(string containerId)
     {
         throw new NotImplementedException();
     }
 
-    private async Task<string> GetAuthorization()
+    private async Task<string?> GetAuthorization()
     {
         return await Try.WithConsequenceAsync<string>(async () =>
         {
@@ -172,7 +192,7 @@ public class PortainerClient : IEnvironmentClient
         }, retryCount: _retryCount);
     }
 
-    private async Task<string> GetEnvironmentId()
+    private async Task<string?> GetEnvironmentId()
     {
         return await Try.WithConsequenceAsync<string>(async () =>
         {

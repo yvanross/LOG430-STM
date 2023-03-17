@@ -1,3 +1,7 @@
+using ApplicationLogic.Usecases;
+using NodeController.Docker;
+using NodeController.Repository;
+
 namespace NodeController
 {
     public class Program
@@ -36,6 +40,10 @@ namespace NodeController
             app.UseAuthorization();
 
             app.MapControllers();
+
+            var monitor = new MonitorUc(new LocalDockerClient(null), new RepositoryRead(HostInfo.ServiceAddress), new RepositoryWrite());
+
+            monitor.TryScheduleStateProcessingOnScheduler();
 
             app.Run();
         }

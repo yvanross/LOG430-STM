@@ -1,23 +1,24 @@
 ﻿using ApplicationLogic.Interfaces;
-using Entities.DomainInterfaces;
+using Entities.DomainInterfaces.Live;
+using Entities.DomainInterfaces.Planned;
 using NodeController.Cache;
 
 namespace NodeController.Repository;
 
 public class RepositoryWrite : IRepositoryWrite
 {
-    public void WriteService(IServiceInstance serviceInstance)
+    public void AddOrUpdatePod(IPodInstance podInstance)
     {
-        RouteCache.AddOrUpdateService(serviceInstance);
+        RouteCache.AddOrUpdatePodInstance(podInstance);
     }
 
-    public void RemoveService(IServiceInstance serviceInstance)
+    public void TryRemovePod(IPodInstance podInstance)
     {
-        RouteCache.RemoveService(serviceInstance);
+        RouteCache.RemovePodInstance(podInstance);
     }
 
-    public void UpdateServiceType(IServiceInstance serviceInstance, IServiceType containerConfigName)
+    public void AddOrUpdatePodType(IPodType podType)
     {
-        RouteCache.UpdateContainerModel(serviceInstance, containerConfigName);
+        RouteCache.AddOrUpdatePodType(podType);
     }
 }

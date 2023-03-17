@@ -1,24 +1,42 @@
 ﻿using System.Collections.Immutable;
 using Entities.BusinessObjects;
-using Entities.DomainInterfaces;
+using Entities.DomainInterfaces.Live;
+using Entities.DomainInterfaces.Planned;
+using Entities.DomainInterfaces.ResourceManagement;
 
 namespace ApplicationLogic.Interfaces;
 
 public interface IRepositoryRead
 {
-    IServiceInstance? ReadServiceById(Guid name);
+    IPodInstance? GetPodOfService(IServiceInstance serviceInstance);
 
-    IServiceInstance? ReadServiceByAddressAndPort(string address, string port);
+    IPodInstance? GetPodById(string id);
 
-    ImmutableList<IServiceInstance>? ReadServiceByType(string serviceType);
+    ImmutableList<IPodInstance> GetPodInstances(string podType);
 
-    ImmutableList<IServiceInstance>? GetAllServices();
+    ImmutableList<IPodInstance> GetAllPods();
 
-    IScheduler? GetScheduler();
+    ImmutableList<IPodType> GetAllPodTypes();
+
+    IPodType? GetPodType(string podType);
+
+    //----------------------------------------------------------------
+
+    IServiceInstance? GetServiceById(Guid id);
+
+    ImmutableList<IServiceInstance> GetServiceInstances(string serviceType);
+
+    ImmutableList<IServiceInstance> GetAllServices();
+
+    ImmutableList<IServiceType> GetAllServiceTypes();
 
     IServiceType? GetServiceType(string serviceType);
-   
-    List<IServiceType>? GetAllServiceTypes();
-    
+
+    //----------------------------------------------------------------
+
+    IScheduler GetScheduler();
+
+    //----------------------------------------------------------------
+
     string GetAddress();
 }
