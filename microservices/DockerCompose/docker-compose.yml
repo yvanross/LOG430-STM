@@ -1,37 +1,61 @@
 version: '3.8'
-
+ 
 x-conf: 
-  - ingress_port: &ingress_port "32770:80"
   - env: 
-      &env
-      #adjust this to fit the address (without the port) of your ingress service
-      - INGRESS_ADDRESS=host.docker.internal
+    - &SERVICES_ADDRESS SERVICES_ADDRESS=${SERVICES_ADDRESS}   
+    - &INGRESS_ADDRESS INGRESS_ADDRESS=${INGRESS_ADDRESS}
+    - &INGRESS_PORT INGRESS_PORT=${INGRESS_PORT}
+    - &NODE_CONTROLLER_PORT NODE_CONTROLLER_PORT=${NODE_CONTROLLER_PORT}
+    - &ASPNETCORE_URLS ASPNETCORE_URLS=http://+:80
 
-      #adjust this to fit the address (without the port) of your services
-      - SERVICES_ADDRESS=host.docker.internal
-     
-      - ASPNETCORE_URLS=http://+:80
-
-      #this needs to match with ingress_port
-      - INGRESS_PORT=32770
+  - standardEnv: &stdEnv 
+    - *SERVICES_ADDRESS
+    - *NODE_CONTROLLER_PORT
+    - *ASPNETCORE_URLS
+  
   - vol:
-      &vol
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+     &vol
+     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+     - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
 services:
   ingress:
     image: ${DOCKER_REGISTRY-}ingress
     ports:
-      - *ingress_port
+      - ${INGRESS_PORT}
     build:
       context: ../
       dockerfile: Ingress/Ingress/Dockerfile
     container_name: Ingress
     environment:
-      *env
+      *stdEnv
     volumes:
-      *vol
+      *vol      
+  
+  rabbitmq:
+    container_name: MQ
+    image: rabbitmq
+    expose:
+      - ${RABBIT_MQ_PORT}
+
+  nodecontroller:
+    image: ${DOCKER_REGISTRY-}nodecontroller
+    ports:
+      - ${NODE_CONTROLLER_PORT}
+    build:
+      context: ../
+      dockerfile: NodeController/NodeController/Dockerfile
+    container_name: NodeController
+    environment:
+      - *SERVICES_ADDRESS
+      - *NODE_CONTROLLER_PORT
+      - *ASPNETCORE_URLS
+      - *INGRESS_ADDRESS
+      - *INGRESS_PORT
+    volumes:
+      *vol    
+    depends_on:
+      - ingress
 
   routetimeprovider:
     image: ${DOCKER_REGISTRY-}routetimeprovider
@@ -40,13 +64,16 @@ services:
       dockerfile: RouteTimeProvider/RouteTimeProvider/Dockerfile
     container_name: RouteTimeProvider
     environment:
-      *env
+      *stdEnv
     ports:
         - "32771:80"
     volumes:
       *vol
+    labels:
+      SERVICE_TYPE_NAME: RouteTimeProvider
+      COMPONENT_CATEGORY: Computation
     depends_on:
-      - ingress
+      - nodecontroller
 
   tripcomparator:
     image: ${DOCKER_REGISTRY-}tripcomparator
@@ -55,13 +82,20 @@ services:
       dockerfile: TripComparator/TripComparator/Dockerfile
     container_name: TripComparator
     environment:
-      *env
+      *stdEnv
     ports:
         - "32772:80"
     volumes:
       *vol
+    deploy:
+      restart_policy:
+        condition: on-failure
+    labels:
+      SERVICE_TYPE_NAME: TripComparator
+      COMPONENT_CATEGORY: Computation
+      MINIMUM_NUMBER_OF_INSTANCES: 2
     depends_on:
-      - ingress
+      - nodecontroller
 
   stm:
     image: ${DOCKER_REGISTRY-}stm
@@ -70,12 +104,15 @@ services:
         dockerfile: STM/STM/Dockerfile
     container_name: STM
     environment:
-        *env
+      *stdEnv
     ports:
         - "32773:80"
     volumes:
         *vol
+    labels:
+      SERVICE_TYPE_NAME: STM
+      COMPONENT_CATEGORY: Computation
     depends_on:
-        - ingress
+        - nodecontroller
 
 

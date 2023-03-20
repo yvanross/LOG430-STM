@@ -8,6 +8,7 @@ using ApplicationLogic.Interfaces;
 using ApplicationLogic.Services;
 using Entities.BusinessObjects.Live;
 using Entities.BusinessObjects.States;
+using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.ResourceManagement;
 
 namespace ApplicationLogic.Usecases
@@ -18,9 +19,13 @@ namespace ApplicationLogic.Usecases
 
         private readonly ResourceManagementService _resourceManagementService;
 
+        private readonly IEnvironmentClient _client;
+
         public MonitorUc(IEnvironmentClient client, IRepositoryRead readModel, IRepositoryWrite writeModel)
         {
             _readModel = readModel;
+
+            _client = client;
 
             _resourceManagementService = new ResourceManagementService(client, readModel, writeModel);
         }
@@ -30,40 +35,54 @@ namespace ApplicationLogic.Usecases
             if (_readModel.GetScheduler() is not { } scheduler) throw new NullReferenceException("Scheduler was null");
 
             scheduler.TryAddTask(BeginProcessingPodStates);
+            
+            scheduler.TryAddTask(GarbageCollection);
+        }
+
+        private async Task GarbageCollection()
+        {
+            await _client.GarbageCollection();
         }
 
         private async Task BeginProcessingPodStates()
         {
             await Try.WithConsequenceAsync(async () =>
             {
+                var runningContainerIds = (await _client.GetRunningServices())?.ToHashSet();
+
+                if (runningContainerIds is null) return Task.CompletedTask;
+
                 var routes = _readModel.GetAllPods();
 
-                //if empty or null
-                if ((routes?.Any() ?? true) is false) return Task.CompletedTask;
-
-                var unknownPodStates = routes!.Where(pod =>
-                {
-                    pod.ServiceInstances.ForEach(service => service.ServiceStatus?.EvaluateState());
-
-                    return pod.ServiceInstances.Any(service => service.ServiceStatus is UnknownState);
-                }).ToList();
-
-                foreach (var podInstance in unknownPodStates)
+                foreach (var podInstance in routes)
                 {
                     var minNumberOfInstances = _readModel.GetPodType(podInstance.Type)!.MinimumNumberOfInstances;
 
-                    if (_readModel.GetServiceInstances(podInstance.Type)!.Count > minNumberOfInstances)
+                    if (IsAnyPodServiceDown(podInstance, runningContainerIds))
                     {
-                        await _resourceManagementService.RemovePodInstance(podInstance).ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        await _resourceManagementService.ReplacePodInstance(podInstance).ConfigureAwait(false);
+                        if (IsNumberOfRunningInstancesGreaterThanRequired(podInstance, minNumberOfInstances))
+                        {
+                            await _resourceManagementService.RemovePodInstance(podInstance).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            await _resourceManagementService.ReplacePodInstance(podInstance).ConfigureAwait(false);
+                        }
                     }
                 }
 
                 return Task.CompletedTask;
             }, retryCount: 5);
+
+            bool IsAnyPodServiceDown(IPodInstance podInstance, HashSet<string> runningContainerIds)
+            {
+                return podInstance.ServiceInstances.Any(serviceInstance => runningContainerIds.Contains(serviceInstance.ContainerInfo?.Id ?? string.Empty)) is false;
+            }
+
+            bool IsNumberOfRunningInstancesGreaterThanRequired(IPodInstance podInstance, int minNumberOfInstances)
+            {
+                return _readModel.GetServiceInstances(podInstance.Type)!.Count > minNumberOfInstances;
+            }
         }
     }
 }

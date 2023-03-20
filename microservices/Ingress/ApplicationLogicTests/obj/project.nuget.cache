@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "MgvbA/Y/+mdoa2b0ggfTrAG6t+qGUJ0iyf09bOZx8U3Zx6b7h5w2zZrY7Yl+VtN7HaAfdulbcbJcwHYcChdUvQ==",
+  "dgSpecHash": "ZdH01jWJ1EN6hPraUf5lGdhljUzauvKP91aH9HbeAdKVvsHjX/AYigunQ2VhVRV79PG7NnmxUNEiwnLivXP+xQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.60\\ambassador.1.0.60.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
