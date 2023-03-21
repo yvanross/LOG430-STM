@@ -30,9 +30,9 @@ public class IngressUC
             retryCount: 100);
     }
 
-    public async Task<string> GetLogStore()
+    public string GetLogStoreAddressAndPort()
     {
-        var logStore = await _ingressClient.GetLogStore();
+        var logStore = _ingressClient.GetLogStoreAddressAndPort();
 
         return logStore;
     }

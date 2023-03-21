@@ -11,4 +11,6 @@ public class Snapshot : ISnapshot
     public required List<IServiceInstance> RunningInstances { get; init; }
 
     public required List<IServiceType> ServiceTypes { get; init; }
+    
+    public required IEnumerable<ISaga> Saga { get; init; }
 }

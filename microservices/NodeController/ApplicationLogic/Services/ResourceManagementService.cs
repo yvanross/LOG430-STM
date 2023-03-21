@@ -12,29 +12,29 @@ public class ResourceManagementService
 {
     private readonly IEnvironmentClient _environmentClient;
 
-    private readonly IRepositoryRead _readModel;
+    private readonly IPodReadModel _readModelModel;
     
-    private readonly IRepositoryWrite _writeModel;
+    private readonly IPodWriteModel _writeModelModel;
 
-    public ResourceManagementService(IEnvironmentClient environmentClient, IRepositoryRead readModel, IRepositoryWrite writeModel)
+    public ResourceManagementService(IEnvironmentClient environmentClient, IPodReadModel readModelModel, IPodWriteModel writeModelModel)
     {
         _environmentClient = environmentClient;
-        _readModel = readModel;
-        _writeModel = writeModel;
+        _readModelModel = readModelModel;
+        _writeModelModel = writeModelModel;
 
-        _readModel.GetScheduler()?.TryAddTask(nameof(MatchInstanceDemandOnPods), MatchInstanceDemandOnPods);
+        _readModelModel.GetScheduler()?.TryAddTask(nameof(MatchInstanceDemandOnPods), MatchInstanceDemandOnPods);
     }
 
 
     private async Task MatchInstanceDemandOnPods()
     {
-        var podTypes = _readModel.GetAllPodTypes();
+        var podTypes = _readModelModel.GetAllPodTypes();
 
         if (podTypes is not null)
         {
             foreach (var podType in podTypes)
             {
-                while (_readModel.GetPodInstances(podType.Type)?.Count < podType.MinimumNumberOfInstances)
+                while (_readModelModel.GetPodInstances(podType.Type)?.Count < podType.MinimumNumberOfInstances)
                 {
                     await IncreaseNumberOfPodInstances(podType.Type).ConfigureAwait(false);
                 }
@@ -44,7 +44,7 @@ public class ResourceManagementService
 
     public async Task RemovePodInstance(IPodInstance podInstance)
     {
-        _writeModel.TryRemovePod(podInstance);
+        _writeModelModel.TryRemovePod(podInstance);
 
         foreach (var serviceInstance in podInstance.ServiceInstances)
         {
@@ -66,7 +66,7 @@ public class ResourceManagementService
             {
                 serviceInstance.ServiceStatus = new LaunchedState(serviceInstance);
 
-                var serviceType = _readModel.GetServiceType(serviceInstance.Type);
+                var serviceType = _readModelModel.GetServiceType(serviceInstance.Type);
 
                 serviceInstance.PodId = podInstance.Id;
 
@@ -76,13 +76,13 @@ public class ResourceManagementService
         }
         finally
         {
-            _writeModel.AddOrUpdatePod(podInstance);
+            _writeModelModel.AddOrUpdatePod(podInstance);
         }
     }
 
     public async Task IncreaseNumberOfPodInstances(string type)
     {
-        var podType = _readModel.GetPodType(type);
+        var podType = _readModelModel.GetPodType(type);
 
         if (podType is not null)
         {
@@ -94,7 +94,7 @@ public class ResourceManagementService
                 {
                     newServiceInstance.ServiceStatus = new LaunchedState(newServiceInstance);
 
-                    var serviceType = _readModel.GetServiceType(newServiceInstance.Type);
+                    var serviceType = _readModelModel.GetServiceType(newServiceInstance.Type);
 
                     if (serviceType is not null)
                     {
@@ -108,7 +108,7 @@ public class ResourceManagementService
                     }
                 }
 
-                _writeModel.AddOrUpdatePod(newPodInstance);
+                _writeModelModel.AddOrUpdatePod(newPodInstance);
             }
             catch
             {
@@ -128,7 +128,7 @@ public class ResourceManagementService
 
                 serviceInstances.Add(new ServiceInstance()
                 {
-                    Address = _readModel.GetAddress(),
+                    Address = _readModelModel.GetAddress(),
                     Id = newServiceId,
                     ContainerInfo = default,
                     Type = serviceType.Type,

@@ -2,7 +2,7 @@ version: '3.8'
  
 x-conf: 
   - env: 
-    - &ASPNETCORE_URLS ASPNETCORE_URLS=http://+:80
+    - &ASPNETCORE_URLS http://+:80
   - vol:
      &vol
      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
@@ -11,7 +11,7 @@ x-conf:
 x-variables: &std
   SERVICES_ADDRESS: ${SERVICES_ADDRESS}   
   NODE_CONTROLLER_PORT: ${NODE_CONTROLLER_PORT}
-  ASPNETCORE_URLS: ASPNETCORE_URLS=http://+:80
+  ASPNETCORE_URLS: *ASPNETCORE_URLS
 
 services:
   ingress:
@@ -23,7 +23,7 @@ services:
       context: ../
       dockerfile: Ingress/Ingress/Dockerfile
     environment:
-      - *ASPNETCORE_URLS
+      ASPNETCORE_URLS: *ASPNETCORE_URLS
     volumes:
       *vol
     labels:
@@ -59,10 +59,12 @@ services:
       context: ../
       dockerfile: NodeController/NodeController/Dockerfile
     environment:
-      <<: *std
       TEAM_NAME: ${TEAM_NAME}
       INGRESS_ADDRESS: ${INGRESS_ADDRESS}
       INGRESS_PORT: ${INGRESS_PORT}
+      SERVICES_ADDRESS: ${SERVICES_ADDRESS}     
+      NODE_CONTROLLER_PORT: ${NODE_CONTROLLER_PORT}
+      ASPNETCORE_URLS: *ASPNETCORE_URLS
     volumes:
       *vol    
     depends_on:
@@ -89,6 +91,7 @@ services:
     environment:
       <<: *std
       ID: *name 
+      API_KEY: ${TOMTOM}
     ports:
         - "32772:80"
     volumes:
@@ -131,6 +134,7 @@ services:
     environment:
       <<: *std
       ID: *name 
+      API_KEY: ${STM}
     ports:
         - "32774:80"
     volumes:

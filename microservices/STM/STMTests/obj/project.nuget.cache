@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "o91VArMYtcG8s1+HBSbwzNnc8GHVF6J8tdLgygxXGsxJNw4zlEcz/lQVv3/gS834y4cp5UJO0TorOYaVrXQbDQ==",
+  "dgSpecHash": "RrpO1Epa3t1Fnn3jxFUIJoflqv3dKGLV8X0BpsVVQ9BNswa6IWBIV1UdKPnSkbTIPqDLsR41CXWap8TJGl5Uhw==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\STMTests\\STMTests.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.57\\ambassador.1.0.57.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.61\\ambassador.1.0.61.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\coverlet.collector\\3.2.0\\coverlet.collector.3.2.0.nupkg.sha512",

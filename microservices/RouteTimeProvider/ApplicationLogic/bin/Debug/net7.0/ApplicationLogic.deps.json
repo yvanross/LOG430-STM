@@ -8,13 +8,14 @@
     ".NETCoreApp,Version=v7.0": {
       "ApplicationLogic/1.0.0": {
         "dependencies": {
-          "Ambassador": "1.0.57"
+          "Ambassador": "1.0.61",
+          "Entities": "1.0.0"
         },
         "runtime": {
           "ApplicationLogic.dll": {}
         }
       },
-      "Ambassador/1.0.57": {
+      "Ambassador/1.0.61": {
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
           "Microsoft.Extensions.Logging.Abstractions": "7.0.0",
@@ -24,8 +25,8 @@
         },
         "runtime": {
           "lib/net7.0/Ambassador.dll": {
-            "assemblyVersion": "1.0.57.0",
-            "fileVersion": "1.0.57.0"
+            "assemblyVersion": "1.0.61.0",
+            "fileVersion": "1.0.61.0"
           }
         }
       },
@@ -877,6 +878,11 @@
           "System.Threading": "4.3.0",
           "System.Xml.ReaderWriter": "4.3.0"
         }
+      },
+      "Entities/1.0.0": {
+        "runtime": {
+          "Entities.dll": {}
+        }
       }
     }
   },
@@ -886,12 +892,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Ambassador/1.0.57": {
+    "Ambassador/1.0.61": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-CNn7TZg6bxdfHoM5rgkiiaXH2GA2ovk4dWaUwUTUPa1fImojLapjQmXv6qboroNNHA7WHZEbG4hvYe8drrOaAA==",
-      "path": "ambassador/1.0.57",
-      "hashPath": "ambassador.1.0.57.nupkg.sha512"
+      "sha512": "sha512-FHDZuv+2W5WEe+6XKvppGPINoewhObCwvOYzoJnAaIJlYgPGh/irZReR1TI9RaINU7DzoGCEPjbWbY29aMXN9w==",
+      "path": "ambassador/1.0.61",
+      "hashPath": "ambassador.1.0.61.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Http.Features/5.0.17": {
       "type": "package",
@@ -1522,6 +1528,11 @@
       "sha512": "sha512-lJ8AxvkX7GQxpC6GFCeBj8ThYVyQczx2+f/cWHJU8tjS7YfI6Cv6bon70jVEgs2CiFbmmM8b9j1oZVx0dSI2Ww==",
       "path": "system.xml.xmldocument/4.3.0",
       "hashPath": "system.xml.xmldocument.4.3.0.nupkg.sha512"
+    },
+    "Entities/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

@@ -24,21 +24,21 @@ namespace ApplicationLogic.Usecases
 {
     public class ServicePoolDiscoveryUC
     {
-        private readonly IRepositoryWrite _repositoryWrite;
+        private readonly IPodWriteModel _podWriteModel;
         
-        private readonly IRepositoryRead _repositoryRead;
+        private readonly IPodReadModel _podReadModel;
 
         private readonly IEnvironmentClient _environmentClient;
 
         private static string NodeAddress => Environment.GetEnvironmentVariable("SERVICES_ADDRESS")!;
 
-        public ServicePoolDiscoveryUC(IRepositoryWrite repositoryWrite, IRepositoryRead repositoryRead, IEnvironmentClient environmentClient, IScheduler scheduler)
+        public ServicePoolDiscoveryUC(IPodWriteModel podWriteModel, IPodReadModel podReadModel, IEnvironmentClient environmentClient)
         {
-            _repositoryWrite = repositoryWrite;
-            _repositoryRead = repositoryRead;
+            _podWriteModel = podWriteModel;
+            _podReadModel = podReadModel;
             _environmentClient = environmentClient;
 
-            scheduler.TryAddTask(nameof(DiscoverServices), DiscoverServices);
+            _podReadModel.GetScheduler().TryAddTask(nameof(DiscoverServices), DiscoverServices);
         }
 
         private async Task DiscoverServices()
@@ -60,7 +60,7 @@ namespace ApplicationLogic.Usecases
             {
                 var runningServicesIds = await _environmentClient.GetRunningServices();
 
-                var registeredServices = _repositoryRead.GetAllServices().ToDictionary(s => s.Id);
+                var registeredServices = _podReadModel.GetAllServices().ToDictionary(s => s.Id);
 
                 var unregisteredServices = runningServicesIds?.Where(runningService => registeredServices.ContainsKey(runningService) is false).ToList();
                 
@@ -103,11 +103,11 @@ namespace ApplicationLogic.Usecases
 
             void UpdateOrCreatePodType(string podType, (ContainerInfo CuratedInfo, IContainerConfig RawConfig) service, IServiceType serviceType)
             {
-                var pod = _repositoryRead.GetPodType(podType);
+                var pod = _podReadModel.GetPodType(podType);
 
                 if (pod is null)
                 {
-                    _repositoryWrite.AddOrUpdatePodType(new PodType()
+                    _podWriteModel.AddOrUpdatePodType(new PodType()
                     {
                         Type = podType,
                         MinimumNumberOfInstances = GetMinimumNumberOfInstances(service.CuratedInfo.Labels),
@@ -121,7 +121,7 @@ namespace ApplicationLogic.Usecases
             {
                 var podId = GetPodId(service.CuratedInfo.Labels);
 
-                var pod = _repositoryRead.GetPodById(podId);
+                var pod = _podReadModel.GetPodById(podId);
 
                 pod ??= new PodInstance()
                 {
@@ -131,7 +131,7 @@ namespace ApplicationLogic.Usecases
                     Id = podId
                 };
 
-                _repositoryWrite.AddOrUpdatePod(pod);
+                _podWriteModel.AddOrUpdatePod(pod);
             }
         }
 

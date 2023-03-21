@@ -8,6 +8,7 @@ using System.Threading.Channels;
 using Ambassador.BusinessObjects;
 using Ambassador.BusinessObjects.InterServiceRequests;
 using Ambassador.Health;
+using Ambassador.Services;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RestSharp;
@@ -16,7 +17,7 @@ namespace Ambassador.Usecases
 {
     internal class RestUC
     {
-        private IngressRoutingUC _ingressRoutingUc = new ();
+        private IngressRoutingService _ingressRoutingService = new ();
 
         internal async Task<ChannelReader<RestResponse>> Get(GetRoutingRequest routingRequest)
         {
@@ -68,7 +69,7 @@ namespace Ambassador.Usecases
         {
             try
             {
-                var routingInfos = await _ingressRoutingUc.GetServiceRoutingData(routingRequest.TargetService, routingRequest.Mode);
+                var routingInfos = await _ingressRoutingService.GetServiceRoutingData(routingRequest.TargetService, routingRequest.Mode);
 
                 var routingData = DecorateRequest(routingInfos).ToList();
 
@@ -76,7 +77,7 @@ namespace Ambassador.Usecases
             }
             catch (Exception e)
             {
-                var exception = GetExceptionMessage(e, "IngressController Routing Data exception");
+                var exception = GetExceptionMessage(e, "NodeController Routing Data exception");
 
                 ContainerService.Logger?.LogError(exception.Message);
 

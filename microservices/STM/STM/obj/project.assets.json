@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net7.0": {
-      "Ambassador/1.0.57": {
+      "Ambassador/1.0.61": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
@@ -2605,13 +2605,13 @@
     }
   },
   "libraries": {
-    "Ambassador/1.0.57": {
-      "sha512": "CNn7TZg6bxdfHoM5rgkiiaXH2GA2ovk4dWaUwUTUPa1fImojLapjQmXv6qboroNNHA7WHZEbG4hvYe8drrOaAA==",
+    "Ambassador/1.0.61": {
+      "sha512": "FHDZuv+2W5WEe+6XKvppGPINoewhObCwvOYzoJnAaIJlYgPGh/irZReR1TI9RaINU7DzoGCEPjbWbY29aMXN9w==",
       "type": "package",
-      "path": "ambassador/1.0.57",
+      "path": "ambassador/1.0.61",
       "files": [
         ".nupkg.metadata",
-        "ambassador.1.0.57.nupkg.sha512",
+        "ambassador.1.0.61.nupkg.sha512",
         "ambassador.nuspec",
         "lib/net7.0/Ambassador.dll",
         "lib/net7.0/Ambassador.pdb"
@@ -8455,7 +8455,7 @@
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "Ambassador >= 1.0.57",
+      "Ambassador >= 1.0.61",
       "ApplicationLogic >= 1.0.0",
       "Google.Protobuf >= 3.22.0",
       "Microsoft.EntityFrameworkCore.SqlServer >= 7.0.3",
@@ -8517,7 +8517,7 @@
         "dependencies": {
           "Ambassador": {
             "target": "Package",
-            "version": "[1.0.57, )"
+            "version": "[1.0.61, )"
           },
           "Google.Protobuf": {
             "target": "Package",

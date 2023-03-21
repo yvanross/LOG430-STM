@@ -6,8 +6,6 @@ namespace ApplicationLogic.Usecases;
 
 public class HeadersUC
 {
-    private const string TomtomApiKey = "sQQL61fpIzA0TroTMOwjrUcgwutuJ7Aw";
-
     public void AddJsonHeader(RoutingData data)
     {
         data.IngressAddedHeaders.Add(new NameValue()
@@ -24,7 +22,7 @@ public class HeadersUC
             data.IngressAddedQueryParams.Add(new NameValue()
             {
                 Name = "key",
-                Value = TomtomApiKey
+                Value = ""
             });
         }
     }

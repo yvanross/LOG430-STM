@@ -6,13 +6,13 @@ using Entities.DomainInterfaces.Planned;
 using Entities.DomainInterfaces.ResourceManagement;
 using NodeController.Cache;
 
-namespace NodeController.Repository;
+namespace NodeController.External.Repository;
 
-public class RepositoryRead : IRepositoryRead
+public class PodReadModel : IPodReadModel
 {
     private readonly string _http;
 
-    public RepositoryRead(string http)
+    public PodReadModel(string http)
     {
         _http = http;
     }

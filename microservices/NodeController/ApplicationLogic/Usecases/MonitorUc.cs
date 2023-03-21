@@ -15,24 +15,24 @@ namespace ApplicationLogic.Usecases
 {
     public class MonitorUc
     {
-        private readonly IRepositoryRead _readModel;
+        private readonly IPodReadModel _readModelModel;
 
         private readonly ResourceManagementService _resourceManagementService;
 
         private readonly IEnvironmentClient _client;
 
-        public MonitorUc(IEnvironmentClient client, IRepositoryRead readModel, IRepositoryWrite writeModel)
+        public MonitorUc(IEnvironmentClient client, IPodReadModel readModelModel, IPodWriteModel writeModelModel)
         {
-            _readModel = readModel;
+            _readModelModel = readModelModel;
 
             _client = client;
 
-            _resourceManagementService = new ResourceManagementService(client, readModel, writeModel);
+            _resourceManagementService = new ResourceManagementService(client, readModelModel, writeModelModel);
         }
 
         public void TryScheduleStateProcessingOnScheduler()
         {
-            if (_readModel.GetScheduler() is not { } scheduler) throw new NullReferenceException("Scheduler was null");
+            if (_readModelModel.GetScheduler() is not { } scheduler) throw new NullReferenceException("Scheduler was null");
 
             scheduler.TryAddTask(nameof(BeginProcessingPodStates), BeginProcessingPodStates);
             
@@ -52,11 +52,11 @@ namespace ApplicationLogic.Usecases
 
                 if (runningContainerIds is null) return Task.CompletedTask;
 
-                var routes = _readModel.GetAllPods();
+                var routes = _readModelModel.GetAllPods();
 
                 foreach (var podInstance in routes)
                 {
-                    var minNumberOfInstances = _readModel.GetPodType(podInstance.Type)!.MinimumNumberOfInstances;
+                    var minNumberOfInstances = _readModelModel.GetPodType(podInstance.Type)!.MinimumNumberOfInstances;
 
                     if (IsAnyPodServiceDown(podInstance, runningContainerIds))
                     {
@@ -81,7 +81,7 @@ namespace ApplicationLogic.Usecases
 
             bool IsNumberOfRunningInstancesGreaterThanRequired(IPodInstance podInstance, int minNumberOfInstances)
             {
-                return _readModel.GetServiceInstances(podInstance.Type)!.Count > minNumberOfInstances;
+                return _readModelModel.GetServiceInstances(podInstance.Type)!.Count > minNumberOfInstances;
             }
         }
     }

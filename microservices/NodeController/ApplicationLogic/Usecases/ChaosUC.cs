@@ -7,22 +7,26 @@ namespace ApplicationLogic.Usecases;
 
 public class ChaosUC
 {
-    private readonly ILogStore _logStore;
+    private readonly ILogStoreWriteModel _logStoreWriteModel;
 
     private readonly IScheduler _scheduler;
 
-    private readonly IRepositoryRead _readModel;
+    private readonly IPodReadModel _readModelModel;
+    
+    private readonly IDataStreamReadModel _streamReadModel;
 
     private readonly ResourceManagementService _resourceManagementService;
 
     private int _killsThisMinute = 0;
 
-    public ChaosUC(ILogStore logStore, IScheduler scheduler, IEnvironmentClient environmentClient, IRepositoryRead readModel, IRepositoryWrite writeModel)
+    public ChaosUC(ILogStoreWriteModel logStoreWriteModel, IScheduler scheduler, IEnvironmentClient environmentClient,
+                    IPodReadModel readModelModel, IPodWriteModel writeModelModel, IDataStreamReadModel streamReadModel)
     {
-        _logStore = logStore;
+        _logStoreWriteModel = logStoreWriteModel;
         _scheduler = scheduler;
-        _readModel = readModel;
-        _resourceManagementService = new ResourceManagementService(environmentClient, readModel, writeModel);
+        _readModelModel = readModelModel;
+        _streamReadModel = streamReadModel;
+        _resourceManagementService = new ResourceManagementService(environmentClient, readModelModel, writeModelModel);
     }
 
     public void InduceChaos(IChaosCodex codex)
@@ -52,16 +56,16 @@ public class ChaosUC
 
                     var expectedKillCount = (int)(killRate / 60) * currentSecond;
 
-                    var overPodLimit = Math.Max(_readModel.GetAllPods().Count - maxNumberOfPods - (expectedKillCount - _killsThisMinute), 0);
+                    var overPodLimit = Math.Max(_readModelModel.GetAllPods().Count - maxNumberOfPods - (expectedKillCount - _killsThisMinute), 0);
 
                     for (var i = _killsThisMinute; i < expectedKillCount + overPodLimit; i++)
                     {
-                        var podsOfType = _readModel.GetAllPodTypes()
+                        var podsOfType = _readModelModel.GetAllPodTypes()
                             .FindAll(podType => podType.ServiceTypes
                                 .Any(serviceType => serviceType.ComponentCategory.Equals(category)))
                             .ToDictionary(p => p.Type);
 
-                        var podToKill = _readModel.GetAllPods().Where(pod => podsOfType.ContainsKey(pod.Type))
+                        var podToKill = _readModelModel.GetAllPods().Where(pod => podsOfType.ContainsKey(pod.Type))
                             .MinBy(_ => Random.Shared.Next());
 
                         if (podToKill is not null)
@@ -70,21 +74,24 @@ public class ChaosUC
 
                     _killsThisMinute = expectedKillCount;
 
-                    var podsOfTypeDict = _readModel.GetAllPodTypes()
+                    var podsOfTypeDict = _readModelModel.GetAllPodTypes()
                         .FindAll(podType => podType.ServiceTypes
                             .Any(serviceType => serviceType.ComponentCategory.Equals(category)))
                         .ToDictionary(p => p.Type);
 
-                    foreach (var pod in _readModel.GetAllPods().Where(p => podsOfTypeDict.ContainsKey(p.Type)))
+                    foreach (var pod in _readModelModel.GetAllPods().Where(p => podsOfTypeDict.ContainsKey(p.Type)))
                     {
                         await _resourceManagementService.SetResources(pod, nanoCpus, memory);
                     }
                 }
 
-                _logStore.Log(new Snapshot()
+                var sagas = await _streamReadModel.GetData();
+
+                await _logStoreWriteModel.Log(new Snapshot()
                 {
-                    ServiceTypes = _readModel.GetAllServiceTypes().ToList(),
-                    RunningInstances = _readModel.GetAllServices().ToList(),
+                    ServiceTypes = _readModelModel.GetAllServiceTypes().ToList(),
+                    RunningInstances = _readModelModel.GetAllServices().ToList(),
+                    Saga = sagas
                 });
             }
         });

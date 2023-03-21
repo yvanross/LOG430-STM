@@ -14,28 +14,23 @@ namespace ApplicationLogic.Usecases;
 
 public class RoutingUC
 {
-    private readonly IRepositoryRead _readModel;
+    private readonly IPodReadModel _readModelModel;
 
-    private readonly ResourceManagementService _resourceManagementService;
-
-    private const string TomtomUrl = "https://api.tomtom.com";
-
-    public RoutingUC(IRepositoryRead readModel, IRepositoryWrite repositoryWrite, IEnvironmentClient environment)
+    public RoutingUC(IPodReadModel readModelModel)
     {
-        _readModel = readModel;
-        _resourceManagementService = new ResourceManagementService(environment, readModel, repositoryWrite);
+        _readModelModel = readModelModel;
     }
 
     public IEnumerable<RoutingData> RouteByDestinationType(string sourceId, string type, LoadBalancingMode mode)
     {
-        var service = _readModel.GetServiceById(sourceId);
+        var service = _readModelModel.GetServiceById(sourceId);
 
         var possibleTargets = HandlePodLocalRouting();
 
         if (possibleTargets is null)
         {
-            var podTypes = _readModel.GetAllPodTypes().ToDictionary(k => k.Type);
-            var podInstances = _readModel.GetAllPods();
+            var podTypes = _readModelModel.GetAllPodTypes().ToDictionary(k => k.Type);
+            var podInstances = _readModelModel.GetAllPods();
 
             possibleTargets = GetPossibleCommunicationEntryPoints(podTypes, podInstances);
         }
@@ -61,7 +56,7 @@ public class RoutingUC
 
         IEnumerable<IServiceInstance>? HandlePodLocalRouting()
         {
-            if (string.IsNullOrEmpty(service?.PodId) is false && _readModel.GetPodById(service.PodId) is { } pod)
+            if (string.IsNullOrEmpty(service?.PodId) is false && _readModelModel.GetPodById(service.PodId) is { } pod)
             {
                 var target = pod.ServiceInstances.Where(serviceInstance => serviceInstance.Type.Equals(type));
 

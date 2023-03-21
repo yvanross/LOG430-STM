@@ -8,8 +8,9 @@
     ".NETCoreApp,Version=v7.0": {
       "RouteTimeProvider/1.0.0": {
         "dependencies": {
-          "Ambassador": "1.0.57",
+          "Ambassador": "1.0.61",
           "ApplicationLogic": "1.0.0",
+          "Entities": "1.0.0",
           "Microsoft.AspNetCore.OpenApi": "7.0.3",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.17.2",
           "Swashbuckle.AspNetCore": "6.4.0"
@@ -18,7 +19,7 @@
           "RouteTimeProvider.dll": {}
         }
       },
-      "Ambassador/1.0.57": {
+      "Ambassador/1.0.61": {
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
           "Microsoft.Extensions.Logging.Abstractions": "7.0.0",
@@ -28,8 +29,8 @@
         },
         "runtime": {
           "lib/net7.0/Ambassador.dll": {
-            "assemblyVersion": "1.0.57.0",
-            "fileVersion": "1.0.57.0"
+            "assemblyVersion": "1.0.61.0",
+            "fileVersion": "1.0.61.0"
           }
         }
       },
@@ -910,10 +911,16 @@
       },
       "ApplicationLogic/1.0.0": {
         "dependencies": {
-          "Ambassador": "1.0.57"
+          "Ambassador": "1.0.61",
+          "Entities": "1.0.0"
         },
         "runtime": {
           "ApplicationLogic.dll": {}
+        }
+      },
+      "Entities/1.0.0": {
+        "runtime": {
+          "Entities.dll": {}
         }
       }
     }
@@ -924,12 +931,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Ambassador/1.0.57": {
+    "Ambassador/1.0.61": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-CNn7TZg6bxdfHoM5rgkiiaXH2GA2ovk4dWaUwUTUPa1fImojLapjQmXv6qboroNNHA7WHZEbG4hvYe8drrOaAA==",
-      "path": "ambassador/1.0.57",
-      "hashPath": "ambassador.1.0.57.nupkg.sha512"
+      "sha512": "sha512-FHDZuv+2W5WEe+6XKvppGPINoewhObCwvOYzoJnAaIJlYgPGh/irZReR1TI9RaINU7DzoGCEPjbWbY29aMXN9w==",
+      "path": "ambassador/1.0.61",
+      "hashPath": "ambassador.1.0.61.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Http.Features/5.0.17": {
       "type": "package",
@@ -1618,6 +1625,11 @@
       "hashPath": "system.xml.xmldocument.4.3.0.nupkg.sha512"
     },
     "ApplicationLogic/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Entities/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

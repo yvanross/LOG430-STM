@@ -3,6 +3,7 @@ using Ambassador.Usecases;
 using ApplicationLogic.Usecases;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using PLACEHOLDER.External;
 
 namespace PLACEHOLDER.Controllers
 {
@@ -26,12 +27,9 @@ namespace PLACEHOLDER.Controllers
         {
             _logger.LogInformation($"Fetching car travel time from {startingCoordinates} to {destinationCoordinates}");
 
-            var travelTime = await _travelUc.GetTravelTimeInSeconds(RemoveWhiteSpaces(startingCoordinates), RemoveWhiteSpaces(destinationCoordinates));
+            var travelTime = await _travelUc.GetTravelTimeInSeconds(startingCoordinates, destinationCoordinates, new TomTomClient());
 
             return Ok(travelTime);
-
-            string RemoveWhiteSpaces(string s)
-                => s.Replace(" ", "");
         }
     }
 }

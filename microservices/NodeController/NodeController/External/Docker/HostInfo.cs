@@ -1,0 +1,41 @@
+﻿using ApplicationLogic.Interfaces;
+
+namespace NodeController.External.Docker;
+
+public class HostInfo : IHostInfo
+{
+    public static readonly string TeamName = Environment.GetEnvironmentVariable("TEAM_NAME")!;
+
+    public static readonly string IngressAddress = Environment.GetEnvironmentVariable("INGRESS_ADDRESS")!;
+
+    public static readonly string IngressPort = Environment.GetEnvironmentVariable("INGRESS_PORT")!;
+
+    public static readonly string ServiceAddress = Environment.GetEnvironmentVariable("SERVICES_ADDRESS")!;
+
+    public static readonly string NodeControllerPort = Environment.GetEnvironmentVariable("NODE_CONTROLLER_PORT")!;
+
+    public string GetTeamName()
+    {
+        return TeamName;
+    }
+
+    public string GetIngressAddress()
+    {
+        return IngressAddress;
+    }
+
+    public string GetIngressPort()
+    {
+        return IngressPort;
+    }
+
+    public string GetAddress()
+    {
+        return ServiceAddress;
+    }
+
+    public string GetPort()
+    {
+        return NodeControllerPort;
+    }
+}

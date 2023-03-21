@@ -1,10 +1,9 @@
 ﻿using System.Collections.Immutable;
-using Docker.DotNet;
 using Docker.DotNet.Models;
 using Entities.BusinessObjects.Live;
 using Entities.DomainInterfaces.Live;
 
-namespace Entities.DomainInterfaces.ResourceManagement;
+namespace ApplicationLogic.Interfaces;
 
 public interface IEnvironmentClient
 {

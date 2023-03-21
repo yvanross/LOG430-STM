@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="BusinessObjects\" />
+    <Compile Remove="BusinessObjects\**" />
+    <EmbeddedResource Remove="BusinessObjects\**" />
+    <None Remove="BusinessObjects\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="DomainInterfaces\" />
   </ItemGroup>
 

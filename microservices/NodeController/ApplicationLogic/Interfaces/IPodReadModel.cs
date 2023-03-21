@@ -6,7 +6,7 @@ using Entities.DomainInterfaces.ResourceManagement;
 
 namespace ApplicationLogic.Interfaces;
 
-public interface IRepositoryRead
+public interface IPodReadModel
 {
     IPodInstance? GetPodOfService(IServiceInstance serviceInstance);
 

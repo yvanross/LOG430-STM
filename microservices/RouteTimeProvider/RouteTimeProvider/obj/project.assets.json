@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net7.0": {
-      "Ambassador/1.0.60": {
+      "Ambassador/1.0.61": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
@@ -1731,7 +1731,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "Ambassador": "1.0.60"
+          "Ambassador": "1.0.61",
+          "Entities": "1.0.0"
         },
         "compile": {
           "bin/placeholder/ApplicationLogic.dll": {}
@@ -1739,17 +1740,27 @@
         "runtime": {
           "bin/placeholder/ApplicationLogic.dll": {}
         }
+      },
+      "Entities/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "compile": {
+          "bin/placeholder/Entities.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Entities.dll": {}
+        }
       }
     }
   },
   "libraries": {
-    "Ambassador/1.0.60": {
-      "sha512": "5sPKnmjsIu20t62QEumJ6EuPDN5JMUdhGidOLDlWMrbb1eXnDCDN5SXIdK/+uE9xGO7YHBF46HF7zQkYAVt1wg==",
+    "Ambassador/1.0.61": {
+      "sha512": "FHDZuv+2W5WEe+6XKvppGPINoewhObCwvOYzoJnAaIJlYgPGh/irZReR1TI9RaINU7DzoGCEPjbWbY29aMXN9w==",
       "type": "package",
-      "path": "ambassador/1.0.60",
+      "path": "ambassador/1.0.61",
       "files": [
         ".nupkg.metadata",
-        "ambassador.1.0.60.nupkg.sha512",
+        "ambassador.1.0.61.nupkg.sha512",
         "ambassador.nuspec",
         "lib/net7.0/Ambassador.dll",
         "lib/net7.0/Ambassador.pdb"
@@ -6162,12 +6173,18 @@
       "type": "project",
       "path": "../ApplicationLogic/ApplicationLogic.csproj",
       "msbuildProject": "../ApplicationLogic/ApplicationLogic.csproj"
+    },
+    "Entities/1.0.0": {
+      "type": "project",
+      "path": "../Entities/Entities.csproj",
+      "msbuildProject": "../Entities/Entities.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "Ambassador >= 1.0.60",
+      "Ambassador >= 1.0.61",
       "ApplicationLogic >= 1.0.0",
+      "Entities >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 7.0.3",
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.17.2",
       "Swashbuckle.AspNetCore >= 6.4.0"
@@ -6209,6 +6226,9 @@
           "projectReferences": {
             "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogic\\ApplicationLogic.csproj": {
               "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogic\\ApplicationLogic.csproj"
+            },
+            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\Entities\\Entities.csproj": {
+              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\Entities\\Entities.csproj"
             }
           }
         }
@@ -6225,7 +6245,7 @@
         "dependencies": {
           "Ambassador": {
             "target": "Package",
-            "version": "[1.0.60, )"
+            "version": "[1.0.61, )"
           },
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",

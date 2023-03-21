@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
+using ApplicationLogic.Interfaces;
 using Docker.DotNet;
 using Docker.DotNet.Models;
 using Entities.BusinessObjects.Live;
@@ -9,7 +10,7 @@ using Entities.DomainInterfaces.Planned;
 using Entities.DomainInterfaces.ResourceManagement;
 using Try = ApplicationLogic.Extensions.Try;
 
-namespace NodeController.Docker;
+namespace NodeController.External.Docker;
 
 /// <summary>
 /// This is for testing purposes on Docker Desktop
@@ -27,7 +28,7 @@ public class LocalDockerClient : IEnvironmentClient
 
     public async Task<ImmutableList<string>?> GetRunningServices(string[]? statuses = default)
     {
-        statuses ??= new [] { "running" };
+        statuses ??= new[] { "running" };
 
         return await Try.WithConsequenceAsync(async () =>
         {
@@ -39,8 +40,8 @@ public class LocalDockerClient : IEnvironmentClient
                 }
             });
 
-            return containers.Select(c=>c.ID).ToImmutableList();
-        }, retryCount: 5, autoThrow:false);
+            return containers.Select(c => c.ID).ToImmutableList();
+        }, retryCount: 5, autoThrow: false);
     }
 
     public async Task<MultiplexedStream> GetContainerLogs(string containerId)
@@ -57,7 +58,7 @@ public class LocalDockerClient : IEnvironmentClient
             var labels = container.Config.Labels
                 .Where(kv => Enum.TryParse(typeof(ServiceLabelsEnum), kv.Key, true, out _))
                 .ToList()
-                .ConvertAll(kv => 
+                .ConvertAll(kv =>
                     new KeyValuePair<ServiceLabelsEnum, string>(
                         (ServiceLabelsEnum)Enum.Parse(typeof(ServiceLabelsEnum), kv.Key, true),
                         kv.Value));
@@ -71,11 +72,11 @@ public class LocalDockerClient : IEnvironmentClient
                 Name = container.Name[1..] ?? string.Empty,
                 ImageName = container.Image,
                 Status = container.State.Status,
-                Port = container.HostConfig.PortBindings["80/tcp"].First(p=>string.IsNullOrEmpty(p.HostPort) is false).HostPort,
+                Port = container.HostConfig.PortBindings["80/tcp"].First(p => string.IsNullOrEmpty(p.HostPort) is false).HostPort,
                 Labels = labelDict,
                 NanoCpus = container.HostConfig.NanoCPUs,
                 Memory = container.HostConfig.Memory,
-            }, 
+            },
             RawConfig: new ContainerConfig()
             {
                 Config = container
@@ -103,7 +104,7 @@ public class LocalDockerClient : IEnvironmentClient
             env.Add($"POD_ID={podId}");
 
             var exposedPorts = GetPortBindings();
-            
+
             containerConfig.Config.HostConfig.AutoRemove = true;
             containerConfig.Config.HostConfig.PortBindings = exposedPorts;
 
@@ -114,16 +115,16 @@ public class LocalDockerClient : IEnvironmentClient
                 Env = env,
                 Image = containerConfig.Config.Image,
                 Name = newContainerName,
-                ExposedPorts = new Dictionary<string, EmptyStruct>() { {exposedPorts.Keys.First(), new EmptyStruct()} } 
+                ExposedPorts = new Dictionary<string, EmptyStruct>() { { exposedPorts.Keys.First(), new EmptyStruct() } }
             });
 
-            _ =await _dockerClient.Containers.StartContainerAsync(containerResponse.ID, new ContainerStartParameters());
+            _ = await _dockerClient.Containers.StartContainerAsync(containerResponse.ID, new ContainerStartParameters());
 
             return containerResponse;
-        }, 
+        },
             onFailure: async (_, _) =>
             {
-                if(containerResponse is not null)
+                if (containerResponse is not null)
                     await RemoveContainerInstance(containerResponse.ID).ConfigureAwait(false);
             },
             autoThrow: false,

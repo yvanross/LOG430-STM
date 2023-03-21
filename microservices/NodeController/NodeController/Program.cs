@@ -1,6 +1,6 @@
 using ApplicationLogic.Usecases;
-using NodeController.Docker;
-using NodeController.Repository;
+using NodeController.External.Docker;
+using NodeController.External.Repository;
 
 namespace NodeController
 {
@@ -41,11 +41,24 @@ namespace NodeController
 
             app.MapControllers();
 
-            var monitor = new MonitorUc(new LocalDockerClient(null), new RepositoryRead(HostInfo.ServiceAddress), new RepositoryWrite());
+            
+            BeginScheduler();
+
+            app.Run();
+        }
+
+        private static void BeginScheduler()
+        {
+            var writeModel = new PodWriteModel();
+            var readModel = new PodReadModel(HostInfo.ServiceAddress);
+            var environmentClient = new LocalDockerClient(null);
+
+
+            var monitor = new MonitorUc(environmentClient, readModel, writeModel);
 
             monitor.TryScheduleStateProcessingOnScheduler();
 
-            app.Run();
+            var _servicePool = new ServicePoolDiscoveryUC(writeModel, readModel, environmentClient);
         }
     }
 }

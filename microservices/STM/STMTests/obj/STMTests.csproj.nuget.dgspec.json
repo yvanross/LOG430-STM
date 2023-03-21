@@ -343,7 +343,7 @@
           "dependencies": {
             "Ambassador": {
               "target": "Package",
-              "version": "[1.0.57, )"
+              "version": "[1.0.61, )"
             },
             "Google.Protobuf": {
               "target": "Package",

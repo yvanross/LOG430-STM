@@ -4,8 +4,8 @@ using ApplicationLogic.Extensions;
 using ApplicationLogic.Usecases;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using NodeController.Docker;
-using NodeController.Repository;
+using NodeController.External.Docker;
+using NodeController.External.Repository;
 
 namespace NodeController.Controllers
 {
@@ -16,8 +16,6 @@ namespace NodeController.Controllers
     {
         private readonly RoutingUC _routingUc;
 
-        private readonly MonitorUc _monitorUc;
-
         private readonly HeadersUC _headersUc = new();
 
         private readonly ILogger<RoutingController> _logger;
@@ -26,21 +24,18 @@ namespace NodeController.Controllers
         {
             _logger = logger;
 
-            var readModel = new RepositoryRead(HostInfo.ServiceAddress);
-            var writeModel = new RepositoryWrite();
-            var environmentClient = new LocalDockerClient(logger);
+            var readModel = new PodReadModel(HostInfo.ServiceAddress);
 
-            _routingUc = new(readModel, writeModel, environmentClient);
-            _monitorUc = new(environmentClient, readModel, writeModel);
+            _routingUc = new(readModel);
         }
 
         [HttpGet]
         [ActionName(nameof(RouteByServiceType))]
-        public ActionResult<IEnumerable<RoutingData>> RouteByServiceType(string id, string serviceType, LoadBalancingMode mode)
+        public ActionResult<IEnumerable<RoutingData>> RouteByServiceType(string caller, string serviceType, LoadBalancingMode mode)
         {
             return Ok(Try.WithConsequenceAsync(() =>
             {
-                var routingDatas = _routingUc.RouteByDestinationType(id, serviceType, mode).ToList();
+                var routingDatas = _routingUc.RouteByDestinationType(caller, serviceType, mode).ToList();
 
                 foreach (var routingData in routingDatas)
                 {

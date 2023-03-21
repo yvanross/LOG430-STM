@@ -2,7 +2,7 @@
 
 namespace ApplicationLogic.Interfaces;
 
-public interface ILogStore
+public interface ILogStoreWriteModel
 {
-    void Log(ISnapshot snapshot);
+    Task Log(ISnapshot snapshot);
 }

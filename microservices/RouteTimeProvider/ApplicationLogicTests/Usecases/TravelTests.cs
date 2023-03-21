@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Ambassador;
 using Ambassador.Controllers;
 using Ambassador.Usecases;
+using PLACEHOLDER.External;
 
 namespace ApplicationLogic.Usecases.Tests
 {
@@ -16,17 +17,11 @@ namespace ApplicationLogic.Usecases.Tests
     {
         private static readonly TravelUC _travelUc = new();
 
-        [TestInitialize]
-        public void Init()
-        {
-            RegistrationController.Register(ServiceTypes.RouteTimeProvider.ToString(), default);
-        }
-
         [TestMethod()]
         public async Task TravelTimeBetweenTwoCoordinates()
         {
             var time = await _travelUc.GetTravelTimeInSeconds("45.49529799006756,-73.56309288413388",
-                "45.501735228664714,-73.57656830180076");
+                "45.501735228664714,-73.57656830180076", new TomTomClient());
 
             Assert.IsTrue(time > 0);
         }

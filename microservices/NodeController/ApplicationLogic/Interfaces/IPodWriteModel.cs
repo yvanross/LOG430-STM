@@ -3,7 +3,7 @@ using Entities.DomainInterfaces.Planned;
 
 namespace ApplicationLogic.Interfaces;
 
-public interface IRepositoryWrite
+public interface IPodWriteModel
 {
     void AddOrUpdatePod(IPodInstance podInstance);
     

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Immutable;
 using ApplicationLogic.Extensions;
 using ApplicationLogic.Interfaces;
 using ApplicationLogic.Services.BusTracking;
@@ -10,7 +9,7 @@ namespace ApplicationLogic.Use_Cases;
 
 public class TrackBusUC
 {
-    private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromSeconds(1));
+    private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(10));
 
     private readonly ConcurrentQueue<IBusTracking> _trackingQueue = new();
 

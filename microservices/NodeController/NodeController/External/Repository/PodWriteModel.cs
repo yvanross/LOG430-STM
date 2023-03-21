@@ -3,9 +3,9 @@ using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
 using NodeController.Cache;
 
-namespace NodeController.Repository;
+namespace NodeController.External.Repository;
 
-public class RepositoryWrite : IRepositoryWrite
+public class PodWriteModel : IPodWriteModel
 {
     public void AddOrUpdatePod(IPodInstance podInstance)
     {

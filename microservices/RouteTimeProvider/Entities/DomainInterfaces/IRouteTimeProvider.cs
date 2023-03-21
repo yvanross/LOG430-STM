@@ -2,5 +2,5 @@
 
 public interface IRouteTimeProvider
 {
-    double GetTravelTimeInSeconds(double latitude, double longitude);
+    Task<int> GetTravelTimeInSeconds(string startingCoordinates, string destinationCoordinates);
 }

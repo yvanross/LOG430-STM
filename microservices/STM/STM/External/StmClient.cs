@@ -9,7 +9,7 @@ namespace STM.External;
 
 public class StmClient : IStmClient
 {
-    private static string ApiKey => @"l7ba104e682e6143ecacf7fadccb8e3979";
+    private static string ApiKey => Environment.GetEnvironmentVariable("API_KEY") ?? string.Empty;
 
     private static readonly RestClient _stmClient = new ("https://api.stm.info/pub/od/gtfs-rt/ic/v2");
 
@@ -36,7 +36,7 @@ public class StmClient : IStmClient
 
                 RemoveOldEntries();
 
-                await Task.Delay(TimeSpan.FromSeconds(15));
+                await Task.Delay(TimeSpan.FromSeconds(10));
             }
         }, retryCount:int.MaxValue);
 

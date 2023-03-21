@@ -4,5 +4,5 @@ public interface IIngressClient
 {
     public Task Subscribe(string teamName, string address, string port);
 
-    public Task<string> GetLogStore();
+    public string GetLogStoreAddressAndPort();
 }
