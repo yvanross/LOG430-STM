@@ -72,7 +72,9 @@ public class LocalDockerClient : IEnvironmentClient
                 ImageName = container.Image,
                 Status = container.State.Status,
                 Port = container.HostConfig.PortBindings["80/tcp"].First(p=>string.IsNullOrEmpty(p.HostPort) is false).HostPort,
-                Labels = labelDict
+                Labels = labelDict,
+                NanoCpus = container.HostConfig.NanoCPUs,
+                Memory = container.HostConfig.Memory,
             }, 
             RawConfig: new ContainerConfig()
             {
@@ -130,16 +132,25 @@ public class LocalDockerClient : IEnvironmentClient
 
     public async Task GarbageCollection()
     {
+        await _dockerClient.Containers.PruneContainersAsync();
+    }
+
+    public async Task SetResources(IPodInstance podInstance, long nanoCpus, long memory)
+    {
         await Try.WithConsequenceAsync(async () =>
         {
-            var containersToRemove = await GetRunningServices(new[] { "exited", "dead" });
-
-            await Parallel
-                .ForEachAsync(containersToRemove, async (toKill, _) => await RemoveContainerInstance(toKill))
-                .ConfigureAwait(false);
+            foreach (var service in podInstance.ServiceInstances)
+            {
+                await _dockerClient.Containers.UpdateContainerAsync(service.ContainerInfo!.Id,
+                    new ContainerUpdateParameters()
+                    {
+                        NanoCPUs = nanoCpus,
+                        Memory = memory,
+                    });
+            }
 
             return Task.CompletedTask;
-        });
+        }, retryCount: 5, autoThrow: false);
     }
 
     public async Task RemoveContainerInstance(string containerId)

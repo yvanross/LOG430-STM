@@ -5,4 +5,6 @@ public interface IHostInfo
     string GetPort();
 
     string GetIngressAddress();
+
+    string GetAddress();
 }

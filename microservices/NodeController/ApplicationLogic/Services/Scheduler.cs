@@ -15,9 +15,14 @@ public class Scheduler : IScheduler
         _ = BeginScheduling();
     }
 
-    public void TryAddTask(Func<Task> func)
+    public void TryAddTask(string name, Func<Task> func)
     {
         ImmutableInterlocked.TryAdd(ref _tasks, func.Method.Name, func);
+    }
+
+    public void TryRemoveTask(string name)
+    {
+        ImmutableInterlocked.TryRemove(ref _tasks, name, out _);
     }
 
     private async Task BeginScheduling()

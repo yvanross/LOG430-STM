@@ -36,11 +36,11 @@ namespace NodeController.Controllers
 
         [HttpGet]
         [ActionName(nameof(RouteByServiceType))]
-        public ActionResult<IEnumerable<RoutingData>> RouteByServiceType(string serviceType, LoadBalancingMode mode)
+        public ActionResult<IEnumerable<RoutingData>> RouteByServiceType(string id, string serviceType, LoadBalancingMode mode)
         {
             return Ok(Try.WithConsequenceAsync(() =>
             {
-                var routingDatas = _routingUc.RouteByDestinationType(serviceType, mode).ToList();
+                var routingDatas = _routingUc.RouteByDestinationType(id, serviceType, mode).ToList();
 
                 foreach (var routingData in routingDatas)
                 {

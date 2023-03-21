@@ -2,7 +2,7 @@
 
 public interface IIngressClient
 {
-    public Task Subscribe();
+    public Task Subscribe(string teamName, string address, string port);
 
-    public Task SendUpdate();
+    public Task<string> GetLogStore();
 }

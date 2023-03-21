@@ -22,7 +22,7 @@ public interface IRepositoryRead
 
     //----------------------------------------------------------------
 
-    IServiceInstance? GetServiceById(Guid id);
+    IServiceInstance? GetServiceById(string id);
 
     ImmutableList<IServiceInstance> GetServiceInstances(string serviceType);
 

@@ -9,7 +9,7 @@ public class PodType : IPodType
 
     public required int MinimumNumberOfInstances { get; set; }
 
-    public IServiceType? Sidecar { get; set; }
+    public IServiceType? Gateway { get; set; }
 
     public required ImmutableList<IServiceType> ServiceTypes { get; set; } = ImmutableList<IServiceType>.Empty;
 

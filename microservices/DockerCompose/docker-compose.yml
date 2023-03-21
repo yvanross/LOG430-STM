@@ -2,87 +2,101 @@ version: '3.8'
  
 x-conf: 
   - env: 
-    - &SERVICES_ADDRESS SERVICES_ADDRESS=${SERVICES_ADDRESS}   
-    - &INGRESS_ADDRESS INGRESS_ADDRESS=${INGRESS_ADDRESS}
-    - &INGRESS_PORT INGRESS_PORT=${INGRESS_PORT}
-    - &NODE_CONTROLLER_PORT NODE_CONTROLLER_PORT=${NODE_CONTROLLER_PORT}
     - &ASPNETCORE_URLS ASPNETCORE_URLS=http://+:80
-
-  - standardEnv: &stdEnv 
-    - *SERVICES_ADDRESS
-    - *NODE_CONTROLLER_PORT
-    - *ASPNETCORE_URLS
-  
   - vol:
      &vol
      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
 
+x-variables: &std
+  SERVICES_ADDRESS: ${SERVICES_ADDRESS}   
+  NODE_CONTROLLER_PORT: ${NODE_CONTROLLER_PORT}
+  ASPNETCORE_URLS: ASPNETCORE_URLS=http://+:80
+
 services:
   ingress:
     image: ${DOCKER_REGISTRY-}ingress
+    restart: always
     ports:
       - ${INGRESS_PORT}
     build:
       context: ../
       dockerfile: Ingress/Ingress/Dockerfile
-    container_name: Ingress
     environment:
-      *stdEnv
+      - *ASPNETCORE_URLS
     volumes:
-      *vol      
+      *vol
+    labels:
+      COMPONENT_CATEGORY: DEBUG      
   
-  rabbitmq:
-    container_name: MQ
-    image: rabbitmq
-    expose:
-      - ${RABBIT_MQ_PORT}
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    labels:
+      COMPONENT_CATEGORY: DEBUG
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+    labels:
+      COMPONENT_CATEGORY: DEBUG
 
   nodecontroller:
     image: ${DOCKER_REGISTRY-}nodecontroller
+    restart: always
     ports:
       - ${NODE_CONTROLLER_PORT}
     build:
       context: ../
       dockerfile: NodeController/NodeController/Dockerfile
-    container_name: NodeController
     environment:
-      - *SERVICES_ADDRESS
-      - *NODE_CONTROLLER_PORT
-      - *ASPNETCORE_URLS
-      - *INGRESS_ADDRESS
-      - *INGRESS_PORT
+      <<: *std
+      TEAM_NAME: ${TEAM_NAME}
+      INGRESS_ADDRESS: ${INGRESS_ADDRESS}
+      INGRESS_PORT: ${INGRESS_PORT}
     volumes:
       *vol    
     depends_on:
       - ingress
 
   routetimeprovider:
+    container_name: &name RouteTimeProvider
     image: ${DOCKER_REGISTRY-}routetimeprovider
+    restart: always
     build:
       context: ../
       dockerfile: RouteTimeProvider/RouteTimeProvider/Dockerfile
-    container_name: RouteTimeProvider
     environment:
-      *stdEnv
+      <<: *std
+      ID: *name 
     ports:
         - "32771:80"
     volumes:
       *vol
     labels:
-      SERVICE_TYPE_NAME: RouteTimeProvider
       COMPONENT_CATEGORY: Computation
     depends_on:
       - nodecontroller
 
   tripcomparator:
+    container_name: &name TripComparator
     image: ${DOCKER_REGISTRY-}tripcomparator
+    restart: always
     build:
       context: ../
       dockerfile: TripComparator/TripComparator/Dockerfile
-    container_name: TripComparator
     environment:
-      *stdEnv
+      <<: *std
+      ID: *name 
     ports:
         - "32772:80"
     volumes:
@@ -91,26 +105,26 @@ services:
       restart_policy:
         condition: on-failure
     labels:
-      SERVICE_TYPE_NAME: TripComparator
       COMPONENT_CATEGORY: Computation
       MINIMUM_NUMBER_OF_INSTANCES: 2
     depends_on:
       - nodecontroller
 
   stm:
+    container_name: &name STM
     image: ${DOCKER_REGISTRY-}stm
+    restart: always
     build:
         context: ../
         dockerfile: STM/STM/Dockerfile
-    container_name: STM
     environment:
-      *stdEnv
+      <<: *std
+      ID: *name 
     ports:
         - "32773:80"
     volumes:
         *vol
     labels:
-      SERVICE_TYPE_NAME: STM
       COMPONENT_CATEGORY: Computation
     depends_on:
         - nodecontroller

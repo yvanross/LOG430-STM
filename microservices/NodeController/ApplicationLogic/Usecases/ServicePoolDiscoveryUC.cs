@@ -22,7 +22,7 @@ using Entities.DomainInterfaces.ResourceManagement;
 
 namespace ApplicationLogic.Usecases
 {
-    public class SubscriptionUC
+    public class ServicePoolDiscoveryUC
     {
         private readonly IRepositoryWrite _repositoryWrite;
         
@@ -30,18 +30,15 @@ namespace ApplicationLogic.Usecases
 
         private readonly IEnvironmentClient _environmentClient;
 
-        private readonly IScheduler _scheduler;
-
         private static string NodeAddress => Environment.GetEnvironmentVariable("SERVICES_ADDRESS")!;
 
-        public SubscriptionUC(IRepositoryWrite repositoryWrite, IRepositoryRead repositoryRead, IEnvironmentClient environmentClient, IScheduler scheduler)
+        public ServicePoolDiscoveryUC(IRepositoryWrite repositoryWrite, IRepositoryRead repositoryRead, IEnvironmentClient environmentClient, IScheduler scheduler)
         {
             _repositoryWrite = repositoryWrite;
             _repositoryRead = repositoryRead;
             _environmentClient = environmentClient;
-            _scheduler = scheduler;
 
-            _scheduler.TryAddTask(DiscoverServices);
+            scheduler.TryAddTask(nameof(DiscoverServices), DiscoverServices);
         }
 
         private async Task DiscoverServices()
@@ -77,7 +74,7 @@ namespace ApplicationLogic.Usecases
                     Id = service.RawConfig.Config.Config.Env.First(e => e.ToString().StartsWith("ID=")),
                     ContainerInfo = service.CuratedInfo,
                     Address = NodeAddress,
-                    Type = GetServiceTypeName(service.CuratedInfo.Labels),
+                    Type = service.CuratedInfo.Name,
                     PodId = GetPodId(service.CuratedInfo.Labels)
                 };
 
@@ -95,7 +92,7 @@ namespace ApplicationLogic.Usecases
                 var serviceType = new ServiceType()
                 {
                     ContainerConfig = service.RawConfig,
-                    Type = GetServiceTypeName(curatedInfoLabels),
+                    Type = service.CuratedInfo.Name,
                     ComponentCategory = GetComponentCategory(curatedInfoLabels),
                     IsPodSidecar = GetIsSidecar(curatedInfoLabels),
                     PodName = podType
@@ -114,7 +111,7 @@ namespace ApplicationLogic.Usecases
                     {
                         Type = podType,
                         MinimumNumberOfInstances = GetMinimumNumberOfInstances(service.CuratedInfo.Labels),
-                        Sidecar = GetIsSidecar(service.CuratedInfo.Labels) ? serviceType : pod?.Sidecar ?? default,
+                        Gateway = GetIsSidecar(service.CuratedInfo.Labels) ? serviceType : pod?.Gateway ?? default,
                         ServiceTypes = pod?.ServiceTypes.Add(serviceType) ?? ImmutableList<IServiceType>.Empty.Add(serviceType),
                     });
                 }
@@ -143,11 +140,6 @@ namespace ApplicationLogic.Usecases
             labels.TryGetValue(serviceLabels, out var label);
 
             return label ?? string.Empty;
-        }
-
-        private string GetServiceTypeName(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
-        {
-            return GetLabelValue(ServiceLabelsEnum.SERVICE_TYPE_NAME, labels);
         }
 
         private string GetComponentCategory(ConcurrentDictionary<ServiceLabelsEnum, string> labels)

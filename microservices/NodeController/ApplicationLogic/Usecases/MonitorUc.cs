@@ -34,9 +34,9 @@ namespace ApplicationLogic.Usecases
         {
             if (_readModel.GetScheduler() is not { } scheduler) throw new NullReferenceException("Scheduler was null");
 
-            scheduler.TryAddTask(BeginProcessingPodStates);
+            scheduler.TryAddTask(nameof(BeginProcessingPodStates), BeginProcessingPodStates);
             
-            scheduler.TryAddTask(GarbageCollection);
+            scheduler.TryAddTask(nameof(GarbageCollection), GarbageCollection);
         }
 
         private async Task GarbageCollection()

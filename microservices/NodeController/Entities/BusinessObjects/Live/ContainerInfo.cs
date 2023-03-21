@@ -15,6 +15,10 @@ public class ContainerInfo
     public required string Status { get; set; }
 
     public required string Port { get; set; }
+    
+    public required long NanoCpus { get; set; }
+    
+    public required long Memory { get; set; }
 
     public ConcurrentDictionary<ServiceLabelsEnum, string> Labels { get; set; } = new();
 }

@@ -8,7 +8,7 @@ public interface IPodType
 
     int MinimumNumberOfInstances { get; set; }
 
-    IServiceType? Sidecar { get; set; }
+    IServiceType? Gateway { get; set; }
 
     ImmutableList<IServiceType> ServiceTypes { get; set; }
 }

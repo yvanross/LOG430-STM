@@ -22,7 +22,7 @@ public class ResourceManagementService
         _readModel = readModel;
         _writeModel = writeModel;
 
-        _readModel.GetScheduler()?.TryAddTask(MatchInstanceDemandOnPods);
+        _readModel.GetScheduler()?.TryAddTask(nameof(MatchInstanceDemandOnPods), MatchInstanceDemandOnPods);
     }
 
 
@@ -156,5 +156,10 @@ public class ResourceManagementService
             LoadBalancingMode.Broadcast => services,
             _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
         };
+    }
+
+    public async Task SetResources(IPodInstance podInstance, long nanoCpus, long memory)
+    {
+        await _environmentClient.SetResources(podInstance, nanoCpus, memory);
     }
 }

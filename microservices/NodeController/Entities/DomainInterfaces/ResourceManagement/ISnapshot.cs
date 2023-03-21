@@ -5,6 +5,8 @@ namespace Entities.DomainInterfaces.ResourceManagement;
 
 public interface ISnapshot
 {
+    DateTime Timestamp { get; }
+
     List<IServiceInstance> RunningInstances { get; }
     
     List<IServiceType> ServiceTypes { get; }

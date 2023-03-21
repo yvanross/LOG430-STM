@@ -48,7 +48,7 @@ public class RepositoryRead : IRepositoryRead
         return RouteCache.GetPodTypes().Select(kv => kv.Value).SingleOrDefault(pt => pt.Type.Equals(podType));
     }
 
-    public IServiceInstance? GetServiceById(Guid id)
+    public IServiceInstance? GetServiceById(string id)
     {
         return RouteCache.GetPodInstances()
             .SelectMany(pod => pod.ServiceInstances).SingleOrDefault(service => service.Id.Equals(id));

@@ -5,5 +5,6 @@ public enum ServiceCategoriesEnum
     Computation,
     Database,
     Connector,
-    Undefined
+    Undefined,
+    DEBUG
 }

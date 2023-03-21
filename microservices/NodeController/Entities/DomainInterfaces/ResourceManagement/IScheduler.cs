@@ -2,6 +2,7 @@
 
 public interface IScheduler
 {
-    void TryAddTask(Func<Task> func);
+    void TryAddTask(string name, Func<Task> func);
 
+    void TryRemoveTask(string name);
 }

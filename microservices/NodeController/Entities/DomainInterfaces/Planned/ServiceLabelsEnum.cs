@@ -3,7 +3,6 @@
 public enum ServiceLabelsEnum
 {
     //Service type info
-    SERVICE_TYPE_NAME,
     COMPONENT_CATEGORY,
     MINIMUM_NUMBER_OF_INSTANCES,
     //Pod info

@@ -18,4 +18,6 @@ public interface IEnvironmentClient
     Task<(ContainerInfo CuratedInfo, IContainerConfig RawConfig)> GetContainerInfo(string containerId);
 
     Task GarbageCollection();
+
+    Task SetResources(IPodInstance podInstance, long nanoCpus, long memory);
 }
