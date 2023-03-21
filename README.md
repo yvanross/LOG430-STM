@@ -232,8 +232,11 @@ Chaque équipe doit réaliser une documentation d'architecture ainsi qu'une impl
 3. Spare avec monitor et predictive model
 
 ## Performance
-1. Limit event response avec maintain multiple copies of computation
-2. Introduce concurrency
+1. Limit event response 
+2. Maintain multiple copies of computation
+3. Maintain multiple copies of data
+4. Introduce concurrency
+   
 
 ## Securité
 - Detect service denial attack
@@ -253,3 +256,7 @@ Chaque équipe doit réaliser une documentation d'architecture ainsi qu'une impl
 ## Interopérability
   - service discovery
   - 
+
+
+
+
