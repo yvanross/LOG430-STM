@@ -77,7 +77,7 @@ public class ChaosUC
 
                     foreach (var pod in _readModel.GetAllPods().Where(p => podsOfTypeDict.ContainsKey(p.Type)))
                     {
-                        _resourceManagementService.SetResources(pod, nanoCpus, memory);
+                        await _resourceManagementService.SetResources(pod, nanoCpus, memory);
                     }
                 }
 

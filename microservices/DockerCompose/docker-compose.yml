@@ -67,6 +67,17 @@ services:
       *vol    
     depends_on:
       - ingress
+    
+  event-store:
+    container_name: &name eventStore
+    image: rabbitmq
+    restart: always
+    ports:
+        - "32771:80"
+    environment:
+      ID: *name 
+    labels:
+      COMPONENT_CATEGORY: Connector
 
   routetimeprovider:
     container_name: &name RouteTimeProvider
@@ -79,7 +90,7 @@ services:
       <<: *std
       ID: *name 
     ports:
-        - "32771:80"
+        - "32772:80"
     volumes:
       *vol
     labels:
@@ -98,7 +109,7 @@ services:
       <<: *std
       ID: *name 
     ports:
-        - "32772:80"
+        - "32773:80"
     volumes:
       *vol
     deploy:
@@ -121,7 +132,7 @@ services:
       <<: *std
       ID: *name 
     ports:
-        - "32773:80"
+        - "32774:80"
     volumes:
         *vol
     labels:
