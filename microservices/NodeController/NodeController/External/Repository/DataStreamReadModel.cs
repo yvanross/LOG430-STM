@@ -1,14 +1,47 @@
-﻿using ApplicationLogic.Interfaces;
+﻿using System.Collections.Concurrent;
+using System.Collections.Immutable;
+using Ambassador;
+using ApplicationLogic.Interfaces;
+using ApplicationLogic.Usecases;
 using Entities.DomainInterfaces.Live;
+using MassTransit;
+using HostInfo = NodeController.External.Docker.HostInfo;
+using ISaga = Entities.DomainInterfaces.Live.ISaga;
 
 namespace NodeController.External.Repository;
 
-public class DataStreamReadModel : IDataStreamReadModel
+public class DataStreamReadModel : IDataStreamReadModel, IConsumer<ISaga>
 {
 
+    ImmutableHashSet<string> _dataStreams;
 
-    public async Task<IEnumerable<ISaga>> GetData()
+    private RoutingUC routing = new RoutingUC(new PodReadModel(HostInfo.ServiceAddress));
+
+    public void BeginStreaming(string testId)
     {
-        throw new NotImplementedException();
+        if (_dataStreams.Contains(testId) is false)
+        {
+            var mq = routing.RouteByDestinationType(string.Empty, HostInfo.MqServiceName, LoadBalancingMode.RoundRobin).FirstOrDefault();
+
+            if (mq is not null)
+            {
+                var busControl = Bus.Factory.CreateUsingInMemory(cfg =>
+                {
+                    cfg.Host(new Uri(mq.Address));
+
+                    cfg.ReceiveEndpoint(testId, e =>
+                    {
+                        e.Consumer<DataStreamReadModel>();
+                    });
+                });
+
+                _ = busControl.StartAsync();
+            }
+        }
+    }
+
+    public Task Consume(ConsumeContext<ISaga> context)
+    {
+        var 
     }
 }

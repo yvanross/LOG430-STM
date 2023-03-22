@@ -3,6 +3,7 @@ version: '3.8'
 x-conf: 
   - env: 
     - &ASPNETCORE_URLS http://+:80
+    - &MQ_SERVICE_NAME EventStream
   - vol:
      &vol
      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
@@ -65,19 +66,20 @@ services:
       SERVICES_ADDRESS: ${SERVICES_ADDRESS}     
       NODE_CONTROLLER_PORT: ${NODE_CONTROLLER_PORT}
       ASPNETCORE_URLS: *ASPNETCORE_URLS
+      MQ_SERVICE_NAME: *MQ_SERVICE_NAME
     volumes:
       *vol    
     depends_on:
       - ingress
     
   event-store:
-    container_name: &name eventStore
+    container_name: *MQ_SERVICE_NAME
     image: rabbitmq
     restart: always
     ports:
         - "32771:80"
     environment:
-      ID: *name 
+      ID: *MQ_SERVICE_NAME 
     labels:
       COMPONENT_CATEGORY: Connector
 

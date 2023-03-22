@@ -23,8 +23,6 @@ public class RoutingUC
 
     public IEnumerable<RoutingData> RouteByDestinationType(string sourceId, string type, LoadBalancingMode mode)
     {
-        var service = _readModelModel.GetServiceById(sourceId);
-
         var possibleTargets = HandlePodLocalRouting();
 
         if (possibleTargets is null)
@@ -56,6 +54,8 @@ public class RoutingUC
 
         IEnumerable<IServiceInstance>? HandlePodLocalRouting()
         {
+            var service = _readModelModel.GetServiceById(sourceId);
+
             if (string.IsNullOrEmpty(service?.PodId) is false && _readModelModel.GetPodById(service.PodId) is { } pod)
             {
                 var target = pod.ServiceInstances.Where(serviceInstance => serviceInstance.Type.Equals(type));

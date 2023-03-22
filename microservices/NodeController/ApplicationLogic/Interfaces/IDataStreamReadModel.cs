@@ -4,5 +4,5 @@ namespace ApplicationLogic.Interfaces;
 
 public interface IDataStreamReadModel
 {
-    public Task<IEnumerable<ISaga>> GetData();
+    public void BeginStreaming();
 }

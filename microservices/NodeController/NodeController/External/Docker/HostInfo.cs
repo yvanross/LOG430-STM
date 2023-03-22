@@ -11,6 +11,8 @@ public class HostInfo : IHostInfo
     public static readonly string IngressPort = Environment.GetEnvironmentVariable("INGRESS_PORT")!;
 
     public static readonly string ServiceAddress = Environment.GetEnvironmentVariable("SERVICES_ADDRESS")!;
+    
+    public static readonly string MqServiceName = Environment.GetEnvironmentVariable("MQ_SERVICE_NAME")!;
 
     public static readonly string NodeControllerPort = Environment.GetEnvironmentVariable("NODE_CONTROLLER_PORT")!;
 
@@ -37,5 +39,10 @@ public class HostInfo : IHostInfo
     public string GetPort()
     {
         return NodeControllerPort;
+    }
+
+    public string GetMQServiceName()
+    {
+        return MqServiceName;
     }
 }

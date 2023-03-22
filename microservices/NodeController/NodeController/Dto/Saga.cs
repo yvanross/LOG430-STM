@@ -1,4 +1,5 @@
-﻿using Entities.DomainInterfaces.Live;
+﻿using MassTransit;
+using ISaga = Entities.DomainInterfaces.Live.ISaga;
 
 namespace Entities.BusinessObjects.Live;
 

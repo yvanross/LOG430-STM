@@ -85,7 +85,7 @@ public class ChaosUC
                     }
                 }
 
-                var sagas = await _streamReadModel.GetData();
+                var sagas = await _streamReadModel.BeginStreaming();
 
                 await _logStoreWriteModel.Log(new Snapshot()
                 {

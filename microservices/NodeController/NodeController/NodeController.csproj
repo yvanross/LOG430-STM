@@ -19,8 +19,7 @@
   <ItemGroup>
     <PackageReference Include="Ambassador" Version="1.0.60" />
     <PackageReference Include="Docker.DotNet" Version="3.125.13" />
-    <PackageReference Include="MassTransit.MongoDb" Version="8.0.14" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.14" />
+    <PackageReference Include="MassTransit" Version="8.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.3" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.4" />
@@ -45,10 +44,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="External\Ingress\" />
   </ItemGroup>
 
 </Project>

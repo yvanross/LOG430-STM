@@ -10,6 +10,4 @@ public interface ISnapshot
     List<IServiceInstance> RunningInstances { get; }
     
     List<IServiceType> ServiceTypes { get; }
-
-    IEnumerable<ISaga> Saga { get; }
 }
