@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ambassador.Dto;
 using ApplicationLogic.Interfaces;
+using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Services;
 using Entities;
 using Entities.BusinessObjects;
@@ -37,11 +38,9 @@ namespace ApplicationLogic.Usecases
             _podWriteModel = podWriteModel;
             _podReadModel = podReadModel;
             _environmentClient = environmentClient;
-
-            _podReadModel.GetScheduler().TryAddTask(nameof(DiscoverServices), DiscoverServices);
         }
 
-        private async Task DiscoverServices()
+        public async Task DiscoverServices()
         {
             var unregisteredServices = await GetUnregisteredServices();
 

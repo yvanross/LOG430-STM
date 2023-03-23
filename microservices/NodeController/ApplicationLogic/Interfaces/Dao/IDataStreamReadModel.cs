@@ -1,6 +1,6 @@
 ﻿using Entities.DomainInterfaces.Live;
 
-namespace ApplicationLogic.Interfaces;
+namespace ApplicationLogic.Interfaces.Dao;
 
 public interface IDataStreamReadModel
 {

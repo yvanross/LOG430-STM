@@ -1,5 +1,5 @@
 ﻿using System.Collections.Immutable;
-using ApplicationLogic.Interfaces;
+using ApplicationLogic.Interfaces.Dao;
 using Entities.DomainInterfaces;
 using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;

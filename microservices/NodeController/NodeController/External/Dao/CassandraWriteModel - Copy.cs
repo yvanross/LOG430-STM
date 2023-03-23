@@ -1,9 +1,9 @@
-﻿using ApplicationLogic.Interfaces;
+﻿using ApplicationLogic.Interfaces.Dao;
 using Entities.DomainInterfaces.ResourceManagement;
 
 namespace NodeController.External.Repository;
 
-public class LogStoreWriteModel : ILogStoreWriteModel
+public class SystemStateStorageWriteModel : ISystemStateStorageWriteModel
 {
     public async Task Log(ISnapshot snapshot)
     {

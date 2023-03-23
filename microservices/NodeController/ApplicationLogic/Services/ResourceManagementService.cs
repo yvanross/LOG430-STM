@@ -5,6 +5,7 @@ using Entities.BusinessObjects.States;
 using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.ResourceManagement;
 using Entities.BusinessObjects.Live;
+using ApplicationLogic.Interfaces.Dao;
 
 namespace ApplicationLogic.Services;
 
@@ -21,25 +22,6 @@ public class ResourceManagementService
         _environmentClient = environmentClient;
         _readModelModel = readModelModel;
         _writeModelModel = writeModelModel;
-
-        _readModelModel.GetScheduler()?.TryAddTask(nameof(MatchInstanceDemandOnPods), MatchInstanceDemandOnPods);
-    }
-
-
-    private async Task MatchInstanceDemandOnPods()
-    {
-        var podTypes = _readModelModel.GetAllPodTypes();
-
-        if (podTypes is not null)
-        {
-            foreach (var podType in podTypes)
-            {
-                while (_readModelModel.GetPodInstances(podType.Type)?.Count < podType.MinimumNumberOfInstances)
-                {
-                    await IncreaseNumberOfPodInstances(podType.Type).ConfigureAwait(false);
-                }
-            }
-        }
     }
 
     public async Task RemovePodInstance(IPodInstance podInstance)

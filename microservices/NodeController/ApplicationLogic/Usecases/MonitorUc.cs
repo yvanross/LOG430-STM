@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ApplicationLogic.Extensions;
 using ApplicationLogic.Interfaces;
+using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Services;
 using Entities.BusinessObjects.Live;
 using Entities.BusinessObjects.States;
@@ -30,21 +31,25 @@ namespace ApplicationLogic.Usecases
             _resourceManagementService = new ResourceManagementService(client, readModelModel, writeModelModel);
         }
 
-        public void TryScheduleStateProcessingOnScheduler()
-        {
-            if (_readModelModel.GetScheduler() is not { } scheduler) throw new NullReferenceException("Scheduler was null");
-
-            scheduler.TryAddTask(nameof(BeginProcessingPodStates), BeginProcessingPodStates);
-            
-            scheduler.TryAddTask(nameof(GarbageCollection), GarbageCollection);
-        }
-
-        private async Task GarbageCollection()
+        public async Task GarbageCollection()
         {
             await _client.GarbageCollection();
         }
 
-        private async Task BeginProcessingPodStates()
+        public async Task MatchInstanceDemandOnPods()
+        {
+            var podTypes = _readModelModel.GetAllPodTypes();
+
+            foreach (var podType in podTypes)
+            {
+                while (_readModelModel.GetPodInstances(podType.Type)?.Count < podType.MinimumNumberOfInstances)
+                {
+                    await _resourceManagementService.IncreaseNumberOfPodInstances(podType.Type).ConfigureAwait(false);
+                }
+            }
+        }
+
+        public async Task ProcessPodStates()
         {
             await Try.WithConsequenceAsync(async () =>
             {

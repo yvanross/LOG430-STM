@@ -41,24 +41,25 @@ namespace NodeController
 
             app.MapControllers();
 
-            
-            BeginScheduler();
+            ScheduleRecurringTasks();
 
             app.Run();
         }
 
-        private static void BeginScheduler()
+        private static void ScheduleRecurringTasks()
         {
             var writeModel = new PodWriteModel();
             var readModel = new PodReadModel(HostInfo.ServiceAddress);
             var environmentClient = new LocalDockerClient(null);
 
+            var servicePool = new ServicePoolDiscoveryUC(writeModel, readModel, environmentClient);
 
             var monitor = new MonitorUc(environmentClient, readModel, writeModel);
 
-            monitor.TryScheduleStateProcessingOnScheduler();
-
-            var _servicePool = new ServicePoolDiscoveryUC(writeModel, readModel, environmentClient);
+            readModel.GetScheduler().TryAddTask(nameof(servicePool.DiscoverServices), servicePool.DiscoverServices);
+            readModel.GetScheduler().TryAddTask(nameof(monitor.GarbageCollection), monitor.GarbageCollection);
+            readModel.GetScheduler().TryAddTask(nameof(monitor.ProcessPodStates), monitor.ProcessPodStates);
+            readModel.GetScheduler().TryAddTask(nameof(monitor.MatchInstanceDemandOnPods), monitor.MatchInstanceDemandOnPods);
         }
     }
 }

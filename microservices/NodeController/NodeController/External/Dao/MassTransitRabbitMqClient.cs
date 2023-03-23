@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Immutable;
 using Ambassador;
-using ApplicationLogic.Interfaces;
+using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Usecases;
 using Entities.DomainInterfaces.Live;
 using MassTransit;
@@ -10,7 +10,7 @@ using ISaga = Entities.DomainInterfaces.Live.ISaga;
 
 namespace NodeController.External.Repository;
 
-public class DataStreamReadModel : IDataStreamReadModel, IConsumer<ISaga>
+public class MassTransitRabbitMqClient : IDataStreamReadModel, IConsumer<ISaga>
 {
 
     ImmutableHashSet<string> _dataStreams;
@@ -31,7 +31,7 @@ public class DataStreamReadModel : IDataStreamReadModel, IConsumer<ISaga>
 
                     cfg.ReceiveEndpoint(testId, e =>
                     {
-                        e.Consumer<DataStreamReadModel>();
+                        e.Consumer<MassTransitRabbitMqClient>();
                     });
                 });
 

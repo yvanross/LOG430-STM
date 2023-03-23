@@ -4,7 +4,7 @@ using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
 using Entities.DomainInterfaces.ResourceManagement;
 
-namespace ApplicationLogic.Interfaces;
+namespace ApplicationLogic.Interfaces.Dao;
 
 public interface IPodReadModel
 {

@@ -6,7 +6,7 @@ namespace ApplicationLogic.Services;
 
 public class Scheduler : IScheduler
 {
-    private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(500));
+    private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(100));
 
     private ImmutableDictionary<string, Func<Task>> _tasks = ImmutableDictionary<string, Func<Task>>.Empty;
 

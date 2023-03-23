@@ -1,4 +1,5 @@
 ﻿using ApplicationLogic.Interfaces;
+using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Services;
 using Entities.BusinessObjects.ResourceManagement;
 using Entities.DomainInterfaces.ResourceManagement;
@@ -7,7 +8,7 @@ namespace ApplicationLogic.Usecases;
 
 public class ChaosUC
 {
-    private readonly ILogStoreWriteModel _logStoreWriteModel;
+    private readonly ISystemStateStorageWriteModel _systemStateStorageWriteModel;
 
     private readonly IScheduler _scheduler;
 
@@ -19,10 +20,10 @@ public class ChaosUC
 
     private int _killsThisMinute = 0;
 
-    public ChaosUC(ILogStoreWriteModel logStoreWriteModel, IScheduler scheduler, IEnvironmentClient environmentClient,
+    public ChaosUC(ISystemStateStorageWriteModel systemStateStorageWriteModel, IScheduler scheduler, IEnvironmentClient environmentClient,
                     IPodReadModel readModelModel, IPodWriteModel writeModelModel, IDataStreamReadModel streamReadModel)
     {
-        _logStoreWriteModel = logStoreWriteModel;
+        _systemStateStorageWriteModel = systemStateStorageWriteModel;
         _scheduler = scheduler;
         _readModelModel = readModelModel;
         _streamReadModel = streamReadModel;
@@ -87,7 +88,7 @@ public class ChaosUC
 
                 var sagas = await _streamReadModel.BeginStreaming();
 
-                await _logStoreWriteModel.Log(new Snapshot()
+                await _systemStateStorageWriteModel.Log(new Snapshot()
                 {
                     ServiceTypes = _readModelModel.GetAllServiceTypes().ToList(),
                     RunningInstances = _readModelModel.GetAllServices().ToList(),

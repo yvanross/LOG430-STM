@@ -1,8 +1,8 @@
 ﻿using Entities.DomainInterfaces.ResourceManagement;
 
-namespace ApplicationLogic.Interfaces;
+namespace ApplicationLogic.Interfaces.Dao;
 
-public interface ILogStoreWriteModel
+public interface ISystemStateStorageWriteModel
 {
     Task Log(ISnapshot snapshot);
 }
