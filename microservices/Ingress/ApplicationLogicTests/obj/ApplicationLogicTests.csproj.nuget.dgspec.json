@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogicTests\\ApplicationLogicTests.csproj": {}
+    "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogicTests\\ApplicationLogicTests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogicTests\\ApplicationLogicTests.csproj": {
+    "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogicTests\\ApplicationLogicTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
+        "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
         "projectName": "ApplicationLogicTests",
-        "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
+        "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
         "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogicTests\\obj\\",
+        "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogicTests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -26,19 +26,18 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Nuget": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
+          "C:\\Users\\david\\LOG430-STM\\microservices\\Nuget": {},
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj": {
-                "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj"
+              "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj": {
+                "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj"
               },
-              "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\Ingress\\Ingress.csproj": {
-                "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\Ingress\\Ingress.csproj"
+              "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Ingress\\Ingress.csproj": {
+                "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Ingress\\Ingress.csproj"
               }
             }
           }
@@ -90,14 +89,14 @@
         }
       }
     },
-    "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj": {
+    "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
+        "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
         "projectName": "ApplicationLogic",
-        "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
+        "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
         "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\obj\\",
+        "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -112,16 +111,15 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Nuget": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
+          "C:\\Users\\david\\LOG430-STM\\microservices\\Nuget": {},
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\Entities\\Entities.csproj": {
-                "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\Entities\\Entities.csproj"
+              "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Entities\\Entities.csproj": {
+                "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Entities\\Entities.csproj"
               }
             }
           }
@@ -136,10 +134,6 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
-            "Ambassador": {
-              "target": "Package",
-              "version": "[1.0.60, )"
-            },
             "Docker.DotNet": {
               "target": "Package",
               "version": "[3.125.13, )"
@@ -165,14 +159,14 @@
         }
       }
     },
-    "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\Entities\\Entities.csproj": {
+    "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Entities\\Entities.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\Entities\\Entities.csproj",
+        "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Entities\\Entities.csproj",
         "projectName": "Entities",
-        "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\Entities\\Entities.csproj",
+        "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Entities\\Entities.csproj",
         "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\Entities\\obj\\",
+        "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Entities\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -187,9 +181,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Nuget": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
+          "C:\\Users\\david\\LOG430-STM\\microservices\\Nuget": {},
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
@@ -232,14 +225,14 @@
         }
       }
     },
-    "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\Ingress\\Ingress.csproj": {
+    "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Ingress\\Ingress.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\Ingress\\Ingress.csproj",
+        "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Ingress\\Ingress.csproj",
         "projectName": "Ingress",
-        "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\Ingress\\Ingress.csproj",
+        "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Ingress\\Ingress.csproj",
         "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\Ingress\\obj\\",
+        "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\Ingress\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -254,16 +247,15 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Nuget": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
+          "C:\\Users\\david\\LOG430-STM\\microservices\\Nuget": {},
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj": {
-                "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj"
+              "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj": {
+                "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj"
               }
             }
           }
@@ -278,10 +270,6 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
-            "Ambassador": {
-              "target": "Package",
-              "version": "[1.0.60, )"
-            },
             "Docker.DotNet": {
               "target": "Package",
               "version": "[3.125.13, )"

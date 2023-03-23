@@ -1,19 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "idKW5ljM392g37vboj0AWshtk6iKXSPKapQJcW0n1UIazJ8Vc2TWIYEsPfhrpm2gmdC61IMtAgu06xma3ZpBjA==",
+  "dgSpecHash": "2ofw2OT6zRkk0dQqhOjkWkPx1UWjQqaHt7fnvOwJNvehU9WUZF/8xTvFgFGpx3oGD9EtApoyq7nRPy8WMaz5Bg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
+  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.60\\ambassador.1.0.60.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\docker.dotnet\\3.125.13\\docker.dotnet.3.125.13.nupkg.sha512",
-    "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
-    "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
-    "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.primitives\\5.0.1\\microsoft.extensions.primitives.5.0.1.nupkg.sha512",
-    "C:\\Users\\david\\.nuget\\packages\\microsoft.net.http.headers\\2.2.8\\microsoft.net.http.headers.2.2.8.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
-    "C:\\Users\\david\\.nuget\\packages\\restsharp\\108.0.3\\restsharp.108.0.3.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
-    "C:\\Users\\david\\.nuget\\packages\\system.io.pipelines\\5.0.2\\system.io.pipelines.5.0.2.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512"
   ],
   "logs": []

@@ -1,24 +1,18 @@
 ﻿using ApplicationLogic.Interfaces;
 using Entities.DomainInterfaces;
 using Ingress.Cache;
-using Ingress.Interfaces;
 
 namespace Ingress.Repository;
 
 public class RepositoryWrite : IRepositoryWrite
 {
-    public void WriteService(IServiceInstance serviceInstance)
+    public void AddOrUpdateNode(INode node)
     {
-        RouteCache.AddOrUpdateService(serviceInstance);
+        RouteCache.AddOrUpdateNode(node);
     }
 
-    public void RemoveService(IServiceInstance serviceInstance)
+    public void RemoveNode(INode node)
     {
-        RouteCache.RemoveService(serviceInstance);
-    }
-
-    public void UpdateServiceType(IServiceInstance serviceInstance, IServiceType containerConfigName)
-    {
-        RouteCache.UpdateContainerModel(serviceInstance, containerConfigName);
+        RouteCache.RemoveNode(node);
     }
 }

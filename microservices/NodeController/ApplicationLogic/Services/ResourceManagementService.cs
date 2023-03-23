@@ -46,7 +46,7 @@ public class ResourceManagementService
         {
             foreach (var serviceInstance in podInstance.ServiceInstances)
             {
-                serviceInstance.ServiceStatus = new LaunchedState(serviceInstance);
+                serviceInstance.ServiceStatus = new LaunchedState();
 
                 var serviceType = _readModelModel.GetServiceType(serviceInstance.Type);
 
@@ -74,7 +74,7 @@ public class ResourceManagementService
             {
                 foreach (var newServiceInstance in newPodInstance.ServiceInstances)
                 {
-                    newServiceInstance.ServiceStatus = new LaunchedState(newServiceInstance);
+                    newServiceInstance.ServiceStatus = new LaunchedState();
 
                     var serviceType = _readModelModel.GetServiceType(newServiceInstance.Type);
 

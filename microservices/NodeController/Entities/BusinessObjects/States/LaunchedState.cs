@@ -1,22 +1,21 @@
 ﻿using Entities.DomainInterfaces.Live;
+using Entities.DomainInterfaces.ResourceManagement;
 
 namespace Entities.BusinessObjects.States;
 
-public class LaunchedState : AState
+public class LaunchedState : IServiceState
 {
-    public LaunchedState(IServiceInstance serviceInstance) : base(serviceInstance) { }
-
-    public override void EvaluateState()
+    public void EvaluateState(IServiceInstance serviceInstance)
     {
-        var deltaTime = DateTime.UtcNow.Subtract(ServiceInstance.LastHeartbeat);
+        var deltaTime = DateTime.UtcNow.Subtract(serviceInstance.LastHeartbeat);
 
         if (deltaTime > TimeSpan.FromSeconds(8))
         {
-            ServiceInstance.ServiceStatus = new UnresponsiveState(ServiceInstance);
+            serviceInstance.ServiceStatus = new UnresponsiveState();
         }
         if(deltaTime < TimeSpan.FromSeconds(2))
         {
-            ServiceInstance.ServiceStatus = new ReadyState(ServiceInstance);
+            serviceInstance.ServiceStatus = new ReadyState();
         }
     }
 }

@@ -77,7 +77,7 @@ namespace ApplicationLogic.Usecases
                     PodId = GetPodId(service.CuratedInfo.Labels)
                 };
 
-                newService.ServiceStatus = new ReadyState(newService);
+                newService.ServiceStatus = new ReadyState();
 
                 return newService;
             }

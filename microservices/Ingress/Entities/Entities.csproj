@@ -10,8 +10,4 @@
     <PackageReference Include="Docker.DotNet" Version="3.125.13" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="BusinessObjects\" />
-  </ItemGroup>
-
 </Project>

@@ -13,7 +13,7 @@ namespace Ingress.Controllers
 {
     [EnableCors("AllowOrigin")]
     [ApiController]
-    [Route("[controller]/{source}/[action]")]
+    [Route("[controller]/[action]")]
     public class SubscriptionController : ControllerBase
     {
         private readonly SubscriptionUC _subscriptionUc;
@@ -22,13 +22,11 @@ namespace Ingress.Controllers
 
         private readonly ILogger<SubscriptionController> _logger;
 
-        public SubscriptionController(ILogger<SubscriptionController> logger, IHttpContextAccessor httpContextAccessor)
+        public SubscriptionController(ILogger<SubscriptionController> logger)
         {
             _logger = logger;
 
-            var source = httpContextAccessor.HttpContext!.GetRouteValue("source")!.ToString();
-
-            var _readModel = new RepositoryRead(source);
+            var _readModel = new RepositoryRead();
             var _writeModel = new RepositoryWrite();
             var _environmentClient = new LocalDockerClient(logger);
 
@@ -36,21 +34,16 @@ namespace Ingress.Controllers
             _monitorUc = new(_environmentClient, _readModel, _writeModel);
         }
 
-        [HttpPut]
-        [ActionName(nameof(Subscribe))]
-        public async Task<IActionResult> Subscribe(SubscriptionDto subscriptionDto)
+        [HttpPost("{id}")]
+        public async Task<IActionResult> Post([FromRoute] string id, [FromBody] string address, [FromBody] string port)
         {
             try
             {
-                _logger.LogInformation($"{subscriptionDto.ServiceType} attempting to subscribe");
+                _logger.LogInformation($"{id} attempting to subscribe");
 
-                var container = await _monitorUc.GetPort(subscriptionDto.ContainerId);
+                if (string.IsNullOrEmpty(address) || string.IsNullOrEmpty(port)) throw new Exception("Source couldn't be determined");
 
-                if (string.IsNullOrEmpty(container.Port)) throw new Exception("Source port couldn't be determined");
-
-                _logger.LogInformation($"Calling port: {container.Port}");
-
-                await _subscriptionUc.Subscribe(subscriptionDto, container);
+                await _subscriptionUc.Subscribe(id, address, port);
 
                 _monitorUc.TryScheduleHeartBeatOnScheduler();
 

@@ -1,6 +1,6 @@
 ﻿using ApplicationLogic.Extensions;
 using ApplicationLogic.Interfaces;
-using MongoDB.Driver.Core.Operations;
+using NodeController.External.Docker;
 using RestSharp;
 
 namespace NodeController.External.Ingress;
@@ -13,9 +13,15 @@ public class IngressClient : IIngressClient
     {
         await Try.WithConsequenceAsync(async () =>
         {
-            var client = new RestClient($"{address}:{port}");
+            var client = new RestClient($"{HostInfo.IngressAddress}:{HostInfo.IngressPort}");
 
-            var request = new RestRequest($"Register/{teamName}");
+            var request = new RestRequest($"Subscription/{teamName}");
+
+            request.AddBody(new
+            {
+                address,
+                port
+            });
 
             var res = await client.ExecutePostAsync(request);
 

@@ -1,93 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ApplicationLogic.Extensions;
+﻿using ApplicationLogic.Extensions;
 using ApplicationLogic.Interfaces;
-using ApplicationLogic.Services;
-using Entities.BusinessObjects;
+using Docker.DotNet.Models;
 using Entities.BusinessObjects.States;
 using Entities.DomainInterfaces;
+using System.Net.NetworkInformation;
 
 namespace ApplicationLogic.Usecases
 {
     public class MonitorUc
     {
-        private readonly IEnvironmentClient _client;
 
         private readonly IRepositoryRead _readModel;
 
         private readonly IRepositoryWrite _writeModel;
 
-        private readonly ResourceManagementService _resourceManagementService;
-
-        public MonitorUc(IEnvironmentClient client, IRepositoryRead readModel, IRepositoryWrite writeModel)
+        public MonitorUc(IRepositoryRead readModel, IRepositoryWrite writeModel)
         {
-            _client = client;
             _readModel = readModel;
             _writeModel = writeModel;
-
-            _resourceManagementService = new ResourceManagementService(_client, readModel, writeModel);
         }
 
-        public void TryScheduleHeartBeatOnScheduler()
+        public void Acknowledge(INode node)
         {
-            if (_readModel.GetScheduler() is not { } scheduler) throw new NullReferenceException("Scheduler was null");
-
-            scheduler.TryAddTask(BeginProcessingHeartbeats);
-        }
-
-        public void Acknowledge(Guid id)
-        {
-            var route = _readModel.ReadServiceById(id);
+            var route = _readModel.ReadNodeById(node.Name);
 
             if (route is not null)
             {
-                route.LastHeartbeat = DateTime.UtcNow;
+                Ping pingSender = new ();
+                try
+                {
+                    var reply = pingSender.Send($"http://{route.Address}:{route.Port}");
+
+                    if (reply.Status.Equals(IPStatus.Success))
+                        route.LastSuccessfulPing = DateTime.UtcNow;
+                }
+                catch
+                {
+                    // ignored
+                }
             }
         }
 
         private async Task BeginProcessingHeartbeats()
         {
-            await Try.WithConsequenceAsync(async () =>
+            await Try.WithConsequenceAsync(() =>
             {
-                var routes = _readModel.GetAllServices();
+                var routes = _readModel.GetAllNodes();
 
                 //if empty or null
-                if ((routes?.Any() ?? true) is false) return Task.CompletedTask;
+                if ((routes?.Any() ?? true) is false) return Task.FromResult(Task.CompletedTask);
 
-                var unknownStateRoutes = routes!.Where(service =>
+                var unknownStateRoutes = routes!.Where(node =>
                 {
-                    service.ServiceStatus?.EvaluateState();
-                    return service.ServiceStatus is UnknownState;
+                    node.ServiceStatus?.EvaluateState(node);
+                    return node.ServiceStatus is UnknownState;
                 }).ToList();
 
-                foreach (var route in unknownStateRoutes)
+                foreach (var node in unknownStateRoutes)
                 {
-                    var minNumberOfInstances = _readModel.GetServiceType(route.Type)!.MinimumNumberOfInstances;
-
-                    if (_readModel.ReadServiceByType(route.Type)!.Count > minNumberOfInstances)
-                    {
-                        await _resourceManagementService.RemoveServiceInstance(route).ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        await _resourceManagementService.ReplaceServiceInstance(route).ConfigureAwait(false);
-                    }
+                    _writeModel.RemoveNode(node);
                 }
 
-                return Task.CompletedTask;
+                return Task.FromResult(Task.CompletedTask);
             }, retryCount: int.MaxValue);
-        }
-
-        public async Task<ContainerInfo> GetPort(string containerId)
-        {
-            var runningServices = await _client.GetRunningServices();
-
-            var targetService = runningServices.SingleOrDefault(rs => rs.Id.Equals(containerId));
-
-            return targetService;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Entities.DomainInterfaces.ResourceManagement;
+﻿using Entities.DomainInterfaces.Live;
+
+namespace Entities.DomainInterfaces.ResourceManagement;
 
 public interface IServiceState
 {

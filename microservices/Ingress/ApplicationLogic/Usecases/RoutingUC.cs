@@ -1,43 +1,24 @@
-﻿using Ambassador;
-using Ambassador.BusinessObjects;
-using ApplicationLogic.Interfaces;
-using ApplicationLogic.Services;
-using Entities;
+﻿using ApplicationLogic.Interfaces;
 using Entities.DomainInterfaces;
 
 namespace ApplicationLogic.Usecases;
 
 public class RoutingUC
 {
-    private IRepositoryRead _repositoryRead;
+    private readonly IRepositoryRead _repositoryRead;
 
-    private ResourceManagementService _resourceManagementService;
-
-    private const string TomtomUrl = "https://api.tomtom.com";
-
-    public RoutingUC(IRepositoryRead repositoryRead, IRepositoryWrite repositoryWrite, IEnvironmentClient environment)
+    public RoutingUC(IRepositoryRead repositoryRead)
     {
         _repositoryRead = repositoryRead;
-        _resourceManagementService = new ResourceManagementService(environment, repositoryRead, repositoryWrite);
     }
 
-    public IEnumerable<RoutingData> RouteByDestinationType(string type, LoadBalancingMode mode)
+    public string RouteByDestinationType(string nodeId)
     {
-        if (type.Equals(ServiceTypes.Tomtom.ToString())){ yield return new RoutingData() { Address = TomtomUrl }; yield break; }
+        var node = _repositoryRead.ReadNodeById(nodeId);
 
-        var serviceRoute = _repositoryRead.ReadServiceByType(type);
-
-        if (serviceRoute is null)
+        if (node is null)
             throw new Exception("service was not found");
 
-        var targets = _resourceManagementService.LoadBalancing(serviceRoute, mode);
-
-        foreach (var target in targets)
-        {
-            yield return new RoutingData()
-            {
-                Address = target.IsHttp ? target.HttpRoute : target.HttpsRoute
-            };
-        }
+        return $"http://{node.Address}:{node.Port}";
     }
 }

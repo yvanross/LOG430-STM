@@ -1,4 +1,6 @@
-﻿namespace Entities.DomainInterfaces;
+﻿using Entities.DomainInterfaces.ResourceManagement;
+
+namespace Entities.DomainInterfaces;
 
 public interface INode
 {
@@ -8,5 +10,7 @@ public interface INode
 
     public string Port { get; set; }
 
-    public 
+    public INodeState ServiceStatus { get; set; }
+
+    public DateTime LastSuccessfulPing { get; set; }
 }

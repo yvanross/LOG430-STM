@@ -1,22 +1,22 @@
-﻿using Entities.DomainInterfaces.Live;
+﻿using Entities.BusinessObjects.Live;
+using Entities.DomainInterfaces.Live;
+using Entities.DomainInterfaces.ResourceManagement;
 
 namespace Entities.BusinessObjects.States;
 
-public class UnresponsiveState : AState
+public class UnresponsiveState : IServiceState
 {
-    public UnresponsiveState(IServiceInstance serviceInstance) : base(serviceInstance) { }
-
-    public override void EvaluateState()
+    public void EvaluateState(IServiceInstance serviceInstance)
     {
-        var deltaTime = DateTime.UtcNow.Subtract(ServiceInstance.LastHeartbeat);
+        var deltaTime = DateTime.UtcNow.Subtract(serviceInstance.LastHeartbeat);
 
         if (deltaTime > TimeSpan.FromSeconds(5))
         {
-            ServiceInstance.ServiceStatus = new UnknownState(ServiceInstance);
+            serviceInstance.ServiceStatus = new UnknownState();
         }
         if (deltaTime < TimeSpan.FromSeconds(2))
         {
-            ServiceInstance.ServiceStatus = new ReadyState(ServiceInstance);
+            serviceInstance.ServiceStatus = new ReadyState();
         }
     }
 }

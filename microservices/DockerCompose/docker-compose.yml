@@ -15,6 +15,10 @@ x-variables: &std
   ASPNETCORE_URLS: *ASPNETCORE_URLS
 
 services:
+
+#Section Admin: Cette section est seulement pour la première itération et doit être effacé
+# pour les itérations subséquentes
+
   ingress:
     image: ${DOCKER_REGISTRY-}ingress
     restart: always
@@ -30,12 +34,43 @@ services:
     labels:
       COMPONENT_CATEGORY: DEBUG      
   
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME=my_cassandra_cluster
+    ports:
+      - "32670:80"
+    labels:
+      COMPONENT_CATEGORY: DEBUG
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+
+  cassandra-web:
+    image: valeriansaliou/cassandra-web:2
+    container_name: cassandra-web
+    environment:
+      - CASSANDRAWEB_USERNAME=admin
+      - CASSANDRAWEB_PASSWORD=admin
+      - CASSANDRAWEB_CONTACT_POINTS=cassandra
+      - CASSANDRAWEB_PORT=32670
+      - CASSANDRAWEB_AUTH_USERNAME=
+      - CASSANDRAWEB_AUTH_PASSWORD=
+    ports:
+      - "32671:80"
+    depends_on:
+      - cassandra
+    labels:
+      COMPONENT_CATEGORY: DEBUG
+
   mongo:
-    image: mongo
+    image: mongo:latest
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "32672:80"
     labels:
       COMPONENT_CATEGORY: DEBUG
 
@@ -43,13 +78,37 @@ services:
     image: mongo-express
     restart: always
     ports:
-      - 8081:8081
+      - "32673:80"
+    depends_on:
+      - mongo
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
     labels:
       COMPONENT_CATEGORY: DEBUG
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "32674:80"
+    labels:
+      COMPONENT_CATEGORY: DEBUG
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    container_name: redisinsight
+    ports:
+      - "32675:80"
+    volumes:
+      - redisinsight-data:/db
+    depends_on:
+      - redis
+    labels:
+      COMPONENT_CATEGORY: DEBUG
+
+#Fin Section Admin
 
   nodecontroller:
     image: ${DOCKER_REGISTRY-}nodecontroller

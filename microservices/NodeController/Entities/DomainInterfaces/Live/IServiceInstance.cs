@@ -17,7 +17,7 @@ public interface IServiceInstance : IEquatable<IServiceInstance>
 
     bool IsHttp { get; init; }
 
-    IServiceState? ServiceStatus { get; set; }
+    IServiceState ServiceStatus { get; set; }
 
     string HttpRoute { get; }
 

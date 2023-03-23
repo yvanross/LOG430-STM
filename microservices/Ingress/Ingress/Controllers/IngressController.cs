@@ -13,7 +13,7 @@ namespace Ingress.Controllers
 {
     [EnableCors("AllowOrigin")]
     [ApiController]
-    [Route("[controller]/{Source}/[action]")]
+    [Route("[controller]/[action]")]
     public class IngressController : ControllerBase
     {
         private readonly RoutingUC _routingUc;
@@ -36,26 +36,6 @@ namespace Ingress.Controllers
 
             _routingUc = new(readModel, writeModel, environmentClient);
             _monitorUc = new(environmentClient, readModel, writeModel);
-        }
-
-        [HttpPost]
-        [ActionName(nameof(HeartBeat))]
-        public IActionResult HeartBeat(Guid serviceId)
-        {
-            try
-            {
-                _monitorUc.Acknowledge(serviceId);
-            }
-            catch (Exception e)
-            {
-                var errorMessage = $"{e.Message} \n \t{e.StackTrace}";
-
-                _logger.LogError(errorMessage);
-
-                return Problem(errorMessage);
-            }
-
-            return Ok();
         }
 
         [HttpGet]
