@@ -1,25 +1,12 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Collections.Immutable;
-using System.ComponentModel;
-using System.Globalization;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
-using Ambassador.Dto;
 using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Dao;
-using ApplicationLogic.Services;
-using Entities;
-using Entities.BusinessObjects;
 using Entities.BusinessObjects.Live;
 using Entities.BusinessObjects.Planned;
 using Entities.BusinessObjects.States;
 using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
-using Entities.DomainInterfaces.ResourceManagement;
 
 namespace ApplicationLogic.Usecases
 {

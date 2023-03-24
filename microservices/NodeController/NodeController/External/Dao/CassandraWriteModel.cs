@@ -10,70 +10,41 @@ namespace NodeController.External.Repository;
 
 public class CassandraWriteModel : ISystemStateWriteModel
 {
-    private readonly IPodReadModel = new PodReadModel();
+    private static readonly string ContactPoint = "127.0.0.1";
 
+    private static readonly string Keyspace = "your_keyspace_name";
 
-    private async Task CreateUserDefinedTypes(IServiceInstance serviceInstance)
+    static CassandraWriteModel()
     {
-        var dto = ServiceInstanceDto.TryConvertToDto(serviceInstance);
+        _ = CreateUserDefinedTypes();
+    }
 
-        if (dto is null) return;
-
-        // Connect to the Cassandra cluster
+    private static async Task CreateUserDefinedTypes()
+    {
         var cluster = Cluster.Builder()
-            .AddContactPoint("localhost")
+            .AddContactPoint(ContactPoint)
             .Build();
 
-        // Get a session to interact with the keyspace
-        var session = cluster.Connect("my_keyspace");
+        using var session = await cluster.ConnectAsync();
 
-        // Define the UDT schema in C#
-        var myObjectUdt = new UserDefinedType(
-            "my_object",
-            new[]
-            {
-                new UdtColumnInfo("property1", typeof(int)),
-                new UdtColumnInfo("property2", typeof(string)),
-                new UdtColumnInfo("property3", typeof(double))
-            }
-        );
-
-        // Create the UDT in Cassandra
-        var createUdtCql = new CreateTypeCql(myObjectUdt);
-        session.Execute(createUdtCql);
-
-        // Register the UDT mapping with the driver
-        var config = new MappingConfiguration()
-            .Define(UdtMap.For<MyObject>("my_object"));
-        var mapper = new Mapper(session, config);
+        await session.UserDefinedTypes.DefineAsync(UdtMap.For<ExperimentDto>("experiment"));
     }
 
     public async Task Log(IExperimentReport experimentReport)
     {
-        // Connect to the Cassandra cluster
-        var cluster = Cluster.Builder()
-            .AddContactPoint("localhost")
+        var dto = ExperimentDto.TryConvertToDto(experimentReport);
+
+        using var cluster = Cluster.Builder()
+            .AddContactPoint(ContactPoint)
             .Build();
 
-        // Get a session to interact with the keyspace
-        var session = cluster.Connect("my_keyspace");
+        using var session = await cluster.ConnectAsync();
 
-        // Define your data
-        var partitionKey = 1;
-        var eventTime = DateTimeOffset.UtcNow;
-        var objects = new List<UDTMap>
-        {
-            new UDTMap { { "property1", 42 }, { "property2", "Hello" }, { "property3", 3.14 } },
-            new UDTMap { { "property1", 13 }, { "property2", "World" }, { "property3", 2.71 } }
-        };
-        var someInt = 123;
+        var insertQuery = "INSERT INTO experiment VALUES (?)";
+        var preparedStatement = await session.PrepareAsync(insertQuery);
 
-        // Prepare an INSERT statement
-        var insertStatement = session.Prepare("INSERT INTO my_timeseries (partition_key, event_time, objects, some_int) VALUES (?, ?, ?, ?)");
+        var boundStatement = preparedStatement.Bind(dto);
 
-        // Execute the INSERT statement with the data
-        session.Execute(insertStatement.Bind(partitionKey, eventTime, objects, someInt));
-
-        Console.WriteLine("Data appended to the time series");
+        await session.ExecuteAsync(boundStatement);
     }
 }

@@ -10,4 +10,6 @@ public interface IExperimentReport
     List<IServiceInstance> RunningInstances { get; }
     
     List<IServiceType> ServiceTypes { get; }
+
+    IExperimentResult? ExperimentResult { get; }
 }

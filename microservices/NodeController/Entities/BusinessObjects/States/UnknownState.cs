@@ -5,6 +5,11 @@ namespace Entities.BusinessObjects.States;
 
 public class UnknownState : IServiceState
 {
+    public string GetStateName()
+    {
+        return "Unknown";
+    }
+
     public void EvaluateState(IServiceInstance serviceInstance)
     {
         var deltaTime = DateTime.UtcNow.Subtract(serviceInstance.LastHeartbeat);

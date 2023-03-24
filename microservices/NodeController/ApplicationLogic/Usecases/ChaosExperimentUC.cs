@@ -57,7 +57,7 @@ public class ChaosExperimentUC
                 {
                     var podsOfType = _readModelModel.GetAllPodTypes()
                         .FindAll(podType => podType.ServiceTypes
-                            .Any(serviceType => serviceType.ComponentCategory.Equals(category)))
+                            .Any(serviceType => serviceType.ArtifactType.Equals(category)))
                         .ToDictionary(p => p.Type);
 
                     var podToKill = _readModelModel.GetAllPods().Where(pod => podsOfType.ContainsKey(pod.Type))
@@ -71,7 +71,7 @@ public class ChaosExperimentUC
 
                 var podsOfTypeDict = _readModelModel.GetAllPodTypes()
                     .FindAll(podType => podType.ServiceTypes
-                        .Any(serviceType => serviceType.ComponentCategory.Equals(category)))
+                        .Any(serviceType => serviceType.ArtifactType.Equals(category)))
                     .ToDictionary(p => p.Type);
 
                 foreach (var pod in _readModelModel.GetAllPods().Where(p => podsOfTypeDict.ContainsKey(p.Type)))

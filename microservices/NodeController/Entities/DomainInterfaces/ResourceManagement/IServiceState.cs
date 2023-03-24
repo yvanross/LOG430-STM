@@ -4,5 +4,7 @@ namespace Entities.DomainInterfaces.ResourceManagement;
 
 public interface IServiceState
 {
-    public void EvaluateState();
+    public string GetStateName();
+
+    public void EvaluateState(IServiceInstance serviceInstance);
 }

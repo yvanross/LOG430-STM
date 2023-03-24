@@ -1,6 +1,6 @@
 ﻿namespace Entities.DomainInterfaces.Live;
 
-public interface ITestSnapshot
+public interface IExperimentResult
 {
     double AverageLatency { get; set; }
 

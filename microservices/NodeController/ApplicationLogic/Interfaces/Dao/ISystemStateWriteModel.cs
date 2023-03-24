@@ -4,5 +4,5 @@ namespace ApplicationLogic.Interfaces.Dao;
 
 public interface ISystemStateWriteModel
 {
-    Task Log(INodeHealthReport nodeHealthReport);
+    Task Log(IExperimentReport experimentReport);
 }

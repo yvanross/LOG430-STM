@@ -49,7 +49,7 @@ namespace NodeController
         private static void ScheduleRecurringTasks()
         {
             var writeModel = new PodWriteModel();
-            var readModel = new PodReadModel(HostInfo.ServiceAddress);
+            var readModel = new PodReadModel();
             var environmentClient = new LocalDockerClient(null);
 
             var servicePool = new ServicePoolDiscoveryUC(writeModel, readModel, environmentClient);

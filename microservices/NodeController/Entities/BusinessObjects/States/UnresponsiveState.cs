@@ -6,6 +6,11 @@ namespace Entities.BusinessObjects.States;
 
 public class UnresponsiveState : IServiceState
 {
+    public string GetStateName()
+    {
+        return "Unresponsive";
+    }
+
     public void EvaluateState(IServiceInstance serviceInstance)
     {
         var deltaTime = DateTime.UtcNow.Subtract(serviceInstance.LastHeartbeat);

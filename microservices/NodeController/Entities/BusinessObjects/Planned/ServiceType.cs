@@ -9,7 +9,7 @@ public class ServiceType : IServiceType
 
     public required IContainerConfig ContainerConfig { get; set; }
 
-    public string ArtifactType { get; set; } = ServiceCategoriesEnum.Undefined.ToString();
+    public string ArtifactType { get; set; } = ArtifactTypeEnum.Undefined.ToString();
     
     public bool IsPodSidecar { get; set; }
     

@@ -12,5 +12,5 @@ public class ExperimentReport : IExperimentReport
 
     public required List<IServiceType> ServiceTypes { get; init; }
 
-    public required IExperimentResult? ExperimentResult { get; init; }
+    public required IExperimentResult ExperimentResult { get; init; }
 }

@@ -5,6 +5,11 @@ namespace Entities.BusinessObjects.States;
 
 public class ReadyState : IServiceState
 {
+    public string GetStateName()
+    {
+        return "Ready";
+    }
+
     public void EvaluateState(IServiceInstance serviceInstance)
     {
         var deltaTime = DateTime.UtcNow.Subtract(serviceInstance.LastHeartbeat);
