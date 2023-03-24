@@ -1,5 +1,4 @@
 
-using Ambassador;
 using Entities.BusinessObjects;
 using Ingress.Repository;
 

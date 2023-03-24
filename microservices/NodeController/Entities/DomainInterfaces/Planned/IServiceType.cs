@@ -8,7 +8,7 @@ public interface IServiceType
 
     IContainerConfig ContainerConfig { get; set; }
 
-    string ComponentCategory { get; set; }
+    string ArtifactType { get; set; }
 
     bool IsPodSidecar { get; set; }
 }

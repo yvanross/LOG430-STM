@@ -15,13 +15,9 @@ public interface IServiceInstance : IEquatable<IServiceInstance>
 
     DateTime LastHeartbeat { get; set; }
 
-    bool IsHttp { get; init; }
-
     IServiceState ServiceStatus { get; set; }
 
     string HttpRoute { get; }
-
-    string HttpsRoute { get; }
 
     string PodId { get; set; }
 }

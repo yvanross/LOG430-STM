@@ -16,7 +16,7 @@ internal static class RouteCache
     
     private static readonly ConcurrentDictionary<string, IPodType> PodTypes = new ();
 
-    private static readonly Scheduler Scheduler = new ();
+    private static readonly SchedulerService SchedulerService = new ();
 
     internal static ImmutableList<IPodInstance> GetPodInstances()
     {
@@ -45,6 +45,6 @@ internal static class RouteCache
 
     internal static IScheduler GetScheduler()
     {
-        return Scheduler;
+        return SchedulerService;
     }
 }   

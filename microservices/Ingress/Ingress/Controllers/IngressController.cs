@@ -1,13 +1,8 @@
-﻿using Ambassador;
-using Ambassador.BusinessObjects;
-using ApplicationLogic.Services;
-using ApplicationLogic.Usecases;
+﻿using ApplicationLogic.Usecases;
 using Ingress.Extensions;
 using Ingress.Repository;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Monitor.Docker;
 
 namespace Ingress.Controllers
 {
@@ -17,8 +12,6 @@ namespace Ingress.Controllers
     public class IngressController : ControllerBase
     {
         private readonly RoutingUC _routingUc;
-
-        private readonly MonitorUc _monitorUc;
 
         private readonly HeadersUC _headersUc = new();
 
@@ -35,7 +28,6 @@ namespace Ingress.Controllers
             var environmentClient = new LocalDockerClient(logger);
 
             _routingUc = new(readModel, writeModel, environmentClient);
-            _monitorUc = new(environmentClient, readModel, writeModel);
         }
 
         [HttpGet]

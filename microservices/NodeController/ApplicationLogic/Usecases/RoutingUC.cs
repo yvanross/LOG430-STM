@@ -37,7 +37,7 @@ public class RoutingUC
         {
             yield return new RoutingData()
             {
-                Address = target.IsHttp ? target.HttpRoute : target.HttpsRoute
+                Address = target.HttpRoute
             };
         }
 

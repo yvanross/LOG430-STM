@@ -5,7 +5,9 @@ namespace Entities.DomainInterfaces.ResourceManagement;
 
 public interface IChaosCodex
 {
-    ConcurrentDictionary<ServiceCategoriesEnum, IChaosConfig> ChaosConfigs { get; }
+    ConcurrentDictionary<ArtifactTypeEnum, IChaosConfig> ChaosConfigs { get; }
+
+    int AcceptableAverageLatencyInMs { get; }
 
     DateTime EndTestAt { get; }
 

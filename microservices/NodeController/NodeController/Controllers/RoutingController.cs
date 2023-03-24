@@ -1,6 +1,7 @@
 ﻿using Ambassador;
 using Ambassador.BusinessObjects;
 using ApplicationLogic.Extensions;
+using ApplicationLogic.Services;
 using ApplicationLogic.Usecases;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ namespace NodeController.Controllers
     {
         private readonly RoutingUC _routingUc;
 
-        private readonly HeadersUC _headersUc = new();
+        private readonly HeaderService _headerService = new();
 
         private readonly ILogger<RoutingController> _logger;
 
@@ -39,9 +40,9 @@ namespace NodeController.Controllers
 
                 foreach (var routingData in routingDatas)
                 {
-                    _headersUc.AddJsonHeader(routingData);
+                    _headerService.AddJsonHeader(routingData);
 
-                    _headersUc.AddAuthorizationHeaders(routingData, serviceType);
+                    _headerService.AddAuthorizationHeaders(routingData, serviceType);
 
                     _logger.LogInformation($"routing service to {routingData.Address}");
                 }

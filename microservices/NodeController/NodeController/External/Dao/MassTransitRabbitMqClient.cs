@@ -3,45 +3,62 @@ using System.Collections.Immutable;
 using Ambassador;
 using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Usecases;
+using Entities.BusinessObjects.Live;
 using Entities.DomainInterfaces.Live;
 using MassTransit;
+using NodeController.External.Docker;
 using HostInfo = NodeController.External.Docker.HostInfo;
 using ISaga = Entities.DomainInterfaces.Live.ISaga;
 
 namespace NodeController.External.Repository;
 
-public class MassTransitRabbitMqClient : IDataStreamReadModel, IConsumer<ISaga>
+public class MassTransitRabbitMqClient : IDataStreamReadModel, IConsumer<Saga>
 {
+    private readonly IPodReadModel _podReadModel = new PodReadModel();
 
-    ImmutableHashSet<string> _dataStreams;
+    private readonly RoutingUC _routing;
 
-    private RoutingUC routing = new RoutingUC(new PodReadModel(HostInfo.ServiceAddress));
+    private readonly ChaosExperimentUC _chaosExperimentUc;
 
-    public void BeginStreaming(string testId)
+    private IBusControl? _busControl;
+
+    public MassTransitRabbitMqClient()
     {
-        if (_dataStreams.Contains(testId) is false)
+        _routing = new(_podReadModel);
+        _chaosExperimentUc = new ChaosExperimentUC(new LocalDockerClient(null), _podReadModel, new PodWriteModel());
+    }
+
+    public void BeginStreaming()
+    {
+        var mq = _routing.RouteByDestinationType(string.Empty, HostInfo.MqServiceName, LoadBalancingMode.RoundRobin).FirstOrDefault();
+
+        if (mq is not null)
         {
-            var mq = routing.RouteByDestinationType(string.Empty, HostInfo.MqServiceName, LoadBalancingMode.RoundRobin).FirstOrDefault();
-
-            if (mq is not null)
+            var busControl = Bus.Factory.CreateUsingInMemory(cfg =>
             {
-                var busControl = Bus.Factory.CreateUsingInMemory(cfg =>
+                cfg.Host(new Uri(mq.Address));
+
+                cfg.ReceiveEndpoint("TimeComparison", e =>
                 {
-                    cfg.Host(new Uri(mq.Address));
+                    e.PrefetchCount = 1;
 
-                    cfg.ReceiveEndpoint(testId, e =>
-                    {
-                        e.Consumer<MassTransitRabbitMqClient>();
-                    });
+                    e.Consumer<MassTransitRabbitMqClient>();
                 });
+            });
 
-                _ = busControl.StartAsync();
-            }
+            _busControl = busControl;
+
+            _ = busControl.StartAsync();
         }
     }
 
-    public Task Consume(ConsumeContext<ISaga> context)
+    public async Task EndStreaming()
     {
-        var 
+        _ = _busControl?.StopAsync();
+    }
+
+    public Task Consume(ConsumeContext<Saga> context)
+    {
+        return _chaosExperimentUc.ReportTestResult(context.Message);
     }
 }

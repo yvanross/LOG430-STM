@@ -5,17 +5,13 @@ using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
 using Entities.DomainInterfaces.ResourceManagement;
 using NodeController.Cache;
+using NodeController.External.Docker;
 
 namespace NodeController.External.Repository;
 
 public class PodReadModel : IPodReadModel
 {
-    private readonly string _http;
-
-    public PodReadModel(string http)
-    {
-        _http = http;
-    }
+    private readonly string _http = HostInfo.ServiceAddress;
 
     public IPodInstance? GetPodOfService(IServiceInstance serviceInstance)
     {

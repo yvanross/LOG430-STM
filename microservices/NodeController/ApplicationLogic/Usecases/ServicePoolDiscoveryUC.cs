@@ -92,7 +92,7 @@ namespace ApplicationLogic.Usecases
                 {
                     ContainerConfig = service.RawConfig,
                     Type = service.CuratedInfo.Name,
-                    ComponentCategory = GetComponentCategory(curatedInfoLabels),
+                    ArtifactType = GetComponentCategory(curatedInfoLabels),
                     IsPodSidecar = GetIsSidecar(curatedInfoLabels),
                     PodName = podType
                 };
@@ -145,7 +145,7 @@ namespace ApplicationLogic.Usecases
         {
             var value = GetLabelValue(ServiceLabelsEnum.COMPONENT_CATEGORY, labels);
 
-            return string.IsNullOrEmpty(value) ? nameof(ServiceCategoriesEnum.Undefined) : value;
+            return string.IsNullOrEmpty(value) ? nameof(ArtifactTypeEnum.Undefined) : value;
         }
 
         private int GetMinimumNumberOfInstances(ConcurrentDictionary<ServiceLabelsEnum, string> labels)

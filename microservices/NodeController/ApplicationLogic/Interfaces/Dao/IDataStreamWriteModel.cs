@@ -4,5 +4,5 @@ namespace ApplicationLogic.Interfaces.Dao;
 
 public interface IDataStreamWriteModel
 {
-    Task Log(ISnapshot snapshot);
+    Task Log(IExperimentReport experimentReport);
 }
