@@ -10,31 +10,41 @@ namespace ApplicationLogic.Usecases;
 public class ChaosExperimentUC
 {
     private readonly IPodReadModel _readModelModel;
+
+    private readonly IChaosCodex _codex;
+  
+    private readonly ISystemStateWriteModel _systemStateWriteModel;
     
+    private readonly IDataStreamReadModel _streamReadModel;
+
     private readonly ResourceManagementService _resourceManagementService;
     
     private readonly ChaosTestMonitoringService _chaosMonitoringService;
 
     private int _killsThisMinute;
 
-    public ChaosExperimentUC(IEnvironmentClient environmentClient, IPodReadModel readModelModel, IPodWriteModel writeModelModel)
+    public ChaosExperimentUC(IEnvironmentClient environmentClient, IPodReadModel readModelModel, IPodWriteModel writeModelModel,
+        IChaosCodex codex, ISystemStateWriteModel systemStateWriteModel, IDataStreamReadModel streamReadModel)
     {
         _readModelModel = readModelModel;
+        _codex = codex;
+        _systemStateWriteModel = systemStateWriteModel;
+        _streamReadModel = streamReadModel;
         _resourceManagementService = new ResourceManagementService(environmentClient, readModelModel, writeModelModel);
         _chaosMonitoringService = new ChaosTestMonitoringService();
     }
 
-    public async Task InduceChaos(IChaosCodex codex, ISystemStateWriteModel systemStateWriteModel, IDataStreamReadModel streamReadModel)
+    public async Task InduceChaos()
     {
         _killsThisMinute = 0;
 
-        while (DateTime.UtcNow > codex.EndTestAt)
+        if (DateTime.UtcNow > _codex.EndTestAt)
         {
             var completionPercentage =
-                (GetSecondsSinceEpoch(DateTime.UtcNow) - GetSecondsSinceEpoch(codex.StartTestAt)) /
-                (GetSecondsSinceEpoch(codex.EndTestAt) - GetSecondsSinceEpoch(codex.StartTestAt));
+                (GetSecondsSinceEpoch(DateTime.UtcNow) - GetSecondsSinceEpoch(_codex.StartTestAt)) /
+                (GetSecondsSinceEpoch(_codex.EndTestAt) - GetSecondsSinceEpoch(_codex.StartTestAt));
 
-            foreach (var kv in codex.ChaosConfigs.OrderBy(_ => Random.Shared.Next()))
+            foreach (var kv in _codex.ChaosConfigs.OrderBy(_ => Random.Shared.Next()))
             {
                 var chaosConfig = kv.Value;
                 var category = Enum.GetName(kv.Key);
@@ -80,9 +90,9 @@ public class ChaosExperimentUC
                 }
             }
 
-            streamReadModel.BeginStreaming();
+            _streamReadModel.BeginStreaming(ReportTestResult);
 
-            await systemStateWriteModel.Log(new ExperimentReport()
+            await _systemStateWriteModel.Log(new ExperimentReport()
             {
                 ServiceTypes = _readModelModel.GetAllServiceTypes().ToList(),
                 RunningInstances = _readModelModel.GetAllServices().ToList(),
@@ -90,8 +100,13 @@ public class ChaosExperimentUC
             });
         }
 
-        await streamReadModel.EndStreaming();
+        else
+        {
+            await _streamReadModel.EndStreaming();
 
+            //todo clean up resources after experiment and refactoring this ugly method
+        }
+        
         double GetSecondsSinceEpoch(DateTime datetime) => (datetime - DateTime.UnixEpoch).TotalSeconds;
     }
 

@@ -9,7 +9,6 @@ namespace ApplicationLogic.Usecases
 {
     public class MonitorUc
     {
-
         private readonly IRepositoryRead _readModel;
 
         private readonly IRepositoryWrite _writeModel;
@@ -20,28 +19,7 @@ namespace ApplicationLogic.Usecases
             _writeModel = writeModel;
         }
 
-        public void Acknowledge(INode node)
-        {
-            var route = _readModel.ReadNodeById(node.Name);
-
-            if (route is not null)
-            {
-                Ping pingSender = new ();
-                try
-                {
-                    var reply = pingSender.Send($"http://{route.Address}:{route.Port}");
-
-                    if (reply.Status.Equals(IPStatus.Success))
-                        route.LastSuccessfulPing = DateTime.UtcNow;
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
-        }
-
-        private async Task BeginProcessingHeartbeats()
+        public async Task BeginProcessingHeartbeats()
         {
             await Try.WithConsequenceAsync(() =>
             {
@@ -49,6 +27,8 @@ namespace ApplicationLogic.Usecases
 
                 //if empty or null
                 if ((routes?.Any() ?? true) is false) return Task.FromResult(Task.CompletedTask);
+
+                Parallel.ForEachAsync(routes!, async (node, _) => await Acknowledge(node));
 
                 var unknownStateRoutes = routes!.Where(node =>
                 {
@@ -63,6 +43,27 @@ namespace ApplicationLogic.Usecases
 
                 return Task.FromResult(Task.CompletedTask);
             }, retryCount: int.MaxValue);
+        }
+
+        private async Task Acknowledge(INode node)
+        {
+            var route = _readModel.ReadNodeById(node.Name);
+
+            if (route is not null)
+            {
+                Ping pingSender = new();
+                try
+                {
+                    var reply = await pingSender.SendPingAsync($"http://{route.Address}:{route.Port}");
+
+                    if (reply.Status.Equals(IPStatus.Success))
+                        route.LastSuccessfulPing = DateTime.UtcNow;
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
         }
     }
 }

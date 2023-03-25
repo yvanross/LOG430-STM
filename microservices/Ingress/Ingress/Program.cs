@@ -1,6 +1,8 @@
 
+using ApplicationLogic.Usecases;
 using Entities.BusinessObjects;
 using Ingress.Repository;
+using NuGet.Packaging.Signing;
 
 namespace Ingress
 {
@@ -41,7 +43,18 @@ namespace Ingress
 
             app.MapControllers();
 
+            ScheduleRecurringTasks();
+
             app.Run();
+        }
+
+        private static void ScheduleRecurringTasks()
+        {
+            var readModel = new RepositoryRead();
+
+            var monitor = new MonitorUc(readModel, new RepositoryWrite());
+
+            readModel.GetScheduler().TryAddTask(monitor.BeginProcessingHeartbeats);
         }
     }
 }

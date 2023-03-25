@@ -1,5 +1,6 @@
 using ApplicationLogic.Usecases;
 using NodeController.External.Docker;
+using NodeController.External.Ingress;
 using NodeController.External.Repository;
 
 namespace NodeController
@@ -48,6 +49,12 @@ namespace NodeController
 
         private static void ScheduleRecurringTasks()
         {
+            var ingressUc = new IngressUC(new HostInfo(), new IngressClient());
+
+            ingressUc.Register().Wait();
+
+            ingressUc.GetLogStoreAddressAndPort().Wait();
+
             var writeModel = new PodWriteModel();
             var readModel = new PodReadModel();
             var environmentClient = new LocalDockerClient(null);

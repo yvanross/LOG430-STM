@@ -4,7 +4,7 @@ namespace ApplicationLogic.Interfaces.Dao;
 
 public interface IDataStreamReadModel
 {
-    void BeginStreaming();
+    void BeginStreaming(Func<ISaga, Task> reportTestResult);
 
     Task EndStreaming();
 }

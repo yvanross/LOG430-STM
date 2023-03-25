@@ -1,8 +1,8 @@
 ﻿using Ambassador;
-using Ambassador.BusinessObjects;
 using ApplicationLogic.Extensions;
 using ApplicationLogic.Services;
 using ApplicationLogic.Usecases;
+using Entities.BusinessObjects.Live;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using NodeController.External.Docker;

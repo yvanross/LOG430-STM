@@ -1,11 +1,12 @@
 ﻿using System.Collections.Immutable;
 using System.Runtime.InteropServices;
 using Ambassador;
-using Ambassador.BusinessObjects;
 using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Services;
 using Docker.DotNet.Models;
 using Entities;
+using Entities.BusinessObjects.Live;
+using Entities.BusinessObjects.States;
 using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
 using Entities.DomainInterfaces.ResourceManagement;
@@ -33,6 +34,8 @@ public class RoutingUC
             possibleTargets = GetPossibleCommunicationEntryPoints(podTypes, podInstances);
         }
 
+        possibleTargets = LoadBalancing(possibleTargets, mode);
+
         foreach (var target in possibleTargets!)
         {
             yield return new RoutingData()
@@ -41,7 +44,7 @@ public class RoutingUC
             };
         }
 
-        IEnumerable<IServiceInstance>? GetPossibleCommunicationEntryPoints(IDictionary<string, IPodType> podTypes, ImmutableList<IPodInstance> podInstances)
+        List<IServiceInstance>? GetPossibleCommunicationEntryPoints(IDictionary<string, IPodType> podTypes, ImmutableList<IPodInstance> podInstances)
         {
             return podInstances.SelectMany(pod =>
             {
@@ -52,7 +55,7 @@ public class RoutingUC
             }).DistinctBy(pod => pod is not null).ToList()!;
         }
 
-        IEnumerable<IServiceInstance>? HandlePodLocalRouting()
+        List<IServiceInstance>? HandlePodLocalRouting()
         {
             var service = _readModelModel.GetServiceById(sourceId);
 
@@ -60,10 +63,22 @@ public class RoutingUC
             {
                 var target = pod.ServiceInstances.Where(serviceInstance => serviceInstance.Type.Equals(type));
 
-                return target;
+                return target.ToList();
             }
 
             return null;
         }
+    }
+
+    public List<IServiceInstance> LoadBalancing(List<IServiceInstance>? services, LoadBalancingMode mode)
+    {
+        services = services.Where(t => t.ServiceStatus is ReadyState).ToList();
+
+        return mode switch
+        {
+            LoadBalancingMode.RoundRobin => new () { services[Random.Shared.Next(0, services.Count - 1)] },
+            LoadBalancingMode.Broadcast => services,
+            _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+        };
     }
 }

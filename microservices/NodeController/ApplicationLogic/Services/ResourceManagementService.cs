@@ -128,18 +128,6 @@ public class ResourceManagementService
         }
     }
 
-    public ImmutableList<IServiceInstance> LoadBalancing(ImmutableList<IServiceInstance> services, LoadBalancingMode mode)
-    {
-        services = services.Where(t => t.ServiceStatus is ReadyState).ToImmutableList();
-
-        return mode switch
-        {
-            LoadBalancingMode.RoundRobin => ImmutableList.Create(services[Random.Shared.Next(0, services.Count - 1)]),
-            LoadBalancingMode.Broadcast => services,
-            _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
-        };
-    }
-
     public async Task SetResources(IPodInstance podInstance, long nanoCpus, long memory)
     {
         await _environmentClient.SetResources(podInstance, nanoCpus, memory);

@@ -1,6 +1,5 @@
 ﻿using ApplicationLogic.Usecases;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Monitor.Docker;
 
 namespace ApplicationLogicTests.Usecases
 {

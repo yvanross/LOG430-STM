@@ -1,6 +1,6 @@
-﻿using ApplicationLogic.Extensions;
+﻿using System.Globalization;
+using ApplicationLogic.Extensions;
 using ApplicationLogic.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace ApplicationLogic.Usecases;
 
@@ -10,29 +10,26 @@ public class IngressUC
     
     private readonly IHostInfo _hostInfo;
 
-    private readonly ILogger _logger;
-
-    public IngressUC(ILogger logger)
+    public IngressUC(IHostInfo hostInfo, IIngressClient ingressClient)
     {
-        _logger = logger;
+        _hostInfo = hostInfo;
+        _ingressClient = ingressClient;
     }
 
-    public async Task Register(string teamName)
+    public async Task Register()
     {
         await Try.WithConsequenceAsync(async () =>
             {
-                _logger?.LogInformation($"Attempting to subscribe to IngressController");
-
-                await _ingressClient.Subscribe(teamName, _hostInfo.GetAddress(), _hostInfo.GetPort());
+                await _ingressClient.Subscribe(_hostInfo.GetTeamName(), _hostInfo.GetAddress(), _hostInfo.GetPort());
 
                 return Task.CompletedTask;
             },
             retryCount: 100);
     }
 
-    public string GetLogStoreAddressAndPort()
+    public async Task<string> GetLogStoreAddressAndPort()
     {
-        var logStore = _ingressClient.GetLogStoreAddressAndPort();
+        var logStore = await _ingressClient.GetLogStoreAddressAndPort(_hostInfo.GetTeamName());
 
         return logStore;
     }

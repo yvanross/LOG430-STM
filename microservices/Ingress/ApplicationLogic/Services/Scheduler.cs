@@ -2,7 +2,7 @@
 using ApplicationLogic.Extensions;
 using Entities.DomainInterfaces;
 
-namespace Entities.BusinessObjects;
+namespace ApplicationLogic.Services;
 
 public class Scheduler : IScheduler
 {

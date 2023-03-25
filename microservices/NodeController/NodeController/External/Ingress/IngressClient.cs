@@ -1,4 +1,5 @@
-﻿using ApplicationLogic.Extensions;
+﻿using System.Dynamic;
+using ApplicationLogic.Extensions;
 using ApplicationLogic.Interfaces;
 using NodeController.External.Docker;
 using RestSharp;
@@ -7,7 +8,7 @@ namespace NodeController.External.Ingress;
 
 public class IngressClient : IIngressClient
 {
-    private static readonly string LogStoreAddressAndPort;
+    private string _logStoreAddressAndPort = string.Empty;
 
     public async Task Subscribe(string teamName, string address, string port)
     {
@@ -31,8 +32,19 @@ public class IngressClient : IIngressClient
         }, retryCount: 5);
     }
 
-    public string GetLogStoreAddressAndPort()
+    public async Task<string> GetLogStoreAddressAndPort(string teamName)
     {
-        return LogStoreAddressAndPort;
+        if (string.IsNullOrEmpty(_logStoreAddressAndPort))
+        {
+            var client = new RestClient($"{HostInfo.IngressAddress}:{HostInfo.IngressPort}");
+
+            var request = new RestRequest($"LogStore/{teamName}");
+
+            var res = await client.GetAsync<string>(request);
+
+            _logStoreAddressAndPort = res ?? string.Empty;
+        }
+
+        return _logStoreAddressAndPort;
     }
 }

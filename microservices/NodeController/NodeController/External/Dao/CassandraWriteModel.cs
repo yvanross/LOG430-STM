@@ -1,41 +1,33 @@
 ﻿using ApplicationLogic.Interfaces.Dao;
-using Cassandra.Mapping;
 using Cassandra;
 using Entities.BusinessObjects.Live;
-using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.ResourceManagement;
-using System.Drawing;
+using ApplicationLogic.Usecases;
+using NodeController.External.Docker;
+using NodeController.External.Ingress;
 
 namespace NodeController.External.Repository;
 
 public class CassandraWriteModel : ISystemStateWriteModel
 {
-    private static readonly string ContactPoint = "127.0.0.1";
+    private static string _contactPoint = null!;
 
-    private static readonly string Keyspace = "your_keyspace_name";
-
-    static CassandraWriteModel()
-    {
-        _ = CreateUserDefinedTypes();
-    }
-
-    private static async Task CreateUserDefinedTypes()
-    {
-        var cluster = Cluster.Builder()
-            .AddContactPoint(ContactPoint)
-            .Build();
-
-        using var session = await cluster.ConnectAsync();
-
-        await session.UserDefinedTypes.DefineAsync(UdtMap.For<ExperimentDto>("experiment"));
-    }
+    private static readonly string KeySpace = HostInfo.TeamName;
 
     public async Task Log(IExperimentReport experimentReport)
     {
+        if (string.IsNullOrEmpty(_contactPoint))
+        {
+            await new IngressUC(new HostInfo(), new IngressClient()).GetLogStoreAddressAndPort().ContinueWith(r => _contactPoint = r.Result);
+
+            await CreateUserDefinedTypes();
+        }
+
         var dto = ExperimentDto.TryConvertToDto(experimentReport);
 
         using var cluster = Cluster.Builder()
-            .AddContactPoint(ContactPoint)
+            .AddContactPoint(_contactPoint)
+            .WithDefaultKeyspace(KeySpace)
             .Build();
 
         using var session = await cluster.ConnectAsync();
@@ -46,5 +38,17 @@ public class CassandraWriteModel : ISystemStateWriteModel
         var boundStatement = preparedStatement.Bind(dto);
 
         await session.ExecuteAsync(boundStatement);
+    }
+
+    private static async Task CreateUserDefinedTypes()
+    {
+        var cluster = Cluster.Builder()
+            .AddContactPoint(_contactPoint)
+            .WithDefaultKeyspace(KeySpace)
+            .Build();
+
+        using var session = await cluster.ConnectAsync();
+
+        await session.UserDefinedTypes.DefineAsync(UdtMap.For<ExperimentDto>("experiment"));
     }
 }

@@ -29,12 +29,14 @@ services:
       dockerfile: Ingress/Ingress/Dockerfile
     environment:
       ASPNETCORE_URLS: *ASPNETCORE_URLS
+      NODE_STATE_STORAGE_Port: 32670
+      EXPERIMENT_HISTORY_STORAGE_Port: 32672
     volumes:
       *vol
     labels:
       COMPONENT_CATEGORY: DEBUG      
   
-  cassandra:
+  node-state-time-serie-storage:
     image: cassandra:latest
     container_name: cassandra
     environment:
@@ -43,27 +45,27 @@ services:
       - "32670:80"
     labels:
       COMPONENT_CATEGORY: DEBUG
-    volumes:
-      - cassandra-data:/var/lib/cassandra
+    #volumes:
+    #  - cassandra-data:/var/lib/cassandra
 
-  cassandra-web:
-    image: valeriansaliou/cassandra-web:2
-    container_name: cassandra-web
-    environment:
-      - CASSANDRAWEB_USERNAME=admin
-      - CASSANDRAWEB_PASSWORD=admin
-      - CASSANDRAWEB_CONTACT_POINTS=cassandra
-      - CASSANDRAWEB_PORT=32670
-      - CASSANDRAWEB_AUTH_USERNAME=
-      - CASSANDRAWEB_AUTH_PASSWORD=
-    ports:
-      - "32671:80"
-    depends_on:
-      - cassandra
-    labels:
-      COMPONENT_CATEGORY: DEBUG
+#  cassandra-web:
+#    image: k8ssandra/cass-management-api
+#    container_name: cassandra-web
+#    environment:
+#      - CASSANDRAWEB_USERNAME=admin
+#      - CASSANDRAWEB_PASSWORD=admin
+#      - CASSANDRAWEB_CONTACT_POINTS=cassandra
+#      - CASSANDRAWEB_PORT=32670
+#      - CASSANDRAWEB_AUTH_USERNAME=
+#      - CASSANDRAWEB_AUTH_PASSWORD=
+#    ports:
+#      - "32671:80"
+#    depends_on:
+#      - node-state-time-serie-storage
+#    labels:
+#      COMPONENT_CATEGORY: DEBUG
 
-  mongo:
+  experiment-history-storage:
     image: mongo:latest
     restart: always
     environment:
@@ -80,7 +82,7 @@ services:
     ports:
       - "32673:80"
     depends_on:
-      - mongo
+      - experiment-history-storage
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example

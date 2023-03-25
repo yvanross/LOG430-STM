@@ -466,7 +466,6 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogi
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\ApplicationLogicTests.runtimeconfig.json
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\ApplicationLogicTests.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\ApplicationLogicTests.pdb
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Ambassador.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Docker.DotNet.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Humanizer.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.AspNetCore.OpenApi.dll
@@ -520,7 +519,6 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogi
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\NuGet.ProjectModel.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\NuGet.Protocol.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\NuGet.Versioning.dll
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\RestSharp.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll

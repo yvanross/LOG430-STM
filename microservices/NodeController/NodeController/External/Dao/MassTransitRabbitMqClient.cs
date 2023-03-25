@@ -1,10 +1,7 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Immutable;
-using Ambassador;
+﻿using Ambassador;
 using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Usecases;
 using Entities.BusinessObjects.Live;
-using Entities.DomainInterfaces.Live;
 using MassTransit;
 using NodeController.External.Docker;
 using HostInfo = NodeController.External.Docker.HostInfo;
@@ -18,22 +15,23 @@ public class MassTransitRabbitMqClient : IDataStreamReadModel, IConsumer<Saga>
 
     private readonly RoutingUC _routing;
 
-    private readonly ChaosExperimentUC _chaosExperimentUc;
-
     private IBusControl? _busControl;
+
+    private Func<ISaga, Task>? _reportTestResult;
 
     public MassTransitRabbitMqClient()
     {
         _routing = new(_podReadModel);
-        _chaosExperimentUc = new ChaosExperimentUC(new LocalDockerClient(null), _podReadModel, new PodWriteModel());
     }
 
-    public void BeginStreaming()
+    public void BeginStreaming(Func<ISaga, Task> reportTestResult)
     {
         var mq = _routing.RouteByDestinationType(string.Empty, HostInfo.MqServiceName, LoadBalancingMode.RoundRobin).FirstOrDefault();
 
         if (mq is not null)
         {
+            _reportTestResult = reportTestResult;
+
             var busControl = Bus.Factory.CreateUsingInMemory(cfg =>
             {
                 cfg.Host(new Uri(mq.Address));
@@ -59,6 +57,6 @@ public class MassTransitRabbitMqClient : IDataStreamReadModel, IConsumer<Saga>
 
     public Task Consume(ConsumeContext<Saga> context)
     {
-        return _chaosExperimentUc.ReportTestResult(context.Message);
+        return _reportTestResult?.Invoke(context.Message) ?? Task.CompletedTask;
     }
 }
