@@ -9,6 +9,10 @@ namespace ApplicationLogic.Usecases;
 
 public class ChaosExperimentUC
 {
+    public int KillsThisMinute { get; private set; }
+
+    public IExperimentResult? ExperimentResult => _chaosMonitoringService.ExperimentResult;
+
     private readonly IPodReadModel _readModelModel;
 
     private readonly IChaosCodex _codex;
@@ -20,8 +24,6 @@ public class ChaosExperimentUC
     private readonly ResourceManagementService _resourceManagementService;
     
     private readonly ChaosTestMonitoringService _chaosMonitoringService;
-
-    private int _killsThisMinute;
 
     public ChaosExperimentUC(IEnvironmentClient environmentClient, IPodReadModel readModelModel, IPodWriteModel writeModelModel,
         IChaosCodex codex, ISystemStateWriteModel systemStateWriteModel, IDataStreamReadModel streamReadModel)
@@ -36,9 +38,7 @@ public class ChaosExperimentUC
 
     public async Task InduceChaos()
     {
-        _killsThisMinute = 0;
-
-        if (DateTime.UtcNow > _codex.EndTestAt)
+        if (DateTime.UtcNow < _codex.EndTestAt)
         {
             var completionPercentage =
                 (GetSecondsSinceEpoch(DateTime.UtcNow) - GetSecondsSinceEpoch(_codex.StartTestAt)) /
@@ -51,55 +51,21 @@ public class ChaosExperimentUC
 
                 var currentSecond = DateTime.UtcNow.Second;
 
-                if (currentSecond < 1 && _killsThisMinute > 1)
-                    _killsThisMinute = 0;
+                if (currentSecond < 1)
+                    KillsThisMinute = 0;
 
                 var killRate = chaosConfig.KillRate * completionPercentage;
                 var maxNumberOfPods = chaosConfig.MaxNumberOfPods / completionPercentage;
                 var memory = (long)(chaosConfig.Memory / completionPercentage);
                 var nanoCpus = (long)(chaosConfig.NanoCpus / completionPercentage);
 
-                var expectedKillCount = (int)(killRate / 60) * currentSecond;
+                await ChaosMonkey(killRate, currentSecond, maxNumberOfPods, category);
 
-                var overPodLimit = Math.Max(_readModelModel.GetAllPods().Count - maxNumberOfPods - (expectedKillCount - _killsThisMinute), 0);
-
-                for (var i = _killsThisMinute; i < expectedKillCount + overPodLimit; i++)
-                {
-                    var podsOfType = _readModelModel.GetAllPodTypes()
-                        .FindAll(podType => podType.ServiceTypes
-                            .Any(serviceType => serviceType.ArtifactType.Equals(category)))
-                        .ToDictionary(p => p.Type);
-
-                    var podToKill = _readModelModel.GetAllPods().Where(pod => podsOfType.ContainsKey(pod.Type))
-                        .MinBy(_ => Random.Shared.Next());
-
-                    if (podToKill is not null)
-                        await _resourceManagementService.RemovePodInstance(podToKill);
-                }
-
-                _killsThisMinute = expectedKillCount;
-
-                var podsOfTypeDict = _readModelModel.GetAllPodTypes()
-                    .FindAll(podType => podType.ServiceTypes
-                        .Any(serviceType => serviceType.ArtifactType.Equals(category)))
-                    .ToDictionary(p => p.Type);
-
-                foreach (var pod in _readModelModel.GetAllPods().Where(p => podsOfTypeDict.ContainsKey(p.Type)))
-                {
-                    await _resourceManagementService.SetResources(pod, nanoCpus, memory);
-                }
+                await SetResourcesOnPods(category, nanoCpus, memory);
             }
 
-            _streamReadModel.BeginStreaming(ReportTestResult);
-
-            await _systemStateWriteModel.Log(new ExperimentReport()
-            {
-                ServiceTypes = _readModelModel.GetAllServiceTypes().ToList(),
-                RunningInstances = _readModelModel.GetAllServices().ToList(),
-                ExperimentResult = _chaosMonitoringService.ExperimentResult
-            });
+            await StreamAndLogExperimentResults();
         }
-
         else
         {
             await _streamReadModel.EndStreaming();
@@ -108,6 +74,57 @@ public class ChaosExperimentUC
         }
         
         double GetSecondsSinceEpoch(DateTime datetime) => (datetime - DateTime.UnixEpoch).TotalSeconds;
+    }
+
+    private async Task ChaosMonkey(double killRate, int currentSecond, double maxNumberOfPods, string? category)
+    {
+        var expectedKillCount = (int)(killRate / 60) * currentSecond;
+
+        var overPodLimit = Math.Max(_readModelModel.GetAllPods().Count - maxNumberOfPods - expectedKillCount, 0);
+
+        expectedKillCount += Convert.ToInt32(overPodLimit);
+
+        for (var i = KillsThisMinute; i < expectedKillCount; i++)
+        {
+            var podsOfType = _readModelModel.GetAllPodTypes()
+                .FindAll(podType => podType.ServiceTypes
+                    .Any(serviceType => serviceType.ArtifactType.Equals(category)))
+                .ToDictionary(p => p.Type);
+
+            var podToKill = _readModelModel.GetAllPods()
+                .Where(pod => podsOfType.ContainsKey(pod.Type))
+                .MinBy(_ => Random.Shared.Next());
+
+            if (podToKill is not null)
+                await _resourceManagementService.RemovePodInstance(podToKill);
+        }
+
+        KillsThisMinute += expectedKillCount;
+    }
+
+    private async Task SetResourcesOnPods(string? category, long nanoCpus, long memory)
+    {
+        var podsOfTypeDict = _readModelModel.GetAllPodTypes()
+            .FindAll(podType => podType.ServiceTypes
+                .Any(serviceType => serviceType.ArtifactType.Equals(category)))
+            .ToDictionary(p => p.Type);
+
+        foreach (var pod in _readModelModel.GetAllPods().Where(p => podsOfTypeDict.ContainsKey(p.Type)))
+        {
+            await _resourceManagementService.SetResources(pod, nanoCpus, memory);
+        }
+    }
+
+    private async Task StreamAndLogExperimentResults()
+    {
+        _streamReadModel.BeginStreaming(ReportTestResult);
+
+        await _systemStateWriteModel.Log(new ExperimentReport()
+        {
+            ServiceTypes = _readModelModel.GetAllServiceTypes().ToList(),
+            RunningInstances = _readModelModel.GetAllServices().ToList(),
+            ExperimentResult = _chaosMonitoringService.ExperimentResult
+        });
     }
 
     public Task ReportTestResult(ISaga saga)

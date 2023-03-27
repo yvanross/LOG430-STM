@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net7.0": {
-      "Ambassador/1.0.60": {
+      "Ambassador/1.0.61": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
@@ -2008,7 +2008,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "Ambassador": "1.0.60"
+          "Ambassador": "1.0.61"
         },
         "compile": {
           "bin/placeholder/ApplicationLogic.dll": {}
@@ -2020,13 +2020,13 @@
     }
   },
   "libraries": {
-    "Ambassador/1.0.60": {
-      "sha512": "5sPKnmjsIu20t62QEumJ6EuPDN5JMUdhGidOLDlWMrbb1eXnDCDN5SXIdK/+uE9xGO7YHBF46HF7zQkYAVt1wg==",
+    "Ambassador/1.0.61": {
+      "sha512": "FHDZuv+2W5WEe+6XKvppGPINoewhObCwvOYzoJnAaIJlYgPGh/irZReR1TI9RaINU7DzoGCEPjbWbY29aMXN9w==",
       "type": "package",
-      "path": "ambassador/1.0.60",
+      "path": "ambassador/1.0.61",
       "files": [
         ".nupkg.metadata",
-        "ambassador.1.0.60.nupkg.sha512",
+        "ambassador.1.0.61.nupkg.sha512",
         "ambassador.nuspec",
         "lib/net7.0/Ambassador.dll",
         "lib/net7.0/Ambassador.pdb"

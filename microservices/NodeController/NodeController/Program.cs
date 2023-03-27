@@ -1,7 +1,7 @@
 using ApplicationLogic.Usecases;
+using NodeController.External.Dao;
 using NodeController.External.Docker;
 using NodeController.External.Ingress;
-using NodeController.External.Repository;
 
 namespace NodeController
 {
@@ -42,31 +42,53 @@ namespace NodeController
 
             app.MapControllers();
 
-            ScheduleRecurringTasks();
+            var logger = app.Services.GetRequiredService<ILogger<SchedulingService>>();
+
+            _ = new SchedulingService(logger);
 
             app.Run();
         }
 
-        private static void ScheduleRecurringTasks()
+        public class SchedulingService
         {
-            var ingressUc = new IngressUC(new HostInfo(), new IngressClient());
+            private readonly ILogger<SchedulingService> _logger;
 
-            ingressUc.Register().Wait();
+            public SchedulingService(ILogger<SchedulingService> logger)
+            {
+                _logger = logger;
+                ScheduleRecurringTasks();
+            }
 
-            ingressUc.GetLogStoreAddressAndPort().Wait();
+            private void ScheduleRecurringTasks()
+            {
+                _logger.LogInformation("# Schedule Recurring Tasks #");
+                
+                var ingressUc = new IngressUC(new HostInfo(), new IngressClient());
 
-            var writeModel = new PodWriteModel();
-            var readModel = new PodReadModel();
-            var environmentClient = new LocalDockerClient(null);
+                ingressUc.Register().Wait();
 
-            var servicePool = new ServicePoolDiscoveryUC(writeModel, readModel, environmentClient);
+                ingressUc.GetLogStoreAddressAndPort().Wait();
 
-            var monitor = new MonitorUc(environmentClient, readModel, writeModel);
+                var writeModel = new PodWriteModel();
+                var readModel = new PodReadModel();
+                var environmentClient = new LocalDockerClient(null);
 
-            readModel.GetScheduler().TryAddTask(nameof(servicePool.DiscoverServices), servicePool.DiscoverServices);
-            readModel.GetScheduler().TryAddTask(nameof(monitor.GarbageCollection), monitor.GarbageCollection);
-            readModel.GetScheduler().TryAddTask(nameof(monitor.ProcessPodStates), monitor.ProcessPodStates);
-            readModel.GetScheduler().TryAddTask(nameof(monitor.MatchInstanceDemandOnPods), monitor.MatchInstanceDemandOnPods);
+                var servicePool = new ServicePoolDiscoveryUC(writeModel, readModel, environmentClient);
+
+                var monitor = new MonitorUc(environmentClient, readModel, writeModel);
+
+                readModel.GetScheduler().SetLogger(_logger);
+
+                _logger.LogInformation("# Preparation Complete, scheduling... #");
+
+                readModel.GetScheduler().TryAddTask(nameof(servicePool.DiscoverServices), servicePool.DiscoverServices);
+                readModel.GetScheduler().TryAddTask(nameof(monitor.GarbageCollection), monitor.GarbageCollection);
+                readModel.GetScheduler().TryAddTask(nameof(monitor.RemoveOrReplaceDeadPodsFromModel), monitor.RemoveOrReplaceDeadPodsFromModel);
+                readModel.GetScheduler().TryAddTask(nameof(monitor.MatchInstanceDemandOnPods), monitor.MatchInstanceDemandOnPods);
+
+                _logger.LogInformation($"# Tasks: {nameof(servicePool.DiscoverServices)}, {nameof(monitor.GarbageCollection)}, " +
+                                       $"{nameof(monitor.RemoveOrReplaceDeadPodsFromModel)}, {nameof(monitor.MatchInstanceDemandOnPods)}; have been scheduled #");
+            }
         }
     }
 }

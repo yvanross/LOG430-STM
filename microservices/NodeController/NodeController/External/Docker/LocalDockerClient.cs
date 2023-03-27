@@ -7,7 +7,6 @@ using Docker.DotNet.Models;
 using Entities.BusinessObjects.Live;
 using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
-using Entities.DomainInterfaces.ResourceManagement;
 using Try = ApplicationLogic.Extensions.Try;
 
 namespace NodeController.External.Docker;
@@ -97,14 +96,13 @@ public class LocalDockerClient : IEnvironmentClient
 
             env.Add($"ID={serviceId}");
 
-            var labels = (List<string>)containerConfig.Config.Config.Labels;
-
             env.RemoveAll(e => e.ToString().StartsWith("POD_ID="));
 
             env.Add($"POD_ID={podId}");
 
             var exposedPorts = GetPortBindings();
 
+            containerConfig.Config.HostConfig.RestartPolicy = null;
             containerConfig.Config.HostConfig.AutoRemove = true;
             containerConfig.Config.HostConfig.PortBindings = exposedPorts;
 

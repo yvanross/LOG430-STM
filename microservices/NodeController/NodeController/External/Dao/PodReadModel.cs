@@ -1,13 +1,12 @@
 ﻿using System.Collections.Immutable;
 using ApplicationLogic.Interfaces.Dao;
-using Entities.DomainInterfaces;
 using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
 using Entities.DomainInterfaces.ResourceManagement;
 using NodeController.Cache;
 using NodeController.External.Docker;
 
-namespace NodeController.External.Repository;
+namespace NodeController.External.Dao;
 
 public class PodReadModel : IPodReadModel
 {

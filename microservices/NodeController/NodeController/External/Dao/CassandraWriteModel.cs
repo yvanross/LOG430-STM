@@ -1,12 +1,12 @@
 ﻿using ApplicationLogic.Interfaces.Dao;
 using Cassandra;
-using Entities.BusinessObjects.Live;
 using Entities.DomainInterfaces.ResourceManagement;
 using ApplicationLogic.Usecases;
 using NodeController.External.Docker;
 using NodeController.External.Ingress;
+using NodeController.Dto;
 
-namespace NodeController.External.Repository;
+namespace NodeController.External.Dao;
 
 public class CassandraWriteModel : ISystemStateWriteModel
 {

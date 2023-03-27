@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "fS4r8oM+NN6t9DTM1YDkKRJSgCmOw3xQKSYKeT7PDmf2T3Yr1UCWI/P9o0RQgJPzJ3fYNdH/glm3whVz9AJcCA==",
+  "dgSpecHash": "t7cCjfHLHwagAJ55B7fNMkt2bjm1C93/8cL4vy1VT4Nav1Wy0h/IHH0y9slCiieDkgNFiQoKbsFZ2JJgKSUO6A==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\TripComparator\\TripComparator.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.60\\ambassador.1.0.60.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.61\\ambassador.1.0.61.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\masstransit\\8.0.14\\masstransit.8.0.14.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\masstransit.abstractions\\8.0.14\\masstransit.abstractions.8.0.14.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\masstransit.rabbitmq\\8.0.14\\masstransit.rabbitmq.8.0.14.nupkg.sha512",

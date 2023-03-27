@@ -1,12 +1,11 @@
 ﻿using ApplicationLogic.Interfaces.Dao;
 using Cassandra.Mapping;
 using Cassandra.Mapping.Attributes;
-using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
 using Entities.DomainInterfaces.ResourceManagement;
-using NodeController.External.Repository;
+using NodeController.External.Dao;
 
-namespace Entities.BusinessObjects.Live;
+namespace NodeController.Dto;
 
 public class ExperimentDto
 {
@@ -30,7 +29,7 @@ public class ExperimentDto
             ErrorCount = experimentReport.ExperimentResult?.ErrorCount ?? default,
             Message = experimentReport.ExperimentResult?.Message ?? string.Empty,
             RunningInstances = experimentReport.RunningInstances.ConvertAll(ri => ArtifactDto.TryConvertToDto(ri, GetServiceType(ri.Type)))
-                                                                    .DistinctBy(artifactDto=>artifactDto is not null).ToList()!
+                                                                    .Where(artifactDto => artifactDto is not null).ToList()!
         };
     }
 

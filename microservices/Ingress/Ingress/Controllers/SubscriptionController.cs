@@ -1,4 +1,5 @@
 using ApplicationLogic.Usecases;
+using Ingress.Dto;
 using Ingress.Repository;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -26,17 +27,17 @@ namespace Ingress.Controllers
         }
 
         [HttpPost("{id}")]
-        public async Task<IActionResult> Post([FromRoute] string id, [FromBody] dynamic body)
+        public async Task<IActionResult> Post([FromRoute] string id, [FromBody] CallingServiceInfo callingServiceInfo)
         {
             try
             {
                 _logger.LogInformation($"{id} attempting to subscribe");
 
-                if (string.IsNullOrEmpty(body.address) || string.IsNullOrEmpty(body.port)) throw new Exception("Source couldn't be determined");
+                if (string.IsNullOrEmpty(callingServiceInfo.Address) || string.IsNullOrEmpty(callingServiceInfo.Port)) throw new Exception("Source couldn't be determined");
 
-                _subscriptionUc.Subscribe(id, body.address, body.port);
+                _subscriptionUc.Subscribe(id, callingServiceInfo.Address, callingServiceInfo.Port);
 
-                _logger.LogInformation($"{id} from {body.address}:{body.port} has subscribed");
+                _logger.LogInformation($"{id} from {callingServiceInfo.Address}:{callingServiceInfo.Port} has subscribed");
             }
             catch (Exception e)
             {

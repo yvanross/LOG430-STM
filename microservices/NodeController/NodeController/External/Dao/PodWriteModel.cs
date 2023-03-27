@@ -3,7 +3,7 @@ using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
 using NodeController.Cache;
 
-namespace NodeController.External.Repository;
+namespace NodeController.External.Dao;
 
 public class PodWriteModel : IPodWriteModel
 {

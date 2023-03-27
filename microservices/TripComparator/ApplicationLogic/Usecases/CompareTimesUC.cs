@@ -19,7 +19,7 @@ namespace ApplicationLogic.Usecases
         {
             var res = await RestController.Get(new GetRoutingRequest()
             {
-                TargetService = ServiceTypes.RouteTimeProvider.ToString(),
+                TargetService = "RouteTimeProvider",
                 Endpoint = $"RouteTime/Get",
                 Params = new List<NameValue>()
                 {

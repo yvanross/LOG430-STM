@@ -1,8 +1,12 @@
-﻿namespace Entities.DomainInterfaces.ResourceManagement;
+﻿using Microsoft.Extensions.Logging;
+
+namespace Entities.DomainInterfaces.ResourceManagement;
 
 public interface IScheduler
 {
     void TryAddTask(string name, Func<Task> func);
 
     void TryRemoveTask(string name);
+    
+    void SetLogger(ILogger logger);
 }

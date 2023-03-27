@@ -1,11 +1,10 @@
-﻿using MassTransit;
-using ISaga = Entities.DomainInterfaces.Live.ISaga;
+﻿using ISaga = Entities.DomainInterfaces.Live.ISaga;
 
-namespace Entities.BusinessObjects.Live;
+namespace NodeController.Dto;
 
 public class Saga : ISaga
 {
-    public required int Phase { get; init;}
+    public required int Phase { get; init; }
 
     public required int Seconds { get; init; }
 

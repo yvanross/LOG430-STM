@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using ApplicationLogic.Extensions;
 using Entities.DomainInterfaces.ResourceManagement;
+using Microsoft.Extensions.Logging;
 
 namespace ApplicationLogic.Services;
 
@@ -9,6 +10,8 @@ public class SchedulerService : IScheduler
     private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(100));
 
     private ImmutableDictionary<string, Func<Task>> _tasks = ImmutableDictionary<string, Func<Task>>.Empty;
+
+    private ILogger? _logger;
 
     public SchedulerService()
     {
@@ -25,6 +28,11 @@ public class SchedulerService : IScheduler
         ImmutableInterlocked.TryRemove(ref _tasks, name, out _);
     }
 
+    public void SetLogger(ILogger logger)
+    {
+        _logger = logger;
+    }
+
     private async Task BeginScheduling()
     {
         while (await _periodicTimer.WaitForNextTickAsync().ConfigureAwait(false))
@@ -36,7 +44,18 @@ public class SchedulerService : IScheduler
                     await func();
 
                     return Task.CompletedTask;
-                });
+                }, 
+                    onFailure: (e, _) =>
+                    {
+                        _logger?.LogError(e.Message);
+                        
+                        _logger?.LogCritical(e.InnerException?.Message);
+                        
+                        _logger?.LogInformation(e.StackTrace);
+
+                        return Task.CompletedTask;
+                    },
+                    autoThrow: false);
             }
         }
     }

@@ -1,12 +1,10 @@
-﻿using Ambassador;
-using ApplicationLogic.Extensions;
-using ApplicationLogic.Services;
+﻿using ApplicationLogic.Extensions;
 using ApplicationLogic.Usecases;
 using Entities.DomainInterfaces.ResourceManagement;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using NodeController.External.Dao;
 using NodeController.External.Docker;
-using NodeController.External.Repository;
 
 namespace NodeController.Controllers
 {
@@ -28,6 +26,8 @@ namespace NodeController.Controllers
         {
             Try.WithConsequenceAsync(() =>
             {
+                _logger.LogInformation("Scheduling experiment...");
+
                 var readModel = new PodReadModel();
 
                 var scheduler = readModel.GetScheduler();
@@ -41,6 +41,8 @@ namespace NodeController.Controllers
                     new MassTransitRabbitMqClient());
 
                 scheduler.TryAddTask(nameof(experimentUc.InduceChaos), experimentUc.InduceChaos);
+
+                _logger.LogInformation("Experiment scheduled");
 
                 return Task.FromResult(0);
             }, retryCount: 2).Wait();

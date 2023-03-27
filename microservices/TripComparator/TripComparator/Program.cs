@@ -42,19 +42,7 @@ namespace TripComparator
 
             app.MapControllers();
 
-            var logger = app.Services.GetRequiredService<ILogger<AmbassadorService>>();
-
-            _ = new AmbassadorService(logger);
-
             app.Run();
-        }
-    }
-
-    public class AmbassadorService
-    {
-        public AmbassadorService(ILogger<AmbassadorService> logger)
-        {
-            RegistrationController.Register(ServiceTypes.ComparateurTrajet.ToString(), logger);
         }
     }
 }

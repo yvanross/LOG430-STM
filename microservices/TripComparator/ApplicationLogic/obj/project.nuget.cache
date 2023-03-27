@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Wyt3Mgo56MIPP4m0RsQJAKwd3i5w+1WhCT4YtHbCTgkzpYmL3dzJRLisZlFJH61XiV7982XiMQSSyqJWYsE4Yw==",
+  "dgSpecHash": "BYsCxUjDfSaKdspZzLpKOnYBYt4DBRnyzlmKgpuBgyLwT8aOIEDJtstEulzdujScMiWK83wHiJPoBdzyL65b9A==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.60\\ambassador.1.0.60.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.61\\ambassador.1.0.61.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.csharp\\4.3.0\\microsoft.csharp.4.3.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",

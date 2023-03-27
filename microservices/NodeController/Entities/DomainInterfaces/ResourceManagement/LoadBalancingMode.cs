@@ -1,4 +1,4 @@
-﻿namespace Ambassador;
+﻿namespace Entities.DomainInterfaces.ResourceManagement;
 
 public enum LoadBalancingMode
 {

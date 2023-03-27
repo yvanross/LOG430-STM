@@ -1,5 +1,4 @@
-﻿using ApplicationLogic.Interfaces.Dao;
-using Entities.BusinessObjects.Live;
+﻿using Entities.BusinessObjects.Live;
 using Entities.DomainInterfaces.Live;
 
 namespace ApplicationLogic.Services;
@@ -21,9 +20,7 @@ public class ChaosTestMonitoringService
     public async Task AnalyzeAndStoreRealtimeTestData(ISaga saga)
     {
         UpdateSagaDuration(saga);
-     
-        _processedSagaCount++;
-
+        
         this.ExperimentResult = new ExperimentResult()
         {
             AverageLatency = GetAverageLatency(),
@@ -33,7 +30,7 @@ public class ChaosTestMonitoringService
 
         double GetAverageLatency()
         {
-            return Convert.ToDouble(_sagaDuration) / _processedSagaCount;
+            return Convert.ToDouble(_sagaDuration + _sagaPhaseDuration) / _processedSagaCount;
         }
 
         void UpdateSagaDuration(ISaga data)
@@ -44,12 +41,16 @@ public class ChaosTestMonitoringService
                     _errorCount++;
 
                 _sagaPhaseDuration = data.Seconds;
+
+                _processedSagaCount++;
             }
             else
             {
                 _sagaPhase = data.Phase;
 
                 _sagaDuration += _sagaPhaseDuration;
+
+                _sagaPhaseDuration = saga.Seconds;
             }
         }
     }

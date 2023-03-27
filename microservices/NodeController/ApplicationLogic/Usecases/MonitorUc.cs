@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ApplicationLogic.Extensions;
+﻿using ApplicationLogic.Extensions;
 using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Services;
-using Entities.BusinessObjects.Live;
-using Entities.BusinessObjects.States;
 using Entities.DomainInterfaces.Live;
-using Entities.DomainInterfaces.ResourceManagement;
 
 namespace ApplicationLogic.Usecases
 {
@@ -42,14 +34,16 @@ namespace ApplicationLogic.Usecases
 
             foreach (var podType in podTypes)
             {
-                while (_readModelModel.GetPodInstances(podType.Type)?.Count < podType.MinimumNumberOfInstances)
+                var podCount = _readModelModel.GetPodInstances(podType.Type)?.Count;
+
+                if (podCount < podType.MinimumNumberOfInstances)
                 {
                     await _resourceManagementService.IncreaseNumberOfPodInstances(podType.Type).ConfigureAwait(false);
                 }
             }
         }
 
-        public async Task ProcessPodStates()
+        public async Task RemoveOrReplaceDeadPodsFromModel()
         {
             await Try.WithConsequenceAsync(async () =>
             {

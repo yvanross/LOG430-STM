@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "QmVsgS2gkQAdILESpBEx7Nu5GPmAqIo0/CKIzBDiwgn66HgcjWXkD58a0D7NBEJ4EbOC8KCWIKc5bIzK5bTgjA==",
+  "dgSpecHash": "CXe/fJRrzAehp1txkfG1dw31BR4AYkybREmphrXS1xznsVZOPuiS1mPYdQLV0Rt07L0QmQSMoCHbdq7oXbKWVw==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.60\\ambassador.1.0.60.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.61\\ambassador.1.0.61.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.codecoverage\\17.3.2\\microsoft.codecoverage.17.3.2.nupkg.sha512",

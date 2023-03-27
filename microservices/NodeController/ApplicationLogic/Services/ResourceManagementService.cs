@@ -1,9 +1,7 @@
 ﻿using System.Collections.Immutable;
 using ApplicationLogic.Interfaces;
-using Ambassador;
 using Entities.BusinessObjects.States;
 using Entities.DomainInterfaces.Live;
-using Entities.DomainInterfaces.ResourceManagement;
 using Entities.BusinessObjects.Live;
 using ApplicationLogic.Interfaces.Dao;
 

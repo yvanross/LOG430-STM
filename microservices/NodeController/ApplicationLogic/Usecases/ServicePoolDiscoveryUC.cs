@@ -33,47 +33,60 @@ namespace ApplicationLogic.Usecases
 
             foreach (var unregisteredService in unregisteredServices!)
             {
+                var newPodId = Guid.NewGuid().ToString();
+
                 var service = await _environmentClient.GetContainerInfo(unregisteredService);
 
-                var newService = CreateService(service);
+                var newService = CreateService(service, newPodId);
+
+                if(newService is null) continue;
 
                 CreateServiceType(service);
 
-                CreateOrUpdatePodInstance(service, newService);
+                CreateOrUpdatePodInstance(service, newService, newPodId);
             }
 
-            async Task<List<string>?> GetUnregisteredServices()
+            async Task<List<string>> GetUnregisteredServices()
             {
                 var runningServicesIds = await _environmentClient.GetRunningServices();
 
-                var registeredServices = _podReadModel.GetAllServices().ToDictionary(s => s.Id);
+                var registeredServices = _podReadModel.GetAllServices().DistinctBy(s=>s.Id).ToDictionary(s => s.Id);
 
                 var unregisteredServices = runningServicesIds?.Where(runningService => registeredServices.ContainsKey(runningService) is false).ToList();
                 
-                return unregisteredServices;
+                return unregisteredServices ?? new List<string>();
             }
 
-            ServiceInstance CreateService((ContainerInfo CuratedInfo, IContainerConfig RawConfig) service)
+            ServiceInstance? CreateService((ContainerInfo CuratedInfo, IContainerConfig RawConfig) service, string newPodId)
             {
-                var newService = new ServiceInstance()
+                try
                 {
-                    Id = service.RawConfig.Config.Config.Env.First(e => e.ToString().StartsWith("ID=")),
-                    ContainerInfo = service.CuratedInfo,
-                    Address = NodeAddress,
-                    Type = service.CuratedInfo.Name,
-                    PodId = GetPodId(service.CuratedInfo.Labels)
-                };
+                    var newService = new ServiceInstance()
+                    {
+                        Id = service.RawConfig.Config.Config.Env.First(e => e.ToString().StartsWith("ID=")),
+                        ContainerInfo = service.CuratedInfo,
+                        Address = NodeAddress,
+                        Type = service.CuratedInfo.Name,
+                        PodId = GetPodId(service.CuratedInfo.Labels) ?? newPodId
+                    };
 
-                newService.ServiceStatus = new ReadyState();
+                    newService.ServiceStatus = new ReadyState();
 
-                return newService;
+                    return newService;
+                }
+                catch
+                {
+                    // ignore because we don't control the assigned Ids, they are set in the docker composee
+                }
+                
+                return null;
             }
 
             void CreateServiceType((ContainerInfo CuratedInfo, IContainerConfig RawConfig) service)
             {
                 var curatedInfoLabels = service.CuratedInfo.Labels;
 
-                var podType = GetPodName(curatedInfoLabels);
+                var podType = GetPodName(curatedInfoLabels) ?? service.CuratedInfo.Name;
 
                 var serviceType = new ServiceType()
                 {
@@ -103,9 +116,9 @@ namespace ApplicationLogic.Usecases
                 }
             }
 
-            void CreateOrUpdatePodInstance((ContainerInfo CuratedInfo, IContainerConfig RawConfig) service, IServiceInstance newService)
+            void CreateOrUpdatePodInstance((ContainerInfo CuratedInfo, IContainerConfig RawConfig) service, IServiceInstance newService, string newPodId)
             {
-                var podId = GetPodId(service.CuratedInfo.Labels);
+                var podId = GetPodId(service.CuratedInfo.Labels) ?? newPodId;
 
                 var pod = _podReadModel.GetPodById(podId);
 
@@ -113,7 +126,7 @@ namespace ApplicationLogic.Usecases
                 {
                     ServiceInstances = pod?.ServiceInstances?.Add(newService) ??
                                        ImmutableList<IServiceInstance>.Empty.Add(newService),
-                    Type = GetPodName(service.CuratedInfo.Labels),
+                    Type = GetPodName(service.CuratedInfo.Labels) ?? service.CuratedInfo.Name,
                     Id = podId
                 };
 
@@ -121,38 +134,38 @@ namespace ApplicationLogic.Usecases
             }
         }
 
-        private string GetLabelValue(ServiceLabelsEnum serviceLabels, ConcurrentDictionary<ServiceLabelsEnum, string> labels)
+        private static string? GetLabelValue(ServiceLabelsEnum serviceLabels, ConcurrentDictionary<ServiceLabelsEnum, string> labels)
         {
             labels.TryGetValue(serviceLabels, out var label);
 
-            return label ?? string.Empty;
+            return label;
         }
 
-        private string GetComponentCategory(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
+        private static string GetComponentCategory(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
         {
             var value = GetLabelValue(ServiceLabelsEnum.COMPONENT_CATEGORY, labels);
 
             return string.IsNullOrEmpty(value) ? nameof(ArtifactTypeEnum.Undefined) : value;
         }
 
-        private int GetMinimumNumberOfInstances(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
+        private static int GetMinimumNumberOfInstances(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
         {
             uint.TryParse(GetLabelValue(ServiceLabelsEnum.MINIMUM_NUMBER_OF_INSTANCES, labels), out var nbInstances);
             
             return Convert.ToInt32(nbInstances);
         }
 
-        private string GetPodName(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
+        private static string? GetPodName(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
         {
             return GetLabelValue(ServiceLabelsEnum.POD_NAME, labels);
         }
 
-        private string GetPodId(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
+        private static string? GetPodId(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
         {
             return GetLabelValue(ServiceLabelsEnum.POD_ID, labels);
         }
 
-        private bool GetIsSidecar(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
+        private static bool GetIsSidecar(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
         {
             bool.TryParse(GetLabelValue(ServiceLabelsEnum.IS_POD_SIDECAR, labels), out var isSidecar);
 

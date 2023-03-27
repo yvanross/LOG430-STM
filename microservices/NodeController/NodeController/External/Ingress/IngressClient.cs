@@ -1,6 +1,6 @@
-﻿using System.Dynamic;
-using ApplicationLogic.Extensions;
+﻿using ApplicationLogic.Extensions;
 using ApplicationLogic.Interfaces;
+using Ingress.Dto;
 using NodeController.External.Docker;
 using RestSharp;
 
@@ -10,21 +10,21 @@ public class IngressClient : IIngressClient
 {
     private string _logStoreAddressAndPort = string.Empty;
 
+    private static readonly RestClient Client = new ($"http://{HostInfo.IngressAddress}:{HostInfo.IngressPort}");
+
     public async Task Subscribe(string teamName, string address, string port)
     {
         await Try.WithConsequenceAsync(async () =>
         {
-            var client = new RestClient($"{HostInfo.IngressAddress}:{HostInfo.IngressPort}");
-
             var request = new RestRequest($"Subscription/{teamName}");
 
-            request.AddBody(new
+            request.AddJsonBody(new IngressSubsciptionDto()
             {
-                address,
-                port
+                Address = address,
+                Port = port
             });
 
-            var res = await client.ExecutePostAsync(request);
+            var res = await Client.ExecutePostAsync(request);
 
             res.ThrowIfError();
 
@@ -36,11 +36,9 @@ public class IngressClient : IIngressClient
     {
         if (string.IsNullOrEmpty(_logStoreAddressAndPort))
         {
-            var client = new RestClient($"{HostInfo.IngressAddress}:{HostInfo.IngressPort}");
-
             var request = new RestRequest($"LogStore/{teamName}");
 
-            var res = await client.GetAsync<string>(request);
+            var res = await Client.GetAsync<string>(request);
 
             _logStoreAddressAndPort = res ?? string.Empty;
         }

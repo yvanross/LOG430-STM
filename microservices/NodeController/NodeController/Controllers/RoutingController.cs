@@ -1,12 +1,11 @@
-﻿using Ambassador;
-using ApplicationLogic.Extensions;
+﻿using ApplicationLogic.Extensions;
 using ApplicationLogic.Services;
 using ApplicationLogic.Usecases;
 using Entities.BusinessObjects.Live;
+using Entities.DomainInterfaces.ResourceManagement;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using NodeController.External.Docker;
-using NodeController.External.Repository;
+using NodeController.External.Dao;
 
 namespace NodeController.Controllers
 {
@@ -36,6 +35,8 @@ namespace NodeController.Controllers
         {
             return Ok(Try.WithConsequenceAsync(() =>
             {
+                _logger.LogInformation($"Finding best route for {caller} to {serviceType} in {Enum.GetName(mode)} mode");
+
                 var routingDatas = _routingUc.RouteByDestinationType(caller, serviceType, mode).ToList();
 
                 foreach (var routingData in routingDatas)

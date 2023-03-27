@@ -1,13 +1,12 @@
-﻿using Ambassador;
-using ApplicationLogic.Interfaces.Dao;
+﻿using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Usecases;
-using Entities.BusinessObjects.Live;
+using Entities.DomainInterfaces.ResourceManagement;
 using MassTransit;
-using NodeController.External.Docker;
+using NodeController.Dto;
 using HostInfo = NodeController.External.Docker.HostInfo;
 using ISaga = Entities.DomainInterfaces.Live.ISaga;
 
-namespace NodeController.External.Repository;
+namespace NodeController.External.Dao;
 
 public class MassTransitRabbitMqClient : IDataStreamReadModel, IConsumer<Saga>
 {

@@ -1,8 +1,7 @@
 ﻿using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
-using Entities.DomainInterfaces.ResourceManagement;
 
-namespace Entities.BusinessObjects.Live;
+namespace NodeController.Dto;
 
 public class ArtifactDto
 {
@@ -19,7 +18,7 @@ public class ArtifactDto
     public string ServiceStatus { get; init; }
 
     public string PodId { get; init; }
-    
+
     public string ArtifactType { get; init; }
 
     public static ArtifactDto? TryConvertToDto(IServiceInstance serviceInstance, IServiceType? serviceType)

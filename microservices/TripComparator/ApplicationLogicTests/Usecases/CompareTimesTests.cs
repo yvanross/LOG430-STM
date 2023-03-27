@@ -14,7 +14,6 @@ namespace ApplicationLogicTests.Usecases
         [TestInitialize]
         public void Init()
         {
-            RegistrationController.Register(ServiceTypes.ComparateurTrajet.ToString(), default);
         }
 
         [TestMethod()]

@@ -1,10 +1,5 @@
 ﻿using System.Collections.Immutable;
-using System.Runtime.InteropServices;
-using Ambassador;
 using ApplicationLogic.Interfaces.Dao;
-using ApplicationLogic.Services;
-using Docker.DotNet.Models;
-using Entities;
 using Entities.BusinessObjects.Live;
 using Entities.BusinessObjects.States;
 using Entities.DomainInterfaces.Live;
@@ -22,16 +17,16 @@ public class RoutingUC
         _readModelModel = readModelModel;
     }
 
-    public IEnumerable<RoutingData> RouteByDestinationType(string sourceId, string type, LoadBalancingMode mode)
+    public IEnumerable<RoutingData> RouteByDestinationType(string serviceSourceId, string type, LoadBalancingMode mode)
     {
-        var possibleTargets = HandlePodLocalRouting();
+        var possibleTargets = HandlePodLocalRouting().Where(service => service.Id.Equals(serviceSourceId) is false).ToList();
 
-        if (possibleTargets is null)
+        if (possibleTargets.Count < 1)
         {
             var podTypes = _readModelModel.GetAllPodTypes().ToDictionary(k => k.Type);
             var podInstances = _readModelModel.GetAllPods();
 
-            possibleTargets = GetPossibleCommunicationEntryPoints(podTypes, podInstances);
+            possibleTargets = GetPossibleCommunicationEntryPoints(podTypes, podInstances).Where(service => service.Id.Equals(serviceSourceId) is false).ToList();
         }
 
         possibleTargets = LoadBalancing(possibleTargets, mode);
@@ -44,7 +39,7 @@ public class RoutingUC
             };
         }
 
-        List<IServiceInstance>? GetPossibleCommunicationEntryPoints(IDictionary<string, IPodType> podTypes, ImmutableList<IPodInstance> podInstances)
+        List<IServiceInstance> GetPossibleCommunicationEntryPoints(IDictionary<string, IPodType> podTypes, ImmutableList<IPodInstance> podInstances)
         {
             return podInstances.SelectMany(pod =>
             {
@@ -52,12 +47,12 @@ public class RoutingUC
                     return new[] { pod.ServiceInstances.FirstOrDefault(p => p.Type.Equals(gateway.Type)) };
 
                 return pod.ServiceInstances.ToArray();
-            }).DistinctBy(pod => pod is not null).ToList()!;
+            }).Where(pod => pod is not null).ToList()!;
         }
 
-        List<IServiceInstance>? HandlePodLocalRouting()
+        List<IServiceInstance> HandlePodLocalRouting()
         {
-            var service = _readModelModel.GetServiceById(sourceId);
+            var service = _readModelModel.GetServiceById(serviceSourceId);
 
             if (string.IsNullOrEmpty(service?.PodId) is false && _readModelModel.GetPodById(service.PodId) is { } pod)
             {
@@ -66,7 +61,7 @@ public class RoutingUC
                 return target.ToList();
             }
 
-            return null;
+            return new List<IServiceInstance>();
         }
     }
 
