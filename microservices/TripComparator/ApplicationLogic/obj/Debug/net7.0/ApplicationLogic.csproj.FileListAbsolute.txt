@@ -34,3 +34,6 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\Applicat
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogic\obj\Debug\net7.0\refint\ApplicationLogic.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogic\obj\Debug\net7.0\ApplicationLogic.pdb
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogic\obj\Debug\net7.0\ref\ApplicationLogic.dll
+C:\Users\david\LOG430-STM\microservices\TripComparator\ApplicationLogic\bin\Debug\net7.0\Entities.dll
+C:\Users\david\LOG430-STM\microservices\TripComparator\ApplicationLogic\bin\Debug\net7.0\Entities.pdb
+C:\Users\david\LOG430-STM\microservices\TripComparator\ApplicationLogic\obj\Debug\net7.0\ApplicationLogic.csproj.CopyComplete

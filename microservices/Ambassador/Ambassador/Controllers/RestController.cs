@@ -21,4 +21,9 @@ public static class RestController
     {
         return Try.WithConsequenceAsync(() => RestUc.Post(routingRequest), retryCount: 3)!;
     }
+
+    public static Task<IEnumerable<RoutingData>> GetAddress(string targetService, LoadBalancingMode mode)
+    {
+        return Try.WithConsequenceAsync(() => RestUc.GetServiceRoutingData(targetService, mode), retryCount: 3)!;
+    }
 }

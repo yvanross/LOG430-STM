@@ -2,6 +2,7 @@
 using ApplicationLogic.Usecases;
 using Entities.DomainInterfaces.ResourceManagement;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using NodeController.External.Dao;
 using NodeController.External.Docker;
@@ -22,10 +23,15 @@ namespace NodeController.Controllers
 
         [HttpPost]
         [ActionName(nameof(BeginExperiment))]
-        public IActionResult BeginExperiment(IChaosCodex chaosCodex)
+        public async Task<Results<Ok, BadRequest<string>>?> BeginExperiment(IChaosCodex chaosCodex)
         {
-            Try.WithConsequenceAsync(() =>
+            return await Try.WithConsequenceAsync<Results<Ok, BadRequest<string>>>(() =>
             {
+                _logger.LogInformation("Checking pool sanity...");
+
+                if (ServicePoolDiscoveryUC.BannedIds.Any())
+                    return new(() => TypedResults.BadRequest("Pool compromised by unregistered services, flagging as cheating"));
+
                 _logger.LogInformation("Scheduling experiment...");
 
                 var readModel = new PodReadModel();
@@ -44,10 +50,8 @@ namespace NodeController.Controllers
 
                 _logger.LogInformation("Experiment scheduled");
 
-                return Task.FromResult(0);
-            }, retryCount: 2).Wait();
-
-            return Ok();
+                return new(() => TypedResults.Ok());
+            }, retryCount: 2);
         }
     }
 }

@@ -87,10 +87,10 @@ namespace ApplicationLogicTests.Usecases
         [TestMethod]
         public async Task ReportTestResult_GenericSettings()
         {
-            await _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(0,1).Object);
-            await _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(0,2).Object);
-            await _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(1,0).Object);
-            await _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(1,1).Object);
+            _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(0,1).Object);
+            _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(0, 2).Object);
+            _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(1, 0).Object);
+            _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(1,1).Object);
 
             _chaosExperimentUc.ExperimentResult.Should().NotBeNull();
             _chaosExperimentUc.ExperimentResult.Message.Should().Be("Test message");
@@ -101,10 +101,10 @@ namespace ApplicationLogicTests.Usecases
         [TestMethod]
         public async Task ReportTestResult_IncreasedLatency()
         {
-            await _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(0, 2).Object);
-            await _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(0, 4).Object);
-            await _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(1, 0).Object);
-            await _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(1, 2).Object);
+            _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(0, 2).Object);
+            _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(0, 4).Object);
+            _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(1, 0).Object);
+            _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(1, 2).Object);
 
             _chaosExperimentUc.ExperimentResult.Should().NotBeNull();
             _chaosExperimentUc.ExperimentResult.Message.Should().Be("Test message");
@@ -115,11 +115,11 @@ namespace ApplicationLogicTests.Usecases
         [TestMethod]
         public async Task ReportTestResult_ErrorCount()
         {
-            await _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock().Object);
-            await _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(0, 1).Object);
-            await _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(0, 2).Object);
-            await _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(1, 1).Object);
-            await _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(1, 0).Object);
+            _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock().Object);
+            _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(0, 1).Object);
+            _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(0, 2).Object);
+            _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(1, 1).Object);
+            _chaosExperimentUc.ReportTestResult(MockProvider.GetSagaMock(1, 0).Object);
 
             _chaosExperimentUc.ExperimentResult.Should().NotBeNull();
             _chaosExperimentUc.ExperimentResult.Message.Should().Be("Test message");

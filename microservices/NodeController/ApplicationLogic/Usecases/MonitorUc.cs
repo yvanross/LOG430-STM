@@ -51,9 +51,9 @@ namespace ApplicationLogic.Usecases
 
                 if (runningContainerIds is null) return Task.CompletedTask;
 
-                var routes = _readModelModel.GetAllPods();
+                var allPods = _readModelModel.GetAllPods();
 
-                foreach (var podInstance in routes)
+                foreach (var podInstance in allPods)
                 {
                     var minNumberOfInstances = _readModelModel.GetPodType(podInstance.Type)!.MinimumNumberOfInstances;
 
@@ -71,7 +71,7 @@ namespace ApplicationLogic.Usecases
                 }
 
                 return Task.CompletedTask;
-            }, retryCount: 5);
+            }, retryCount: 2).ConfigureAwait(false);
 
             bool IsAnyPodServiceDown(IPodInstance podInstance, HashSet<string> runningContainerIds)
             {
@@ -80,7 +80,9 @@ namespace ApplicationLogic.Usecases
 
             bool IsNumberOfRunningInstancesGreaterThanRequired(IPodInstance podInstance, int minNumberOfInstances)
             {
-                return _readModelModel.GetServiceInstances(podInstance.Type)!.Count > minNumberOfInstances;
+                var count = _readModelModel.GetServiceInstances(podInstance.Type)!.Count;
+
+                return count > minNumberOfInstances;
             }
         }
     }

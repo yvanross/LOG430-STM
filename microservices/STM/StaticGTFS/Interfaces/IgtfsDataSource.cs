@@ -1,6 +1,4 @@
-﻿using Entities.Concretions;
-using Entities.Domain;
-using GTFS.Concretions;
+﻿using Entities.Domain;
 using STM.ExternalServiceProvider.Proto;
 using System.Collections.Immutable;
 

@@ -37,7 +37,7 @@ namespace ApplicationLogicTests.Usecases
             await monitorUc.RemoveOrReplaceDeadPodsFromModel();
 
             _envMock.Verify(x=>x.RemoveContainerInstance(
-                    It.IsAny<string>()),
+                    It.IsAny<string>(), It.IsAny<bool>()),
                 Times.Exactly(6));
         }
 
@@ -47,7 +47,7 @@ namespace ApplicationLogicTests.Usecases
             await monitorUc.RemoveOrReplaceDeadPodsFromModel();
 
             _envMock.Verify(x => x.RemoveContainerInstance(
-                    It.IsAny<string>()),
+                    It.IsAny<string>(), It.IsAny<bool>()),
                 Times.Exactly(0));
         }
 

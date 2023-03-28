@@ -19,7 +19,7 @@
   <ItemGroup>
     <PackageReference Include="CassandraCSharpDriver" Version="3.19.1" />
     <PackageReference Include="Docker.DotNet" Version="3.125.13" />
-    <PackageReference Include="MassTransit" Version="8.0.14" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.14" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.3" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.4" />

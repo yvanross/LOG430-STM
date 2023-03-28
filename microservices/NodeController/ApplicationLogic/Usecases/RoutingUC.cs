@@ -26,7 +26,9 @@ public class RoutingUC
             var podTypes = _readModelModel.GetAllPodTypes().ToDictionary(k => k.Type);
             var podInstances = _readModelModel.GetAllPods();
 
-            possibleTargets = GetPossibleCommunicationEntryPoints(podTypes, podInstances).Where(service => service.Id.Equals(serviceSourceId) is false).ToList();
+            possibleTargets = GetPossibleCommunicationEntryPoints(podTypes, podInstances)
+                .Where(service => service.Id.Equals(serviceSourceId) is false)
+                .Where(s => s.Type.Equals(type)).ToList();
         }
 
         possibleTargets = LoadBalancing(possibleTargets, mode);

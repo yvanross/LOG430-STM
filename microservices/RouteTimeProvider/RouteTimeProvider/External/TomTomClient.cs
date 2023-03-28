@@ -16,12 +16,12 @@ public class TomTomClient : IRouteTimeProvider
     {
         var request = new RestRequest($"routing/1/calculateRoute/{HttpUtility.UrlEncode($"{startingCoordinates}:{destinationCoordinates}")}/json");
 
-        request.AddHeader("key", _apiKey);
+        request.AddQueryParameter("key", _apiKey);
 
         var result = await _restClient.ExecuteGetAsync(request);
 
         dynamic data = JsonConvert.DeserializeObject<ExpandoObject>(result.Content);
 
-        return (int)(data?.routes.FirstOrDefault()?.summary.travelTimeInSeconds ?? default)!;
+        return (int)(data?.routes[0].summary.travelTimeInSeconds ?? default)!;
     }
 }

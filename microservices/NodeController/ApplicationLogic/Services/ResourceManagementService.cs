@@ -31,14 +31,11 @@ public class ResourceManagementService
             if (serviceInstance.ContainerInfo is not null)
                 await _environmentClient.RemoveContainerInstance(serviceInstance.ContainerInfo.Id);
         }
-        
     }
 
     public async Task ReplacePodInstance(IPodInstance podInstance)
     {
         await RemovePodInstance(podInstance);
-
-        podInstance.Id = Guid.NewGuid().ToString();
 
         try
         {
@@ -48,10 +45,14 @@ public class ResourceManagementService
 
                 var serviceType = _readModelModel.GetServiceType(serviceInstance.Type);
 
-                serviceInstance.PodId = podInstance.Id;
-
                 if (serviceType is not null)
-                    await _environmentClient.IncreaseByOneNumberOfInstances(serviceType.ContainerConfig, $"{serviceType.Type}-{Random.Shared.Next(0, int.MaxValue)}", serviceInstance.Id, serviceInstance.PodId);
+                {
+                    var creationInfo = await _environmentClient.IncreaseByOneNumberOfInstances(serviceType.ContainerConfig, $"{serviceType.Type}-{Random.Shared.Next(0, int.MaxValue)}", serviceInstance.Id, serviceInstance.PodId);
+
+                    var containerInfo = await _environmentClient.GetContainerInfo(creationInfo!.ID);
+
+                    serviceInstance.ContainerInfo = containerInfo.CuratedInfo;
+                }
             }
         }
         finally
@@ -122,6 +123,7 @@ public class ResourceManagementService
                 ServiceInstances = serviceInstances.ToImmutableList(),
                 Type = podType.Type,
             };
+
             return newPodInstance;
         }
     }

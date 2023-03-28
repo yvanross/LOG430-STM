@@ -1,8 +1,6 @@
 ﻿using ApplicationLogic.Interfaces;
-using Entities.Concretions;
 using Entities.Domain;
 using Microsoft.Extensions.Logging;
-using STM.ExternalServiceProvider.Proto;
 
 namespace ApplicationLogic.Services.BusTracking;
 
@@ -10,9 +8,12 @@ public class BusTrackingService : ABusTrackingService
 {
     private DateTime _crossedFirstStopTime;
 
-    public BusTrackingService(IBus bus, IStmClient stmClient, ILogger? logger, DateTime crossedFirstStopTime) : base(bus, stmClient, logger)
+    private readonly DateTime _startingTime;
+
+    public BusTrackingService(IBus bus, IStmClient stmClient, ILogger? logger, DateTime crossedFirstStopTime, DateTime startingTime) : base(bus, stmClient, logger)
     {
         _crossedFirstStopTime = crossedFirstStopTime;
+        _startingTime = startingTime;
     }
 
     private protected override (IBusTracking, ITrackingService?) Track()
@@ -21,7 +22,9 @@ public class BusTrackingService : ABusTrackingService
         {
             return (new Entities.Concretions.BusTracking()
             {
-                Message = $"Real Time Tracking is done, bus {Bus.Name} has reached the destination in {DeltaTime(_crossedFirstStopTime)}"
+                Message = $"Real Time Tracking is done, bus {Bus.Name} has reached the destination in {DeltaTime(_crossedFirstStopTime).TotalSeconds}",
+                Duration = DeltaTime(_startingTime).TotalMilliseconds,
+                TrackingCompleted = true
             }, default);
         }
 
@@ -29,8 +32,8 @@ public class BusTrackingService : ABusTrackingService
 
         return (new Entities.Concretions.BusTracking()
         {
-            Message =
-                $"Bus {Bus.Name} is on its way to the target stop, it did {prediction * 100}% of the way in {DeltaTime(_crossedFirstStopTime)} seconds"
+            Message = $"Bus {Bus.Name} is on its way to the target stop, it did {prediction * 100}% of the way in {DeltaTime(_crossedFirstStopTime).TotalSeconds} seconds",
+            Duration = DeltaTime(_startingTime).TotalMilliseconds
         }, this);
     }
 }

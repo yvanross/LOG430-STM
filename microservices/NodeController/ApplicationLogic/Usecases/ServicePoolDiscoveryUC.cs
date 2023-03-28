@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Dao;
@@ -7,24 +8,30 @@ using Entities.BusinessObjects.Planned;
 using Entities.BusinessObjects.States;
 using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
+using Microsoft.Extensions.Logging;
 
 namespace ApplicationLogic.Usecases
 {
     public class ServicePoolDiscoveryUC
     {
+        public static ImmutableHashSet<string> BannedIds = ImmutableHashSet<string>.Empty;
+
         private readonly IPodWriteModel _podWriteModel;
         
         private readonly IPodReadModel _podReadModel;
 
         private readonly IEnvironmentClient _environmentClient;
 
+        private readonly ILogger _logger;
+
         private static string NodeAddress => Environment.GetEnvironmentVariable("SERVICES_ADDRESS")!;
 
-        public ServicePoolDiscoveryUC(IPodWriteModel podWriteModel, IPodReadModel podReadModel, IEnvironmentClient environmentClient)
+        public ServicePoolDiscoveryUC(IPodWriteModel podWriteModel, IPodReadModel podReadModel, IEnvironmentClient environmentClient, ILogger logger)
         {
             _podWriteModel = podWriteModel;
             _podReadModel = podReadModel;
             _environmentClient = environmentClient;
+            _logger = logger;
         }
 
         public async Task DiscoverServices()
@@ -50,35 +57,38 @@ namespace ApplicationLogic.Usecases
             {
                 var runningServicesIds = await _environmentClient.GetRunningServices();
 
-                var registeredServices = _podReadModel.GetAllServices().DistinctBy(s=>s.Id).ToDictionary(s => s.Id);
+                var registeredServices = _podReadModel.GetAllServices()
+                    .Where(s=>s.ContainerInfo is not null && s.ServiceStatus is not LaunchedState).DistinctBy(s=>s.Id).ToDictionary(s => s.ContainerInfo!.Id);
 
-                var unregisteredServices = runningServicesIds?.Where(runningService => registeredServices.ContainsKey(runningService) is false).ToList();
+                var filterServices = runningServicesIds?.Where(runningService => BannedIds.Contains(runningService) is false && registeredServices.ContainsKey(runningService) is false).ToList();
                 
-                return unregisteredServices ?? new List<string>();
+                return filterServices ?? new List<string>();
             }
 
             ServiceInstance? CreateService((ContainerInfo CuratedInfo, IContainerConfig RawConfig) service, string newPodId)
             {
                 try
                 {
-                    var newService = new ServiceInstance()
+                    var newService = new ServiceInstance
                     {
-                        Id = service.RawConfig.Config.Config.Env.First(e => e.ToString().StartsWith("ID=")),
+                        Id = service.RawConfig.Config.Config.Env.First(e => e.ToString().StartsWith("ID="))[3..],
                         ContainerInfo = service.CuratedInfo,
                         Address = NodeAddress,
-                        Type = service.CuratedInfo.Name,
-                        PodId = GetPodId(service.CuratedInfo.Labels) ?? newPodId
+                        Type = GetArtifactName(service.CuratedInfo.Labels),
+                        PodId = GetPodId(service.CuratedInfo.Labels) ?? newPodId,
+                        ServiceStatus = new ReadyState()
                     };
-
-                    newService.ServiceStatus = new ReadyState();
 
                     return newService;
                 }
                 catch
                 {
-                    // ignore because we don't control the assigned Ids, they are set in the docker composee
+                    // ignore because we don't control the assigned Ids, they are set in the docker compose
+                    _logger.LogWarning("Invalid Service configuration found in service pool");
+
+                    ImmutableInterlocked.Update(ref BannedIds, (set) => set.Add(service.CuratedInfo.Id));
                 }
-                
+
                 return null;
             }
 
@@ -86,13 +96,13 @@ namespace ApplicationLogic.Usecases
             {
                 var curatedInfoLabels = service.CuratedInfo.Labels;
 
-                var podType = GetPodName(curatedInfoLabels) ?? service.CuratedInfo.Name;
+                var podType = GetArtifactName(curatedInfoLabels);
 
                 var serviceType = new ServiceType()
                 {
                     ContainerConfig = service.RawConfig,
                     Type = service.CuratedInfo.Name,
-                    ArtifactType = GetComponentCategory(curatedInfoLabels),
+                    ArtifactType = GetArtifactCategory(curatedInfoLabels),
                     IsPodSidecar = GetIsSidecar(curatedInfoLabels),
                     PodName = podType
                 };
@@ -120,15 +130,15 @@ namespace ApplicationLogic.Usecases
             {
                 var podId = GetPodId(service.CuratedInfo.Labels) ?? newPodId;
 
-                var pod = _podReadModel.GetPodById(podId);
-
-                pod ??= new PodInstance()
+                var pod = _podReadModel.GetPodById(podId) ?? new PodInstance()
                 {
-                    ServiceInstances = pod?.ServiceInstances?.Add(newService) ??
-                                       ImmutableList<IServiceInstance>.Empty.Add(newService),
-                    Type = GetPodName(service.CuratedInfo.Labels) ?? service.CuratedInfo.Name,
+                    ServiceInstances = ImmutableList<IServiceInstance>.Empty,
+                    Type = GetPodName(service.CuratedInfo.Labels) ?? GetArtifactName(service.CuratedInfo.Labels),
                     Id = podId
                 };
+
+                pod.ServiceInstances = pod.ServiceInstances.RemoveAll(s => s.Id.Equals(newService.Id));
+                pod.ServiceInstances = pod.ServiceInstances.Add(newService);
 
                 _podWriteModel.AddOrUpdatePod(pod);
             }
@@ -141,9 +151,16 @@ namespace ApplicationLogic.Usecases
             return label;
         }
 
-        private static string GetComponentCategory(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
+        private static string GetArtifactName(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
         {
-            var value = GetLabelValue(ServiceLabelsEnum.COMPONENT_CATEGORY, labels);
+            var value = GetLabelValue(ServiceLabelsEnum.ARTIFACT_NAME, labels);
+
+            return string.IsNullOrEmpty(value) ? throw new Exception("Artifact name not defined in compose") : value;
+        }
+
+        private static string GetArtifactCategory(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
+        {
+            var value = GetLabelValue(ServiceLabelsEnum.ARTIFACT_CATEGORY, labels);
 
             return string.IsNullOrEmpty(value) ? nameof(ArtifactTypeEnum.Undefined) : value;
         }

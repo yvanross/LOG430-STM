@@ -1,13 +1,9 @@
 ﻿using System.Collections.Immutable;
 using ApplicationLogic.Interfaces;
 using ApplicationLogic.Services.Itinerary;
-using Entities.Concretions;
 using Entities.Domain;
-using GTFS;
-using GTFS.Concretions;
 using GTFS.Interfaces;
 using Microsoft.Extensions.Logging;
-using STM.ExternalServiceProvider.Proto;
 
 namespace ApplicationLogic.Use_Cases
 {

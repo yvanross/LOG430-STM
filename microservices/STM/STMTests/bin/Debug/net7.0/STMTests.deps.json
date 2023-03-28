@@ -20,21 +20,6 @@
           "STMTests.dll": {}
         }
       },
-      "Ambassador/1.0.57": {
-        "dependencies": {
-          "Microsoft.AspNetCore.Http.Features": "5.0.17",
-          "Microsoft.Extensions.Logging.Abstractions": "7.0.0",
-          "Microsoft.Net.Http.Headers": "2.2.8",
-          "Newtonsoft.Json": "13.0.1",
-          "RestSharp": "108.0.3"
-        },
-        "runtime": {
-          "lib/net7.0/Ambassador.dll": {
-            "assemblyVersion": "1.0.57.0",
-            "fileVersion": "1.0.57.0"
-          }
-        }
-      },
       "Azure.Core/1.24.0": {
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "1.1.1",
@@ -76,12 +61,6 @@
             "assemblyVersion": "3.22.0.0",
             "fileVersion": "3.22.0.0"
           }
-        }
-      },
-      "Microsoft.AspNetCore.Http.Features/5.0.17": {
-        "dependencies": {
-          "Microsoft.Extensions.Primitives": "7.0.0",
-          "System.IO.Pipelines": "5.0.2"
         }
       },
       "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
@@ -344,12 +323,6 @@
             "assemblyVersion": "6.21.0.0",
             "fileVersion": "6.21.0.30701"
           }
-        }
-      },
-      "Microsoft.Net.Http.Headers/2.2.8": {
-        "dependencies": {
-          "Microsoft.Extensions.Primitives": "7.0.0",
-          "System.Buffers": "4.5.1"
         }
       },
       "Microsoft.NET.Test.Sdk/17.5.0": {
@@ -829,7 +802,6 @@
           "System.Threading.Tasks": "4.3.0"
         }
       },
-      "System.IO.Pipelines/5.0.2": {},
       "System.Memory/4.5.4": {},
       "System.Memory.Data/1.0.2": {
         "dependencies": {
@@ -1001,7 +973,6 @@
       },
       "STM/1.0.0": {
         "dependencies": {
-          "Ambassador": "1.0.57",
           "ApplicationLogic": "1.0.0",
           "Google.Protobuf": "3.22.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.3",
@@ -1028,13 +999,6 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
-    },
-    "Ambassador/1.0.57": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-CNn7TZg6bxdfHoM5rgkiiaXH2GA2ovk4dWaUwUTUPa1fImojLapjQmXv6qboroNNHA7WHZEbG4hvYe8drrOaAA==",
-      "path": "ambassador/1.0.57",
-      "hashPath": "ambassador.1.0.57.nupkg.sha512"
     },
     "Azure.Core/1.24.0": {
       "type": "package",
@@ -1063,13 +1027,6 @@
       "sha512": "sha512-UE1TRMrBBBmnA8xbqzTvX4sSwn+2W/Xxrs/v5Aws/7C8RD6fY6STi1eAnCu7Ez93oHcPdpyStGnFel/aIB407Q==",
       "path": "google.protobuf/3.22.0",
       "hashPath": "google.protobuf.3.22.0.nupkg.sha512"
-    },
-    "Microsoft.AspNetCore.Http.Features/5.0.17": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-3jG2xS+dx8DDCGV/F+STdPTg89lX3ao3dF/VEPvJaz3wzBIjuadipTtYNEXDIVuOPZwb6jdmhrX9jkzOIBm5cw==",
-      "path": "microsoft.aspnetcore.http.features/5.0.17",
-      "hashPath": "microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512"
     },
     "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
       "type": "package",
@@ -1267,13 +1224,6 @@
       "path": "microsoft.identitymodel.tokens/6.21.0",
       "hashPath": "microsoft.identitymodel.tokens.6.21.0.nupkg.sha512"
     },
-    "Microsoft.Net.Http.Headers/2.2.8": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-wHdwMv0QDDG2NWDSwax9cjkeQceGC1Qq53a31+31XpvTXVljKXRjWISlMoS/wZYKiqdqzuEvKFKwGHl+mt2jCA==",
-      "path": "microsoft.net.http.headers/2.2.8",
-      "hashPath": "microsoft.net.http.headers.2.2.8.nupkg.sha512"
-    },
     "Microsoft.NET.Test.Sdk/17.5.0": {
       "type": "package",
       "serviceable": true,
@@ -1462,13 +1412,6 @@
       "sha512": "sha512-3qjaHvxQPDpSOYICjUoTsmoq5u6QJAFRUITgeT/4gqkF1bajbSmb1kwSxEA8AHlofqgcKJcM8udgieRNhaJ5Cg==",
       "path": "system.io/4.3.0",
       "hashPath": "system.io.4.3.0.nupkg.sha512"
-    },
-    "System.IO.Pipelines/5.0.2": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Iew+dfa6FFiyvWBdRmXApixRY1db+beyutpIck4SOSe0NLM8FD/7AD54MscqVLhvfSMLHO7KadjTRT7fqxOGTA==",
-      "path": "system.io.pipelines/5.0.2",
-      "hashPath": "system.io.pipelines.5.0.2.nupkg.sha512"
     },
     "System.Memory/4.5.4": {
       "type": "package",

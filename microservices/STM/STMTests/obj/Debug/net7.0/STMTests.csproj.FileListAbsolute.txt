@@ -511,3 +511,4 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\obj\Debug\
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\obj\Debug\net7.0\STMTests.genruntimeconfig.cache
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\obj\Debug\net7.0\ref\STMTests.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\net7.0\nuget.config
+C:\Users\david\LOG430-STM\microservices\STM\STMTests\bin\Debug\net7.0\nuget.config

@@ -1,10 +1,5 @@
 using System.Reflection;
-using Ambassador;
-using Ambassador.Controllers;
 using GTFS;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using STM.ExternalServiceProvider;
 
 var builder = WebApplication.CreateBuilder(args);
 

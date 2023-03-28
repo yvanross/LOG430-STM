@@ -5,36 +5,28 @@ namespace Ambassador.Health;
 
 internal class ContainerService
 {
-    private static Guid? _serviceId = null;
+    private static string? _serviceId;
 
-    internal static Guid ServiceId
+    internal static string ServiceId
     {
         get
         {
-            if (_serviceId is not null) return _serviceId.Value;
+            if (_serviceId is not null) return _serviceId;
             
             if (Environment.GetEnvironmentVariable("ID") is { } stringId)
             {
-                Guid.TryParse(stringId, out var id);
-                
-                _serviceId = id;
+                _serviceId = stringId;
 
-                return _serviceId.Value;
+                return _serviceId;
             }
 
-            _serviceId = Guid.NewGuid();
+            _serviceId = Guid.NewGuid().ToString();
 
-            return _serviceId.Value;
+            return _serviceId;
         }
     }
 
-    internal static ILogger? Logger;
-
     internal static string NodeControllerAddress =>
-        "http://" + Environment.GetEnvironmentVariable("INGRESS_ADDRESS") + ":" +
-        Environment.GetEnvironmentVariable("INGRESS_PORT");
-
-    internal static string ServiceAddress => Environment.GetEnvironmentVariable("SERVICES_ADDRESS")!;
-
-    internal static readonly int RetryCount = 10;
+        "http://" + Environment.GetEnvironmentVariable("SERVICES_ADDRESS") + ":" +
+        Environment.GetEnvironmentVariable("NODE_CONTROLLER_PORT");
 }

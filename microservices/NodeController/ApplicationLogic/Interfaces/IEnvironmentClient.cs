@@ -12,7 +12,7 @@ public interface IEnvironmentClient
     public Task<CreateContainerResponse?> IncreaseByOneNumberOfInstances(IContainerConfig containerConfig,
         string newContainerName, string serviceId, string podId);
 
-    public Task RemoveContainerInstance(string containerId);
+    public Task RemoveContainerInstance(string containerId, bool quiet = false);
 
     Task<(ContainerInfo CuratedInfo, IContainerConfig RawConfig)> GetContainerInfo(string containerId);
 

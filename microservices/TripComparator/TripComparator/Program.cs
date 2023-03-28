@@ -1,8 +1,3 @@
-
-using Ambassador;
-using Ambassador.Controllers;
-using Ambassador.Usecases;
-
 namespace TripComparator
 {
     public class Program

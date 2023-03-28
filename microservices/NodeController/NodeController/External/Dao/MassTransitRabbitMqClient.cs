@@ -16,24 +16,24 @@ public class MassTransitRabbitMqClient : IDataStreamReadModel, IConsumer<Saga>
 
     private IBusControl? _busControl;
 
-    private Func<ISaga, Task>? _reportTestResult;
+    private Action<ISaga>? _reportTestResult;
 
     public MassTransitRabbitMqClient()
     {
         _routing = new(_podReadModel);
     }
 
-    public void BeginStreaming(Func<ISaga, Task> reportTestResult)
+    public void BeginStreaming(Action<ISaga> reportTestResult)
     {
         var mq = _routing.RouteByDestinationType(string.Empty, HostInfo.MqServiceName, LoadBalancingMode.RoundRobin).FirstOrDefault();
 
         if (mq is not null)
         {
             _reportTestResult = reportTestResult;
-
-            var busControl = Bus.Factory.CreateUsingInMemory(cfg =>
+            
+            var busControl = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
-                cfg.Host(new Uri(mq.Address));
+                cfg.Host($"rabbitmq{mq.Address[4..]}");
 
                 cfg.ReceiveEndpoint("TimeComparison", e =>
                 {
@@ -49,13 +49,15 @@ public class MassTransitRabbitMqClient : IDataStreamReadModel, IConsumer<Saga>
         }
     }
 
-    public async Task EndStreaming()
+    public void EndStreaming()
     {
         _ = _busControl?.StopAsync();
     }
 
     public Task Consume(ConsumeContext<Saga> context)
     {
-        return _reportTestResult?.Invoke(context.Message) ?? Task.CompletedTask;
+        _reportTestResult?.Invoke(context.Message);
+
+        return Task.CompletedTask;
     }
 }

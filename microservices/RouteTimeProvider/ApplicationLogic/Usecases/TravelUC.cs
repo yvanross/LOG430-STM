@@ -20,8 +20,7 @@ namespace ApplicationLogic.Usecases
         {
             return await routeTimeProvider.GetTravelTimeInSeconds(RemoveWhiteSpaces(startingCoordinates), RemoveWhiteSpaces(destinationCoordinates));
 
-            string RemoveWhiteSpaces(string s)
-                => s.Replace(" ", "");
+            string RemoveWhiteSpaces(string s) => s.Replace(" ", "");
         }
     }
 }

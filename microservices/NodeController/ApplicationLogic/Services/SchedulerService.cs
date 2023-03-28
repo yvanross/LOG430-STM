@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using ApplicationLogic.Extensions;
 using Entities.DomainInterfaces.ResourceManagement;
 using Microsoft.Extensions.Logging;
@@ -37,11 +38,11 @@ public class SchedulerService : IScheduler
     {
         while (await _periodicTimer.WaitForNextTickAsync().ConfigureAwait(false))
         {
-            foreach (var func in _tasks.Select(kv=>kv.Value))
+            foreach (var task in _tasks)
             {
                 await Try.WithConsequenceAsync(async () =>
                 {
-                    await func();
+                    await task.Value();
 
                     return Task.CompletedTask;
                 }, 

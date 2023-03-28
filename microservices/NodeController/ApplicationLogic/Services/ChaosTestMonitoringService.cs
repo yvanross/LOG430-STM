@@ -11,13 +11,9 @@ public class ChaosTestMonitoringService
 
     private int _sagaDuration;
 
-    private int _sagaPhaseDuration;
-
-    private int _sagaPhase;
-    
     private int _errorCount;
 
-    public async Task AnalyzeAndStoreRealtimeTestData(ISaga saga)
+    public void AnalyzeAndStoreRealtimeTestData(ISaga saga)
     {
         UpdateSagaDuration(saga);
         
@@ -30,28 +26,17 @@ public class ChaosTestMonitoringService
 
         double GetAverageLatency()
         {
-            return Convert.ToDouble(_sagaDuration + _sagaPhaseDuration) / _processedSagaCount;
+            return Convert.ToDouble(_sagaDuration / _processedSagaCount);
         }
 
         void UpdateSagaDuration(ISaga data)
         {
-            if (data.Phase.Equals(_sagaPhase))
-            {
-                if (_sagaPhaseDuration > data.Seconds)
-                    _errorCount++;
+            if (_sagaDuration > data.Seconds)
+                _errorCount++;
 
-                _sagaPhaseDuration = data.Seconds;
+            _sagaDuration = data.Seconds;
 
-                _processedSagaCount++;
-            }
-            else
-            {
-                _sagaPhase = data.Phase;
-
-                _sagaDuration += _sagaPhaseDuration;
-
-                _sagaPhaseDuration = saga.Seconds;
-            }
+            _processedSagaCount++;
         }
     }
 }

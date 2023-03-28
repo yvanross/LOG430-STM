@@ -23,7 +23,7 @@ public class IngressUC
 
                 return Task.CompletedTask;
             },
-            retryCount: 100);
+            retryCount: 2);
     }
 
     public async Task<string> GetLogStoreAddressAndPort()

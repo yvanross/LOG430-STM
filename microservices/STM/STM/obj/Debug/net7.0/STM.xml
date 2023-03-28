@@ -4,7 +4,7 @@
         <name>STM</name>
     </assembly>
     <members>
-        <member name="M:STM.Controllers.STMOptimalBusController.GetBestBus(System.String,System.String)">
+        <member name="M:STM.Controllers.FinderController.OptimalBuses(System.String,System.String)">
             <remarks>
             Find optimal STM bus to travel between two coordinates
             </remarks>
@@ -14,7 +14,7 @@
             Json containing the ID of the bus, its trip ID, its name, the ETA, the first and last stops of the trip 
             </returns>
         </member>
-        <member name="M:STM.Controllers.TrackBusController.BeginTracking(STM.Dto.BusDto)">
+        <member name="M:STM.Controllers.TrackController.BeginTracking(STM.Dto.BusDto)">
             <remarks>
             Allows the real-time tracking of a bus. Call-Back will be issued once the bus reached its target destination
             </remarks>

@@ -3,12 +3,10 @@ using System.Threading.Tasks;
 using ApplicationLogic.Use_Cases;
 using Entities.Concretions;
 using GTFS;
-using GTFS.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using STM.Controllers;
 using STM.External;
-using STMTests.Stub;
 
 namespace STMTests.Use_Cases
 {
@@ -21,7 +19,7 @@ namespace STMTests.Use_Cases
         [TestMethod()]
         public async Task TestController()
         {
-            STMOptimalBusController busController = new STMOptimalBusController(new Logger<STMOptimalBusController>(new LoggerFactory()));
+            FinderController busController = new FinderController(new Logger<FinderController>(new LoggerFactory()));
 
             //var bus = await busController.Get("45.50146231405799,-73.5769508553735", "45.5269499152848,-73.56423906516093");
             

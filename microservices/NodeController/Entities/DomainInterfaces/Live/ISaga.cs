@@ -2,8 +2,6 @@
 
 public interface ISaga
 {
-    int Phase { get; }
-
     int Seconds { get; }
 
     string Message { get; }

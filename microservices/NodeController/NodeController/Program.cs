@@ -71,9 +71,9 @@ namespace NodeController
 
                 var writeModel = new PodWriteModel();
                 var readModel = new PodReadModel();
-                var environmentClient = new LocalDockerClient(null);
+                var environmentClient = new LocalDockerClient(_logger);
 
-                var servicePool = new ServicePoolDiscoveryUC(writeModel, readModel, environmentClient);
+                var servicePool = new ServicePoolDiscoveryUC(writeModel, readModel, environmentClient, _logger);
 
                 var monitor = new MonitorUc(environmentClient, readModel, writeModel);
 
@@ -82,9 +82,9 @@ namespace NodeController
                 _logger.LogInformation("# Preparation Complete, scheduling... #");
 
                 readModel.GetScheduler().TryAddTask(nameof(servicePool.DiscoverServices), servicePool.DiscoverServices);
-                readModel.GetScheduler().TryAddTask(nameof(monitor.GarbageCollection), monitor.GarbageCollection);
                 readModel.GetScheduler().TryAddTask(nameof(monitor.RemoveOrReplaceDeadPodsFromModel), monitor.RemoveOrReplaceDeadPodsFromModel);
                 readModel.GetScheduler().TryAddTask(nameof(monitor.MatchInstanceDemandOnPods), monitor.MatchInstanceDemandOnPods);
+                //readModel.GetScheduler().TryAddTask(nameof(monitor.GarbageCollection), monitor.GarbageCollection);
 
                 _logger.LogInformation($"# Tasks: {nameof(servicePool.DiscoverServices)}, {nameof(monitor.GarbageCollection)}, " +
                                        $"{nameof(monitor.RemoveOrReplaceDeadPodsFromModel)}, {nameof(monitor.MatchInstanceDemandOnPods)}; have been scheduled #");

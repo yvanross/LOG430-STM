@@ -6,5 +6,5 @@ public class StopScheduleDto
 
     public string? DepartureTime { get; set; }
 
-    public int index { get; set; }
+    public int Index { get; set; }
 }

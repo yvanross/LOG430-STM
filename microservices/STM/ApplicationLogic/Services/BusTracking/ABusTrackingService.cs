@@ -1,9 +1,7 @@
 ﻿using System.Collections.Immutable;
 using ApplicationLogic.Interfaces;
-using Entities.Concretions;
 using Entities.Domain;
 using Microsoft.Extensions.Logging;
-using STM.ExternalServiceProvider.Proto;
 
 namespace ApplicationLogic.Services.BusTracking;
 
@@ -54,6 +52,6 @@ public abstract class ABusTrackingService : ITrackingService
         return progression;
     }
 
-    private protected double DeltaTime(DateTime? crossedOriginTime)
-        => (DateTime.UtcNow - (crossedOriginTime ?? DateTime.UtcNow)).TotalSeconds;
+    private protected TimeSpan DeltaTime(DateTime? crossedOriginTime)
+        => (DateTime.UtcNow - (crossedOriginTime ?? DateTime.UtcNow));
 }

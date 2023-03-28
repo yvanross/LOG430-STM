@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Threading.Tasks;
 using Entities.Concretions;
 using Entities.Domain;
 using GTFS;
 using GTFS.Concretions;
 using GTFS.Interfaces;
-using Microsoft.OpenApi.Models;
 using STM.ExternalServiceProvider.Proto;
 
 namespace STMTests.Stub;

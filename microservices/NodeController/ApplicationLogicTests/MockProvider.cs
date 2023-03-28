@@ -9,11 +9,27 @@ using Entities.DomainInterfaces.ResourceManagement;
 using Moq;
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
+using Microsoft.Extensions.Logging;
+using System;
 
 namespace ApplicationLogicTests;
 
 public static class MockProvider
 {
+    public static Mock<ILogger> GetLoggerMock()
+    {
+        var logger = new Mock<ILogger>();
+
+        logger.Setup(x => x.Log(
+            It.IsAny<LogLevel>(),
+            It.IsAny<EventId>(),
+            It.IsAny<object>() ,
+            It.IsAny<Exception>(),
+            It.IsAny<Func<object, Exception?, string>>()));
+       
+        return logger;
+    }
+
     public static Mock<IHostInfo> GetHostInfoMock()
     {
         var hostInfo = new Mock<IHostInfo>();
@@ -45,8 +61,6 @@ public static class MockProvider
 
         saga.Setup(x => x.Message).Returns("Test message");
 
-        saga.Setup(x => x.Phase).Returns(phase);
-
         saga.Setup(x => x.Seconds).Returns(seconds);
 
         return saga;
@@ -56,7 +70,7 @@ public static class MockProvider
     {
         var dataStreamReadModel = new Mock<IDataStreamReadModel>();
 
-        dataStreamReadModel.Setup(x => x.BeginStreaming(It.IsAny<Func<ISaga, Task>>()));
+        dataStreamReadModel.Setup(x => x.BeginStreaming(It.IsAny<Action<ISaga>>()));
 
         dataStreamReadModel.Setup(x => x.EndStreaming());
 
@@ -287,7 +301,7 @@ public static class MockProvider
                 ID = serviceInstance2.Id
             })!).Verifiable();
 
-        environmentClient.Setup(x => x.RemoveContainerInstance(It.IsAny<string>())).Returns(Task.CompletedTask);
+        environmentClient.Setup(x => x.RemoveContainerInstance(It.IsAny<string>(), It.IsAny<bool>())).Returns(Task.CompletedTask);
 
         environmentClient.Setup(x => x.SetResources(It.IsAny<IPodInstance>(), It.IsAny<long>(), It.IsAny<long>()))
             .Returns(Task.CompletedTask);
@@ -311,7 +325,8 @@ public static class MockProvider
             Labels = new ConcurrentDictionary<ServiceLabelsEnum, string>(),
         };
 
-        containerInfo.Labels.TryAdd(ServiceLabelsEnum.COMPONENT_CATEGORY, "Computation");
+        containerInfo.Labels.TryAdd(ServiceLabelsEnum.ARTIFACT_CATEGORY, "Computation");
+        containerInfo.Labels.TryAdd(ServiceLabelsEnum.ARTIFACT_NAME, $"{podTypeNb}");
         containerInfo.Labels.TryAdd(ServiceLabelsEnum.MINIMUM_NUMBER_OF_INSTANCES, "2");
         containerInfo.Labels.TryAdd(ServiceLabelsEnum.POD_ID, $"PodId{podInstanceNb}");
         containerInfo.Labels.TryAdd(ServiceLabelsEnum.POD_NAME, $"PodType{podTypeNb}");

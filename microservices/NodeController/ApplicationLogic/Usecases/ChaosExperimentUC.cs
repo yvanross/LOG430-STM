@@ -68,7 +68,7 @@ public class ChaosExperimentUC
         }
         else
         {
-            await _streamReadModel.EndStreaming();
+            _streamReadModel.EndStreaming();
 
             //todo clean up resources after experiment and refactoring this ugly method
         }
@@ -127,8 +127,8 @@ public class ChaosExperimentUC
         });
     }
 
-    public Task ReportTestResult(ISaga saga)
+    public void ReportTestResult(ISaga saga)
     {
-        return _chaosMonitoringService.AnalyzeAndStoreRealtimeTestData(saga);
+        _chaosMonitoringService.AnalyzeAndStoreRealtimeTestData(saga);
     }
 }

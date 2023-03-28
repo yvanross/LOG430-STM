@@ -2,7 +2,7 @@
 
 public class StopDto
 {
-    public string ID { get; set; }
+    public string Id { get; set; }
 
     public PositionDto Position { get; set; } = new PositionDto();
 

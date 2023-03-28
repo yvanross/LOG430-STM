@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net7.0": {
-      "Ambassador/1.0.61": {
+      "Ambassador/1.0.62": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
@@ -588,6 +588,19 @@
         "runtime": {
           "lib/netstandard2.0/NuGet.Frameworks.dll": {
             "related": ".xml"
+          }
+        }
+      },
+      "Polly/7.2.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Polly.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Polly.dll": {
+            "related": ".pdb;.xml"
           }
         }
       },
@@ -2147,6 +2160,7 @@
           "Entities": "1.0.0",
           "Microsoft.AspNetCore.OpenApi": "7.0.3",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.17.2",
+          "Polly": "7.2.3",
           "Swashbuckle.AspNetCore": "6.4.0"
         },
         "compile": {
@@ -2162,13 +2176,13 @@
     }
   },
   "libraries": {
-    "Ambassador/1.0.61": {
-      "sha512": "FHDZuv+2W5WEe+6XKvppGPINoewhObCwvOYzoJnAaIJlYgPGh/irZReR1TI9RaINU7DzoGCEPjbWbY29aMXN9w==",
+    "Ambassador/1.0.62": {
+      "sha512": "BZSSuIcpHaTK0fL7w6xy72TAUaYW2tJnVwZIH5UAu+Q7wW+hqvjdVf9p9gvJfkTX1fCc4eTAIKdhqZBaU1FpbQ==",
       "type": "package",
-      "path": "ambassador/1.0.61",
+      "path": "ambassador/1.0.62",
       "files": [
         ".nupkg.metadata",
-        "ambassador.1.0.61.nupkg.sha512",
+        "ambassador.1.0.62.nupkg.sha512",
         "ambassador.nuspec",
         "lib/net7.0/Ambassador.dll",
         "lib/net7.0/Ambassador.pdb"
@@ -3764,6 +3778,30 @@
         "lib/netstandard2.0/NuGet.Frameworks.xml",
         "nuget.frameworks.5.11.0.nupkg.sha512",
         "nuget.frameworks.nuspec"
+      ]
+    },
+    "Polly/7.2.3": {
+      "sha512": "DeCY0OFbNdNxsjntr1gTXHJ5pKUwYzp04Er2LLeN3g6pWhffsGuKVfMBLe1lw7x76HrPkLxKEFxBlpRxS2nDEQ==",
+      "type": "package",
+      "path": "polly/7.2.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Polly.png",
+        "lib/net461/Polly.dll",
+        "lib/net461/Polly.pdb",
+        "lib/net461/Polly.xml",
+        "lib/net472/Polly.dll",
+        "lib/net472/Polly.pdb",
+        "lib/net472/Polly.xml",
+        "lib/netstandard1.1/Polly.dll",
+        "lib/netstandard1.1/Polly.pdb",
+        "lib/netstandard1.1/Polly.xml",
+        "lib/netstandard2.0/Polly.dll",
+        "lib/netstandard2.0/Polly.pdb",
+        "lib/netstandard2.0/Polly.xml",
+        "polly.7.2.3.nupkg.sha512",
+        "polly.nuspec"
       ]
     },
     "RestSharp/108.0.3": {
@@ -7668,11 +7706,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
+      "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
       "projectName": "ApplicationLogicTests",
-      "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
+      "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
       "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogicTests\\obj\\",
+      "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogicTests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -7687,19 +7725,18 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Nuget": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
+        "C:\\Users\\david\\LOG430-STM\\microservices\\Nuget": {},
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogic\\ApplicationLogic.csproj": {
-              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogic\\ApplicationLogic.csproj"
+            "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogic\\ApplicationLogic.csproj": {
+              "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogic\\ApplicationLogic.csproj"
             },
-            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\RouteTimeProvider\\RouteTimeProvider.csproj": {
-              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\RouteTimeProvider\\RouteTimeProvider.csproj"
+            "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\RouteTimeProvider\\RouteTimeProvider.csproj": {
+              "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\RouteTimeProvider\\RouteTimeProvider.csproj"
             }
           }
         }
@@ -7750,5 +7787,27 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "ApplicationLogic depends on Ambassador (>= 1.0.61) but Ambassador 1.0.61 was not found. An approximate best match of Ambassador 1.0.62 was resolved.",
+      "libraryId": "Ambassador",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    },
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "RouteTimeProvider depends on Ambassador (>= 1.0.61) but Ambassador 1.0.61 was not found. An approximate best match of Ambassador 1.0.62 was resolved.",
+      "libraryId": "Ambassador",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }

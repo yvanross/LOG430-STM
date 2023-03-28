@@ -49,7 +49,7 @@ namespace NodeController.Controllers
                 }
 
                 return Task.FromResult(routingDatas);
-            }, retryCount: 2));
+            }, retryCount: 2).Result);
         }
     }
 }

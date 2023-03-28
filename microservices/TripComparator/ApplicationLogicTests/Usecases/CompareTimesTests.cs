@@ -1,28 +1,28 @@
-﻿using Ambassador;
-using Ambassador.Controllers;
-using Ambassador.Usecases;
-using ApplicationLogic.Usecases;
+﻿using ApplicationLogic.Usecases;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TripComparator.External;
 
 namespace ApplicationLogicTests.Usecases
 {
     [TestClass()]
     public class CompareTimesTests
     {
-        private static readonly CompareTimesUC _compareTimesUc = new();
+        private CompareTimesUC _compareTimesUc;
 
         [TestInitialize]
         public void Init()
         {
+            _compareTimesUc = new CompareTimesUC(new RouteTimeProviderClient(), new StmClient(null),
+                new MassTransitRabbitMqClient());
         }
 
         [TestMethod()]
         public async Task TravelTimeBetweenTwoCoordinates()
         {
-            var time = await _compareTimesUc.CompareBusAndCarTime("45.49529799006756,-73.56309288413388",
+            var time = await _compareTimesUc.BeginComparingBusAndCarTime("45.49529799006756,-73.56309288413388",
                 "45.501735228664714,-73.57656830180076");
 
-            Assert.IsTrue(time > 0);
+            Assert.IsNotNull(time);
         }
     }
 }

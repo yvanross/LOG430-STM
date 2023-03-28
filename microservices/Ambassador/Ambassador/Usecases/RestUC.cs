@@ -32,7 +32,6 @@ namespace Ambassador.Usecases
                     if (task.Result.IsSuccessStatusCode)
                         return channel.Writer.WriteAsync(task.Result);
 
-                    ContainerService.Logger?.LogInformation(task.Exception?.Message);
                     return ValueTask.CompletedTask;
                 }));
 
@@ -56,7 +55,6 @@ namespace Ambassador.Usecases
                         if (task.Result.IsSuccessStatusCode)
                             return channel.Writer.WriteAsync(task.Result);
 
-                        ContainerService.Logger?.LogInformation(task.Exception?.Message);
                         return ValueTask.CompletedTask;
                     }));
 
@@ -65,11 +63,14 @@ namespace Ambassador.Usecases
             return channel.Reader;
         }
 
+        internal async Task<IEnumerable<RoutingData>> GetServiceRoutingData(string targetService, LoadBalancingMode mode)
+            =>await _ingressRoutingService.GetServiceRoutingData(targetService, mode);
+
         private async Task<List<(RestClient client, RestRequest request)>> GetDestinationRoutingData(ServiceRoutingRequest routingRequest, Method method)
         {
             try
             {
-                var routingInfos = await _ingressRoutingService.GetServiceRoutingData(routingRequest.TargetService, routingRequest.Mode);
+                var routingInfos = await GetServiceRoutingData(routingRequest.TargetService, routingRequest.Mode);
 
                 var routingData = DecorateRequest(routingInfos).ToList();
 
@@ -78,8 +79,6 @@ namespace Ambassador.Usecases
             catch (Exception e)
             {
                 var exception = GetExceptionMessage(e, "NodeController Routing Data exception");
-
-                ContainerService.Logger?.LogError(exception.Message);
 
                 throw exception;
             }

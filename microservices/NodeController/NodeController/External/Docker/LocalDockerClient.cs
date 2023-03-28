@@ -40,7 +40,7 @@ public class LocalDockerClient : IEnvironmentClient
             });
 
             return containers.Select(c => c.ID).ToImmutableList();
-        }, retryCount: 5, autoThrow: false);
+        }, retryCount: 2, autoThrow: false).ConfigureAwait(false);
     }
 
     public async Task<MultiplexedStream> GetContainerLogs(string containerId)
@@ -81,7 +81,7 @@ public class LocalDockerClient : IEnvironmentClient
                 Config = container
             });
         },
-        retryCount: 5);
+        retryCount: 2, autoThrow: false).ConfigureAwait(false);
     }
 
     public async Task<CreateContainerResponse?> IncreaseByOneNumberOfInstances(IContainerConfig containerConfig, string newContainerName, string serviceId, string podId)
@@ -96,9 +96,10 @@ public class LocalDockerClient : IEnvironmentClient
 
             env.Add($"ID={serviceId}");
 
-            env.RemoveAll(e => e.ToString().StartsWith("POD_ID="));
-
-            env.Add($"POD_ID={podId}");
+            if (containerConfig.Config.Config.Labels.ContainsKey("POD_ID"))
+                containerConfig.Config.Config.Labels["POD_ID"] = podId;
+            else
+                containerConfig.Config.Config.Labels.Add("POD_ID", podId);
 
             var exposedPorts = GetPortBindings();
 
@@ -111,6 +112,7 @@ public class LocalDockerClient : IEnvironmentClient
             {
                 HostConfig = containerConfig.Config.HostConfig,
                 Env = env,
+                Labels = containerConfig.Config.Config.Labels,
                 Image = containerConfig.Config.Image,
                 Name = newContainerName,
                 ExposedPorts = new Dictionary<string, EmptyStruct>() { { exposedPorts.Keys.First(), new EmptyStruct() } }
@@ -120,18 +122,23 @@ public class LocalDockerClient : IEnvironmentClient
 
             return containerResponse;
         },
-            onFailure: async (_, _) =>
+            onFailure: async (e, _) =>
             {
+                _logger.LogCritical(e.Message);
+                _logger.LogDebug(e.StackTrace);
+
                 if (containerResponse is not null)
-                    await RemoveContainerInstance(containerResponse.ID).ConfigureAwait(false);
+                    await RemoveContainerInstance(containerResponse.ID, true).ConfigureAwait(false);
             },
             autoThrow: false,
-            retryCount: 5);
+            retryCount: 2).ConfigureAwait(false);
     }
 
     public async Task GarbageCollection()
     {
-        await _dockerClient.Containers.PruneContainersAsync();
+        await Try.WithConsequenceAsync(async () => await _dockerClient.Containers.PruneContainersAsync(
+            new ContainersPruneParameters(),
+            new CancellationTokenSource(50).Token), autoThrow: false);
     }
 
     public async Task SetResources(IPodInstance podInstance, long nanoCpus, long memory)
@@ -149,19 +156,27 @@ public class LocalDockerClient : IEnvironmentClient
             }
 
             return Task.CompletedTask;
-        }, retryCount: 5, autoThrow: false);
+        }, retryCount: 2, autoThrow: false).ConfigureAwait(false);
     }
 
-    public async Task RemoveContainerInstance(string containerId)
+    public async Task RemoveContainerInstance(string containerId, bool quiet = false)
     {
-        try
+        await Try.WithConsequenceAsync(async () =>
         {
             await _dockerClient.Containers.RemoveContainerAsync(containerId, new ContainerRemoveParameters() { Force = true });
-        }
-        catch
-        {
-            // ignored
-        }
+
+            return Task.CompletedTask;
+        }, retryCount: 2, autoThrow: false,
+            onFailure: (e, _) =>
+            {
+                if (quiet is false)
+                {
+                    _logger?.LogCritical(e.Message);
+                    _logger?.LogDebug(e.StackTrace);
+                }
+                
+                return Task.CompletedTask;
+            }).ConfigureAwait(false);
     }
 
     [MethodImpl(MethodImplOptions.NoOptimization)]

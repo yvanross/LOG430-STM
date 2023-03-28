@@ -1,9 +1,7 @@
-using Ambassador;
-using Ambassador.BusinessObjects;
-using Ambassador.Usecases;
 using ApplicationLogic.Usecases;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using TripComparator.External;
 
 namespace TripComparator.Controllers
 {
@@ -14,22 +12,25 @@ namespace TripComparator.Controllers
     {
         private readonly ILogger<TripComparatorController> _logger;
 
-        private readonly CompareTimesUC compareTimesUc = new();
+        private readonly CompareTimesUC _compareTimesUc;
 
         public TripComparatorController(ILogger<TripComparatorController> logger)
         {
             _logger = logger;
+            _compareTimesUc = new(new RouteTimeProviderClient(), new StmClient(_logger), new MassTransitRabbitMqClient());
         }
 
-        [HttpGet]
-        [ActionName(nameof(Get))]
-        public async Task<ActionResult<int>> Get(string startingCoordinates, string destinationCoordinates)
+        [HttpPost]
+        [ActionName(nameof(Post))]
+        public async Task<ActionResult<int>> Post(string startingCoordinates, string destinationCoordinates)
         {
             _logger.LogInformation($"Comparing trip duration from {startingCoordinates} to {destinationCoordinates}");
 
-            var travelTime = await compareTimesUc.CompareBusAndCarTime(RemoveWhiteSpaces(startingCoordinates), RemoveWhiteSpaces(destinationCoordinates));
+            var producer = await _compareTimesUc.BeginComparingBusAndCarTime(RemoveWhiteSpaces(startingCoordinates), RemoveWhiteSpaces(destinationCoordinates));
 
-            return Ok(travelTime);
+            _ = _compareTimesUc.WriteToStream(producer);
+
+            return Ok();
 
             string RemoveWhiteSpaces(string s)
                 => s.Replace(" ", "");

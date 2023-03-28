@@ -119,3 +119,11 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\TripComp
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\TripComparator\bin\Debug\net7.0\MassTransit.Abstractions.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\TripComparator\bin\Debug\net7.0\MassTransit.RabbitMqTransport.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\TripComparator\bin\Debug\net7.0\RabbitMQ.Client.dll
+C:\Users\david\LOG430-STM\microservices\TripComparator\TripComparator\bin\Debug\net7.0\MassTransit.dll
+C:\Users\david\LOG430-STM\microservices\TripComparator\TripComparator\bin\Debug\net7.0\MassTransit.Abstractions.dll
+C:\Users\david\LOG430-STM\microservices\TripComparator\TripComparator\bin\Debug\net7.0\MassTransit.RabbitMqTransport.dll
+C:\Users\david\LOG430-STM\microservices\TripComparator\TripComparator\bin\Debug\net7.0\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Users\david\LOG430-STM\microservices\TripComparator\TripComparator\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\david\LOG430-STM\microservices\TripComparator\TripComparator\bin\Debug\net7.0\RabbitMQ.Client.dll
+C:\Users\david\LOG430-STM\microservices\TripComparator\TripComparator\bin\Debug\net7.0\Entities.dll
+C:\Users\david\LOG430-STM\microservices\TripComparator\TripComparator\bin\Debug\net7.0\Entities.pdb

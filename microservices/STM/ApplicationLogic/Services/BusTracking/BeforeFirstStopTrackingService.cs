@@ -1,8 +1,6 @@
 ﻿using ApplicationLogic.Interfaces;
-using Entities.Concretions;
 using Entities.Domain;
 using Microsoft.Extensions.Logging;
-using STM.ExternalServiceProvider.Proto;
 
 namespace ApplicationLogic.Services.BusTracking;
 
@@ -25,11 +23,12 @@ public class BeforeFirstStopTrackingService : ABusTrackingService
 
         if (CurrentStopIndex >= Bus.Trip.RelevantOrigin!.Value.Index)
         {
-            var busTrackingService = new BusTrackingService(Bus, StmClient, Logger, DateTime.UtcNow);
+            var busTrackingService = new BusTrackingService(Bus, StmClient, Logger, DateTime.UtcNow, _startingTime);
 
             return (new Entities.Concretions.BusTracking()
             {
-                Message = $"Bus {Bus.Name} is at the first stop, begin timer"
+                Message = $"Bus {Bus.Name} is at the first stop, begin timer",
+                Duration = DeltaTime(_startingTime).TotalMilliseconds,
             }, busTrackingService);
         }
 
@@ -37,7 +36,8 @@ public class BeforeFirstStopTrackingService : ABusTrackingService
 
         return (new Entities.Concretions.BusTracking()
         {
-            Message = $"Bus {Bus.Name} is not yet at the first stop, it did {prediction * 100}% of the way in {DeltaTime(_startingTime)} seconds, expected to reach the first stop in {_originalEta - DeltaTime(_startingTime)} seconds"
+            Message = $"Bus {Bus.Name} is not yet at the first stop, it did {prediction * 100}% of the way in {DeltaTime(_startingTime).TotalSeconds} seconds, expected to reach the first stop in {_originalEta - DeltaTime(_startingTime).TotalSeconds} seconds",
+            Duration = DeltaTime(_startingTime).TotalMilliseconds,
         }, this);
     }
 }

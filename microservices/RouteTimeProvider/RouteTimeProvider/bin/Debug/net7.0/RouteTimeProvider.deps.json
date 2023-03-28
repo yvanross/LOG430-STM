@@ -8,18 +8,19 @@
     ".NETCoreApp,Version=v7.0": {
       "RouteTimeProvider/1.0.0": {
         "dependencies": {
-          "Ambassador": "1.0.61",
+          "Ambassador": "1.0.62",
           "ApplicationLogic": "1.0.0",
           "Entities": "1.0.0",
           "Microsoft.AspNetCore.OpenApi": "7.0.3",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.17.2",
+          "Polly": "7.2.3",
           "Swashbuckle.AspNetCore": "6.4.0"
         },
         "runtime": {
           "RouteTimeProvider.dll": {}
         }
       },
-      "Ambassador/1.0.61": {
+      "Ambassador/1.0.62": {
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "5.0.17",
           "Microsoft.Extensions.Logging.Abstractions": "7.0.0",
@@ -29,8 +30,8 @@
         },
         "runtime": {
           "lib/net7.0/Ambassador.dll": {
-            "assemblyVersion": "1.0.61.0",
-            "fileVersion": "1.0.61.0"
+            "assemblyVersion": "1.0.62.0",
+            "fileVersion": "1.0.62.0"
           }
         }
       },
@@ -159,6 +160,14 @@
           "lib/netstandard1.3/Newtonsoft.Json.dll": {
             "assemblyVersion": "10.0.0.0",
             "fileVersion": "10.0.3.21018"
+          }
+        }
+      },
+      "Polly/7.2.3": {
+        "runtime": {
+          "lib/netstandard2.0/Polly.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.2.3.0"
           }
         }
       },
@@ -911,7 +920,7 @@
       },
       "ApplicationLogic/1.0.0": {
         "dependencies": {
-          "Ambassador": "1.0.61",
+          "Ambassador": "1.0.62",
           "Entities": "1.0.0"
         },
         "runtime": {
@@ -931,12 +940,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Ambassador/1.0.61": {
+    "Ambassador/1.0.62": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-FHDZuv+2W5WEe+6XKvppGPINoewhObCwvOYzoJnAaIJlYgPGh/irZReR1TI9RaINU7DzoGCEPjbWbY29aMXN9w==",
-      "path": "ambassador/1.0.61",
-      "hashPath": "ambassador.1.0.61.nupkg.sha512"
+      "sha512": "sha512-BZSSuIcpHaTK0fL7w6xy72TAUaYW2tJnVwZIH5UAu+Q7wW+hqvjdVf9p9gvJfkTX1fCc4eTAIKdhqZBaU1FpbQ==",
+      "path": "ambassador/1.0.62",
+      "hashPath": "ambassador.1.0.62.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Http.Features/5.0.17": {
       "type": "package",
@@ -1035,6 +1044,13 @@
       "sha512": "sha512-hSXaFmh7hNCuEoC4XNY5DrRkLDzYHqPx/Ik23R4J86Z7PE/Y6YidhG602dFVdLBRSdG6xp9NabH3dXpcoxWvww==",
       "path": "newtonsoft.json/10.0.3",
       "hashPath": "newtonsoft.json.10.0.3.nupkg.sha512"
+    },
+    "Polly/7.2.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-DeCY0OFbNdNxsjntr1gTXHJ5pKUwYzp04Er2LLeN3g6pWhffsGuKVfMBLe1lw7x76HrPkLxKEFxBlpRxS2nDEQ==",
+      "path": "polly/7.2.3",
+      "hashPath": "polly.7.2.3.nupkg.sha512"
     },
     "RestSharp/108.0.3": {
       "type": "package",
