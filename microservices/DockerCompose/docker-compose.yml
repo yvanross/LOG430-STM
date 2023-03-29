@@ -44,7 +44,7 @@ services:
     environment:
       - CASSANDRA_CLUSTER_NAME=my_cassandra_cluster
     ports:
-      - "32670:80"
+      - "32670:9042"
     labels:
       ARTIFACT_CATEGORY: Database
       ARTIFACT_NAME: *name
@@ -59,7 +59,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     ports:
-      - "32672:80"
+      - "32672:27017"
     labels:
       ARTIFACT_CATEGORY: Database
       ARTIFACT_NAME: *name
@@ -83,6 +83,10 @@ services:
       NODE_CONTROLLER_PORT: ${NODE_CONTROLLER_PORT}
       ASPNETCORE_URLS: *ASPNETCORE_URLS
       MQ_SERVICE_NAME: *MQ_SERVICE_NAME
+      #list here all the custom container ports you are using in your services for communication
+      #added are the default ports for rabbitmq, cassandra and mongodb
+      #feel free to add the necessary ones for your needs
+      CUSTOM_CONTAINER_PORTS_DISCOVERY: 5672,27017,9042
     volumes:
       *vol    
     depends_on:
@@ -90,10 +94,11 @@ services:
     
   event-store:
     container_name: *MQ_SERVICE_NAME
-    image: rabbitmq
+    image: rabbitmq:3.12-rc-management
     restart: always
     ports:
-        - "32771:80"
+        - "32771:5672"
+        - "15672:15672"
     environment:
       ID: *MQ_SERVICE_NAME 
       #default username and password are both: guest

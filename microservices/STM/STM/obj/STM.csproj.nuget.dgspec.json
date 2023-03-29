@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\STM\\STM.csproj": {}
+    "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\STM\\STM.csproj": {}
   },
   "projects": {
-    "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\ApplicationLogic\\ApplicationLogic.csproj": {
+    "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\ApplicationLogic\\ApplicationLogic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\ApplicationLogic\\ApplicationLogic.csproj",
+        "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\ApplicationLogic\\ApplicationLogic.csproj",
         "projectName": "ApplicationLogic",
-        "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\ApplicationLogic\\ApplicationLogic.csproj",
+        "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\ApplicationLogic\\ApplicationLogic.csproj",
         "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\ApplicationLogic\\obj\\",
+        "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\ApplicationLogic\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -26,15 +26,16 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Users\\david\\LOG430-STM\\microservices\\Nuget": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Nuget": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj": {
-                "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj"
+              "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj": {
+                "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj"
               }
             }
           }
@@ -74,14 +75,14 @@
         }
       }
     },
-    "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\Entities\\Entities.csproj": {
+    "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\Entities\\Entities.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\Entities\\Entities.csproj",
+        "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\Entities\\Entities.csproj",
         "projectName": "Entities",
-        "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\Entities\\Entities.csproj",
+        "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\Entities\\Entities.csproj",
         "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\Entities\\obj\\",
+        "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\Entities\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -96,8 +97,9 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Users\\david\\LOG430-STM\\microservices\\Nuget": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Nuget": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
@@ -134,14 +136,14 @@
         }
       }
     },
-    "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj": {
+    "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj",
+        "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj",
         "projectName": "GTFS",
-        "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj",
+        "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj",
         "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\StaticGTFS\\obj\\",
+        "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\StaticGTFS\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -156,15 +158,16 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Users\\david\\LOG430-STM\\microservices\\Nuget": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Nuget": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\Entities\\Entities.csproj": {
-                "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\Entities\\Entities.csproj"
+              "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\Entities\\Entities.csproj": {
+                "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\Entities\\Entities.csproj"
               }
             }
           }
@@ -204,14 +207,14 @@
         }
       }
     },
-    "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\STM\\STM.csproj": {
+    "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\STM\\STM.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\STM\\STM.csproj",
+        "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\STM\\STM.csproj",
         "projectName": "STM",
-        "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\STM\\STM.csproj",
+        "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\STM\\STM.csproj",
         "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\STM\\obj\\",
+        "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\STM\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -226,15 +229,16 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Users\\david\\LOG430-STM\\microservices\\Nuget": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Nuget": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
         },
         "frameworks": {
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\ApplicationLogic\\ApplicationLogic.csproj": {
-                "projectPath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\ApplicationLogic\\ApplicationLogic.csproj"
+              "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\ApplicationLogic\\ApplicationLogic.csproj": {
+                "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\ApplicationLogic\\ApplicationLogic.csproj"
               }
             }
           }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xFWiBGszCNeOOMxXvD7UCENdH0vU8M4GiQvLsvb/BsOpQodJmbVlDNlvGcLJxVLTDUN76Cl/SX06GaO1eMuizA==",
+  "dgSpecHash": "LAWaNE9X4ycmEbMcFKKT0tqw7zDS99wIzq/3qZ9k8f4Em3FV66RsodbGGeU4O5KzPgkpGbHzEXMKseZ6yOWN4A==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\STM\\Entities\\Entities.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\Entities\\Entities.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

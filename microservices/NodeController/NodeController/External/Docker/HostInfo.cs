@@ -15,6 +15,8 @@ public class HostInfo : IHostInfo
     public static readonly string MqServiceName = Environment.GetEnvironmentVariable("MQ_SERVICE_NAME")!;
 
     public static readonly string NodeControllerPort = Environment.GetEnvironmentVariable("NODE_CONTROLLER_PORT")!;
+    
+    public static readonly string CustomContainerPortsDiscovery = Environment.GetEnvironmentVariable("CUSTOM_CONTAINER_PORTS_DISCOVERY")!;
 
     public string GetTeamName()
     {
@@ -44,5 +46,10 @@ public class HostInfo : IHostInfo
     public string GetMQServiceName()
     {
         return MqServiceName;
+    }
+
+    public string GetCustomContainerPorts()
+    {
+        return CustomContainerPortsDiscovery;
     }
 }

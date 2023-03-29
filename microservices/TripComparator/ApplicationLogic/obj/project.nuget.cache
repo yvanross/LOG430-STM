@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "wUCH57iEtPdXhAj4WXcZ5VNBvpkgvptKLMaSIND/AJTzKOZ47Yn1nBP9TPpQMic8uGcQ66dtGk7F3AhcWD9VMQ==",
+  "dgSpecHash": "2ES5yuE8FiJ2bQRe8hhRHEopvyeFiW2uVZsl3+L4eag8jNrYIyN3or81rxBXPEoNPZb9Ok4hO/h+m+hwEjdiHA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogic\\ApplicationLogic.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

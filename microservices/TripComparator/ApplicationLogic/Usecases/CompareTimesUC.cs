@@ -14,6 +14,8 @@ namespace ApplicationLogic.Usecases
 
         private readonly IDataStreamWriteModel _dataStreamWriteModel;
 
+        private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(5));
+
         public CompareTimesUC(IRouteTimeProvider routeTimeProvider, IBusInfoProvider iBusInfoProvider, IDataStreamWriteModel dataStreamWriteModel)
         {
             _routeTimeProvider = routeTimeProvider;
@@ -47,7 +49,7 @@ namespace ApplicationLogic.Usecases
             {
                 var trackingOnGoing = true;
 
-                while (trackingOnGoing)
+                while (trackingOnGoing && await _periodicTimer.WaitForNextTickAsync())
                 {
                     var trackingResult = await _iBusInfoProvider.GetTrackingUpdate(optimalBus.BusId);
 
@@ -58,7 +60,7 @@ namespace ApplicationLogic.Usecases
                     var saga = new Saga()
                     {
                         Message = trackingResult.Message + $", by car it takes {averageCarTravelTime}",
-                        Seconds = trackingResult.Duration,
+                        Seconds = Convert.ToInt32(trackingResult.Duration),
                     };
 
                     await channel.Writer.WriteAsync(saga);
@@ -72,14 +74,19 @@ namespace ApplicationLogic.Usecases
 
         public async Task WriteToStream(ChannelReader<ISaga> channelReader)
         {
-            await _dataStreamWriteModel.BeginStreaming();
-
-            await foreach (var saga in channelReader!.ReadAllAsync())
+            try
             {
-                await _dataStreamWriteModel.Produce(saga);
-            }
+                await _dataStreamWriteModel.BeginStreaming();
 
-            _dataStreamWriteModel.CloseChannel();
+                await foreach (var saga in channelReader!.ReadAllAsync())
+                {
+                    await _dataStreamWriteModel.Produce(saga);
+                }
+            }
+            finally
+            {
+                _dataStreamWriteModel.CloseChannel();
+            }
         }
     }
 }

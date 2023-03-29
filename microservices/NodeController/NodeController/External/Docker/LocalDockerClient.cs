@@ -64,6 +64,8 @@ public class LocalDockerClient : IEnvironmentClient
 
             var labelDict = new ConcurrentDictionary<ServiceLabelsEnum, string>(labels);
 
+            var ports = GetPortForDefaultProtocols(container);
+
             return (
             CuratedInfo: new ContainerInfo()
             {
@@ -71,17 +73,47 @@ public class LocalDockerClient : IEnvironmentClient
                 Name = container.Name[1..] ?? string.Empty,
                 ImageName = container.Image,
                 Status = container.State.Status,
-                Port = container.HostConfig.PortBindings["80/tcp"].First(p => string.IsNullOrEmpty(p.HostPort) is false).HostPort,
+                HostPort = ports.hostPort,
                 Labels = labelDict,
                 NanoCpus = container.HostConfig.NanoCPUs,
                 Memory = container.HostConfig.Memory,
             },
             RawConfig: new ContainerConfig()
             {
-                Config = container
+                Config = container,
+                ContainerPort = ports.containerPort
             });
         },
         retryCount: 2, autoThrow: false).ConfigureAwait(false);
+
+        (string hostPort, string containerPort) GetPortForDefaultProtocols(ContainerInspectResponse container)
+        {
+            var containerPorts = new List<string>() { "80/tcp" };
+
+            HostInfo.CustomContainerPortsDiscovery
+                .Split(',', StringSplitOptions.TrimEntries)
+                .ToList()
+                .ForEach(containerPort => containerPorts.Add($"{containerPort}/tcp"));
+
+            IList<PortBinding>? portBinding = null;
+
+            var containerPort = string.Empty;
+
+            foreach (var portNumber in containerPorts)
+            {
+                portBinding = container.HostConfig.PortBindings.FirstOrDefault(kv => kv.Key.Equals(portNumber)).Value;
+
+                if (portBinding is not null)
+                {
+                    containerPort = portNumber;
+                    break;
+                }
+            }
+
+            var hostPort = portBinding!.First(p => string.IsNullOrEmpty(p.HostPort) is false).HostPort;
+            
+            return (hostPort, containerPort);
+        }
     }
 
     public async Task<CreateContainerResponse?> IncreaseByOneNumberOfInstances(IContainerConfig containerConfig, string newContainerName, string serviceId, string podId)
@@ -101,7 +133,7 @@ public class LocalDockerClient : IEnvironmentClient
             else
                 containerConfig.Config.Config.Labels.Add("POD_ID", podId);
 
-            var exposedPorts = GetPortBindings();
+            var exposedPorts = GetPortBindings(containerConfig.ContainerPort);
 
             containerConfig.Config.HostConfig.RestartPolicy = null;
             containerConfig.Config.HostConfig.AutoRemove = true;
@@ -179,12 +211,13 @@ public class LocalDockerClient : IEnvironmentClient
             }).ConfigureAwait(false);
     }
 
+    //todo allow discovery of database ports and mq ports
     [MethodImpl(MethodImplOptions.NoOptimization)]
-    private IDictionary<string, IList<PortBinding>> GetPortBindings()
+    private IDictionary<string, IList<PortBinding>> GetPortBindings(string containerPort)
     {
         return new Dictionary<string, IList<PortBinding>>
         {
-            { "80/tcp", new List<PortBinding>
+            { containerPort, new List<PortBinding>
                 {
                     new()
                     {

@@ -13,4 +13,6 @@ public interface IHostInfo
     string GetPort();
     
     string GetMQServiceName();
+    
+    string GetCustomContainerPorts();
 }

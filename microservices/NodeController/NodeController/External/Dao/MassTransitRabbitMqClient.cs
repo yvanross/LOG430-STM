@@ -33,7 +33,11 @@ public class MassTransitRabbitMqClient : IDataStreamReadModel, IConsumer<Saga>
             
             var busControl = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
-                cfg.Host($"rabbitmq{mq.Address[4..]}");
+                cfg.Host($"rabbitmq{mq.Address[4..]}", h =>
+                {
+                    h.Username("guest");
+                    h.Password("guest");
+                });
 
                 cfg.ReceiveEndpoint("TimeComparison", e =>
                 {

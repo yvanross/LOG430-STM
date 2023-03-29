@@ -21,9 +21,9 @@ public class ServiceInstance : IServiceInstance
 
     public IServiceState? ServiceStatus { get; set; }
 
-    public string HttpRoute => $"http://{Address}" + (string.IsNullOrEmpty(ContainerInfo?.Port) ? string.Empty : $":{ContainerInfo.Port}");
+    public string HttpRoute => $"http://{Address}" + (string.IsNullOrEmpty(ContainerInfo?.HostPort) ? string.Empty : $":{ContainerInfo.HostPort}");
 
-    public string HttpsRoute => $"https://{Address}" + (string.IsNullOrEmpty(ContainerInfo?.Port) ? string.Empty : $":{ContainerInfo.Port}");
+    public string HttpsRoute => $"https://{Address}" + (string.IsNullOrEmpty(ContainerInfo?.HostPort) ? string.Empty : $":{ContainerInfo.HostPort}");
     
     public bool Equals(IServiceInstance? other)
     {

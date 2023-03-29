@@ -173,7 +173,6 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STM\bin\Debug\net7.
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STM\bin\Debug\net7.0\STM.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STM\bin\Debug\net7.0\STM.pdb
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STM\bin\Debug\net7.0\STM.xml
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STM\bin\Debug\net7.0\Ambassador.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STM\bin\Debug\net7.0\Azure.Core.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STM\bin\Debug\net7.0\Azure.Identity.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STM\bin\Debug\net7.0\Google.Protobuf.dll
@@ -198,7 +197,6 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STM\bin\Debug\net7.
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STM\bin\Debug\net7.0\Microsoft.SqlServer.Server.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STM\bin\Debug\net7.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STM\bin\Debug\net7.0\Mono.TextTemplating.dll
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STM\bin\Debug\net7.0\Newtonsoft.Json.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STM\bin\Debug\net7.0\RestSharp.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STM\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STM\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll

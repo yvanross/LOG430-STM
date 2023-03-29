@@ -99,14 +99,17 @@ namespace STM.Controllers
             {
                 var update = _busesBeingTracked[busId].GetUpdate();
 
-                if (update is null)
+                if(update is null)
+                    return NoContent();
+
+                if (update.TrackingCompleted)
                 {
-                    _busesBeingTracked.Remove(busId);
+                    _busesBeingTracked = _busesBeingTracked.Remove(busId);
 
                     return NoContent();
                 }
 
-                return new ActionResult<IBusTracking>(update);
+                return Ok(update);
             }
 
             return NoContent();

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "it2TW/w+np6ZdlZ+TF8yQceTX5j5c4oqnt7dEHIUK92spx81Ra2AVlHkyDXj0Bh6Ww150+0f8Wjo2/gvxso/hA==",
+  "dgSpecHash": "AK8kukSNNdu0z3bmhk+iIZpfeLIekwNOvlWhmLIHKbFuDOS+hbZa+RZIc76bGYWo2HGQNRxPw6rBNJ4ZUuX4DQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\TripComparator\\TripComparator\\TripComparator.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\TripComparator\\TripComparator.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.65\\ambassador.1.0.65.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\masstransit\\8.0.14\\masstransit.8.0.14.nupkg.sha512",

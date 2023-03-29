@@ -6,4 +6,6 @@ namespace Entities.BusinessObjects.Live;
 public class ContainerConfig : IContainerConfig
 {
     public ContainerInspectResponse Config { get; set; }
+
+    public required string ContainerPort { get; set; }
 }

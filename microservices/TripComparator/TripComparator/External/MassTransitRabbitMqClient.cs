@@ -16,14 +16,28 @@ public class MassTransitRabbitMqClient : IDataStreamWriteModel
 
         if (mq is not null)
         {
+            var reformattedAddress = $"rabbitmq{mq.Address[4..]}";
+
             var busControl = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
-                cfg.Host($"rabbitmq{mq.Address[4..]}");
+                cfg.Host(reformattedAddress, h =>
+                {
+                    h.Username("guest");
+                    h.Password("guest");
+                });
             });
 
             _busControl = busControl;
 
-            _ = busControl.StartAsync();
+            try
+            {
+                _ = await busControl.StartAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 

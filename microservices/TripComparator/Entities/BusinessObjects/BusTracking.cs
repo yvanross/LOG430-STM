@@ -8,5 +8,5 @@ public class BusTracking : IBusTracking
 
     public bool TrackingCompleted { get; set; }
 
-    public int Duration { get; set; }
+    public double Duration { get; set; }
 }

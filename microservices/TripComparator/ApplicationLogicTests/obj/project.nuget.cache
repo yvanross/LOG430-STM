@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "PtmrrK8Ix+4pYVFZHh4eSxGVUAyex6r/C1VBHDTh+uFftQWIf3uHVEvUKEoZOk4rdWkoOxu/AF108wfVdsawXQ==",
+  "dgSpecHash": "NKi8BiFVS/sOdQftzUX5eL8QvMl4qlNQC273bxloHpO7OTkKp+9FNCzBWVX/MO6Uzef8JBVR+5LfRasv/miokA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.65\\ambassador.1.0.65.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",

@@ -320,7 +320,7 @@ public static class MockProvider
             Memory = 100000L,
             NanoCpus = 100000L,
             Name = $"ContainerTest{serviceInstanceNb}",
-            Port = "0000",
+            HostPort = "0000",
             Status = "Testing",
             Labels = new ConcurrentDictionary<ServiceLabelsEnum, string>(),
         };

@@ -6,5 +6,5 @@ public interface IBusTracking
 
     bool TrackingCompleted { get; set; }
 
-    int Duration { get; set; }
+    double Duration { get; set; }
 }

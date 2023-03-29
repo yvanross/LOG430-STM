@@ -15,10 +15,12 @@ COPY ["TripComparator/Entities/Entities.csproj", "Entities/"]
 RUN dotnet restore "TripComparator/TripComparator.csproj"
 COPY . .
 WORKDIR "/src/TripComparator"
-RUN dotnet build "TripComparator/TripComparator.csproj" -c Release -o /app/build
+RUN dotnet build "TripComparator/TripComparator.csproj" -c Debug -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "TripComparator/TripComparator.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "TripComparator/TripComparator.csproj" -c Debug -o /app/publish /p:UseAppHost=false
+
+ENV ASPNETCORE_ENVIRONMENT=Development
 
 FROM base AS final
 WORKDIR /app

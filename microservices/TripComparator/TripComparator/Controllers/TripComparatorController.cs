@@ -1,6 +1,7 @@
 using ApplicationLogic.Usecases;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using TripComparator.DTO;
 using TripComparator.External;
 
 namespace TripComparator.Controllers
@@ -29,6 +30,26 @@ namespace TripComparator.Controllers
             var producer = await _compareTimesUc.BeginComparingBusAndCarTime(RemoveWhiteSpaces(startingCoordinates), RemoveWhiteSpaces(destinationCoordinates));
 
             _ = _compareTimesUc.WriteToStream(producer);
+
+            return Ok();
+
+            string RemoveWhiteSpaces(string s)
+                => s.Replace(" ", "");
+        }
+
+        [HttpPost]
+        [ActionName(nameof(Debug))]
+        public async Task<ActionResult<int>> Debug()
+        {
+            var mt = new MassTransitRabbitMqClient();
+
+            await mt.BeginStreaming();
+
+            await mt.Produce(new Saga()
+            {
+                Message = "test message",
+                Seconds = 100
+            });
 
             return Ok();
 
