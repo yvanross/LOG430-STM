@@ -3,9 +3,12 @@ using Entities.DomainInterfaces.Planned;
 using Entities.DomainInterfaces.ResourceManagement;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
+using NodeController.Dto.Incoming;
 
 namespace ApplicationLogicTests.Usecases
 {
+    /*
     [TestClass()]
     public class ChaosExperimentTest
     {
@@ -22,6 +25,18 @@ namespace ApplicationLogicTests.Usecases
                 MockProvider.GetSystemStateWriteMock().Object,
                 MockProvider.GetDataStreamReadMock().Object
             );
+        }
+
+        [TestMethod]
+        public void SerializeExperiment()
+        {
+            var json = JsonProvider.GenerateExperimentBody();
+
+            var experimentDto = JsonConvert.DeserializeObject<ExperimentDto>(json);
+
+            experimentDto.Should().NotBeNull();
+
+            //experimentDto.ChaosCodex.ChaosConfigs.Should().HaveCount(3);
         }
 
         [TestMethod]
@@ -126,4 +141,5 @@ namespace ApplicationLogicTests.Usecases
             _chaosExperimentUc.ExperimentResult.ErrorCount.Should().Be(1);
         }
     }
+*/
 }

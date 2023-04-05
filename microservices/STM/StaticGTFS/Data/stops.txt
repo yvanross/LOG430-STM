@@ -1,14 +1,14 @@
 stop_id,stop_code,stop_name,stop_lat,stop_lon,stop_url,location_type,parent_station,wheelchair_boarding
-STATION_M118,10118,STATION ANGRIGNON,45.446466,-73.603118,,1,,2
-43,10118,Station Angrignon,45.446466,-73.603118,http://www.stm.info/fr/infos/reseaux/metro/angrignon,0,STATION_M118,2
-43-01,10118,Station Angrignon,45.446319,-73.603835,,2,STATION_M118,2
+STATION_M118,10118,STATION ANGRIGNON,45.446466,-73.603118,,1,,1
+43,10118,Station Angrignon,45.446466,-73.603118,http://www.stm.info/fr/infos/reseaux/metro/angrignon,0,STATION_M118,1
+43-01,10118,Station Angrignon,45.446319,-73.603835,,2,STATION_M118,1
 STATION_M120,10120,STATION MONK,45.451158,-73.593242,,1,,2
 42,10120,Station Monk,45.451158,-73.593242,http://www.stm.info/fr/infos/reseaux/metro/monk,0,STATION_M120,2
 42-01,10120,Station Monk - Édicule Nord (B),45.451307,-73.593128,,2,STATION_M120,2
 42-02,10120,Station Monk - Édicule Sud (A),45.451007,-73.593380,,2,STATION_M120,2
-STATION_M122,10122,STATION JOLICOEUR,45.457010,-73.581691,,1,,2
-41,10122,Station Jolicoeur,45.457010,-73.581691,http://www.stm.info/fr/infos/reseaux/metro/jolicoeur,0,STATION_M122,2
-41-01,10122,Station Jolicoeur,45.456787,-73.582115,,2,STATION_M122,2
+STATION_M122,10122,STATION JOLICOEUR,45.457010,-73.581691,,1,,1
+41,10122,Station Jolicoeur,45.457010,-73.581691,http://www.stm.info/fr/infos/reseaux/metro/jolicoeur,0,STATION_M122,1
+41-01,10122,Station Jolicoeur,45.456787,-73.582115,,2,STATION_M122,1
 STATION_M124,10124,STATION VERDUN,45.459441,-73.572021,,1,,2
 40,10124,Station Verdun,45.459441,-73.572021,http://www.stm.info/fr/infos/reseaux/metro/verdun,0,STATION_M124,2
 40-01,10124,Station Verdun - Édicule Nord (A),45.459222,-73.571833,,2,STATION_M124,2
@@ -283,6 +283,7 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 61536,61536,Gare Rivière-des-Prairies,45.661811,-73.538735,https://www.stm.info/fr/recherche#stq=61536,0,,1
 61538,61538,YUL Aéroport Montréal-Trudeau / Transport Canada,45.454047,-73.751132,https://www.stm.info/fr/recherche#stq=61538,0,,1
 61539,61539,Roméo-Vachon / No 700,45.453912,-73.751111,https://www.stm.info/fr/recherche#stq=61539,0,,1
+61540,61540,Arthur-Fecteau / Roméo-Vachon,45.453463,-73.744807,https://www.stm.info/fr/recherche#stq=61540,0,,1
 61541,61541,Mc Millan / No 555,45.453117,-73.740984,https://www.stm.info/fr/recherche#stq=61541,0,,1
 61542,61542,Henri-Bourassa / Pie-IX,45.595455,-73.642639,https://www.stm.info/fr/recherche#stq=61542,0,,1
 61543,61543,Pie-IX / Amos,45.594972,-73.641402,https://www.stm.info/fr/recherche#stq=61543,0,,1
@@ -587,8 +588,6 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 62049,62049,Douglas-B.-Floreani / Cypihot,45.494063,-73.759168,https://www.stm.info/fr/recherche#stq=62049,0,,1
 62052,62052,Van Horne / Dollard,45.519290,-73.615882,https://www.stm.info/fr/recherche#stq=62052,0,,2
 62053,62053,Peel / Ottawa,45.494044,-73.559237,https://www.stm.info/fr/recherche#stq=62053,0,,2
-62054,62054,Pie-IX / Pierre-De Coubertin,45.553469,-73.550656,https://www.stm.info/fr/recherche#stq=62054,0,,1
-62055,62055,Pie-IX / Pierre-De Coubertin,45.553357,-73.550305,https://www.stm.info/fr/recherche#stq=62055,0,,1
 62056,62056,Christophe-Colomb / Bureau,45.526040,-73.574977,https://www.stm.info/fr/recherche#stq=62056,0,,1
 62057,62057,Papineau / Jacques-Casault,45.555483,-73.623600,https://www.stm.info/fr/recherche#stq=62057,0,,1
 62059,62059,Saint-Hubert / Sainte-Catherine,45.515450,-73.559081,https://www.stm.info/fr/recherche#stq=62059,0,,1
@@ -634,13 +633,19 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 62115,62115,du Golf / Métropolitain,45.620500,-73.554326,https://www.stm.info/fr/recherche#stq=62115,0,,1
 62116,62116,de Châteauneuf / Baldwin,45.612727,-73.554958,https://www.stm.info/fr/recherche#stq=62116,0,,1
 62119,62119,Côte-des-Neiges / Remembrance,45.495099,-73.604748,https://www.stm.info/fr/recherche#stq=62119,0,,2
+62120,62120,32e Avenue / Provost,45.441624,-73.692442,https://www.stm.info/fr/recherche#stq=62120,0,,1
 62121,62121,Roi-René / Chaumont,45.609600,-73.548565,https://www.stm.info/fr/recherche#stq=62121,0,,1
 62124,62124,Molson / Pierre-Falardeau,45.543263,-73.574653,https://www.stm.info/fr/recherche#stq=62124,0,,1
 62125,62125,Molson / Pierre-Falardeau,45.543627,-73.575434,https://www.stm.info/fr/recherche#stq=62125,0,,1
 62127,62127,Jean-Brillant / Côte-des-Neiges,45.495754,-73.622100,https://www.stm.info/fr/recherche#stq=62127,0,,1
 62129,62129,Perras / Gilbert-Barbier,45.632563,-73.607672,https://www.stm.info/fr/recherche#stq=62129,0,,1
+62131,62131,Papineau / Barrette,45.536258,-73.581636,https://www.stm.info/fr/recherche#stq=62131,0,,2
+62132,62132,Provost / 31e Avenue,45.441954,-73.690932,https://www.stm.info/fr/recherche#stq=62132,0,,1
+62135,62135,Prince-Albert / 9e Avenue,45.639097,-73.492543,https://www.stm.info/fr/recherche#stq=62135,0,,1
 62136,62136,Gare d'autocars de Montréal,45.516924,-73.563714,https://www.stm.info/fr/recherche#stq=62136,0,,1
+62137,62137,Saint-Denis / des Pins,45.518614,-73.571409,https://www.stm.info/fr/recherche#stq=62137,0,,1
 62138,62138,du Trianon / Joseph-Daoust (Terminus Radisson Sud,45.589734,-73.537427,https://www.stm.info/fr/recherche#stq=62138,0,,1
+62139,62139,des Pins / de l'Hôtel-de-Ville,45.516970,-73.573571,https://www.stm.info/fr/recherche#stq=62139,0,,1
 50104,50104,Gare Canora (Jean-Talon / Wilderton),45.513581,-73.632259,https://www.stm.info/fr/recherche#stq=50104,0,,1
 50105,50105,Station Viau,45.560876,-73.547179,https://www.stm.info/fr/recherche#stq=50105,0,,1
 50106,50106,Saint-Joseph / No 3500,45.552134,-73.566095,https://www.stm.info/fr/recherche#stq=50106,0,,1
@@ -886,7 +891,7 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 50357,50357,Fleury / Lajeunesse,45.553118,-73.662190,https://www.stm.info/fr/recherche#stq=50357,0,,1
 50358,50358,Berri / Fleury,45.552655,-73.662566,https://www.stm.info/fr/recherche#stq=50358,0,,1
 50359,50359,Fleury / Berri,45.552508,-73.662360,https://www.stm.info/fr/recherche#stq=50359,0,,1
-50360,50360,Lajeunesse / Fleury,45.553412,-73.661747,https://www.stm.info/fr/recherche#stq=50360,0,,1
+50360,50360,Lajeunesse / Fleury,45.553404,-73.661679,https://www.stm.info/fr/recherche#stq=50360,0,,1
 50361,50361,Charles-De La Tour / de Louvain,45.531899,-73.661976,https://www.stm.info/fr/recherche#stq=50361,0,,1
 50362,50362,de Louvain / Charles-De La Tour,45.532136,-73.662152,https://www.stm.info/fr/recherche#stq=50362,0,,1
 50363,50363,Henri-Bourassa / Hamel,45.564220,-73.661696,https://www.stm.info/fr/recherche#stq=50363,0,,1
@@ -1050,7 +1055,6 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 50533,50533,Kindersley / Ostell-Crescent,45.502912,-73.651174,https://www.stm.info/fr/recherche#stq=50533,0,,1
 50534,50534,Kindersley / Ostell-Crescent,45.503210,-73.651414,https://www.stm.info/fr/recherche#stq=50534,0,,1
 50535,50535,Saint-Hubert / de Louvain,45.553209,-73.649186,https://www.stm.info/fr/recherche#stq=50535,0,,1
-50536,50536,de Louvain / Saint-Hubert,45.553455,-73.649555,https://www.stm.info/fr/recherche#stq=50536,0,,1
 50537,50537,Saint-Hubert / de Louvain,45.553190,-73.649755,https://www.stm.info/fr/recherche#stq=50537,0,,1
 50538,50538,de Louvain / Saint-Hubert,45.553043,-73.649545,https://www.stm.info/fr/recherche#stq=50538,0,,1
 50539,50539,Marché Central (de l'Acadie / Crémazie),45.531237,-73.650307,https://www.stm.info/fr/recherche#stq=50539,0,,1
@@ -1679,7 +1683,6 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 51185,51185,Pie-IX / 43e Rue,45.578904,-73.619674,https://www.stm.info/fr/recherche#stq=51185,0,,1
 51186,51186,Côte-des-Neiges / Jean-Brillant,45.496067,-73.621496,https://www.stm.info/fr/recherche#stq=51186,0,,1
 51187,51187,Station Côte-des-Neiges,45.496098,-73.621950,https://www.stm.info/fr/recherche#stq=51187,0,,1
-51188,51188,Jean-Brillant / Côte-des-Neiges,45.496239,-73.621683,https://www.stm.info/fr/recherche#stq=51188,0,,1
 51189,51189,Jarry / Fabre,45.552161,-73.620100,https://www.stm.info/fr/recherche#stq=51189,0,,1
 51190,51190,Jarry / Fabre,45.551896,-73.620079,https://www.stm.info/fr/recherche#stq=51190,0,,1
 51192,51192,Côte-Sainte-Catherine / de Darlington,45.505612,-73.621293,https://www.stm.info/fr/recherche#stq=51192,0,,1
@@ -1848,7 +1851,6 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 51365,51365,D'Iberville / Tillemont,45.557726,-73.611443,https://www.stm.info/fr/recherche#stq=51365,0,,1
 51366,51366,Pie-IX / Robert,45.575107,-73.610496,https://www.stm.info/fr/recherche#stq=51366,0,,1
 51367,51367,Pie-IX / Robert,45.575049,-73.610928,https://www.stm.info/fr/recherche#stq=51367,0,,1
-51368,51368,Pie-IX / Robert,45.574818,-73.610404,https://www.stm.info/fr/recherche#stq=51368,0,,1
 51369,51369,Saint-Laurent / Saint-Zotique,45.531787,-73.611803,https://www.stm.info/fr/recherche#stq=51369,0,,1
 51370,51370,Décarie / Côte-Saint-Antoine,45.476287,-73.613063,https://www.stm.info/fr/recherche#stq=51370,0,,1
 51371,51371,Côte-Saint-Antoine / Northcliffe,45.476602,-73.613072,https://www.stm.info/fr/recherche#stq=51371,0,,1
@@ -1900,7 +1902,6 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 51418,51418,Notre-Dame / No 6000,45.461372,-73.609589,https://www.stm.info/fr/recherche#stq=51418,0,,1
 51419,51419,Crémazie / 6e Avenue,45.560362,-73.609323,https://www.stm.info/fr/recherche#stq=51419,0,,1
 51420,51420,Crémazie / 6e Avenue,45.559872,-73.608934,https://www.stm.info/fr/recherche#stq=51420,0,,1
-51421,51421,Perras / Gilbert-Barbier,45.632909,-73.607146,https://www.stm.info/fr/recherche#stq=51421,0,,1
 51422,51422,Perras / Gilbert-Barbier,45.632598,-73.607137,https://www.stm.info/fr/recherche#stq=51422,0,,1
 51423,51423,Van Horne / Jeanne-Mance,45.526301,-73.609607,https://www.stm.info/fr/recherche#stq=51423,0,,1
 51424,51424,Pie-IX / Jean-Rivard,45.573909,-73.607780,https://www.stm.info/fr/recherche#stq=51424,0,,1
@@ -2841,7 +2842,6 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 52452,52452,Masson / d'Orléans,45.557317,-73.569687,https://www.stm.info/fr/recherche#stq=52452,0,,1
 52453,52453,du Mont-Royal / Fullum,45.537630,-73.570187,https://www.stm.info/fr/recherche#stq=52453,0,,1
 52454,52454,Saint-Patrick / Charlevoix,45.479585,-73.571838,https://www.stm.info/fr/recherche#stq=52454,0,,1
-52455,52455,Émile-Duployé / Rachel,45.529676,-73.569742,https://www.stm.info/fr/recherche#stq=52455,0,,1
 52456,52456,De Lorimier / Marie-Anne,45.534082,-73.569991,https://www.stm.info/fr/recherche#stq=52456,0,,1
 52457,52457,De Lorimier / Marie-Anne,45.534102,-73.570342,https://www.stm.info/fr/recherche#stq=52457,0,,1
 52458,52458,Sherbrooke / Jeanne-Mance,45.509484,-73.570859,https://www.stm.info/fr/recherche#stq=52458,0,,1
@@ -2916,7 +2916,6 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 52531,52531,Cherrier / Saint-Hubert,45.520007,-73.568444,https://www.stm.info/fr/recherche#stq=52531,0,,1
 52532,52532,Cherrier / Saint-Hubert,45.519700,-73.568557,https://www.stm.info/fr/recherche#stq=52532,0,,1
 52534,52534,Station Place-des-Arts (De Bleury / De Maisonneuve,45.507205,-73.569071,https://www.stm.info/fr/recherche#stq=52534,0,,1
-52536,52536,Émile-Duployé / Gauthier,45.528822,-73.567921,https://www.stm.info/fr/recherche#stq=52536,0,,1
 52538,52538,Beaubien / Châtelain,45.577530,-73.567008,https://www.stm.info/fr/recherche#stq=52538,0,,1
 52539,52539,Beaubien / Châtelain,45.577275,-73.567032,https://www.stm.info/fr/recherche#stq=52539,0,,2
 52540,52540,Station Place-des-Arts,45.508539,-73.568669,https://www.stm.info/fr/recherche#stq=52540,0,,1
@@ -2967,7 +2966,6 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 52594,52594,Pie-IX / Laurier,45.558149,-73.565356,https://www.stm.info/fr/recherche#stq=52594,0,,1
 52595,52595,Laurier / Pie-IX,45.557889,-73.565644,https://www.stm.info/fr/recherche#stq=52595,0,,2
 52596,52596,Pie-IX / Laurier,45.558067,-73.565822,https://www.stm.info/fr/recherche#stq=52596,0,,1
-52597,52597,Pie-IX / Laurier,45.558374,-73.566062,https://www.stm.info/fr/recherche#stq=52597,0,,1
 52598,52598,Charlevoix / Grand Trunk,45.477535,-73.567566,https://www.stm.info/fr/recherche#stq=52598,0,,1
 52599,52599,Charlevoix / Grand Trunk,45.477632,-73.567988,https://www.stm.info/fr/recherche#stq=52599,0,,1
 52600,52600,Lacordaire / Beaubien,45.580411,-73.565035,https://www.stm.info/fr/recherche#stq=52600,0,,1
@@ -3034,9 +3032,7 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 52673,52673,Beaubien / Albani,45.584316,-73.562799,https://www.stm.info/fr/recherche#stq=52673,0,,1
 52674,52674,Guy / William,45.489387,-73.565863,https://www.stm.info/fr/recherche#stq=52674,0,,1
 52675,52675,Guy / William,45.489417,-73.565593,https://www.stm.info/fr/recherche#stq=52675,0,,1
-52676,52676,De Champlain / Sherbrooke,45.526945,-73.563938,https://www.stm.info/fr/recherche#stq=52676,0,,1
 52677,52677,Sherbrooke / Émile-Duployé,45.527221,-73.564283,https://www.stm.info/fr/recherche#stq=52677,0,,1
-52678,52678,Émile-Duployé / Sherbrooke,45.527357,-73.564793,https://www.stm.info/fr/recherche#stq=52678,0,,1
 52679,52679,De Bleury / René-Lévesque,45.505297,-73.564967,https://www.stm.info/fr/recherche#stq=52679,0,,1
 52680,52680,Ontario / Saint-Hubert,45.518020,-73.564285,https://www.stm.info/fr/recherche#stq=52680,0,,1
 52681,52681,Ontario / Saint-Hubert,45.517755,-73.564285,https://www.stm.info/fr/recherche#stq=52681,0,,1
@@ -3162,7 +3158,6 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 52819,52819,Montgomery / Sherbrooke,45.539170,-73.560118,https://www.stm.info/fr/recherche#stq=52819,0,,1
 52820,52820,Ontario / De Champlain,45.525188,-73.559929,https://www.stm.info/fr/recherche#stq=52820,0,,1
 52821,52821,Ontario / De Champlain,45.524893,-73.559958,https://www.stm.info/fr/recherche#stq=52821,0,,1
-52822,52822,De Champlain / Ontario,45.525354,-73.560502,https://www.stm.info/fr/recherche#stq=52822,0,,1
 52823,52823,Rachel / Davidson,45.546522,-73.559803,https://www.stm.info/fr/recherche#stq=52823,0,,1
 52824,52824,Perras / Primat-Paré,45.663164,-73.556070,https://www.stm.info/fr/recherche#stq=52824,0,,1
 52825,52825,Perras / Primat-Paré,45.663601,-73.555964,https://www.stm.info/fr/recherche#stq=52825,0,,1
@@ -3224,7 +3219,6 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 52888,52888,Hochelaga / Hogan,45.537621,-73.557222,https://www.stm.info/fr/recherche#stq=52888,0,,1
 52889,52889,Hochelaga / Hogan,45.537331,-73.557180,https://www.stm.info/fr/recherche#stq=52889,0,,1
 52890,52890,Ash / Wellington,45.478618,-73.558617,https://www.stm.info/fr/recherche#stq=52890,0,,1
-52891,52891,De Champlain / La Fontaine,45.523874,-73.557307,https://www.stm.info/fr/recherche#stq=52891,0,,1
 52892,52892,Wellington / Charon,45.479343,-73.558902,https://www.stm.info/fr/recherche#stq=52892,0,,1
 52893,52893,Wellington / Charon,45.479093,-73.558736,https://www.stm.info/fr/recherche#stq=52893,0,,1
 52894,52894,Wellington / de la Sucrerie,45.482475,-73.558322,https://www.stm.info/fr/recherche#stq=52894,0,,1
@@ -3275,7 +3269,6 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 52940,52940,Rosemont / Langelier,45.586310,-73.554640,https://www.stm.info/fr/recherche#stq=52940,0,,1
 52941,52941,Sherbrooke / Aylwin,45.547424,-73.555432,https://www.stm.info/fr/recherche#stq=52941,0,,1
 52942,52942,Sherbrooke / Aylwin,45.547169,-73.555282,https://www.stm.info/fr/recherche#stq=52942,0,,1
-52943,52943,De Champlain / Logan,45.523140,-73.555736,https://www.stm.info/fr/recherche#stq=52943,0,,1
 52944,52944,Wellington / Ann,45.494587,-73.556618,https://www.stm.info/fr/recherche#stq=52944,0,,1
 52945,52945,Wellington / Ann,45.494333,-73.556564,https://www.stm.info/fr/recherche#stq=52945,0,,1
 52946,52946,du Havre / de Rouen,45.534630,-73.555193,https://www.stm.info/fr/recherche#stq=52946,0,,1
@@ -4106,6 +4099,8 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 53836,53836,Ridgewood / No 3440,45.493890,-73.612544,https://www.stm.info/fr/recherche#stq=53836,0,,1
 53837,53837,Cimetière Notre-Dame-des-Neiges,45.495952,-73.608325,https://www.stm.info/fr/recherche#stq=53837,0,,1
 53838,53838,Remembrance / Cavalerie du SPVM,45.502365,-73.596124,https://www.stm.info/fr/recherche#stq=53838,0,,1
+53839,53839,La Ronde,45.521352,-73.533844,https://www.stm.info/fr/recherche#stq=53839,0,,1
+53841,53841,Pont Jacques-Cartier (Papineau/Logan),45.524266,-73.555805,https://www.stm.info/fr/recherche#stq=53841,0,,1
 53842,53842,du Docteur-Penfield / Côte-des-Neiges,45.496707,-73.586311,https://www.stm.info/fr/recherche#stq=53842,0,,1
 53843,53843,du Docteur-Penfield / Réservoir McTavish,45.505324,-73.578395,https://www.stm.info/fr/recherche#stq=53843,0,,1
 53844,53844,Haig / No 2105,45.580540,-73.524829,https://www.stm.info/fr/recherche#stq=53844,0,,1
@@ -4263,9 +4258,6 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 54018,54018,Station Charlevoix,45.478061,-73.569472,https://www.stm.info/fr/recherche#stq=54018,0,,1
 54019,54019,Sherbrooke / De Champlain (Hôpital Notre-Dame),45.526576,-73.564249,https://www.stm.info/fr/recherche#stq=54019,0,,1
 54020,54020,Gouin / Wood,45.511663,-73.751589,https://www.stm.info/fr/recherche#stq=54020,0,,2
-54022,54022,Pie-IX / Jarry,45.571767,-73.602906,https://www.stm.info/fr/recherche#stq=54022,0,,1
-54025,54025,Pie-IX / 47e Rue,45.580174,-73.621995,https://www.stm.info/fr/recherche#stq=54025,0,,1
-54029,54029,Pie-IX / Rosemont,45.561064,-73.574408,https://www.stm.info/fr/recherche#stq=54029,0,,1
 54035,54035,Elmhurst / Saint-Jacques,45.453660,-73.637773,https://www.stm.info/fr/recherche#stq=54035,0,,1
 54038,54038,Station Frontenac (Frontenac / Ontario),45.532958,-73.552399,https://www.stm.info/fr/recherche#stq=54038,0,,1
 54039,54039,Station Frontenac (Frontenac / Ontario),45.532730,-73.551866,https://www.stm.info/fr/recherche#stq=54039,0,,1
@@ -4384,6 +4376,7 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 54173,54173,Notre-Dame-de-Grâce / Grand Boulevard,45.467014,-73.624461,https://www.stm.info/fr/recherche#stq=54173,0,,1
 54174,54174,Station Langelier (Langelier / Sherbrooke),45.582778,-73.542870,https://www.stm.info/fr/recherche#stq=54174,0,,1
 54175,54175,Lucien-L'Allier / René-Lévesque,45.495165,-73.572056,https://www.stm.info/fr/recherche#stq=54175,0,,2
+54177,54177,La Ronde,45.521538,-73.536015,https://www.stm.info/fr/recherche#stq=54177,0,,1
 54179,54179,Station Rosemont,45.531255,-73.597158,https://www.stm.info/fr/recherche#stq=54179,0,,1
 54180,54180,Saint-Michel / Robert,45.567739,-73.618257,https://www.stm.info/fr/recherche#stq=54180,0,,1
 54181,54181,Station Lionel-Groulx (Atwater / Lionel-Groulx),45.482998,-73.578888,https://www.stm.info/fr/recherche#stq=54181,0,,1
@@ -4493,6 +4486,7 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 54328,54328,Lavoie / Isabella,45.492388,-73.626753,https://www.stm.info/fr/recherche#stq=54328,0,,1
 54329,54329,Lacombe / Légaré,45.494993,-73.624934,https://www.stm.info/fr/recherche#stq=54329,0,,1
 54330,54330,Casino de Montréal,45.506401,-73.525190,https://www.stm.info/fr/recherche#stq=54330,0,,1
+54335,54335,Station Jean-Drapeau,45.512182,-73.532041,https://www.stm.info/fr/recherche#stq=54335,0,,1
 54337,54337,Notre-Dame / 93e Avenue,45.697099,-73.485245,https://www.stm.info/fr/recherche#stq=54337,0,,1
 54338,54338,Parc Saint-Benoît,45.540426,-73.666529,https://www.stm.info/fr/recherche#stq=54338,0,,1
 54339,54339,Tellier / des Futailles,45.585526,-73.521589,https://www.stm.info/fr/recherche#stq=54339,0,,1
@@ -4655,7 +4649,7 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 60709,60709,Parc Gadbois,45.467836,-73.593816,https://www.stm.info/fr/recherche#stq=60709,0,,1
 54166,54166,De Maisonneuve / Chomedey,45.491496,-73.584240,https://www.stm.info/fr/recherche#stq=54166,0,,1
 50432,50432,Papineau / Prieur,45.568761,-73.655258,https://www.stm.info/fr/recherche#stq=50432,0,,1
-60713,60713,Metcalfe / du Square Dorchester (Centre Infotouris,45.500367,-73.571624,https://www.stm.info/fr/recherche#stq=60713,0,,1
+60713,60713,Metcalfe / du Square Dorchester,45.500367,-73.571624,https://www.stm.info/fr/recherche#stq=60713,0,,1
 60714,60714,de la Cathédrale / De La Gauchetière,45.498319,-73.567794,https://www.stm.info/fr/recherche#stq=60714,0,,1
 60717,60717,de la Commune / de Callière,45.502247,-73.553746,https://www.stm.info/fr/recherche#stq=60717,0,,1
 60719,60719,Place Jacques-Cartier (de la Commune/J.-Cartier),45.507067,-73.552122,https://www.stm.info/fr/recherche#stq=60719,0,,1
@@ -5464,7 +5458,6 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 55098,55098,Léger / L'Archevêque,45.603232,-73.636808,https://www.stm.info/fr/recherche#stq=55098,0,,1
 55099,55099,Fleury / de Rome,45.583673,-73.637546,https://www.stm.info/fr/recherche#stq=55099,0,,1
 55101,55101,Fleury / Plaza,45.584261,-73.636685,https://www.stm.info/fr/recherche#stq=55101,0,,1
-55102,55102,Pie-IX / Monselet,45.590173,-73.636389,https://www.stm.info/fr/recherche#stq=55102,0,,1
 55103,55103,Pie-IX / Monselet,45.590206,-73.636814,https://www.stm.info/fr/recherche#stq=55103,0,,1
 55104,55104,Monselet / Pie-IX,45.589996,-73.636786,https://www.stm.info/fr/recherche#stq=55104,0,,1
 55105,55105,Monselet / Pie-IX,45.589993,-73.637092,https://www.stm.info/fr/recherche#stq=55105,0,,1
@@ -5683,7 +5676,6 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 55323,55323,Rolland / Matte,45.613415,-73.617455,https://www.stm.info/fr/recherche#stq=55323,0,,1
 55324,55324,Lacordaire / des Narcisses,45.607102,-73.620618,https://www.stm.info/fr/recherche#stq=55324,0,,1
 55325,55325,Henri-Bourassa / Léger,45.600302,-73.638577,https://www.stm.info/fr/recherche#stq=55325,0,,1
-55328,55328,Pie-IX / Fleury,45.586647,-73.632656,https://www.stm.info/fr/recherche#stq=55328,0,,1
 55329,55329,Léger / Langelier,45.622917,-73.623107,https://www.stm.info/fr/recherche#stq=55329,0,,1
 55330,55330,Jean-Meunier / d'Amos,45.603836,-73.622023,https://www.stm.info/fr/recherche#stq=55330,0,,1
 55331,55331,Gouin / De Belleville,45.589960,-73.650755,https://www.stm.info/fr/recherche#stq=55331,0,,1
@@ -7080,7 +7072,7 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 56699,56699,Marguerite-Bourgeoys / de la Forêt,45.461067,-73.551977,https://www.stm.info/fr/recherche#stq=56699,0,,2
 56700,56700,de l'Île-des-Soeurs / Berlioz,45.458786,-73.544023,https://www.stm.info/fr/recherche#stq=56700,0,,1
 56701,56701,LaSalle / No 7105,45.439200,-73.580966,https://www.stm.info/fr/recherche#stq=56701,0,,1
-56702,56702,René-Lévesque / Levert,45.468277,-73.535333,https://www.stm.info/fr/recherche#stq=56702,0,,1
+56702,56702,René-Lévesque / Levert,45.468277,-73.535333,https://www.stm.info/fr/recherche#stq=56702,0,,2
 56703,56703,Parc Hadley (Bannantyne / Stephens),45.443904,-73.577364,https://www.stm.info/fr/recherche#stq=56703,0,,1
 56705,56705,LaSalle / Woodland,45.452576,-73.567598,https://www.stm.info/fr/recherche#stq=56705,0,,1
 56706,56706,LaSalle / Argyle,45.452850,-73.567617,https://www.stm.info/fr/recherche#stq=56706,0,,1
@@ -7677,8 +7669,6 @@ STATION_M556,10556,STATION SAINT-MICHEL,45.559560,-73.600002,,1,,2
 57288,57288,Provost / 38e Avenue,45.441918,-73.698966,https://www.stm.info/fr/recherche#stq=57288,0,,1
 57289,57289,Provost / 36e Avenue,45.441973,-73.695543,https://www.stm.info/fr/recherche#stq=57289,0,,1
 57290,57290,Provost / 36e Avenue,45.441888,-73.696115,https://www.stm.info/fr/recherche#stq=57290,0,,1
-57291,57291,Notre-Dame / 33e Avenue,45.434418,-73.692848,https://www.stm.info/fr/recherche#stq=57291,0,,1
-57292,57292,Notre-Dame / 33e Avenue,45.434286,-73.693116,https://www.stm.info/fr/recherche#stq=57292,0,,1
 57293,57293,Notre-Dame / 25e Avenue,45.434801,-73.686245,https://www.stm.info/fr/recherche#stq=57293,0,,1
 57294,57294,Notre-Dame / 25e Avenue,45.434681,-73.686495,https://www.stm.info/fr/recherche#stq=57294,0,,1
 57295,57295,Notre-Dame / 21e Avenue,45.434986,-73.683099,https://www.stm.info/fr/recherche#stq=57295,0,,1

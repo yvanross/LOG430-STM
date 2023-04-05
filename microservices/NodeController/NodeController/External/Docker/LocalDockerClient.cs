@@ -73,7 +73,7 @@ public class LocalDockerClient : IEnvironmentClient
                 Name = container.Name[1..] ?? string.Empty,
                 ImageName = container.Image,
                 Status = container.State.Status,
-                HostPort = ports.hostPort,
+                HostPort = ports.hostPort ?? string.Empty,
                 Labels = labelDict,
                 NanoCpus = container.HostConfig.NanoCPUs,
                 Memory = container.HostConfig.Memory,
@@ -81,23 +81,24 @@ public class LocalDockerClient : IEnvironmentClient
             RawConfig: new ContainerConfig()
             {
                 Config = container,
-                ContainerPort = ports.containerPort
+                ContainerPort = ports.containerPort ?? string.Empty,
             });
         },
         retryCount: 2, autoThrow: false).ConfigureAwait(false);
 
-        (string hostPort, string containerPort) GetPortForDefaultProtocols(ContainerInspectResponse container)
+        (string? hostPort, string? containerPort) GetPortForDefaultProtocols(ContainerInspectResponse container)
         {
             var containerPorts = new List<string>() { "80/tcp" };
 
             HostInfo.CustomContainerPortsDiscovery
                 .Split(',', StringSplitOptions.TrimEntries)
+                .Where(s=>string.IsNullOrWhiteSpace(s) is false)
                 .ToList()
                 .ForEach(containerPort => containerPorts.Add($"{containerPort}/tcp"));
 
             IList<PortBinding>? portBinding = null;
 
-            var containerPort = string.Empty;
+            string? containerPort = null;
 
             foreach (var portNumber in containerPorts)
             {
@@ -110,7 +111,7 @@ public class LocalDockerClient : IEnvironmentClient
                 }
             }
 
-            var hostPort = portBinding!.First(p => string.IsNullOrEmpty(p.HostPort) is false).HostPort;
+            var hostPort = portBinding?.FirstOrDefault(p => string.IsNullOrEmpty(p.HostPort) is false)?.HostPort;
             
             return (hostPort, containerPort);
         }
@@ -211,7 +212,6 @@ public class LocalDockerClient : IEnvironmentClient
             }).ConfigureAwait(false);
     }
 
-    //todo allow discovery of database ports and mq ports
     [MethodImpl(MethodImplOptions.NoOptimization)]
     private IDictionary<string, IList<PortBinding>> GetPortBindings(string containerPort)
     {

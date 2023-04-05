@@ -16,6 +16,11 @@ public static class DynamicStaticGTFSParser
         FetchStringData(DataCategory.STOPS);
     }
 
+    public static void FlushData()
+    {
+        _GTFSInfos.Clear();
+    }
+
     public static GTFSInfo[]? GetInfo(DataCategory dataCategory)
     {
         _GTFSInfos.TryGetValue(dataCategory, out var infos);

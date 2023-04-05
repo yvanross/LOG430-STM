@@ -16,9 +16,9 @@ namespace ApplicationLogic.Usecases
     {
         public static ImmutableHashSet<string> BannedIds = ImmutableHashSet<string>.Empty;
 
-        private readonly IPodWriteModel _podWriteModel;
+        private readonly IPodWriteService _podWriteService;
         
-        private readonly IPodReadModel _podReadModel;
+        private readonly IPodReadService _podReadService;
 
         private readonly IEnvironmentClient _environmentClient;
 
@@ -26,10 +26,10 @@ namespace ApplicationLogic.Usecases
 
         private static string NodeAddress => Environment.GetEnvironmentVariable("SERVICES_ADDRESS")!;
 
-        public ServicePoolDiscoveryUC(IPodWriteModel podWriteModel, IPodReadModel podReadModel, IEnvironmentClient environmentClient, ILogger logger)
+        public ServicePoolDiscoveryUC(IPodWriteService podWriteService, IPodReadService podReadService, IEnvironmentClient environmentClient, ILogger logger)
         {
-            _podWriteModel = podWriteModel;
-            _podReadModel = podReadModel;
+            _podWriteService = podWriteService;
+            _podReadService = podReadService;
             _environmentClient = environmentClient;
             _logger = logger;
         }
@@ -57,7 +57,7 @@ namespace ApplicationLogic.Usecases
             {
                 var runningServicesIds = await _environmentClient.GetRunningServices();
 
-                var registeredServices = _podReadModel.GetAllServices()
+                var registeredServices = _podReadService.GetAllServices()
                     .Where(s=>s.ContainerInfo is not null && s.ServiceStatus is not LaunchedState).DistinctBy(s=>s.Id).ToDictionary(s => s.ContainerInfo!.Id);
 
                 var filterServices = runningServicesIds?.Where(runningService => BannedIds.Contains(runningService) is false && registeredServices.ContainsKey(runningService) is false).ToList();
@@ -69,6 +69,9 @@ namespace ApplicationLogic.Usecases
             {
                 try
                 {
+                    if (string.IsNullOrWhiteSpace(service.CuratedInfo.HostPort))
+                        throw new Exception("Port not found, adding to banned id");
+
                     var newService = new ServiceInstance
                     {
                         Id = service.RawConfig.Config.Config.Env.First(e => e.ToString().StartsWith("ID="))[3..],
@@ -112,11 +115,11 @@ namespace ApplicationLogic.Usecases
 
             void UpdateOrCreatePodType(string podType, (ContainerInfo CuratedInfo, IContainerConfig RawConfig) service, IServiceType serviceType)
             {
-                var pod = _podReadModel.GetPodType(podType);
+                var pod = _podReadService.GetPodType(podType);
 
                 if (pod is null)
                 {
-                    _podWriteModel.AddOrUpdatePodType(new PodType()
+                    _podWriteService.AddOrUpdatePodType(new PodType()
                     {
                         Type = podType,
                         MinimumNumberOfInstances = GetMinimumNumberOfInstances(service.CuratedInfo.Labels),
@@ -130,7 +133,7 @@ namespace ApplicationLogic.Usecases
             {
                 var podId = GetPodId(service.CuratedInfo.Labels) ?? newPodId;
 
-                var pod = _podReadModel.GetPodById(podId) ?? new PodInstance()
+                var pod = _podReadService.GetPodById(podId) ?? new PodInstance()
                 {
                     ServiceInstances = ImmutableList<IServiceInstance>.Empty,
                     Type = GetPodName(service.CuratedInfo.Labels) ?? GetArtifactName(service.CuratedInfo.Labels),
@@ -140,7 +143,7 @@ namespace ApplicationLogic.Usecases
                 pod.ServiceInstances = pod.ServiceInstances.RemoveAll(s => s.Id.Equals(newService.Id));
                 pod.ServiceInstances = pod.ServiceInstances.Add(newService);
 
-                _podWriteModel.AddOrUpdatePod(pod);
+                _podWriteService.AddOrUpdatePod(pod);
             }
         }
 

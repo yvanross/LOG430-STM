@@ -24,7 +24,7 @@ namespace NodeController.Controllers
         {
             _logger = logger;
 
-            var readModel = new PodReadModel();
+            var readModel = new PodReadService();
 
             _routingUc = new(readModel);
         }

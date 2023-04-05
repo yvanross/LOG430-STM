@@ -1,6 +1,6 @@
 ﻿using ApplicationLogic.Extensions;
 using ApplicationLogic.Interfaces;
-using Ingress.Dto;
+using NodeController.Dto.OutGoing;
 using NodeController.External.Docker;
 using RestSharp;
 

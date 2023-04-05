@@ -33,7 +33,7 @@ public class StmDataStub : IgtfsDataSource
             _stops = _stops.Add(igtfsStop.Id, igtfsStop);
     }
 
-    public void PrefetchData()
+    public async Task PrefetchData()
     {
         if (_trips is null && _stops is null)
         {

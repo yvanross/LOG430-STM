@@ -45,9 +45,9 @@ public abstract class ABusTrackingService : ITrackingService
         CurrentStopIndex = liveFeed.CurrentStopSequence - Convert.ToUInt32(Bus.StopIndexAtComputationTime);
     }
 
-    private protected double Predictions(double referenceStopB, double referenceStopA, double referenceStopC)
+    private protected double Predictions(double currentStop, double firstStop, double targetStop)
     {
-        var progression = (referenceStopB - referenceStopA) / (referenceStopC - referenceStopA);
+        var progression = (currentStop - firstStop) / (targetStop - firstStop);
 
         return progression;
     }

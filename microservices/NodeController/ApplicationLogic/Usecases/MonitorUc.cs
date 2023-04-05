@@ -8,19 +8,19 @@ namespace ApplicationLogic.Usecases
 {
     public class MonitorUc
     {
-        private readonly IPodReadModel _readModelModel;
+        private readonly IPodReadService _readServiceService;
 
         private readonly ResourceManagementService _resourceManagementService;
 
         private readonly IEnvironmentClient _client;
 
-        public MonitorUc(IEnvironmentClient client, IPodReadModel readModelModel, IPodWriteModel writeModelModel)
+        public MonitorUc(IEnvironmentClient client, IPodReadService readServiceService, IPodWriteService writeServiceService)
         {
-            _readModelModel = readModelModel;
+            _readServiceService = readServiceService;
 
             _client = client;
 
-            _resourceManagementService = new ResourceManagementService(client, readModelModel, writeModelModel);
+            _resourceManagementService = new ResourceManagementService(client, readServiceService, writeServiceService);
         }
 
         public async Task GarbageCollection()
@@ -30,11 +30,11 @@ namespace ApplicationLogic.Usecases
 
         public async Task MatchInstanceDemandOnPods()
         {
-            var podTypes = _readModelModel.GetAllPodTypes();
+            var podTypes = _readServiceService.GetAllPodTypes();
 
             foreach (var podType in podTypes)
             {
-                var podCount = _readModelModel.GetPodInstances(podType.Type)?.Count;
+                var podCount = _readServiceService.GetPodInstances(podType.Type)?.Count;
 
                 if (podCount < podType.MinimumNumberOfInstances)
                 {
@@ -51,11 +51,11 @@ namespace ApplicationLogic.Usecases
 
                 if (runningContainerIds is null) return Task.CompletedTask;
 
-                var allPods = _readModelModel.GetAllPods();
+                var allPods = _readServiceService.GetAllPods();
 
                 foreach (var podInstance in allPods)
                 {
-                    var minNumberOfInstances = _readModelModel.GetPodType(podInstance.Type)!.MinimumNumberOfInstances;
+                    var minNumberOfInstances = _readServiceService.GetPodType(podInstance.Type)!.MinimumNumberOfInstances;
 
                     if (IsAnyPodServiceDown(podInstance, runningContainerIds))
                     {
@@ -80,7 +80,7 @@ namespace ApplicationLogic.Usecases
 
             bool IsNumberOfRunningInstancesGreaterThanRequired(IPodInstance podInstance, int minNumberOfInstances)
             {
-                var count = _readModelModel.GetServiceInstances(podInstance.Type)!.Count;
+                var count = _readServiceService.GetServiceInstances(podInstance.Type)!.Count;
 
                 return count > minNumberOfInstances;
             }

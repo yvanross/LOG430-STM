@@ -10,11 +10,11 @@ namespace ApplicationLogic.Usecases;
 
 public class RoutingUC
 {
-    private readonly IPodReadModel _readModelModel;
+    private readonly IPodReadService _readServiceService;
 
-    public RoutingUC(IPodReadModel readModelModel)
+    public RoutingUC(IPodReadService readServiceService)
     {
-        _readModelModel = readModelModel;
+        _readServiceService = readServiceService;
     }
 
     public IEnumerable<RoutingData> RouteByDestinationType(string serviceSourceId, string type, LoadBalancingMode mode)
@@ -23,8 +23,8 @@ public class RoutingUC
 
         if (possibleTargets.Count < 1)
         {
-            var podTypes = _readModelModel.GetAllPodTypes().ToDictionary(k => k.Type);
-            var podInstances = _readModelModel.GetAllPods();
+            var podTypes = _readServiceService.GetAllPodTypes().ToDictionary(k => k.Type);
+            var podInstances = _readServiceService.GetAllPods();
 
             possibleTargets = GetPossibleCommunicationEntryPoints(podTypes, podInstances)
                 .Where(service => service.Id.Equals(serviceSourceId) is false)
@@ -54,9 +54,9 @@ public class RoutingUC
 
         List<IServiceInstance> HandlePodLocalRouting()
         {
-            var service = _readModelModel.GetServiceById(serviceSourceId);
+            var service = _readServiceService.GetServiceById(serviceSourceId);
 
-            if (string.IsNullOrEmpty(service?.PodId) is false && _readModelModel.GetPodById(service.PodId) is { } pod)
+            if (string.IsNullOrEmpty(service?.PodId) is false && _readServiceService.GetPodById(service.PodId) is { } pod)
             {
                 var target = pod.ServiceInstances.Where(serviceInstance => serviceInstance.Type.Equals(type));
 
@@ -70,6 +70,8 @@ public class RoutingUC
     public List<IServiceInstance> LoadBalancing(List<IServiceInstance>? services, LoadBalancingMode mode)
     {
         services = services.Where(t => t.ServiceStatus is ReadyState).ToList();
+
+        if(services.Any() is false) return services;
 
         return mode switch
         {

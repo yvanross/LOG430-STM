@@ -4,6 +4,8 @@ namespace NodeController.External.Docker;
 
 public class HostInfo : IHostInfo
 {
+    public const bool CheatsAllowed = true;
+
     public static readonly string TeamName = Environment.GetEnvironmentVariable("TEAM_NAME")!;
 
     public static readonly string IngressAddress = Environment.GetEnvironmentVariable("INGRESS_ADDRESS")!;

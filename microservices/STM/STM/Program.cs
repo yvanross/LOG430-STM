@@ -38,7 +38,7 @@ app.UseCors();
 app.UseAuthorization();
 app.MapControllers();
 
-new StmData().PrefetchData();
+_ = new StmData().PrefetchData();
 
 app.Run();
 

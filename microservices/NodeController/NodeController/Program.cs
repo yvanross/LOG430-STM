@@ -1,7 +1,11 @@
 using ApplicationLogic.Usecases;
+using MassTransit;
+using NodeController.Controllers;
+using NodeController.Dto.Converters;
 using NodeController.External.Dao;
 using NodeController.External.Docker;
 using NodeController.External.Ingress;
+using HostInfo = NodeController.External.Docker.HostInfo;
 
 namespace NodeController
 {
@@ -23,7 +27,13 @@ namespace NodeController
                     });
             });
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.Converters.Add(new ChaosConfigDictionaryConverter());
+            });
+
+            ConfigureMassTransit(builder.Services);
+
             builder.Services.AddHttpContextAccessor();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -49,6 +59,14 @@ namespace NodeController
             app.Run();
         }
 
+        private static void ConfigureMassTransit(IServiceCollection services)
+        {
+            services.AddMassTransit(x =>
+            {
+                x.AddConsumer<BusPositionUpdatedMqController>();
+            });
+        }
+
         public class SchedulingService
         {
             private readonly ILogger<SchedulingService> _logger;
@@ -69,8 +87,8 @@ namespace NodeController
 
                 ingressUc.GetLogStoreAddressAndPort().Wait();
 
-                var writeModel = new PodWriteModel();
-                var readModel = new PodReadModel();
+                var writeModel = new PodWriteService();
+                var readModel = new PodReadService();
                 var environmentClient = new LocalDockerClient(_logger);
 
                 var servicePool = new ServicePoolDiscoveryUC(writeModel, readModel, environmentClient, _logger);
@@ -82,7 +100,7 @@ namespace NodeController
                 _logger.LogInformation("# Preparation Complete, scheduling... #");
 
                 readModel.GetScheduler().TryAddTask(nameof(servicePool.DiscoverServices), servicePool.DiscoverServices);
-                readModel.GetScheduler().TryAddTask(nameof(monitor.RemoveOrReplaceDeadPodsFromModel), monitor.RemoveOrReplaceDeadPodsFromModel);
+                //readModel.GetScheduler().TryAddTask(nameof(monitor.RemoveOrReplaceDeadPodsFromModel), monitor.RemoveOrReplaceDeadPodsFromModel);
                 readModel.GetScheduler().TryAddTask(nameof(monitor.MatchInstanceDemandOnPods), monitor.MatchInstanceDemandOnPods);
                 //readModel.GetScheduler().TryAddTask(nameof(monitor.GarbageCollection), monitor.GarbageCollection);
 

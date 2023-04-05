@@ -126,8 +126,8 @@ public class ItineraryService
 
         double DeltaHours(DateTime from)
         {
-            var hours = (from - DateTime.UtcNow).TotalHours;
-            return hours;
+            var minutes = (from - DateTime.UtcNow).TotalMinutes;
+            return minutes;
         }
     }
 

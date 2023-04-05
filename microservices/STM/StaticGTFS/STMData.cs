@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Entities.Concretions;
 using Entities.Domain;
+using Google.Protobuf.WellKnownTypes;
 using GTFS.Concretions;
 using GTFS.Interfaces;
 using STM.ExternalServiceProvider.Proto;
@@ -17,14 +18,18 @@ public class StmData : IgtfsDataSource
 
     public ImmutableDictionary<string, IStopSTM>? GetStops() => _stops;
 
+    private static SemaphoreSlim semaphore = new (1);
+
     public void AddStop(IStopSTM igtfsStop)
     {
         if(_stops?.ContainsKey(igtfsStop.Id) is false)
             _stops = _stops.Add(igtfsStop.Id, igtfsStop);
     }
 
-    public void PrefetchData()
+    public async Task PrefetchData()
     {
+        await semaphore.WaitAsync();
+
         if (_stops is null && _trips is null)
         {
             var stops = FetchStopData().ToArray();
@@ -36,6 +41,10 @@ public class StmData : IgtfsDataSource
             var immutableTrips = LinkTripAndStopData(_stops, trips);
 
             _trips = immutableTrips;
+
+            DynamicStaticGTFSParser.FlushData();
+
+            semaphore.Release();
         }
     }
 
@@ -55,7 +64,7 @@ public class StmData : IgtfsDataSource
                     {
                         Stop = _stops[stopTimeU.StopId],
                         DepartureTime =
-                            (DateTime.UnixEpoch.AddSeconds(stopTimeU.Departure?.Time ?? stopTimeU.Arrival?.Time ?? 0L))
+                            (DateTime.UnixEpoch.AddSeconds(stopTimeU.Departure?.Time ?? stopTimeU.Arrival?.Time ?? 0L)).AddHours(Timezone.UtcDiff)
                     };
 
                     return schedule;
@@ -128,7 +137,7 @@ public class StmData : IgtfsDataSource
 
             string? HMS = gtfsInfo.GetValue("arrival_time");
 
-            DateTime departureTime = DateTime.UnixEpoch;
+            var departureTime = DateTime.UnixEpoch;
 
             if (HMS != null)
             {
@@ -136,10 +145,12 @@ public class StmData : IgtfsDataSource
 
                 var dateTime = DateTime.UtcNow.Date;
 
-                dateTime = dateTime.AddHours(Convert.ToDouble(HMSArray[0])).AddMinutes(Convert.ToDouble(HMSArray[1])).AddSeconds(Convert.ToDouble(HMSArray[2])).AddHours(4);
+                dateTime = dateTime.AddHours(Convert.ToDouble(HMSArray[0])).AddMinutes(Convert.ToDouble(HMSArray[1]))
+                    .AddSeconds(Convert.ToDouble(HMSArray[2])).AddHours(Timezone.UtcDiff);
 
-                if(dateTime.Date > DateTime.UtcNow.Date.AddDays(1))
-                    dateTime = dateTime.AddDays(-1);
+                var dayModifier = (dateTime.Date.ToTimestamp().Seconds - DateTime.UtcNow.Date.ToTimestamp().Seconds) / TimeSpan.FromDays(1).TotalSeconds;
+
+                dateTime = dateTime.AddDays(-(int)dayModifier);
 
                 departureTime = dateTime;
             }

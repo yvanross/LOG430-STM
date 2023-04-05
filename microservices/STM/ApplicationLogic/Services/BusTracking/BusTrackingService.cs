@@ -6,7 +6,7 @@ namespace ApplicationLogic.Services.BusTracking;
 
 public class BusTrackingService : ABusTrackingService
 {
-    private DateTime _crossedFirstStopTime;
+    private readonly DateTime _crossedFirstStopTime;
 
     private readonly DateTime _startingTime;
 

@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "M5xnfQEWqRkIukOJ0GSIjCmdZ9p4j3Qpu82PjCiu4DxFGD0ylhri5yyejV1u6EPgpvkYvCmkS1Nn8mntZPwKmg==",
+  "dgSpecHash": "WmV4nWpio35rLz209IzFAAaS2jdNDDepuTr0YDJtCFR8008je9YIyr8Mf7Isnl7z3C16xqb7qA+qa6btP2eeJw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\RouteTimeProvider\\RouteTimeProvider.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\RouteTimeProvider\\RouteTimeProvider.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.62\\ambassador.1.0.62.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.61\\ambassador.1.0.61.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.3\\microsoft.aspnetcore.openapi.7.0.3.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.csharp\\4.3.0\\microsoft.csharp.4.3.0.nupkg.sha512",
@@ -105,16 +105,5 @@
     "C:\\Users\\david\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "RouteTimeProvider depends on Ambassador (>= 1.0.61) but Ambassador 1.0.61 was not found. An approximate best match of Ambassador 1.0.62 was resolved.",
-      "libraryId": "Ambassador",
-      "targetGraphs": [
-        "net7.0"
-      ]
-    }
-  ]
+  "logs": []
 }

@@ -11,29 +11,26 @@ public class ChaosExperimentUC
 {
     public int KillsThisMinute { get; private set; }
 
-    public IExperimentResult? ExperimentResult => _chaosMonitoringService.ExperimentResult;
-
-    private readonly IPodReadModel _readModelModel;
+    private readonly IPodReadService _readServiceService;
 
     private readonly IChaosCodex _codex;
-  
-    private readonly ISystemStateWriteModel _systemStateWriteModel;
     
-    private readonly IDataStreamReadModel _streamReadModel;
+    private readonly IDataStreamService _streamService;
 
     private readonly ResourceManagementService _resourceManagementService;
     
-    private readonly ChaosTestMonitoringService _chaosMonitoringService;
-
-    public ChaosExperimentUC(IEnvironmentClient environmentClient, IPodReadModel readModelModel, IPodWriteModel writeModelModel,
-        IChaosCodex codex, ISystemStateWriteModel systemStateWriteModel, IDataStreamReadModel streamReadModel)
+    public ChaosExperimentUC(IEnvironmentClient environmentClient, IPodReadService readServiceService, IPodWriteService writeServiceService,
+        IChaosCodex codex, IDataStreamService streamService)
     {
-        _readModelModel = readModelModel;
+        _readServiceService = readServiceService;
         _codex = codex;
-        _systemStateWriteModel = systemStateWriteModel;
-        _streamReadModel = streamReadModel;
-        _resourceManagementService = new ResourceManagementService(environmentClient, readModelModel, writeModelModel);
-        _chaosMonitoringService = new ChaosTestMonitoringService();
+        _streamService = streamService;
+        _resourceManagementService = new ResourceManagementService(environmentClient, readServiceService, writeServiceService);
+    }
+
+    public async Task SendTimeComparisonRequestToPool(ICoordinates coordinates)
+    {
+        await _streamService.Produce(coordinates);
     }
 
     public async Task InduceChaos()
@@ -63,12 +60,10 @@ public class ChaosExperimentUC
 
                 await SetResourcesOnPods(category, nanoCpus, memory);
             }
-
-            await StreamAndLogExperimentResults();
         }
         else
         {
-            _streamReadModel.EndStreaming();
+            _streamService.EndStreaming();
 
             //todo clean up resources after experiment and refactoring this ugly method
         }
@@ -80,18 +75,18 @@ public class ChaosExperimentUC
     {
         var expectedKillCount = (int)(killRate / 60) * currentSecond;
 
-        var overPodLimit = Math.Max(_readModelModel.GetAllPods().Count - maxNumberOfPods - expectedKillCount, 0);
+        var overPodLimit = Math.Max(_readServiceService.GetAllPods().Count - maxNumberOfPods - expectedKillCount, 0);
 
         expectedKillCount += Convert.ToInt32(overPodLimit);
 
         for (var i = KillsThisMinute; i < expectedKillCount; i++)
         {
-            var podsOfType = _readModelModel.GetAllPodTypes()
+            var podsOfType = _readServiceService.GetAllPodTypes()
                 .FindAll(podType => podType.ServiceTypes
                     .Any(serviceType => serviceType.ArtifactType.Equals(category)))
                 .ToDictionary(p => p.Type);
 
-            var podToKill = _readModelModel.GetAllPods()
+            var podToKill = _readServiceService.GetAllPods()
                 .Where(pod => podsOfType.ContainsKey(pod.Type))
                 .MinBy(_ => Random.Shared.Next());
 
@@ -104,31 +99,14 @@ public class ChaosExperimentUC
 
     private async Task SetResourcesOnPods(string? category, long nanoCpus, long memory)
     {
-        var podsOfTypeDict = _readModelModel.GetAllPodTypes()
+        var podsOfTypeDict = _readServiceService.GetAllPodTypes()
             .FindAll(podType => podType.ServiceTypes
                 .Any(serviceType => serviceType.ArtifactType.Equals(category)))
             .ToDictionary(p => p.Type);
 
-        foreach (var pod in _readModelModel.GetAllPods().Where(p => podsOfTypeDict.ContainsKey(p.Type)))
+        foreach (var pod in _readServiceService.GetAllPods().Where(p => podsOfTypeDict.ContainsKey(p.Type)))
         {
             await _resourceManagementService.SetResources(pod, nanoCpus, memory);
         }
-    }
-
-    private async Task StreamAndLogExperimentResults()
-    {
-        _streamReadModel.BeginStreaming(ReportTestResult);
-
-        await _systemStateWriteModel.Log(new ExperimentReport()
-        {
-            ServiceTypes = _readModelModel.GetAllServiceTypes().ToList(),
-            RunningInstances = _readModelModel.GetAllServices().ToList(),
-            ExperimentResult = _chaosMonitoringService.ExperimentResult
-        });
-    }
-
-    public void ReportTestResult(ISaga saga)
-    {
-        _chaosMonitoringService.AnalyzeAndStoreRealtimeTestData(saga);
     }
 }

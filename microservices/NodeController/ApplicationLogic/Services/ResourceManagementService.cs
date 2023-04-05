@@ -11,20 +11,20 @@ public class ResourceManagementService
 {
     private readonly IEnvironmentClient _environmentClient;
 
-    private readonly IPodReadModel _readModelModel;
+    private readonly IPodReadService _readServiceService;
     
-    private readonly IPodWriteModel _writeModelModel;
+    private readonly IPodWriteService _writeServiceService;
 
-    public ResourceManagementService(IEnvironmentClient environmentClient, IPodReadModel readModelModel, IPodWriteModel writeModelModel)
+    public ResourceManagementService(IEnvironmentClient environmentClient, IPodReadService readServiceService, IPodWriteService writeServiceService)
     {
         _environmentClient = environmentClient;
-        _readModelModel = readModelModel;
-        _writeModelModel = writeModelModel;
+        _readServiceService = readServiceService;
+        _writeServiceService = writeServiceService;
     }
 
     public async Task RemovePodInstance(IPodInstance podInstance)
     {
-        _writeModelModel.TryRemovePod(podInstance);
+        _writeServiceService.TryRemovePod(podInstance);
 
         foreach (var serviceInstance in podInstance.ServiceInstances)
         {
@@ -43,7 +43,7 @@ public class ResourceManagementService
             {
                 serviceInstance.ServiceStatus = new LaunchedState();
 
-                var serviceType = _readModelModel.GetServiceType(serviceInstance.Type);
+                var serviceType = _readServiceService.GetServiceType(serviceInstance.Type);
 
                 if (serviceType is not null)
                 {
@@ -57,13 +57,13 @@ public class ResourceManagementService
         }
         finally
         {
-            _writeModelModel.AddOrUpdatePod(podInstance);
+            _writeServiceService.AddOrUpdatePod(podInstance);
         }
     }
 
     public async Task IncreaseNumberOfPodInstances(string type)
     {
-        var podType = _readModelModel.GetPodType(type);
+        var podType = _readServiceService.GetPodType(type);
 
         if (podType is not null)
         {
@@ -75,7 +75,7 @@ public class ResourceManagementService
                 {
                     newServiceInstance.ServiceStatus = new LaunchedState();
 
-                    var serviceType = _readModelModel.GetServiceType(newServiceInstance.Type);
+                    var serviceType = _readServiceService.GetServiceType(newServiceInstance.Type);
 
                     if (serviceType is not null)
                     {
@@ -89,7 +89,7 @@ public class ResourceManagementService
                     }
                 }
 
-                _writeModelModel.AddOrUpdatePod(newPodInstance);
+                _writeServiceService.AddOrUpdatePod(newPodInstance);
             }
             catch
             {
@@ -109,7 +109,7 @@ public class ResourceManagementService
 
                 serviceInstances.Add(new ServiceInstance()
                 {
-                    Address = _readModelModel.GetAddress(),
+                    Address = _readServiceService.GetAddress(),
                     Id = newServiceId,
                     ContainerInfo = default,
                     Type = serviceType.Type,

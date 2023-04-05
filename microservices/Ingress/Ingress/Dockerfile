@@ -15,10 +15,12 @@ COPY ["Ingress/Entities/Entities.csproj", "Entities/"]
 RUN dotnet restore "Ingress/Ingress.csproj"
 COPY . .
 WORKDIR "/src/Ingress"
-RUN dotnet build "Ingress/Ingress.csproj" -c Release -o /app/build
+RUN dotnet build "Ingress/Ingress.csproj" -c Debug -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Ingress/Ingress.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Ingress/Ingress.csproj" -c Debug -o /app/publish /p:UseAppHost=false
+
+ENV ASPNETCORE_ENVIRONMENT=Development
 
 FROM base AS final
 WORKDIR /app

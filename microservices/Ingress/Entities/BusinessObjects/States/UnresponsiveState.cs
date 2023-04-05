@@ -9,7 +9,7 @@ public class UnresponsiveState : INodeState
     {
         var deltaTime = DateTime.UtcNow.Subtract(node.LastSuccessfulPing);
 
-        if (deltaTime > TimeSpan.FromSeconds(5))
+        if (deltaTime > TimeSpan.FromSeconds(10))
         {
             node.ServiceStatus = new UnknownState();
         }

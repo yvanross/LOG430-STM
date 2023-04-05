@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "D7SE+z86RMfsuf9fmLp2K1C//iRoj4IFXCkTFddZJKEs9NHX7I3mz7wLUWGoxNnKSlH32zR1PoUgr+1peefGbA==",
+  "dgSpecHash": "Sa/9BjuuOn7pCDjFvC5Ie19XMof3wo7awZeGQ9WuVq8EjZly7dFj/L+0svVJkwbPziUc3KwXO5mtbdPdj8oJgQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.62\\ambassador.1.0.62.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\ambassador\\1.0.61\\ambassador.1.0.61.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\coverlet.collector\\3.1.2\\coverlet.collector.3.1.2.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.http.features\\5.0.17\\microsoft.aspnetcore.http.features.5.0.17.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.3\\microsoft.aspnetcore.openapi.7.0.3.nupkg.sha512",
@@ -116,26 +116,5 @@
     "C:\\Users\\david\\.nuget\\packages\\system.xml.xdocument\\4.3.0\\system.xml.xdocument.4.3.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\system.xml.xmldocument\\4.3.0\\system.xml.xmldocument.4.3.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "ApplicationLogic depends on Ambassador (>= 1.0.61) but Ambassador 1.0.61 was not found. An approximate best match of Ambassador 1.0.62 was resolved.",
-      "libraryId": "Ambassador",
-      "targetGraphs": [
-        "net7.0"
-      ]
-    },
-    {
-      "code": "NU1603",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "RouteTimeProvider depends on Ambassador (>= 1.0.61) but Ambassador 1.0.61 was not found. An approximate best match of Ambassador 1.0.62 was resolved.",
-      "libraryId": "Ambassador",
-      "targetGraphs": [
-        "net7.0"
-      ]
-    }
-  ]
+  "logs": []
 }

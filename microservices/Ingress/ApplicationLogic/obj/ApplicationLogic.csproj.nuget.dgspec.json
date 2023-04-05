@@ -53,6 +53,10 @@
             "Docker.DotNet": {
               "target": "Package",
               "version": "[3.125.13, )"
+            },
+            "Microsoft.Extensions.Logging.Abstractions": {
+              "target": "Package",
+              "version": "[7.0.0, )"
             }
           },
           "imports": [

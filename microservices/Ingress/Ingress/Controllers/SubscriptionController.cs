@@ -13,8 +13,6 @@ namespace Ingress.Controllers
     {
         private readonly SubscriptionUC _subscriptionUc;
 
-        private readonly MonitorUc _monitorUc;
-
         private readonly ILogger<SubscriptionController> _logger;
 
         public SubscriptionController(ILogger<SubscriptionController> logger)
@@ -27,7 +25,7 @@ namespace Ingress.Controllers
         }
 
         [HttpPost("{id}")]
-        public async Task<IActionResult> Post([FromRoute] string id, [FromBody] CallingServiceInfo callingServiceInfo)
+        public IActionResult Post([FromRoute] string id, [FromBody] CallingServiceInfo callingServiceInfo)
         {
             try
             {

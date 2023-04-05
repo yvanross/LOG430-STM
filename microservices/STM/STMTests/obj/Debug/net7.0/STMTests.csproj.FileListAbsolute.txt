@@ -354,7 +354,6 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\net7.0\STMTests.runtimeconfig.json
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\net7.0\STMTests.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\net7.0\STMTests.pdb
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\net7.0\Ambassador.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\net7.0\Azure.Core.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\net7.0\Azure.Identity.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\net7.0\Google.Protobuf.dll

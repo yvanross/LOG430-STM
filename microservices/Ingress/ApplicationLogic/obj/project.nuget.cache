@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "8934M3wXP5fw5JDTRDAoB1BHFwzkwfFwu3lmURFHwA16tdOFKiGq2t1D5CW19OOQtQkBnus2GTg3nlrevlFBVg==",
+  "dgSpecHash": "VjQ+xMdlKddu5ewCLo4Tg2Uk8uC4u27qyg0TqMIVmIkBPY4jv2FdJu0QEbe1JA8AWcm4QfAy5nnbrZuWedrjLA==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogic\\ApplicationLogic.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\docker.dotnet\\3.125.13\\docker.dotnet.3.125.13.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512"

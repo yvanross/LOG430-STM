@@ -15,7 +15,7 @@ namespace ApplicationLogicTests.Usecases
 
         private Mock<IEnvironmentClient> _envMock;
 
-        private Mock<IPodReadModel> _podReadModel;
+        private Mock<IPodReadService> _podReadModel;
 
         [TestInitialize]
         public void Init()

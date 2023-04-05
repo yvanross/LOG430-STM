@@ -4,6 +4,8 @@ using Entities.DomainInterfaces.ResourceManagement;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using NodeController.Dto.Incoming;
 using NodeController.External.Dao;
 using NodeController.External.Docker;
 
@@ -22,35 +24,46 @@ namespace NodeController.Controllers
         }
 
         [HttpPost]
-        [ActionName(nameof(BeginExperiment))]
-        public async Task<Results<Ok, BadRequest<string>>?> BeginExperiment(IChaosCodex chaosCodex)
+        [ActionName(nameof(Begin))]
+        public async Task<Results<Ok, BadRequest<string>>?> Begin(ExperimentDto experiment)
         {
-            return await Try.WithConsequenceAsync<Results<Ok, BadRequest<string>>>(() =>
+            return await Try.WithConsequenceAsync<Results<Ok, BadRequest<string>>>(async () =>
             {
                 _logger.LogInformation("Checking pool sanity...");
 
-                if (ServicePoolDiscoveryUC.BannedIds.Any())
-                    return new(() => TypedResults.BadRequest("Pool compromised by unregistered services, flagging as cheating"));
+                if (ServicePoolDiscoveryUC.BannedIds.Any() && HostInfo.CheatsAllowed is false)
+                    return TypedResults.BadRequest("Pool compromised by unregistered services, flagging as cheating");
 
-                _logger.LogInformation("Scheduling experiment...");
+                _logger.LogInformation("Pool sane");
 
-                var readModel = new PodReadModel();
+                _logger.LogInformation("Creating experiment...");
 
-                var scheduler = readModel.GetScheduler();
+                var readModel = new PodReadService();
 
                 var experimentUc = new ChaosExperimentUC(
                     new LocalDockerClient(_logger),
                     readModel,
-                    new PodWriteModel(),
-                    chaosCodex,
-                    new CassandraWriteModel(),
+                    new PodWriteService(),
+                    experiment.ChaosCodex,
                     new MassTransitRabbitMqClient());
 
-                scheduler.TryAddTask(nameof(experimentUc.InduceChaos), experimentUc.InduceChaos);
+                _logger.LogInformation("Experiment created");
 
-                _logger.LogInformation("Experiment scheduled");
+                _logger.LogInformation("Sending experiment query to pool...");
 
-                return new(() => TypedResults.Ok());
+                await experimentUc.SendTimeComparisonRequestToPool(experiment.Coordinates);
+
+                _logger.LogInformation("Experiment sent to pool, it may begin processing");
+
+                _logger.LogInformation("Scheduling incremental disruptions and analysis...");
+
+                var scheduler = readModel.GetScheduler();
+
+                //scheduler.TryAddTask(nameof(experimentUc.InduceChaos), experimentUc.InduceChaos);
+
+                _logger.LogInformation("Scheduling completed, good luck");
+
+                return TypedResults.Ok();
             }, retryCount: 2);
         }
     }

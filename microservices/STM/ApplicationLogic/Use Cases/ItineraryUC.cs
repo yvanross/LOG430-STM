@@ -38,7 +38,7 @@ namespace ApplicationLogic.Use_Cases
 
                 if ((relevantTrips?.Count ?? 0) < 1) return default;
 
-                var timeRelevantBuses = await RelevantBuses(relevantTrips);
+                var timeRelevantBuses = RelevantBuses(relevantTrips);
 
                 _logger?.LogInformation($"found {timeRelevantBuses.Length} relevant buses");
 
@@ -69,7 +69,7 @@ namespace ApplicationLogic.Use_Cases
             return relevantTrips;
         }
 
-        private async Task<(IBus bus, double eta)[]> RelevantBuses(ImmutableDictionary<string, ITripSTM>? relevantTrips)
+        private (IBus bus, double eta)[] RelevantBuses(ImmutableDictionary<string, ITripSTM>? relevantTrips)
         {
             GTFSService gtfsService = new GTFSService();
 

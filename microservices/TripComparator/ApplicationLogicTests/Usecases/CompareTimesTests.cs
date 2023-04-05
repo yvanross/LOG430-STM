@@ -13,7 +13,7 @@ namespace ApplicationLogicTests.Usecases
         public void Init()
         {
             _compareTimesUc = new CompareTimesUC(new RouteTimeProviderClient(), new StmClient(null),
-                new MassTransitRabbitMqClient());
+                null);
         }
 
         [TestMethod()]

@@ -12,7 +12,7 @@ public interface IgtfsDataSource
 
     void AddStop(IStopSTM igtfsStop);
 
-    public void PrefetchData();
+    public Task PrefetchData();
 
     public void ApplyTripUpdatesToDataSet(List<TripUpdate> tripUpdates);
 }

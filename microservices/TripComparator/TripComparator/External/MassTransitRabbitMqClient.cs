@@ -1,57 +1,32 @@
 ﻿using Ambassador;
 using Ambassador.Controllers;
 using ApplicationLogic.Interfaces;
+using Entities.DomainInterfaces;
 using MassTransit;
-using ISaga = Entities.DomainInterfaces.ISaga;
+using MassTransit.Transports;
+using MqContracts;
 
 namespace TripComparator.External;
 
 public class MassTransitRabbitMqClient : IDataStreamWriteModel
 {
-    private IBusControl? _busControl;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public async Task BeginStreaming()
+    public MassTransitRabbitMqClient(IPublishEndpoint publishEndpoint)
     {
-        var mq = (await RestController.GetAddress(HostInfo.MqServiceName, LoadBalancingMode.RoundRobin)).FirstOrDefault();
+        _publishEndpoint = publishEndpoint;
+    }
 
-        if (mq is not null)
-        {
-            var reformattedAddress = $"rabbitmq{mq.Address[4..]}";
-
-            var busControl = Bus.Factory.CreateUsingRabbitMq(cfg =>
+    public async Task Produce(IBusPositionUpdated busPositionUpdated)
+    {
+        await _publishEndpoint.Publish(new BusPositionUpdated()
             {
-                cfg.Host(reformattedAddress, h =>
-                {
-                    h.Username("guest");
-                    h.Password("guest");
-                });
+                Message = busPositionUpdated.Message,
+                Seconds = busPositionUpdated.Seconds,
+            },
+            x =>
+            {
+                x.SetRoutingKey("trip_comparison.response");
             });
-
-            _busControl = busControl;
-
-            try
-            {
-                _ = await busControl.StartAsync();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-        }
-    }
-
-    public void CloseChannel()
-    {
-        _ = _busControl?.StopAsync();
-
-        _busControl = null;
-    }
-
-    public async Task Produce(ISaga saga)
-    {
-        var sendEndpoint = await _busControl!.GetSendEndpoint(new Uri("queue:TimeComparison"));
-
-        await sendEndpoint.Send(saga);
     }
 }

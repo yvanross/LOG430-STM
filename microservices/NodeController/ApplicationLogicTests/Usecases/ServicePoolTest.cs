@@ -17,11 +17,11 @@ namespace ApplicationLogicTests.Usecases
       
         private Mock<IEnvironmentClient> _envMock;
 
-        private Mock<IPodReadModel> _readModelMock;
+        private Mock<IPodReadService> _readModelMock;
        
         private Mock<ILogger> _logger;
         
-        private Mock<IPodWriteModel> _writeModel;
+        private Mock<IPodWriteService> _writeModel;
 
         [TestInitialize]
         public void Init()

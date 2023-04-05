@@ -13,7 +13,7 @@ public class FileCompressor
 
         byte[] byteArray = Encoding.ASCII.GetBytes(singleLine);
 
-        await using (FileStream fileStream = new FileStream(@"C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\STM\StaticGTFS\Resources" + "compressed.bin", FileMode.Create))
+        await using (FileStream fileStream = new FileStream(@"C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\StaticGTFS\Resources\" + "compressed.bin", FileMode.Create))
         {
             await using (GZipStream zipStream = new GZipStream(fileStream, CompressionMode.Compress, false))
             {

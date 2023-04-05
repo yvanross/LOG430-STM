@@ -1,178 +1,185 @@
 version: '3.8'
- 
-x-conf: 
-  - env: 
-    - &ASPNETCORE_URLS http://+:80
-    - &MQ_SERVICE_NAME EventStream
+x-conf:
+  - env:
+      - 'http://+:80'
+      - EventStream
   - vol:
-     &vol
-     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-     - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-
-x-variables: &std
-  SERVICES_ADDRESS: ${SERVICES_ADDRESS}   
-  NODE_CONTROLLER_PORT: ${NODE_CONTROLLER_PORT}
-  ASPNETCORE_URLS: *ASPNETCORE_URLS
-
+      - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
+      - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
+x-variables:
+  SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
+  NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
+  ASPNETCORE_URLS: 'http://+:80'
 services:
-
-#Section Admin: Cette section est seulement pour la première itération et doit être effacé
-# pour les itérations subséquentes
-
   ingress:
-    image: ${DOCKER_REGISTRY-}ingress
-    container_name: &name ingress
+    image: '${DOCKER_REGISTRY-}ingress'
+    container_name: Ingress
     restart: always
     ports:
-      - ${INGRESS_PORT}:80
+      - '${INGRESS_PORT}:80'
     build:
       context: ../
       dockerfile: Ingress/Ingress/Dockerfile
     environment:
-      ASPNETCORE_URLS: *ASPNETCORE_URLS
-      NODE_STATE_STORAGE_Port: 32670
-      EXPERIMENT_HISTORY_STORAGE_Port: 32672
+      ASPNETCORE_URLS: 'http://+:80'
+      NODE_STATE_STORAGE_PORT: 32670
+      EXPERIMENT_HISTORY_STORAGE_PORT: 32672
+      SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
     volumes:
-      *vol
+      - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
+      - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
     labels:
-      ARTIFACT_CATEGORY: DEBUG  
-      ARTIFACT_NAME: *name    
-  
+      ARTIFACT_CATEGORY: DEBUG
+      ARTIFACT_NAME: Ingress
   node-state-time-serie-storage:
-    image: cassandra:latest
-    container_name: &name NodeStateTimeSerieStorage
+    image: 'influxdb:latest'
+    container_name: NodeStateTimeSerieStorage
     environment:
-      - CASSANDRA_CLUSTER_NAME=my_cassandra_cluster
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=guest
+      - DOCKER_INFLUXDB_INIT_PASSWORD=guest-pass
+      - DOCKER_INFLUXDB_INIT_ORG=ets
+      - 'DOCKER_INFLUXDB_INIT_BUCKET=${TEAM_NAME}'
+      - INFLUXD_LOG_LEVEL=debug
     ports:
-      - "32670:9042"
+      - '32670:8086'
     labels:
       ARTIFACT_CATEGORY: Database
-      ARTIFACT_NAME: *name
-    #volumes:
-    #  - cassandra-data:/var/lib/cassandra
-
+      ARTIFACT_NAME: NodeStateTimeSerieStorage
+    volumes:
+      - 'influxdb-data:/var/lib/influxdb2'
+      - 'influxdb-config:/etc/influxdb2'
   experiment-history-storage:
-    image: mongo:latest
-    container_name: &name ExperimentHistoryStorage
+    image: 'mongo:latest'
+    container_name: ExperimentHistoryStorage
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     ports:
-      - "32672:27017"
+      - '32672:27017'
     labels:
       ARTIFACT_CATEGORY: Database
-      ARTIFACT_NAME: *name
-
-#Fin Section Admin
-
+      ARTIFACT_NAME: ExperimentHistoryStorage
   nodecontroller:
-    image: ${DOCKER_REGISTRY-}nodecontroller
+    image: '${DOCKER_REGISTRY-}nodecontroller'
     container_name: NodeController
     restart: always
     ports:
-      - ${NODE_CONTROLLER_PORT}:80
+      - '${NODE_CONTROLLER_PORT}:80'
     build:
       context: ../
       dockerfile: NodeController/NodeController/Dockerfile
     environment:
-      TEAM_NAME: ${TEAM_NAME}
-      INGRESS_ADDRESS: ${INGRESS_ADDRESS}
-      INGRESS_PORT: ${INGRESS_PORT}
-      SERVICES_ADDRESS: ${SERVICES_ADDRESS}     
-      NODE_CONTROLLER_PORT: ${NODE_CONTROLLER_PORT}
-      ASPNETCORE_URLS: *ASPNETCORE_URLS
-      MQ_SERVICE_NAME: *MQ_SERVICE_NAME
-      #list here all the custom container ports you are using in your services for communication
-      #added are the default ports for rabbitmq, cassandra and mongodb
-      #feel free to add the necessary ones for your needs
-      CUSTOM_CONTAINER_PORTS_DISCOVERY: 5672,27017,9042
+      TEAM_NAME: '${TEAM_NAME}'
+      INGRESS_ADDRESS: '${INGRESS_ADDRESS}'
+      INGRESS_PORT: '${INGRESS_PORT}'
+      SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
+      NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
+      ASPNETCORE_URLS: 'http://+:80'
+      MQ_SERVICE_NAME: EventStream
+      CUSTOM_CONTAINER_PORTS_DISCOVERY: 5672
     volumes:
-      *vol    
+      - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
+      - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
     depends_on:
       - ingress
-    
   event-store:
-    container_name: *MQ_SERVICE_NAME
-    image: rabbitmq:3.12-rc-management
+    container_name: EventStream
+    image: 'rabbitmq:3.12-rc-management'
     restart: always
     ports:
-        - "32771:5672"
-        - "15672:15672"
+      - '32771:5672'
+      - '15672:15672'
     environment:
-      ID: *MQ_SERVICE_NAME 
-      #default username and password are both: guest
+      ID: EventStream
     labels:
       ARTIFACT_CATEGORY: Connector
-      ARTIFACT_NAME: *MQ_SERVICE_NAME
-
-
+      ARTIFACT_NAME: EventStream
   routetimeprovider:
-    container_name: &name RouteTimeProvider
-    image: ${DOCKER_REGISTRY-}routetimeprovider
+    container_name: RouteTimeProvider
+    image: '${DOCKER_REGISTRY-}routetimeprovider'
     restart: always
     build:
       context: ../
       dockerfile: RouteTimeProvider/RouteTimeProvider/Dockerfile
     environment:
-      <<: *std
-      ID: *name 
-      API_KEY: ${TOMTOM}
+      SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
+      NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
+      ASPNETCORE_URLS: 'http://+:80'
+      ID: RouteTimeProvider
+      API_KEY: '${TOMTOM}'
     ports:
-        - "32772:80"
+      - '32772:80'
     volumes:
-      *vol
+      - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
+      - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
     labels:
       ARTIFACT_CATEGORY: Computation
-      ARTIFACT_NAME: *name
+      ARTIFACT_NAME: RouteTimeProvider
       MINIMUM_NUMBER_OF_INSTANCES: 5
     depends_on:
       - nodecontroller
-
   tripcomparator:
-    container_name: &name TripComparator
-    image: ${DOCKER_REGISTRY-}tripcomparator
+    container_name: TripComparator
+    image: '${DOCKER_REGISTRY-}tripcomparator'
     restart: always
     build:
       context: ../
       dockerfile: TripComparator/TripComparator/Dockerfile
     environment:
-      <<: *std
-      ID: *name 
-      MQ_SERVICE_NAME: *MQ_SERVICE_NAME
+      SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
+      NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
+      ASPNETCORE_URLS: 'http://+:80'
+      ID: TripComparator
+      MQ_SERVICE_NAME: EventStream
     ports:
-        - "32773:80"
+      - '32773:80'
     volumes:
-      *vol
+      - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
+      - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
     deploy:
       restart_policy:
         condition: on-failure
     labels:
       ARTIFACT_CATEGORY: Computation
       MINIMUM_NUMBER_OF_INSTANCES: 1
-      ARTIFACT_NAME: *name
+      ARTIFACT_NAME: TripComparator
     depends_on:
       - nodecontroller
-
+      - event-store
   stm:
-    container_name: &name STM
-    image: ${DOCKER_REGISTRY-}stm
+    container_name: STM
+    image: '${DOCKER_REGISTRY-}stm'
     restart: always
     build:
-        context: ../
-        dockerfile: STM/STM/Dockerfile
+      context: ../
+      dockerfile: STM/STM/Dockerfile
     environment:
-      <<: *std
-      ID: *name 
-      API_KEY: ${STM}
+      SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
+      NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
+      ASPNETCORE_URLS: 'http://+:80'
+      ID: STM
+      API_KEY: '${STM}'
     ports:
-        - "32774:80"
+      - '32774:80'
     volumes:
-        *vol
+      - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
+      - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
     labels:
       ARTIFACT_CATEGORY: Computation
-      ARTIFACT_NAME: *name
+      ARTIFACT_NAME: STM
     depends_on:
-        - nodecontroller
-
-
+      - nodecontroller
+    
+##you will have to comment this out to run the evaluation 
+##using jenkins serves only to increase productivity in this lab
+  jenkins:
+    image: jenkins/jenkins
+    restart: always
+    ports:
+      - '32775:8080'
+      
+volumes:
+  influxdb-data: null
+  influxdb-config: null

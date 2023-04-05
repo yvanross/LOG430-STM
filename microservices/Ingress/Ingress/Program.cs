@@ -2,6 +2,7 @@
 using ApplicationLogic.Usecases;
 using Entities.BusinessObjects;
 using Ingress.Repository;
+using NodeController.External.Docker;
 using NuGet.Packaging.Signing;
 
 namespace Ingress
@@ -28,7 +29,7 @@ namespace Ingress
             builder.Services.AddHttpContextAccessor();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c=>c.EnableAnnotations());
 
             var app = builder.Build();
 
@@ -43,18 +44,31 @@ namespace Ingress
 
             app.MapControllers();
 
-            ScheduleRecurringTasks();
+            var logger = app.Services.GetRequiredService<ILogger<SchedulingService>>();
+
+            _ = new SchedulingService(logger);
 
             app.Run();
         }
 
-        private static void ScheduleRecurringTasks()
+        public class SchedulingService
         {
-            var readModel = new RepositoryRead();
+            private readonly ILogger<SchedulingService> _logger;
 
-            var monitor = new MonitorUc(readModel, new RepositoryWrite());
+            public SchedulingService(ILogger<SchedulingService> logger)
+            {
+                _logger = logger;
+                ScheduleRecurringTasks();
+            }
 
-            readModel.GetScheduler().TryAddTask(monitor.BeginProcessingHeartbeats);
+            private void ScheduleRecurringTasks()
+            {
+                var readModel = new RepositoryRead();
+
+                var monitor = new MonitorUc(readModel, new RepositoryWrite(), _logger);
+
+                readModel.GetScheduler().TryAddTask(monitor.BeginProcessingHeartbeats);
+            }
         }
     }
 }

@@ -4,9 +4,5 @@ namespace ApplicationLogic.Interfaces;
 
 public interface IDataStreamWriteModel
 {
-    Task BeginStreaming();
-
-    void CloseChannel();
-
-    Task Produce(ISaga saga);
+    Task Produce(IBusPositionUpdated busPositionUpdated);
 }

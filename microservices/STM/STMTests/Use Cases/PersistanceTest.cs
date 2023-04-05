@@ -34,7 +34,7 @@ namespace STMTests.Use_Cases
 
             if (!run) return;
 
-            await FileCompressor.CompressTripFile(@"C:\Users\david\OneDrive\Documents\stop_times");
+            await FileCompressor.CompressTripFile(@"C:\Users\david\Documents\stop_times");
         }
     }
 }

@@ -53,6 +53,10 @@
             "Docker.DotNet": {
               "target": "Package",
               "version": "[3.125.13, )"
+            },
+            "Microsoft.Extensions.Logging.Abstractions": {
+              "target": "Package",
+              "version": "[7.0.0, )"
             }
           },
           "imports": [
@@ -204,9 +208,17 @@
               "target": "Package",
               "version": "[7.0.4, )"
             },
+            "RestSharp": {
+              "target": "Package",
+              "version": "[109.0.1, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
+            },
+            "Swashbuckle.AspNetCore.Annotations": {
+              "target": "Package",
+              "version": "[6.5.0, )"
             },
             "System.Collections.Concurrent": {
               "target": "Package",

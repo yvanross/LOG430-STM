@@ -2,6 +2,7 @@
 using ApplicationLogic.Services;
 using ApplicationLogic.Usecases;
 using Entities.BusinessObjects.Live;
+using Entities.BusinessObjects.ResourceManagement;
 using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
 using Entities.DomainInterfaces.ResourceManagement;
@@ -36,6 +37,27 @@ namespace NodeController.Controllers
         public List<IPodInstance> GetPodInstances()
         {
             return RouteCache.GetPodInstances().ToList();
+        }
+        
+        [HttpGet]
+        [ActionName(nameof(CassandraPost))]
+        public async Task<IActionResult> CassandraPost()
+        {
+            var cwm = new InfluxDbWriteService();
+
+            await cwm.Log(new ExperimentReport()
+            {
+                ExperimentResult = new ExperimentResult()
+                {
+                    Message = "testMessage",
+                    AverageLatency = 4,
+                    ErrorCount = 2,
+                },
+                RunningInstances = new List<IServiceInstance>(),
+                ServiceTypes = new List<IServiceType>()
+            });
+
+            return Ok();
         }
     }
 }

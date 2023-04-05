@@ -31,7 +31,7 @@ public class Scheduler : IScheduler
                     await func();
 
                     return Task.CompletedTask;
-                });
+                }, retryCount: int.MaxValue);
             }
         }
     }

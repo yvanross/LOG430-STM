@@ -55,9 +55,9 @@ public static class MockProvider
         return ingressClient;
     }
 
-    public static Mock<ISaga> GetSagaMock(int phase = 0, int seconds = 1)
+    public static Mock<IBusPositionUpdated> GetSagaMock(int phase = 0, int seconds = 1)
     {
-        var saga = new Mock<ISaga>();
+        var saga = new Mock<IBusPositionUpdated>();
 
         saga.Setup(x => x.Message).Returns("Test message");
 
@@ -66,20 +66,18 @@ public static class MockProvider
         return saga;
     }
 
-    public static Mock<IDataStreamReadModel> GetDataStreamReadMock()
+    public static Mock<IDataStreamService> GetDataStreamReadMock()
     {
-        var dataStreamReadModel = new Mock<IDataStreamReadModel>();
-
-        dataStreamReadModel.Setup(x => x.BeginStreaming(It.IsAny<Action<ISaga>>()));
+        var dataStreamReadModel = new Mock<IDataStreamService>();
 
         dataStreamReadModel.Setup(x => x.EndStreaming());
 
         return dataStreamReadModel;
     }
 
-    public static Mock<ISystemStateWriteModel> GetSystemStateWriteMock()
+    public static Mock<ISystemStateWriteService> GetSystemStateWriteMock()
     {
-        var SystemStateWriteModel = new Mock<ISystemStateWriteModel>();
+        var SystemStateWriteModel = new Mock<ISystemStateWriteService>();
 
         SystemStateWriteModel.Setup(x => x.Log(It.IsAny<IExperimentReport>()));
 
@@ -121,9 +119,9 @@ public static class MockProvider
         return chaosConfig;
     }
 
-    public static Mock<IPodWriteModel> GetWriteModelMock()
+    public static Mock<IPodWriteService> GetWriteModelMock()
     {
-        var writeModel = new Mock<IPodWriteModel>();
+        var writeModel = new Mock<IPodWriteService>();
 
         writeModel.Setup(x => x.AddOrUpdatePod(It.IsAny<IPodInstance>()));
 
@@ -134,7 +132,7 @@ public static class MockProvider
         return writeModel;
     }
 
-    public static Mock<IPodReadModel> GetReadModelMock()
+    public static Mock<IPodReadService> GetReadModelMock()
     {
         var podInstance1 = GetPodInstanceMock(1, 1).Object;
         var podInstance2 = GetPodInstanceMock(2, 1).Object;
@@ -153,7 +151,7 @@ public static class MockProvider
         var podType1 = GetPodTypeMock(1).Object;
         var podType2 = GetPodTypeMock(2).Object;
 
-        var readModel = new Mock<IPodReadModel>();
+        var readModel = new Mock<IPodReadService>();
 
         readModel.Setup(x => x.GetScheduler()).Returns(GetSchedulerMock().Object);
 
