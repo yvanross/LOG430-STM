@@ -357,3 +357,4 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\Applicat
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogicTests\bin\Debug\net7.0\TripComparator.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogicTests\bin\Debug\net7.0\TripComparator.pdb
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogicTests\bin\Debug\net7.0\Entities.pdb
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogicTests\bin\Debug\net7.0\Polly.dll

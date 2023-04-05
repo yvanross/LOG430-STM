@@ -35,7 +35,7 @@ public class ChaosExperimentUC
 
     public async Task InduceChaos()
     {
-        if (DateTime.UtcNow < _codex.EndTestAt)
+        if (DateTime.UtcNow < _codex.EndTestAt && _codex.StartTestAt < DateTime.UtcNow)
         {
             var completionPercentage =
                 (GetSecondsSinceEpoch(DateTime.UtcNow) - GetSecondsSinceEpoch(_codex.StartTestAt)) /
@@ -52,7 +52,7 @@ public class ChaosExperimentUC
                     KillsThisMinute = 0;
 
                 var killRate = chaosConfig.KillRate * completionPercentage;
-                var maxNumberOfPods = chaosConfig.MaxNumberOfPods / completionPercentage;
+                var maxNumberOfPods = chaosConfig.MaxNumberOfPods;
                 var memory = (long)(chaosConfig.Memory / completionPercentage);
                 var nanoCpus = (long)(chaosConfig.NanoCpus / completionPercentage);
 
@@ -64,8 +64,6 @@ public class ChaosExperimentUC
         else
         {
             _streamService.EndStreaming();
-
-            //todo clean up resources after experiment and refactoring this ugly method
         }
         
         double GetSecondsSinceEpoch(DateTime datetime) => (datetime - DateTime.UnixEpoch).TotalSeconds;

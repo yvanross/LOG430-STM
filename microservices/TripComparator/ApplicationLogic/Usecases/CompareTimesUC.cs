@@ -1,7 +1,9 @@
-﻿using System.Threading.Channels;
+﻿using System.Diagnostics.Tracing;
+using System.Threading.Channels;
 using ApplicationLogic.Interfaces;
 using Entities.BusinessObjects;
 using Entities.DomainInterfaces;
+using Microsoft.Extensions.Logging;
 
 namespace ApplicationLogic.Usecases
 {
@@ -13,65 +15,69 @@ namespace ApplicationLogic.Usecases
 
         private readonly IDataStreamWriteModel? _dataStreamWriteModel;
 
+        private readonly ILogger? _logger;
+
         private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(5));
 
-        public CompareTimesUC(IRouteTimeProvider routeTimeProvider, IBusInfoProvider iBusInfoProvider, IDataStreamWriteModel? dataStreamWriteModel)
+        private int _averageCarTravelTime;
+
+        private IStmBus? _optimalBus;
+
+        public CompareTimesUC(IRouteTimeProvider routeTimeProvider, IBusInfoProvider iBusInfoProvider, IDataStreamWriteModel? dataStreamWriteModel, ILogger logger)
         {
             _routeTimeProvider = routeTimeProvider;
             _iBusInfoProvider = iBusInfoProvider;
             _dataStreamWriteModel = dataStreamWriteModel;
+            _logger = logger;
         }
 
-        public async Task<ChannelReader<IBusPositionUpdated>> BeginComparingBusAndCarTime(string startingCoordinates, string destinationCoordinates)
+        public async Task<Channel<IBusPositionUpdated>> BeginComparingBusAndCarTime(string startingCoordinates, string destinationCoordinates)
         {
-            int averageCarTravelTime = 0;
-            IStmBus? optimalBus = default;
-
             await Task.WhenAll(
                 
                 _routeTimeProvider.GetTravelTimeInSeconds(startingCoordinates, destinationCoordinates)
-                    .ContinueWith(task => averageCarTravelTime = task.Result),
+                    .ContinueWith(task => _averageCarTravelTime = task.Result),
 
                 _iBusInfoProvider.GetBestBus(startingCoordinates, destinationCoordinates)
                     .ContinueWith(task =>
                     {
-                        optimalBus = task.Result.First();
-                        return _iBusInfoProvider.BeginTracking(optimalBus);
+                        _optimalBus = task.Result.First();
+                        return _iBusInfoProvider.BeginTracking(_optimalBus);
                     })
                 );
 
-            if (optimalBus is null || averageCarTravelTime < 1)
+            if (_optimalBus is null || _averageCarTravelTime < 1)
             {
                 throw new Exception("bus or car data was null");
             }
 
             var channel = Channel.CreateUnbounded<IBusPositionUpdated>();
 
-            _ = Task.Run(async () =>
+            return channel;
+        }
+
+        public async Task PollTrackingUpdate(ChannelWriter<IBusPositionUpdated> channel)
+        {
+            var trackingOnGoing = true;
+
+            while (trackingOnGoing && await _periodicTimer.WaitForNextTickAsync())
             {
-                var trackingOnGoing = true;
+                var trackingResult = await _iBusInfoProvider.GetTrackingUpdate(_optimalBus!.BusId);
 
-                while (trackingOnGoing && await _periodicTimer.WaitForNextTickAsync())
+                if (trackingResult is null) continue;
+
+                trackingOnGoing = !trackingResult.TrackingCompleted;
+
+                var busPosition = new BusPosition()
                 {
-                    var trackingResult = await _iBusInfoProvider.GetTrackingUpdate(optimalBus.BusId);
+                    Message = trackingResult.Message + $", by car it takes {_averageCarTravelTime}",
+                    Seconds = Convert.ToInt32(trackingResult.Duration),
+                };
 
-                    if (trackingResult is null) continue;
+                await channel.WriteAsync(busPosition);
+            }
 
-                    trackingOnGoing = !trackingResult.TrackingCompleted;
-
-                    var busPosition = new BusPosition()
-                    {
-                        Message = trackingResult.Message + $", by car it takes {averageCarTravelTime}",
-                        Seconds = Convert.ToInt32(trackingResult.Duration),
-                    };
-
-                    await channel.Writer.WriteAsync(busPosition);
-                }
-                
-                channel.Writer.Complete();
-            });
-
-            return channel.Reader;
+            channel.Complete();
         }
 
         public async Task WriteToStream(ChannelReader<IBusPositionUpdated> channelReader)
@@ -86,9 +92,9 @@ namespace ApplicationLogic.Usecases
                     await _dataStreamWriteModel.Produce(busPositionUpdated);
                 }
             }
-            catch
+            catch(Exception e)
             {
-                // ignored
+                _logger?.LogError(e.ToString());
             }
         }
     }

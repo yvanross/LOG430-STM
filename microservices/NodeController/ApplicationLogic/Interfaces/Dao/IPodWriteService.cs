@@ -10,5 +10,4 @@ public interface IPodWriteService
     void TryRemovePod(IPodInstance podInstance);
 
     void AddOrUpdatePodType(IPodType podType);
-
 }

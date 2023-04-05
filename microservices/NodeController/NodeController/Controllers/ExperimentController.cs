@@ -59,7 +59,7 @@ namespace NodeController.Controllers
 
                 var scheduler = readModel.GetScheduler();
 
-                //scheduler.TryAddTask(nameof(experimentUc.InduceChaos), experimentUc.InduceChaos);
+                scheduler.TryAddTask(nameof(experimentUc.InduceChaos), experimentUc.InduceChaos);
 
                 _logger.LogInformation("Scheduling completed, good luck");
 

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "NKi8BiFVS/sOdQftzUX5eL8QvMl4qlNQC273bxloHpO7OTkKp+9FNCzBWVX/MO6Uzef8JBVR+5LfRasv/miokA==",
+  "dgSpecHash": "eodQe9/Oh3gLAvFh6ZUw4T+mo9WOZbllY3HYDIJHg3TpmqPb808KmBzKumGsf2pP+COy+VXXDsY32Tm1hipYvA==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\TripComparator\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
   "expectedPackageFiles": [
@@ -56,6 +56,7 @@
     "C:\\Users\\david\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\newtonsoft.json\\10.0.3\\newtonsoft.json.10.0.3.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\nuget.frameworks\\5.11.0\\nuget.frameworks.5.11.0.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\polly\\7.2.3\\polly.7.2.3.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\rabbitmq.client\\6.4.0\\rabbitmq.client.6.4.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\restsharp\\108.0.3\\restsharp.108.0.3.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",

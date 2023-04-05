@@ -18,7 +18,7 @@ namespace TripComparator.Controllers
         public DebugController(ILogger<DebugController> logger)
         {
             _logger = logger;
-            _compareTimesUc = new(new RouteTimeProviderClient(), new StmClient(_logger), null);
+            _compareTimesUc = new(new RouteTimeProviderClient(), new StmClient(_logger), null, logger);
         }
 
         [HttpPost]

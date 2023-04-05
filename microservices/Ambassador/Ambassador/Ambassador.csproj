@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.0.65</Version>
+    <Version>1.0.66</Version>
 	<PackageOutputPath>..\..\Nuget\</PackageOutputPath>
 	  <DebugType>full</DebugType>
 	  <DebugSymbols>true</DebugSymbols>

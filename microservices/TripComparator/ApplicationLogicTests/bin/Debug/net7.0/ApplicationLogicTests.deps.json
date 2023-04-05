@@ -677,6 +677,14 @@
           }
         }
       },
+      "Polly/7.2.3": {
+        "runtime": {
+          "lib/netstandard2.0/Polly.dll": {
+            "assemblyVersion": "7.0.0.0",
+            "fileVersion": "7.2.3.0"
+          }
+        }
+      },
       "RabbitMQ.Client/6.4.0": {
         "dependencies": {
           "System.Memory": "4.5.4",
@@ -1451,7 +1459,8 @@
       },
       "ApplicationLogic/1.0.0": {
         "dependencies": {
-          "Entities": "1.0.0"
+          "Entities": "1.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "7.0.0"
         },
         "runtime": {
           "ApplicationLogic.dll": {}
@@ -1470,6 +1479,7 @@
           "MassTransit.RabbitMQ": "8.0.14",
           "Microsoft.AspNetCore.OpenApi": "7.0.3",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.17.2",
+          "Polly": "7.2.3",
           "Swashbuckle.AspNetCore": "6.4.0"
         },
         "runtime": {
@@ -1855,6 +1865,13 @@
       "sha512": "sha512-eaiXkUjC4NPcquGWzAGMXjuxvLwc6XGKMptSyOGQeT0X70BUZObuybJFZLA0OfTdueLd3US23NBPTBb6iF3V1Q==",
       "path": "nuget.frameworks/5.11.0",
       "hashPath": "nuget.frameworks.5.11.0.nupkg.sha512"
+    },
+    "Polly/7.2.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-DeCY0OFbNdNxsjntr1gTXHJ5pKUwYzp04Er2LLeN3g6pWhffsGuKVfMBLe1lw7x76HrPkLxKEFxBlpRxS2nDEQ==",
+      "path": "polly/7.2.3",
+      "hashPath": "polly.7.2.3.nupkg.sha512"
     },
     "RabbitMQ.Client/6.4.0": {
       "type": "package",

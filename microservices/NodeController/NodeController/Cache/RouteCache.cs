@@ -40,8 +40,5 @@ internal static class RouteCache
         PodInstances.TryRemove(podInstance.Id, out _);
     }
 
-    internal static IScheduler GetScheduler()
-    {
-        return SchedulerService;
-    }
+    internal static IScheduler GetScheduler() => SchedulerService;
 }   

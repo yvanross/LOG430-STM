@@ -196,7 +196,10 @@ public class LocalDockerClient : IEnvironmentClient
     {
         await Try.WithConsequenceAsync(async () =>
         {
-            await _dockerClient.Containers.RemoveContainerAsync(containerId, new ContainerRemoveParameters() { Force = true });
+            var poolContainers = await _dockerClient.Containers.ListContainersAsync(new ContainersListParameters());
+
+            if(poolContainers.Any(c=>c.ID.Equals(containerId)))
+                await _dockerClient.Containers.RemoveContainerAsync(containerId, new ContainerRemoveParameters() { Force = true });
 
             return Task.CompletedTask;
         }, retryCount: 2, autoThrow: false,

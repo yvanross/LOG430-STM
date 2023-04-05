@@ -171,14 +171,7 @@ services:
       ARTIFACT_NAME: STM
     depends_on:
       - nodecontroller
-    
-##you will have to comment this out to run the evaluation 
-##using jenkins serves only to increase productivity in this lab
-  jenkins:
-    image: jenkins/jenkins
-    restart: always
-    ports:
-      - '32775:8080'
+      
       
 volumes:
   influxdb-data: null

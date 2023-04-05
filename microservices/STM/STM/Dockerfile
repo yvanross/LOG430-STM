@@ -11,15 +11,17 @@ COPY ["Nuget/Ambassador.*.nupkg", "STM/"]
 COPY ["STM/STM/nuget.config", ""]
 COPY ["STM/STM/STM.csproj", "STM/"]
 COPY ["STM/ApplicationLogic/ApplicationLogic.csproj", "ApplicationLogic/"]
-COPY ["STM/StaticGTFS/GTFS.csproj", "ApplicationLogic/"]
+COPY ["STM/StaticGTFS/GTFS.csproj", "GTFS/"]
 COPY ["STM/Entities/Entities.csproj", "Entities/"]
 RUN dotnet restore "STM/STM.csproj"
 COPY . .
 WORKDIR "/src/STM"
-RUN dotnet build "STM/STM.csproj" -c Release -o /app/build
+RUN dotnet build "STM/STM.csproj" -c Debug -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "STM/STM.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "STM/STM.csproj" -c Debug -o /app/publish /p:UseAppHost=false
+
+ENV ASPNETCORE_ENVIRONMENT=Development
 
 FROM base AS final
 WORKDIR /app

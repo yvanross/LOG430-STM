@@ -8,6 +8,7 @@ using Entities.BusinessObjects;
 using Entities.DomainInterfaces;
 using Newtonsoft.Json;
 using TripComparator.DTO;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TripComparator.External;
 
@@ -64,31 +65,38 @@ public class StmClient : IBusInfoProvider
 
     public async Task<IBusTracking?> GetTrackingUpdate(string busId)
     {
-        var res = await RestController.Get(new GetRoutingRequest()
+        try
         {
-            TargetService = "STM",
-            Endpoint = $"Track/GetTrackingUpdate",
-            Params = new List<NameValue>()
+            var res = await RestController.Get(new GetRoutingRequest()
             {
-                new ()
+                TargetService = "STM",
+                Endpoint = $"Track/GetTrackingUpdate",
+                Params = new List<NameValue>()
                 {
-                    Name = "busId",
-                    Value = busId
-                }
-            },
-            Mode = LoadBalancingMode.RoundRobin
-        });
+                    new ()
+                    {
+                        Name = "busId",
+                        Value = busId
+                    }
+                },
+                Mode = LoadBalancingMode.RoundRobin
+            });
 
-        var data = await res!.ReadAsync();
+            var data = await res!.ReadAsync();
 
-        if (data.IsSuccessStatusCode && data.StatusCode.Equals(HttpStatusCode.NoContent) is false)
-        {
-            var busTracking = JsonConvert.DeserializeObject<BusTracking>(data.Content);
-            
-            return busTracking;
+            if (data.IsSuccessStatusCode && data.StatusCode.Equals(HttpStatusCode.NoContent) is false)
+            {
+                var busTracking = JsonConvert.DeserializeObject<BusTracking>(data.Content);
+
+                return busTracking;
+            }
+
+            _logger?.LogInformation($"{nameof(GetTrackingUpdate)} resulted in {data.StatusDescription}");
         }
-
-        _logger?.LogInformation($"{nameof(GetTrackingUpdate)} resulted in {data.StatusDescription}");
+        catch (Exception e)
+        {
+            _logger?.LogError(e.ToString());
+        }
 
         return null;
     }

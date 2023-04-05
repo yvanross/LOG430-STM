@@ -13,6 +13,7 @@ internal class IngressRoutingService
 
     internal async Task<IEnumerable<RoutingData>> GetServiceRoutingData(string targetService, LoadBalancingMode routingRequestMode)
     {
+
         var request = new RestRequest("Routing/RouteByServiceType");
 
         request.AddQueryParameter("caller", ContainerService.ServiceId);

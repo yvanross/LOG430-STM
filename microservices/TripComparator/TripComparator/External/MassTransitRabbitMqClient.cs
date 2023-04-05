@@ -19,7 +19,9 @@ public class MassTransitRabbitMqClient : IDataStreamWriteModel
 
     public async Task Produce(IBusPositionUpdated busPositionUpdated)
     {
-        await _publishEndpoint.Publish(new BusPositionUpdated()
+        try
+        {
+            await _publishEndpoint.Publish(new BusPositionUpdated()
             {
                 Message = busPositionUpdated.Message,
                 Seconds = busPositionUpdated.Seconds,
@@ -28,5 +30,10 @@ public class MassTransitRabbitMqClient : IDataStreamWriteModel
             {
                 x.SetRoutingKey("trip_comparison.response");
             });
+        }
+        catch
+        {
+            //ignore
+        }
     }
 }

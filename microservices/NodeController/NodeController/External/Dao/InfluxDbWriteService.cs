@@ -62,7 +62,8 @@ public class InfluxDbWriteService : ISystemStateWriteService
 
             var point = PointData
                 .Measurement("experiment-report")
-                .Tag("message", dto.AverageLatency.ToString())
+                .Field("latency", dto.AverageLatency)
+                .Field("errors", dto.ErrorCount)
                 .Field("report", json)
                 .Timestamp(dto.Timestamp, WritePrecision.Ns);
 
