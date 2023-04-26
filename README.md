@@ -75,7 +75,7 @@ Utiliser l'API ou la page web des fournisseurs externe pour l'estimation en temp
 Nous n’imposons aucune contrainte au niveau du langage de développement utilisé à l'exception que celui-ci doit être de type **Orienté objet**.
 
 ### Réalisation
-Vous devez réaliser votre projet avec des **microservices**
+Vous devez réaliser votre projet avec des **microservices**. Prenez note que nous vous fournissons un répertoire de microservices ayant déja été utilisé pour faire ce laboratoire. Vous pouvez utiliser ces microservices ou développer vos propres microservices.
 
 ### Contrainte d'équipe
 L'équipe de coordonnateur peut imposer aux équipes les contraintes quelle juge nécessaires pour le bon déroulement du projet. 
@@ -223,3 +223,40 @@ participant "<<cu01>>\n<<Composant>>\n:ChaosMonkey" as monkey
 @enduml
 
 ```
+# S20232 
+Chaque équipe doit réaliser une documentation d'architecture ainsi qu'une implémentation/intégration pour les critères suivants:
+
+## Disponibilité
+1. Redondance Active avec détection par vote (TMR)
+2. Redondance passive avec ping/Echo ou heartbeat
+3. Spare avec monitor et predictive model
+
+## Performance
+1. Limit event response 
+2. Maintain multiple copies of computation
+3. Maintain multiple copies of data
+4. Introduce concurrency
+   
+
+## Securité
+- Detect service denial attack
+  - [Quick guide: simulating a DDoS attack in your own lab](https://www.keysight.com/us/en/assets/7019-0414/technical-overviews/Simulating-a-DDoS-Attack-in-Your-Own-Lab.pdf)
+  - Identify Actor
+  - Authenticate Actor
+  - Authenticate Actor
+  - Lock computer for 5 min
+
+## Testability
+- Sandbox
+- Record/playback
+
+## Usability
+- Maintain system model for administrator
+
+## Interopérability
+  - service discovery
+  - 
+
+
+
+
