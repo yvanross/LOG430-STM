@@ -5,28 +5,21 @@ using Entities.BusinessObjects.Live;
 using Entities.DomainInterfaces.ResourceManagement;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using NodeController.External.Dao;
 
 namespace NodeController.Controllers
 {
-    [EnableCors("AllowOrigin")]
     [ApiController]
     [Route("[controller]/[action]")]
     public class RoutingController : ControllerBase
     {
-        private readonly RoutingUC _routingUc;
-
-        private readonly HeaderService _headerService = new();
+        private readonly Routing _routing;
 
         private readonly ILogger<RoutingController> _logger;
 
-        public RoutingController(ILogger<RoutingController> logger)
+        public RoutingController(ILogger<RoutingController> logger, Routing routing)
         {
             _logger = logger;
-
-            var readModel = new PodReadService();
-
-            _routingUc = new(readModel);
+            _routing = routing;
         }
 
         [HttpGet]
@@ -37,14 +30,10 @@ namespace NodeController.Controllers
             {
                 _logger.LogInformation($"Finding best route for {caller} to {serviceType} in {Enum.GetName(mode)} mode");
 
-                var routingDatas = _routingUc.RouteByDestinationType(caller, serviceType, mode).ToList();
+                var routingDatas = _routing.RouteByDestinationType(caller, serviceType, mode).ToList();
 
                 foreach (var routingData in routingDatas)
                 {
-                    _headerService.AddJsonHeader(routingData);
-
-                    _headerService.AddAuthorizationHeaders(routingData, serviceType);
-
                     _logger.LogInformation($"routing service to {routingData.Address}");
                 }
 

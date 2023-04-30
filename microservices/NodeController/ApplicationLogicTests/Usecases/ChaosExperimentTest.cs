@@ -4,7 +4,6 @@ using Entities.DomainInterfaces.ResourceManagement;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
-using NodeController.Dto.Incoming;
 
 namespace ApplicationLogicTests.Usecases
 {
@@ -12,12 +11,12 @@ namespace ApplicationLogicTests.Usecases
     [TestClass()]
     public class ChaosExperimentTest
     {
-        private ChaosExperimentUC _chaosExperimentUc;
+        private ChaosExperiment _chaosExperimentUc;
 
         [TestInitialize]
         public void Init()
         {
-            _chaosExperimentUc = new ChaosExperimentUC(
+            _chaosExperimentUc = new ChaosExperiment(
                 MockProvider.GetEnvironmentMock().Object,
                 MockProvider.GetReadModelMock().Object,
                 MockProvider.GetWriteModelMock().Object,
@@ -59,7 +58,7 @@ namespace ApplicationLogicTests.Usecases
 
             var chaosCodexMock = MockProvider.GetChaosCodexMock(preMocked);
 
-            _chaosExperimentUc = new ChaosExperimentUC(
+            _chaosExperimentUc = new ChaosExperiment(
                 MockProvider.GetEnvironmentMock().Object,
                 MockProvider.GetReadModelMock().Object,
                 MockProvider.GetWriteModelMock().Object,
@@ -85,7 +84,7 @@ namespace ApplicationLogicTests.Usecases
 
             var chaosCodexMock = MockProvider.GetChaosCodexMock(preMocked);
 
-            _chaosExperimentUc = new ChaosExperimentUC(
+            _chaosExperimentUc = new ChaosExperiment(
                 MockProvider.GetEnvironmentMock().Object,
                 MockProvider.GetReadModelMock().Object,
                 MockProvider.GetWriteModelMock().Object,

@@ -1,5 +1,4 @@
-﻿using ApplicationLogic.Usecases;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ApplicationLogicTests.Usecases
 {
@@ -15,7 +14,7 @@ namespace ApplicationLogicTests.Usecases
         [TestMethod()]
         public async Task GetRunningMicroservices()
         {
-            MonitorUc monitor = new MonitorUc(new LocalDockerClient());
+            Monitor monitor = new Monitor(new LocalDockerClient());
 
             var microservices = await monitor.GetRunningMicroservices();
 
@@ -25,7 +24,7 @@ namespace ApplicationLogicTests.Usecases
         [TestMethod()]
         public async Task StartAndStopContainers()
         {
-            MonitorUc monitor = new MonitorUc(new LocalDockerClient());
+            Monitor monitor = new Monitor(new LocalDockerClient());
 
             var initialMicroservices = await monitor.GetRunningMicroservices();
 

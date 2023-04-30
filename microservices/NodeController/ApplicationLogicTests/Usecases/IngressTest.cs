@@ -7,25 +7,25 @@ namespace ApplicationLogicTests.Usecases
     [TestClass()]
     public class IngressTest
     {
-        private IngressUC _ingressUc;
+        private Ingress _ingress;
 
         [TestInitialize]
         public void Init()
         {
-            _ingressUc = new IngressUC(MockProvider.GetHostInfoMock().Object,
+            _ingress = new Ingress(MockProvider.GetHostInfoMock().Object,
                 MockProvider.GetIngressClientMock().Object);
         }
 
         [TestMethod()]
         public async Task SubscriptionTest()
         {
-            await _ingressUc.Register();
+            await _ingress.Register();
         }
 
         [TestMethod()]
         public async Task GetLogStoreAddressAndPort()
         {
-            var address = await _ingressUc.GetLogStoreAddressAndPort();
+            var address = await _ingress.GetLogStoreAddressAndPort();
 
             address.Should().BeEquivalentTo("http://testAddress:8329");
         }

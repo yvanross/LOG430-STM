@@ -1,5 +1,4 @@
 ﻿using Entities.DomainInterfaces;
-using Entities.DomainInterfaces.ResourceManagement;
 
 namespace Entities.BusinessObjects.States;
 

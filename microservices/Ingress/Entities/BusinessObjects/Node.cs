@@ -1,6 +1,5 @@
 ﻿using Entities.BusinessObjects.States;
 using Entities.DomainInterfaces;
-using Entities.DomainInterfaces.ResourceManagement;
 
 namespace Entities.BusinessObjects;
 
@@ -15,4 +14,6 @@ public class Node : INode
     public INodeState ServiceStatus { get; set; } = new ReadyState();
 
     public DateTime LastSuccessfulPing { get; set; } = DateTime.UtcNow;
+    
+    public required string Version { get; set; }
 }

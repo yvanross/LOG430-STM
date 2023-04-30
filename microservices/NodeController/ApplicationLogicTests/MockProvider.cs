@@ -50,7 +50,7 @@ public static class MockProvider
 
         ingressClient.Setup(x => x.GetLogStoreAddressAndPort(It.IsAny<string>())).Returns(Task.FromResult("http://testAddress:8329"));
 
-        ingressClient.Setup(x => x.Subscribe(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(Task.CompletedTask);
+        ingressClient.Setup(x => x.Subscribe(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(Task.CompletedTask);
 
         return ingressClient;
     }
@@ -70,7 +70,7 @@ public static class MockProvider
     {
         var dataStreamReadModel = new Mock<IDataStreamService>();
 
-        dataStreamReadModel.Setup(x => x.EndStreaming());
+        dataStreamReadModel.Setup(x => x.Produce(It.IsAny<ICoordinates>()));
 
         return dataStreamReadModel;
     }
@@ -152,8 +152,6 @@ public static class MockProvider
         var podType2 = GetPodTypeMock(2).Object;
 
         var readModel = new Mock<IPodReadService>();
-
-        readModel.Setup(x => x.GetScheduler()).Returns(GetSchedulerMock().Object);
 
         readModel.Setup(x => x.GetAddress()).Returns("host.docker.internal");
 

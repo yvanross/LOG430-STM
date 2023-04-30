@@ -1,4 +1,4 @@
-﻿namespace Entities.DomainInterfaces.ResourceManagement;
+﻿namespace Entities.DomainInterfaces;
 
 public interface INodeState
 {

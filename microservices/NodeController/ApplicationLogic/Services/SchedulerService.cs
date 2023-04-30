@@ -12,26 +12,24 @@ public class SchedulerService : IScheduler
 
     private ImmutableDictionary<string, Func<Task>> _tasks = ImmutableDictionary<string, Func<Task>>.Empty;
 
-    private ILogger? _logger;
+    private ILogger _logger;
 
-    public SchedulerService()
+    public SchedulerService(ILogger<SchedulerService> logger)
     {
+        _logger = logger;
         _ = BeginScheduling();
     }
 
     public void TryAddTask(string name, Func<Task> func)
     {
         ImmutableInterlocked.TryAdd(ref _tasks, func.Method.Name, func);
+
+        _logger.LogInformation($"# Task: {name} has been scheduled #");
     }
 
     public void TryRemoveTask(string name)
     {
         ImmutableInterlocked.TryRemove(ref _tasks, name, out _);
-    }
-
-    public void SetLogger(ILogger logger)
-    {
-        _logger = logger;
     }
 
     private async Task BeginScheduling()

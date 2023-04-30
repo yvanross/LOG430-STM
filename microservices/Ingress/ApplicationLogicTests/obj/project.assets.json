@@ -8,6 +8,19 @@
           "build/netstandard1.0/coverlet.collector.targets": {}
         }
       },
+      "CsvHelper/30.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/CsvHelper.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/CsvHelper.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Docker.DotNet/3.125.13": {
         "type": "package",
         "dependencies": {
@@ -37,6 +50,52 @@
           "lib/net6.0/Humanizer.dll": {
             "related": ".xml"
           }
+        }
+      },
+      "InfluxDB.Client/4.11.0": {
+        "type": "package",
+        "dependencies": {
+          "InfluxDB.Client.Core": "4.11.0",
+          "JsonSubTypes": "2.0.1",
+          "Microsoft.Extensions.ObjectPool": "7.0.2",
+          "Microsoft.Net.Http.Headers": "2.2.8",
+          "System.Collections.Immutable": "6.0.0",
+          "System.Configuration.ConfigurationManager": "6.0.1",
+          "System.Reactive": "5.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/InfluxDB.Client.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/InfluxDB.Client.dll": {}
+        }
+      },
+      "InfluxDB.Client.Core/4.11.0": {
+        "type": "package",
+        "dependencies": {
+          "CsvHelper": "30.0.1",
+          "Newtonsoft.Json": "13.0.2",
+          "NodaTime": "3.1.6",
+          "NodaTime.Serialization.JsonNet": "3.0.1",
+          "RestSharp": "108.0.3"
+        },
+        "compile": {
+          "lib/netstandard2.1/InfluxDB.Client.Core.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/InfluxDB.Client.Core.dll": {}
+        }
+      },
+      "JsonSubTypes/2.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.1"
+        },
+        "compile": {
+          "lib/netstandard2.0/JsonSubTypes.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/JsonSubTypes.dll": {}
         }
       },
       "Microsoft.AspNetCore.OpenApi/7.0.3": {
@@ -1014,6 +1073,53 @@
           "buildTransitive/net6.0/Microsoft.Extensions.Logging.Abstractions.targets": {}
         }
       },
+      "Microsoft.Extensions.ObjectPool/7.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/Microsoft.Extensions.ObjectPool.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/Microsoft.Extensions.ObjectPool.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.Extensions.Primitives/2.2.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Memory": "4.5.1",
+          "System.Runtime.CompilerServices.Unsafe": "4.5.1"
+        },
+        "compile": {
+          "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.Net.Http.Headers/2.2.8": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "2.2.0",
+          "System.Buffers": "4.5.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Microsoft.Net.Http.Headers.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Net.Http.Headers.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.NET.StringTools/17.3.2": {
         "type": "package",
         "dependencies": {
@@ -1601,16 +1707,49 @@
           "System.Xml.XDocument": "4.3.0"
         }
       },
-      "Newtonsoft.Json/13.0.1": {
+      "Newtonsoft.Json/13.0.2": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
             "related": ".xml"
+          }
+        }
+      },
+      "NodaTime/3.1.6": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "4.7.1"
+        },
+        "compile": {
+          "lib/net6.0/NodaTime.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/NodaTime.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
+      "NodaTime.Serialization.JsonNet/3.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.1",
+          "NodaTime": "[3.0.0, 4.0.0)"
+        },
+        "compile": {
+          "lib/netstandard2.0/NodaTime.Serialization.JsonNet.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/NodaTime.Serialization.JsonNet.dll": {
+            "related": ".pdb;.xml"
           }
         }
       },
@@ -1757,6 +1896,19 @@
         "runtime": {
           "lib/netstandard2.0/NuGet.Versioning.dll": {
             "related": ".xml"
+          }
+        }
+      },
+      "Polly/7.2.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Polly.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Polly.dll": {
+            "related": ".pdb;.xml"
           }
         }
       },
@@ -2205,7 +2357,7 @@
           "buildTransitive/netcoreapp3.1/_._": {}
         }
       },
-      "System.Configuration.ConfigurationManager/6.0.0": {
+      "System.Configuration.ConfigurationManager/6.0.1": {
         "type": "package",
         "dependencies": {
           "System.Security.Cryptography.ProtectedData": "6.0.0",
@@ -2730,6 +2882,22 @@
         },
         "compile": {
           "ref/netstandard/_._": {}
+        }
+      },
+      "System.Reactive/5.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0/System.Reactive.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net5.0/System.Reactive.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net5.0/_._": {}
         }
       },
       "System.Reflection/4.3.0": {
@@ -3587,7 +3755,8 @@
         "dependencies": {
           "Docker.DotNet": "3.125.13",
           "Entities": "1.0.0",
-          "Microsoft.Extensions.Logging.Abstractions": "7.0.0"
+          "Microsoft.Extensions.Logging.Abstractions": "7.0.0",
+          "Polly": "7.2.3"
         },
         "compile": {
           "bin/placeholder/ApplicationLogic.dll": {}
@@ -3615,9 +3784,11 @@
         "dependencies": {
           "ApplicationLogic": "1.0.0",
           "Docker.DotNet": "3.125.13",
+          "InfluxDB.Client": "4.11.0",
           "Microsoft.AspNetCore.OpenApi": "7.0.3",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.17.2",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "7.0.4",
+          "Polly": "7.2.3",
           "RestSharp": "109.0.1",
           "Swashbuckle.AspNetCore": "6.4.0",
           "Swashbuckle.AspNetCore.Annotations": "6.5.0",
@@ -3687,6 +3858,30 @@
         "coverlet.collector.nuspec"
       ]
     },
+    "CsvHelper/30.0.1": {
+      "sha512": "rcZtgbWR+As4G3Vpgx0AMNmShGuQLFjkHAPIIflzrfkJCx8/AOd4m96ZRmiU1Wi39qS5UVjV0P8qdgqOo5Cwyg==",
+      "type": "package",
+      "path": "csvhelper/30.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "csvhelper.30.0.1.nupkg.sha512",
+        "csvhelper.nuspec",
+        "lib/net45/CsvHelper.dll",
+        "lib/net45/CsvHelper.xml",
+        "lib/net47/CsvHelper.dll",
+        "lib/net47/CsvHelper.xml",
+        "lib/net5.0/CsvHelper.dll",
+        "lib/net5.0/CsvHelper.xml",
+        "lib/net6.0/CsvHelper.dll",
+        "lib/net6.0/CsvHelper.xml",
+        "lib/netstandard2.0/CsvHelper.dll",
+        "lib/netstandard2.0/CsvHelper.xml",
+        "lib/netstandard2.1/CsvHelper.dll",
+        "lib/netstandard2.1/CsvHelper.xml"
+      ]
+    },
     "Docker.DotNet/3.125.13": {
       "sha512": "p1DrW2Sw4ND2jFlIvpHB8/pY5o5HIkDalbGAI8tUvqjJR6n0/ubos7kDGWI+Xbx9+L3US3SUR8r59Zwq+ZxBvw==",
       "type": "package",
@@ -3720,6 +3915,55 @@
         "lib/netstandard2.0/Humanizer.dll",
         "lib/netstandard2.0/Humanizer.xml",
         "logo.png"
+      ]
+    },
+    "InfluxDB.Client/4.11.0": {
+      "sha512": "9La5vqpwbPlsdNeNyo90Im/d+OVOrqkjrv/1FY0Ow6NmZSFsFTN5wfQYNrPw5ZkIlYTT5fX4oX01zFChnSYxOw==",
+      "type": "package",
+      "path": "influxdb.client/4.11.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "influxdata.jpg",
+        "influxdb.client.4.11.0.nupkg.sha512",
+        "influxdb.client.nuspec",
+        "lib/netstandard2.0/InfluxDB.Client.dll",
+        "lib/netstandard2.1/InfluxDB.Client.dll"
+      ]
+    },
+    "InfluxDB.Client.Core/4.11.0": {
+      "sha512": "LFQS6u8Lb9yf2IZ8fBd3K4m4r0OVYvTGItBce7cDctYXiNjMiWxR7onzRO75R9UfkndaOkyG/Wz7BeszhRlTkA==",
+      "type": "package",
+      "path": "influxdb.client.core/4.11.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "influxdata.jpg",
+        "influxdb.client.core.4.11.0.nupkg.sha512",
+        "influxdb.client.core.nuspec",
+        "lib/netstandard2.0/InfluxDB.Client.Core.dll",
+        "lib/netstandard2.1/InfluxDB.Client.Core.dll"
+      ]
+    },
+    "JsonSubTypes/2.0.1": {
+      "sha512": "1Po+Ypf0SjCeEKx5+C89Nb5OgTcqNvfS3uTI46MUM+KEp6Rq/M0h+vVsTUt/6DFRwZMTpsAJM4yJrZmEObVANA==",
+      "type": "package",
+      "path": "jsonsubtypes/2.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "README.md",
+        "jsonsubtypes.2.0.1.nupkg.sha512",
+        "jsonsubtypes.nuspec",
+        "lib/net35/JsonSubTypes.dll",
+        "lib/net40/JsonSubTypes.dll",
+        "lib/net45/JsonSubTypes.dll",
+        "lib/net46/JsonSubTypes.dll",
+        "lib/net47/JsonSubTypes.dll",
+        "lib/netstandard1.3/JsonSubTypes.dll",
+        "lib/netstandard2.0/JsonSubTypes.dll"
       ]
     },
     "Microsoft.AspNetCore.OpenApi/7.0.3": {
@@ -5180,6 +5424,51 @@
         "microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
         "microsoft.extensions.logging.abstractions.nuspec",
         "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.ObjectPool/7.0.2": {
+      "sha512": "i1YHthDbI3Xy4Vy1wC2EP+Z/yDJjpv5ejxnPxQ4p7sC8jnpWVfR2/T23Iz9+lIz5aBSruu8dOChmwvUQ3qYXZw==",
+      "type": "package",
+      "path": "microsoft.extensions.objectpool/7.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net462/Microsoft.Extensions.ObjectPool.dll",
+        "lib/net462/Microsoft.Extensions.ObjectPool.xml",
+        "lib/net7.0/Microsoft.Extensions.ObjectPool.dll",
+        "lib/net7.0/Microsoft.Extensions.ObjectPool.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.ObjectPool.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.ObjectPool.xml",
+        "microsoft.extensions.objectpool.7.0.2.nupkg.sha512",
+        "microsoft.extensions.objectpool.nuspec"
+      ]
+    },
+    "Microsoft.Extensions.Primitives/2.2.0": {
+      "sha512": "azyQtqbm4fSaDzZHD/J+V6oWMFaf2tWP4WEGIYePLCMw3+b2RQdj9ybgbQyjCshcitQKQ4lEDOZjmSlTTrHxUg==",
+      "type": "package",
+      "path": "microsoft.extensions.primitives/2.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Primitives.xml",
+        "microsoft.extensions.primitives.2.2.0.nupkg.sha512",
+        "microsoft.extensions.primitives.nuspec"
+      ]
+    },
+    "Microsoft.Net.Http.Headers/2.2.8": {
+      "sha512": "wHdwMv0QDDG2NWDSwax9cjkeQceGC1Qq53a31+31XpvTXVljKXRjWISlMoS/wZYKiqdqzuEvKFKwGHl+mt2jCA==",
+      "type": "package",
+      "path": "microsoft.net.http.headers/2.2.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/Microsoft.Net.Http.Headers.dll",
+        "lib/netstandard2.0/Microsoft.Net.Http.Headers.xml",
+        "microsoft.net.http.headers.2.2.8.nupkg.sha512",
+        "microsoft.net.http.headers.nuspec"
       ]
     },
     "Microsoft.NET.StringTools/17.3.2": {
@@ -6802,14 +7091,15 @@
         "netstandard.library.nuspec"
       ]
     },
-    "Newtonsoft.Json/13.0.1": {
-      "sha512": "ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A==",
+    "Newtonsoft.Json/13.0.2": {
+      "sha512": "R2pZ3B0UjeyHShm9vG+Tu0EBb2lC8b0dFzV9gVn50ofHXh9Smjk6kTn7A/FdAsC8B5cKib1OnGYOXxRBz5XQDg==",
       "type": "package",
-      "path": "newtonsoft.json/13.0.1",
+      "path": "newtonsoft.json/13.0.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.md",
+        "README.md",
         "lib/net20/Newtonsoft.Json.dll",
         "lib/net20/Newtonsoft.Json.xml",
         "lib/net35/Newtonsoft.Json.dll",
@@ -6818,15 +7108,48 @@
         "lib/net40/Newtonsoft.Json.xml",
         "lib/net45/Newtonsoft.Json.dll",
         "lib/net45/Newtonsoft.Json.xml",
+        "lib/net6.0/Newtonsoft.Json.dll",
+        "lib/net6.0/Newtonsoft.Json.xml",
         "lib/netstandard1.0/Newtonsoft.Json.dll",
         "lib/netstandard1.0/Newtonsoft.Json.xml",
         "lib/netstandard1.3/Newtonsoft.Json.dll",
         "lib/netstandard1.3/Newtonsoft.Json.xml",
         "lib/netstandard2.0/Newtonsoft.Json.dll",
         "lib/netstandard2.0/Newtonsoft.Json.xml",
-        "newtonsoft.json.13.0.1.nupkg.sha512",
+        "newtonsoft.json.13.0.2.nupkg.sha512",
         "newtonsoft.json.nuspec",
         "packageIcon.png"
+      ]
+    },
+    "NodaTime/3.1.6": {
+      "sha512": "0ZGOyyLldBHYhFpDi22YcXDuAjj3bI33ChGJyp4/dP2gbhpIIVAKaIgU0h+1oUlh/LgA/UKeyJkWOCW2wHYfIg==",
+      "type": "package",
+      "path": "nodatime/3.1.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net6.0/NodaTime.dll",
+        "lib/net6.0/NodaTime.pdb",
+        "lib/net6.0/NodaTime.xml",
+        "lib/netstandard2.0/NodaTime.dll",
+        "lib/netstandard2.0/NodaTime.pdb",
+        "lib/netstandard2.0/NodaTime.xml",
+        "nodatime.3.1.6.nupkg.sha512",
+        "nodatime.nuspec"
+      ]
+    },
+    "NodaTime.Serialization.JsonNet/3.0.1": {
+      "sha512": "bmw+ElaOr21HZQQVYWZKgqs0QpSb/rJcJxem3Ok6YWAdenqOi0PS2hIkvlh+QJfsl2X3VJcla9Rhya/N3JnweA==",
+      "type": "package",
+      "path": "nodatime.serialization.jsonnet/3.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/NodaTime.Serialization.JsonNet.dll",
+        "lib/netstandard2.0/NodaTime.Serialization.JsonNet.pdb",
+        "lib/netstandard2.0/NodaTime.Serialization.JsonNet.xml",
+        "nodatime.serialization.jsonnet.3.0.1.nupkg.sha512",
+        "nodatime.serialization.jsonnet.nuspec"
       ]
     },
     "NuGet.Common/6.3.1": {
@@ -6988,6 +7311,30 @@
         "lib/netstandard2.0/NuGet.Versioning.xml",
         "nuget.versioning.6.3.1.nupkg.sha512",
         "nuget.versioning.nuspec"
+      ]
+    },
+    "Polly/7.2.3": {
+      "sha512": "DeCY0OFbNdNxsjntr1gTXHJ5pKUwYzp04Er2LLeN3g6pWhffsGuKVfMBLe1lw7x76HrPkLxKEFxBlpRxS2nDEQ==",
+      "type": "package",
+      "path": "polly/7.2.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Polly.png",
+        "lib/net461/Polly.dll",
+        "lib/net461/Polly.pdb",
+        "lib/net461/Polly.xml",
+        "lib/net472/Polly.dll",
+        "lib/net472/Polly.pdb",
+        "lib/net472/Polly.xml",
+        "lib/netstandard1.1/Polly.dll",
+        "lib/netstandard1.1/Polly.pdb",
+        "lib/netstandard1.1/Polly.xml",
+        "lib/netstandard2.0/Polly.dll",
+        "lib/netstandard2.0/Polly.pdb",
+        "lib/netstandard2.0/Polly.xml",
+        "polly.7.2.3.nupkg.sha512",
+        "polly.nuspec"
       ]
     },
     "RestSharp/109.0.1": {
@@ -7724,10 +8071,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "System.Configuration.ConfigurationManager/6.0.0": {
-      "sha512": "7T+m0kDSlIPTHIkPMIu6m6tV6qsMqJpvQWW2jIc2qi7sn40qxFo0q+7mEQAhMPXZHMKnWrnv47ntGlM/ejvw3g==",
+    "System.Configuration.ConfigurationManager/6.0.1": {
+      "sha512": "jXw9MlUu/kRfEU0WyTptAVueupqIeE3/rl0EZDMlf8pcvJnitQ8HeVEp69rZdaStXwTV72boi/Bhw8lOeO+U2w==",
       "type": "package",
-      "path": "system.configuration.configurationmanager/6.0.0",
+      "path": "system.configuration.configurationmanager/6.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -7744,7 +8091,7 @@
         "lib/netstandard2.0/System.Configuration.ConfigurationManager.xml",
         "runtimes/win/lib/net461/System.Configuration.ConfigurationManager.dll",
         "runtimes/win/lib/net461/System.Configuration.ConfigurationManager.xml",
-        "system.configuration.configurationmanager.6.0.0.nupkg.sha512",
+        "system.configuration.configurationmanager.6.0.1.nupkg.sha512",
         "system.configuration.configurationmanager.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -9081,6 +9428,35 @@
         "ref/netstandard/_._",
         "system.private.uri.4.3.2.nupkg.sha512",
         "system.private.uri.nuspec"
+      ]
+    },
+    "System.Reactive/5.0.0": {
+      "sha512": "erBZjkQHWL9jpasCE/0qKAryzVBJFxGHVBAvgRN1bzM0q2s1S4oYREEEL0Vb+1kA/6BKb5FjUZMp5VXmy+gzkQ==",
+      "type": "package",
+      "path": "system.reactive/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/net5.0/_._",
+        "build/netcoreapp3.1/System.Reactive.dll",
+        "build/netcoreapp3.1/System.Reactive.targets",
+        "build/netcoreapp3.1/System.Reactive.xml",
+        "buildTransitive/net5.0/_._",
+        "buildTransitive/netcoreapp3.1/System.Reactive.targets",
+        "lib/net472/System.Reactive.dll",
+        "lib/net472/System.Reactive.xml",
+        "lib/net5.0-windows10.0.19041/System.Reactive.dll",
+        "lib/net5.0-windows10.0.19041/System.Reactive.xml",
+        "lib/net5.0/System.Reactive.dll",
+        "lib/net5.0/System.Reactive.xml",
+        "lib/netcoreapp3.1/_._",
+        "lib/netstandard2.0/System.Reactive.dll",
+        "lib/netstandard2.0/System.Reactive.xml",
+        "lib/uap10.0.16299/System.Reactive.dll",
+        "lib/uap10.0.16299/System.Reactive.pri",
+        "lib/uap10.0.16299/System.Reactive.xml",
+        "system.reactive.5.0.0.nupkg.sha512",
+        "system.reactive.nuspec"
       ]
     },
     "System.Reflection/4.3.0": {
@@ -11292,8 +11668,7 @@
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Nuget": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://pkgs.dev.azure.com/DevOrigins/Origins/_packaging/OriginNugetFeed/nuget/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {

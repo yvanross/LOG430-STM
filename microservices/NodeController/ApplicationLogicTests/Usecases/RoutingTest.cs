@@ -8,18 +8,18 @@ namespace ApplicationLogicTests.Usecases
     [TestClass()]
     public class RoutingTest
     {
-        private RoutingUC routingUc;
+        private Routing _routing;
 
         [TestInitialize]
         public void Init()
         {
-            routingUc = new RoutingUC(MockProvider.GetReadModelMock().Object);
+            _routing = new Routing(MockProvider.GetReadModelMock().Object);
         }
 
         [TestMethod()]
         public void LoadBalancing_Broadcast()
         {
-            var dest= routingUc.LoadBalancing(
+            var dest= _routing.LoadBalancing(
                 MockProvider.GetReadModelMock().Object.GetAllServices().ToList(),
                 LoadBalancingMode.Broadcast).ToList();
 
@@ -29,7 +29,7 @@ namespace ApplicationLogicTests.Usecases
         [TestMethod()]
         public void LoadBalancing_RoundRobin()
         {
-            var dest = routingUc.LoadBalancing(
+            var dest = _routing.LoadBalancing(
                 MockProvider.GetReadModelMock().Object.GetAllServices().ToList(),
                 LoadBalancingMode.RoundRobin).ToList();
 
@@ -41,7 +41,7 @@ namespace ApplicationLogicTests.Usecases
         {
             var source = MockProvider.GetReadModelMock().Object.GetServiceInstances("doesnt_matter_its_a_mock").First();
 
-            var dest = routingUc.RouteByDestinationType(source.Id,
+            var dest = _routing.RouteByDestinationType(source.Id,
                 MockProvider.GetReadModelMock().Object.GetServiceType("doesnt_matter_its_a_mock").Type,
                 LoadBalancingMode.RoundRobin).ToList();
 
@@ -55,7 +55,7 @@ namespace ApplicationLogicTests.Usecases
         {
             var source = MockProvider.GetReadModelMock().Object.GetServiceInstances("doesnt_matter_its_a_mock").First();
 
-            var dest = routingUc.RouteByDestinationType(source.Id,
+            var dest = _routing.RouteByDestinationType(source.Id,
                 MockProvider.GetReadModelMock().Object.GetServiceType("doesnt_matter_its_a_mock").Type,
                 LoadBalancingMode.Broadcast).ToList();
 

@@ -1,22 +1,19 @@
-﻿using ApplicationLogic.Usecases;
-using Ingress.Extensions;
-using Ingress.Repository;
-using Microsoft.AspNetCore.Cors;
+﻿using ApplicationLogic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using NodeController.External.Docker;
 
 namespace Ingress.Controllers
 {
-    [EnableCors("AllowOrigin")]
     [ApiController]
     [Route("[controller]")]
     public class LogStoreController : ControllerBase
     {
         private readonly ILogger<LogStoreController> _logger;
+        private readonly IHostInfo _hostInfo;
 
-        public LogStoreController(ILogger<LogStoreController> logger, IHttpContextAccessor httpContextAccessor)
+        public LogStoreController(ILogger<LogStoreController> logger, IHostInfo hostInfo)
         {
             _logger = logger;
+            _hostInfo = hostInfo;
         }
 
         [HttpGet("{id}")]
@@ -26,7 +23,7 @@ namespace Ingress.Controllers
             {
                 _logger.LogInformation($"{id} attempting to get database");
 
-                return Ok($"{HostInfo.ServiceAddress}:{HostInfo.NodeStateStoragePort}" );
+                return Ok($"{_hostInfo.GetAddress()}:{_hostInfo.GetNodeStateStoragePort()}");
             }
             catch (Exception e)
             {

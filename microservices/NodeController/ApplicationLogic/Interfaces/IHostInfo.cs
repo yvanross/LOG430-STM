@@ -15,4 +15,14 @@ public interface IHostInfo
     string GetMQServiceName();
     
     string GetCustomContainerPorts();
+    
+    bool GetCheatsAllowed();
+
+    string GetUsername();
+
+    string GetSecret();
+
+    string GetVersion();
+
+    string GetBridgePort();
 }

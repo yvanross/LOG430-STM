@@ -1,0 +1,35 @@
+@startuml
+
+node "Single Node" {
+    component UI as ui
+    component Ingress as ingress
+    component AuthService as auth
+    Database InfluxDB as influx
+    Database Sql as sql
+    component NodeController as nodeC
+    component TripComparator as tc
+    component RouteTimeProvider as rtp
+    component Stm
+    queue RabbitMQ as mq {
+        card "coordinate_message(exchange)" as queryEx
+        card "bus_position_updated(exchange)" as resEx
+        queue query as qq
+        queue response as rq
+        queryEx --> qq
+        rq <-- resEx
+    }
+}
+ui -(0-> ingress : Get/Post
+ingress -right(0-> auth : Get/Post
+ingress -left(0->  influx : Read
+ingress -(0)-- nodeC : Get/Post (bi-direction pour supporter portainer*)
+influx <-0)-- nodeC : Write
+auth -right->  sql : Read/Write
+nodeC ..> queryEx : AMQP protocol
+nodeC <.. rq : AMQP protocol
+qq ..> tc : AMQP protocol
+resEx <.. tc : AMQP protocol
+tc -(0-> rtp : Get
+tc -(0-> Stm : Get/Post
+
+@enduml

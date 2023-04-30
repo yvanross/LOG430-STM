@@ -1,27 +1,27 @@
-﻿using ApplicationLogic.Usecases;
+﻿using ApplicationLogic.Interfaces.Dao;
+using ApplicationLogic.Usecases;
+using Entities.DomainInterfaces.ResourceManagement;
 using MassTransit;
 using MqContracts;
-using NodeController.External.Dao;
 
 namespace NodeController.Controllers;
 
 public class BusPositionUpdatedMqController : IConsumer<BusPositionUpdated>
 {
-    private readonly ExperimentMonitoringUC _experimentMonitoringUc;
+    private readonly ExperimentMonitoring _experimentMonitoring;
+    private readonly IScheduler _scheduler;
 
-    private readonly PodReadService _readService;
-
-    public BusPositionUpdatedMqController()
+    public BusPositionUpdatedMqController(ExperimentMonitoring experimentMonitoring, IScheduler scheduler)
     {
-        _readService = new PodReadService();
-        _experimentMonitoringUc = new(new InfluxDbWriteService(), _readService);
+        _experimentMonitoring = experimentMonitoring;
+        _scheduler = scheduler;
     }
 
     public Task Consume(ConsumeContext<BusPositionUpdated> context)
     {
-        _experimentMonitoringUc.AnalyzeAndStoreRealtimeTestData(context.Message);
+        _experimentMonitoring.AnalyzeAndStoreRealtimeTestData(context.Message);
 
-        _readService.GetScheduler().TryAddTask(nameof(_experimentMonitoringUc.LogExperimentResults), _experimentMonitoringUc.LogExperimentResults);
+        _scheduler.TryAddTask(nameof(_experimentMonitoring.LogExperimentResults), _experimentMonitoring.LogExperimentResults);
 
         return Task.CompletedTask;
     }

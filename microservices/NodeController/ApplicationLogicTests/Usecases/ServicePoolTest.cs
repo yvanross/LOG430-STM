@@ -13,7 +13,7 @@ namespace ApplicationLogicTests.Usecases
     [TestClass()]
     public class ServicePoolTest
     {
-        private ServicePoolDiscoveryUC servicePoolDiscoveryUC;
+        private ServicePoolDiscovery _servicePoolDiscovery;
       
         private Mock<IEnvironmentClient> _envMock;
 
@@ -23,6 +23,8 @@ namespace ApplicationLogicTests.Usecases
         
         private Mock<IPodWriteService> _writeModel;
 
+        private Mock<IHostInfo> _hostInfo;
+
         [TestInitialize]
         public void Init()
         {
@@ -30,12 +32,14 @@ namespace ApplicationLogicTests.Usecases
             _readModelMock = MockProvider.GetReadModelMock();
             _logger = MockProvider.GetLoggerMock();
             _writeModel = MockProvider.GetWriteModelMock();
+            _hostInfo = MockProvider.GetHostInfoMock();
 
-            servicePoolDiscoveryUC = new ServicePoolDiscoveryUC(
+            _servicePoolDiscovery = new ServicePoolDiscovery(
                 _writeModel.Object,
                 _readModelMock.Object,
                 _envMock.Object,
-                _logger.Object);
+                (ILogger<ServicePoolDiscovery>)_logger.Object,
+                _hostInfo.Object);
         }
 
         [TestMethod()]
@@ -45,7 +49,7 @@ namespace ApplicationLogicTests.Usecases
             _readModelMock.Setup(x => x.GetAllPodTypes()).Returns(ImmutableList<IPodType>.Empty);
             _readModelMock.Setup(x => x.GetPodType(It.IsAny<string>())).Returns(() => null);
 
-            await servicePoolDiscoveryUC.DiscoverServices();
+            await _servicePoolDiscovery.DiscoverServices();
 
             _writeModel.Verify(x=>x.AddOrUpdatePod(It.IsAny<IPodInstance>()), Times.Exactly(6));
             _writeModel.Verify(x=>x.AddOrUpdatePodType(It.IsAny<IPodType>()), Times.Exactly(6));
@@ -56,7 +60,7 @@ namespace ApplicationLogicTests.Usecases
         {
             _readModelMock.Setup(x => x.GetAllServices()).Returns(ImmutableList<IServiceInstance>.Empty);
 
-            await servicePoolDiscoveryUC.DiscoverServices();
+            await _servicePoolDiscovery.DiscoverServices();
 
             _writeModel.Verify(x => x.AddOrUpdatePod(It.IsAny<IPodInstance>()), Times.Exactly(6));
             _writeModel.Verify(x => x.AddOrUpdatePodType(It.IsAny<IPodType>()), Times.Exactly(0));
@@ -65,7 +69,7 @@ namespace ApplicationLogicTests.Usecases
         [TestMethod()]
         public async Task DiscoverServices_NoNewServices()
         {
-            await servicePoolDiscoveryUC.DiscoverServices();
+            await _servicePoolDiscovery.DiscoverServices();
 
             _writeModel.Verify(x=>x.AddOrUpdatePod(It.IsAny<IPodInstance>()), Times.Exactly(0));
         }

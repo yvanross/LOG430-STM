@@ -4,7 +4,9 @@ public interface IHostInfo
 {
     string GetNodeStateStoragePort();
 
-    string GetExperimentHistoryStoragePort();
+    string GetAuthServicePort();
 
     string GetAddress();
+
+    string GetBridgePort();
 }

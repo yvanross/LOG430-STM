@@ -33,9 +33,5 @@ public interface IPodReadService
 
     //----------------------------------------------------------------
 
-    IScheduler GetScheduler();
-
-    //----------------------------------------------------------------
-
     string GetAddress();
 }

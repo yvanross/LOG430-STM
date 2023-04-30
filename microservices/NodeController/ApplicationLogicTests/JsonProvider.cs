@@ -1,8 +1,8 @@
 ﻿using System.Collections.Concurrent;
 using Entities.DomainInterfaces.Planned;
 using Entities.DomainInterfaces.ResourceManagement;
+using MqContracts;
 using Newtonsoft.Json;
-using NodeController.Dto.Incoming;
 
 namespace ApplicationLogicTests;
 

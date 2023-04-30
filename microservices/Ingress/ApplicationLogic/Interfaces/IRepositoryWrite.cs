@@ -7,5 +7,4 @@ public interface IRepositoryWrite
     void AddOrUpdateNode(INode node);
     
     void RemoveNode(INode node);
-
 }

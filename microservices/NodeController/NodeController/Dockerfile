@@ -11,18 +11,20 @@ COPY ["Nuget/Ambassador.1.1.0.nupkg", "NodeController/"]
 COPY ["NodeController/NodeController/nuget.config", ""]
 COPY ["NodeController/NodeController/NodeController.csproj", "NodeController/"]
 COPY ["NodeController/ApplicationLogic/ApplicationLogic.csproj", "ApplicationLogic/"]
+COPY ["NodeController/Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+COPY ["NodeController/Configuration/Configuration.csproj", "Configuration/"]
 COPY ["NodeController/Entities/Entities.csproj", "Entities/"]
 RUN dotnet restore "NodeController/NodeController.csproj"
 COPY . .
 WORKDIR "/src/NodeController"
-RUN dotnet build "NodeController/NodeController.csproj" -c Debug -o /app/build
+RUN dotnet build "Configuration/Configuration.csproj" -c Debug -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "NodeController/NodeController.csproj" -c Debug -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Configuration/Configuration.csproj" -c Debug -o /app/publish /p:UseAppHost=false
 
 ENV ASPNETCORE_ENVIRONMENT=Development
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "NodeController.dll"]
+ENTRYPOINT ["dotnet", "Configuration.dll"]

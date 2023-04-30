@@ -1,23 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ApplicationLogic.Usecases;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ingress.Controllers;
-using Ingress.Repository;
-using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 
-namespace ApplicationLogic.Usecases.Tests
+namespace ApplicationLogicTests.Usecases
 {
     [TestClass()]
     public class FunctionnalTests
     {
         /*
-        private readonly RoutingUC _routingUc = new (new RepositoryRead());
+        private readonly Routing _routingUc = new (new RepositoryRead());
         
-        private readonly SubscriptionUC _subscriptionUc = new (new RepositoryWrite(), new RepositoryRead());
+        private readonly Subscription _subscriptionUc = new (new RepositoryWrite(), new RepositoryRead());
 
         private string _serviceType = "testServiceType";
 

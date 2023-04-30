@@ -1,41 +1,34 @@
+using ApplicationLogic.Dto;
 using ApplicationLogic.Usecases;
-using Ingress.Dto;
-using Ingress.Repository;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ingress.Controllers
 {
-    [EnableCors("AllowOrigin")]
     [ApiController]
     [Route("[controller]")]
     public class SubscriptionController : ControllerBase
     {
-        private readonly SubscriptionUC _subscriptionUc;
-
         private readonly ILogger<SubscriptionController> _logger;
+        private readonly Subscription _subscription;
 
-        public SubscriptionController(ILogger<SubscriptionController> logger)
+        public SubscriptionController(ILogger<SubscriptionController> logger, Subscription subscription)
         {
             _logger = logger;
-
-            var _writeModel = new RepositoryWrite();
-
-            _subscriptionUc = new SubscriptionUC(_writeModel);
+            _subscription = subscription;
         }
 
-        [HttpPost("{id}")]
-        public IActionResult Post([FromRoute] string id, [FromBody] CallingServiceInfo callingServiceInfo)
+        [HttpPost("{teamName}/{username}")]
+        public async Task<IActionResult> Post([FromRoute] string teamName, [FromRoute] string username, [FromBody] CallingServiceInfo callingServiceInfo)
         {
             try
             {
-                _logger.LogInformation($"{id} attempting to subscribe");
+                _logger.LogInformation($"{username} from {teamName} attempting to subscribe");
 
                 if (string.IsNullOrEmpty(callingServiceInfo.Address) || string.IsNullOrEmpty(callingServiceInfo.Port)) throw new Exception("Source couldn't be determined");
 
-                _subscriptionUc.Subscribe(id, callingServiceInfo.Address, callingServiceInfo.Port);
+                await _subscription.Subscribe(teamName, username, callingServiceInfo.Address, callingServiceInfo.Port, callingServiceInfo.Secret, callingServiceInfo.Version);
 
-                _logger.LogInformation($"{id} from {callingServiceInfo.Address}:{callingServiceInfo.Port} has subscribed");
+                _logger.LogInformation($"{teamName} from {callingServiceInfo.Address}:{callingServiceInfo.Port} has subscribed");
             }
             catch (Exception e)
             {

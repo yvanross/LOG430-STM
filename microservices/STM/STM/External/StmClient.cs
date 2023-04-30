@@ -13,6 +13,7 @@ public class StmClient : IStmClient
 
     private static readonly RestClient _stmClient = new ("https://api.stm.info/pub/od/gtfs-rt/ic/v2");
 
+    //Cache
     private static ImmutableDictionary<string, (VehiclePosition VehiclePosition, DateTime DateTime)> _feedPositions = 
         ImmutableDictionary<string, (VehiclePosition VehiclePosition, DateTime DateTime)>.Empty;
 

@@ -1,0 +1,14 @@
+@startuml
+
+node "Portainer" {
+    component UI as ui
+    component Ingress as ingress
+    component AuthService as auth
+    Database InfluxDB as influx
+    Database Sql as sql
+}
+ui -(0-> ingress : Get/Post
+ingress -right(0-> auth : Get/Post
+ingress -left(0->  influx : Read
+auth -right(0->  sql
+@enduml

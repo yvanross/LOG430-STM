@@ -5,13 +5,14 @@ using ApplicationLogic.Usecases;
 using Entities.DomainInterfaces.Live;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Monitor = ApplicationLogic.Usecases.Monitor;
 
 namespace ApplicationLogicTests.Usecases
 {
     [TestClass()]
     public class MonitorTest
     {
-        private MonitorUc monitorUc;
+        private Monitor _monitor;
 
         private Mock<IEnvironmentClient> _envMock;
 
@@ -23,7 +24,7 @@ namespace ApplicationLogicTests.Usecases
             _envMock = MockProvider.GetEnvironmentMock();
             _podReadModel = MockProvider.GetReadModelMock();
 
-            monitorUc = new MonitorUc(
+            _monitor = new Monitor(
                 _envMock.Object,
                 _podReadModel.Object,
                 MockProvider.GetWriteModelMock().Object);
@@ -34,7 +35,7 @@ namespace ApplicationLogicTests.Usecases
         {
             _envMock.Setup(x => x.GetRunningServices(It.IsAny<string[]>())).Returns(Task.FromResult(ImmutableList<string>.Empty)!);
 
-            await monitorUc.RemoveOrReplaceDeadPodsFromModel();
+            await _monitor.RemoveOrReplaceDeadPodsFromModel();
 
             _envMock.Verify(x=>x.RemoveContainerInstance(
                     It.IsAny<string>(), It.IsAny<bool>()),
@@ -44,7 +45,7 @@ namespace ApplicationLogicTests.Usecases
         [TestMethod()]
         public async Task ProcessPodStates_NoPodsNeedToBeRemoved()
         {
-            await monitorUc.RemoveOrReplaceDeadPodsFromModel();
+            await _monitor.RemoveOrReplaceDeadPodsFromModel();
 
             _envMock.Verify(x => x.RemoveContainerInstance(
                     It.IsAny<string>(), It.IsAny<bool>()),
@@ -54,7 +55,7 @@ namespace ApplicationLogicTests.Usecases
         [TestMethod()]
         public async Task GarbageCollection()
         {
-            await monitorUc.GarbageCollection();
+            await _monitor.GarbageCollection();
         }
 
         [TestMethod()]
@@ -62,7 +63,7 @@ namespace ApplicationLogicTests.Usecases
         {
             _podReadModel.Setup(x => x.GetPodInstances(It.IsAny<string>())).Returns(ImmutableList<IPodInstance>.Empty);
 
-            await monitorUc.MatchInstanceDemandOnPods();
+            await _monitor.MatchInstanceDemandOnPods();
 
             _envMock.Verify(x => x.IncreaseByOneNumberOfInstances(
                     It.IsAny<IContainerConfig>(),
@@ -75,7 +76,7 @@ namespace ApplicationLogicTests.Usecases
         [TestMethod()]
         public async Task MatchDemandOnPods_NoNeedForMorePods()
         {
-            await monitorUc.MatchInstanceDemandOnPods();
+            await _monitor.MatchInstanceDemandOnPods();
 
             _envMock.Verify(x => x.IncreaseByOneNumberOfInstances(
                     It.IsAny<IContainerConfig>(),

@@ -1,0 +1,49 @@
+@startuml
+
+actor User
+
+package "Presentation Layer" {
+  [Controllers]
+  [Views]
+}
+
+package "Application Layer" {
+  [Use Cases]
+  [Application Services]
+  [DTOs]
+  [Mappers]
+}
+
+package "Domain Layer" {
+  [Entities]
+  [Value Objects]
+  [Aggregates]
+  [Domain Services]
+  [Repository Interfaces]
+  [Application Service Interfaces]
+}
+
+package "Infrastructure Layer" {
+  [Database Context]
+  [Repository Implementations]
+  [Infrastructure Services]
+  [External API Clients]
+}
+
+User --> [Controllers] : Interacts
+[Controllers] --> [Use Cases] : Calls
+[Controllers] <-- [DTOs] : Receives
+
+[Use Cases] --> [Application Services] : Orchestrates
+[Use Cases] --> [Repository Interfaces] : Queries/Updates
+[Use Cases] <-- [DTOs] : Exchanges data
+
+[Application Services] --> [Domain Services] : Uses
+[Application Services] --> [Entities] : Manipulates
+[Application Services] <-- [Value Objects] : Utilizes
+[Application Services] <-- [Aggregates] : Manages
+
+[Repository Interfaces] <-- [Repository Implementations] : Implements
+[Application Service Interfaces] <-- [Infrastructure Services] : Implements
+
+@enduml

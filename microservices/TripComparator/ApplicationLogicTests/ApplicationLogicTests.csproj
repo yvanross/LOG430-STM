@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApplicationLogic\ApplicationLogic.csproj" />
-    <ProjectReference Include="..\TripComparator\TripComparator.csproj" />
   </ItemGroup>
 
 </Project>

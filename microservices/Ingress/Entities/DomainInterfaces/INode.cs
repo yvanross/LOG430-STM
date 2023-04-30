@@ -1,6 +1,4 @@
-﻿using Entities.DomainInterfaces.ResourceManagement;
-
-namespace Entities.DomainInterfaces;
+﻿namespace Entities.DomainInterfaces;
 
 public interface INode
 {

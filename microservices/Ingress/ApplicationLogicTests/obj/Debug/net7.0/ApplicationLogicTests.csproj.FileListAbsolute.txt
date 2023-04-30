@@ -1,11 +1,8 @@
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\CoverletSourceRootsMapping
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\testhost.dll
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Ingress.deps.json
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Ingress.runtimeconfig.json
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\nuget.config
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\appsettings.Development.json
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\appsettings.json
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Ingress.exe
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\testhost.exe
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
@@ -329,3 +326,12 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogi
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\obj\Debug\net7.0\ApplicationLogicTests.pdb
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\obj\Debug\net7.0\ApplicationLogicTests.genruntimeconfig.cache
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\obj\Debug\net7.0\ref\ApplicationLogicTests.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\CsvHelper.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\InfluxDB.Client.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\InfluxDB.Client.Core.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\JsonSubTypes.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.Extensions.ObjectPool.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\NodaTime.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\NodaTime.Serialization.JsonNet.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Polly.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\System.Reactive.dll

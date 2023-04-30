@@ -11,18 +11,20 @@ COPY ["Nuget/Ambassador.1.1.0.nupkg", "Ingress/"]
 COPY ["Ingress/Ingress/nuget.config", ""]
 COPY ["Ingress/Ingress/Ingress.csproj", "Ingress/"]
 COPY ["Ingress/ApplicationLogic/ApplicationLogic.csproj", "ApplicationLogic/"]
+COPY ["Ingress/Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+COPY ["Ingress/Configuration/Configuration.csproj", "Configuration/"]
 COPY ["Ingress/Entities/Entities.csproj", "Entities/"]
 RUN dotnet restore "Ingress/Ingress.csproj"
 COPY . .
 WORKDIR "/src/Ingress"
-RUN dotnet build "Ingress/Ingress.csproj" -c Debug -o /app/build
+RUN dotnet build "Configuration/Configuration.csproj" -c Debug -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Ingress/Ingress.csproj" -c Debug -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Configuration/Configuration.csproj" -c Debug -o /app/publish /p:UseAppHost=false
 
 ENV ASPNETCORE_ENVIRONMENT=Development
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Ingress.dll"]
+ENTRYPOINT ["dotnet", "Configuration.dll"]

@@ -12,7 +12,7 @@ x-variables:
   ASPNETCORE_URLS: 'http://+:80'
 services:
   ingress:
-    image: '${DOCKER_REGISTRY-}ingress'
+    image: ingress
     container_name: Ingress
     restart: always
     ports:
@@ -23,14 +23,15 @@ services:
     environment:
       ASPNETCORE_URLS: 'http://+:80'
       NODE_STATE_STORAGE_PORT: 32670
-      EXPERIMENT_HISTORY_STORAGE_PORT: 32672
+      AUTH_SERVICE_PORT: 32671
       SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
+      BRIDGE_PORT: 32674
     volumes:
       - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
       - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
-    labels:
-      ARTIFACT_CATEGORY: DEBUG
-      ARTIFACT_NAME: Ingress
+    depends_on:
+      - bridge
+
   node-state-time-serie-storage:
     image: 'influxdb:latest'
     container_name: NodeStateTimeSerieStorage
@@ -49,20 +50,57 @@ services:
     volumes:
       - 'influxdb-data:/var/lib/influxdb2'
       - 'influxdb-config:/etc/influxdb2'
-  experiment-history-storage:
-    image: 'mongo:latest'
-    container_name: ExperimentHistoryStorage
+  authservice:
+    image: authservice
+    container_name: AuthService
+    restart: always
+    ports:
+      - '32671:80'
+    build:
+      context: ../
+      dockerfile: AuthService/AuthService/Dockerfile
+    environment:
+      ASPNETCORE_URLS: 'http://+:80'
+      POSTGRES_PORT: 32672
+      SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
+    x-develop:
+      watch:
+        - action: build
+          path: AuthService/
+    volumes:
+      - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
+      - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
+
+  userdb:
+    image: postgres
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      POSTGRES_PASSWORD: secret
     ports:
-      - '32672:27017'
-    labels:
-      ARTIFACT_CATEGORY: Database
-      ARTIFACT_NAME: ExperimentHistoryStorage
+      - '32672:5432'
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - '32673:8080'
+    
+  bridge:
+    container_name: BridgePortainerLocal
+    image: 'rabbitmq:3.12-rc-management'
+    restart: always
+    ports:
+      - '32674:5672'
+      - '32675:15672'
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 32676:3000
+    user: '104'
+    
   nodecontroller:
-    image: '${DOCKER_REGISTRY-}nodecontroller'
+    image: nodecontroller
     container_name: NodeController
     restart: always
     ports:
@@ -72,6 +110,8 @@ services:
       dockerfile: NodeController/NodeController/Dockerfile
     environment:
       TEAM_NAME: '${TEAM_NAME}'
+      USERNAME: '${USER}'
+      SECRET: '${SECRET}'
       INGRESS_ADDRESS: '${INGRESS_ADDRESS}'
       INGRESS_PORT: '${INGRESS_PORT}'
       SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
@@ -79,15 +119,14 @@ services:
       ASPNETCORE_URLS: 'http://+:80'
       MQ_SERVICE_NAME: EventStream
       CUSTOM_CONTAINER_PORTS_DISCOVERY: 5672
+      BRIDGE_PORT: 32674
     volumes:
       - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
       - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
-    depends_on:
-      - ingress
+  
   event-store:
     container_name: EventStream
     image: 'rabbitmq:3.12-rc-management'
-    restart: always
     ports:
       - '32771:5672'
       - '15672:15672'
@@ -96,9 +135,11 @@ services:
     labels:
       ARTIFACT_CATEGORY: Connector
       ARTIFACT_NAME: EventStream
+      MINIMUM_NUMBER_OF_INSTANCES: 1
+
   routetimeprovider:
     container_name: RouteTimeProvider
-    image: '${DOCKER_REGISTRY-}routetimeprovider'
+    image: routetimeprovider
     restart: always
     build:
       context: ../
@@ -117,16 +158,15 @@ services:
     labels:
       ARTIFACT_CATEGORY: Computation
       ARTIFACT_NAME: RouteTimeProvider
-      MINIMUM_NUMBER_OF_INSTANCES: 5
     depends_on:
       - nodecontroller
   tripcomparator:
     container_name: TripComparator
-    image: '${DOCKER_REGISTRY-}tripcomparator'
+    image: tripcomparator
     restart: always
     build:
       context: ../
-      dockerfile: TripComparator/TripComparator/Dockerfile
+      dockerfile: TripComparator/Controllers/Dockerfile
     environment:
       SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
       NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
@@ -147,10 +187,9 @@ services:
       ARTIFACT_NAME: TripComparator
     depends_on:
       - nodecontroller
-      - event-store
   stm:
     container_name: STM
-    image: '${DOCKER_REGISTRY-}stm'
+    image: stm
     restart: always
     build:
       context: ../
@@ -171,8 +210,7 @@ services:
       ARTIFACT_NAME: STM
     depends_on:
       - nodecontroller
-      
-      
+  
 volumes:
   influxdb-data: null
   influxdb-config: null
