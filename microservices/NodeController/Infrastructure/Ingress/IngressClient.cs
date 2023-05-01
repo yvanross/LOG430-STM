@@ -19,7 +19,7 @@ public class IngressClient : IIngressClient
         _client = new($"http://{_hostInfo.GetIngressAddress()}:{_hostInfo.GetIngressPort()}");
     }
 
-    public async Task Subscribe(string teamName, string username, string secret, string address, string port)
+    public async Task Subscribe(string group, string teamName, string username, string secret, string address, string port)
     {
         var retryPolicy = Policy
             .Handle<Exception>()
@@ -36,12 +36,10 @@ public class IngressClient : IIngressClient
 
         await retryPolicy.ExecuteAsync(async () =>
         {
-            var request = new RestRequest($"Subscription/{teamName}/{username}");
+            var request = new RestRequest($"Subscription/{group}/{teamName}/{username}");
 
             request.AddJsonBody(new IngressSubscriptionDto()
             {
-                Address = address,
-                Port = port,
                 Secret = secret,
                 Version = _hostInfo.GetVersion(),
             });
@@ -49,6 +47,8 @@ public class IngressClient : IIngressClient
             var res = await _client.ExecutePostAsync(request);
 
             res.ThrowIfError();
+
+            Console.WriteLine($"Subscribed to Ingress");
 
             return Task.CompletedTask;
         });

@@ -1,0 +1,35 @@
+<div class="container">
+  <h1>Real Time Updates</h1>
+  <div class="mat-elevation-z8">
+    <mat-table [dataSource]="dataSource">
+      <!-- Property 1 Column -->
+      <ng-container matColumnDef="User">
+        <mat-header-cell *matHeaderCellDef>User</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.User}}</mat-cell>
+      </ng-container>
+
+      <!-- Property 2 Column -->
+      <ng-container matColumnDef="AverageLatency">
+        <mat-header-cell *matHeaderCellDef>AverageLatency</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.ExperimentReport.averageLatency}}</mat-cell>
+      </ng-container>
+
+      <!-- Property 2 Column -->
+      <ng-container matColumnDef="Errors">
+        <mat-header-cell *matHeaderCellDef>Errors</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.ExperimentReport.errorCount}}</mat-cell>
+      </ng-container>
+
+      <!-- Property 2 Column -->
+      <ng-container matColumnDef="Message">
+        <mat-header-cell *matHeaderCellDef>Message</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.ExperimentReport.message}}</mat-cell>
+      </ng-container>
+
+      <!-- Table Header -->
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <!-- Table Rows -->
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+  </div>
+</div>

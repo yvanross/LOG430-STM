@@ -48,6 +48,7 @@ public class JwtService
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)),
                 new Claim(ClaimTypes.Name, labUser.UserName),
                 new Claim(ClaimTypes.Role, labUser.Role),
+                new Claim(ClaimTypes.GroupSid, labUser.Group),
                 new Claim("team", labUser.Team),
         };
 

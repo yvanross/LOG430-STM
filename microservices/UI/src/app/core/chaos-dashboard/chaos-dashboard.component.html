@@ -1,0 +1,51 @@
+<form [formGroup]="chaosForm" (ngSubmit)="onSubmit()">
+  <div formGroupName="ChaosCodex">
+    <h1>Experiment</h1>
+    <div formGroupName="ChaosConfigs">
+      <div *ngFor="let configName of ['Computation', 'Database', 'Connector']">
+        <h2>{{ configName }}</h2>
+        <div [formGroupName]="configName">
+          <div formGroupName="Value">
+            <label>NanoCpus:</label>
+            <input type="number" formControlName="NanoCpus">
+            <label>Memory:</label>
+            <input type="number" formControlName="Memory">
+            <label>MaxNumberOfPods:</label>
+            <input type="number" formControlName="MaxNumberOfPods">
+            <label>KillRate:</label>
+            <input type="number" formControlName="KillRate">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <label>Acceptable Average Latency In Ms:</label>
+      <input type="number" formControlName="AcceptableAverageLatencyInMs">
+    </div>
+
+    <div>
+      <label>End Test At:</label>
+      <input type="datetime-local" formControlName="EndTestAt">
+    </div>
+
+    <div>
+      <label>Start Test At:</label>
+      <input type="datetime-local" formControlName="StartTestAt">
+    </div>
+  </div>
+
+  <div formGroupName="Coordinates">
+    <h2>Coordinates</h2>
+    <div>
+      <label>Starting Coordinates:</label>
+      <input type="text" formControlName="StartingCoordinates">
+    </div>
+    <div>
+      <label>Destination Coordinates:</label>
+      <input type="text" formControlName="DestinationCoordinates">
+    </div>
+  </div>
+
+  <button type="submit">Send</button>
+</form>

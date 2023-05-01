@@ -335,3 +335,8 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogi
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\NodaTime.Serialization.JsonNet.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Polly.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\System.Reactive.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll

@@ -2,6 +2,8 @@
 
 public interface IHostInfo
 {
+    string GetNodeStateStorageToken();
+
     string GetNodeStateStoragePort();
 
     string GetAuthServicePort();

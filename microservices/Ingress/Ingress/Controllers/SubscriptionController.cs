@@ -17,18 +17,16 @@ namespace Ingress.Controllers
             _subscription = subscription;
         }
 
-        [HttpPost("{teamName}/{username}")]
-        public async Task<IActionResult> Post([FromRoute] string teamName, [FromRoute] string username, [FromBody] CallingServiceInfo callingServiceInfo)
+        [HttpPost("{group}/{teamName}/{username}")]
+        public async Task<IActionResult> Post([FromRoute] string group, [FromRoute] string teamName, [FromRoute] string username, [FromBody] CallingServiceInfo callingServiceInfo)
         {
             try
             {
                 _logger.LogInformation($"{username} from {teamName} attempting to subscribe");
 
-                if (string.IsNullOrEmpty(callingServiceInfo.Address) || string.IsNullOrEmpty(callingServiceInfo.Port)) throw new Exception("Source couldn't be determined");
+                await _subscription.Subscribe(group, teamName, username, callingServiceInfo.Secret, callingServiceInfo.Version);
 
-                await _subscription.Subscribe(teamName, username, callingServiceInfo.Address, callingServiceInfo.Port, callingServiceInfo.Secret, callingServiceInfo.Version);
-
-                _logger.LogInformation($"{teamName} from {callingServiceInfo.Address}:{callingServiceInfo.Port} has subscribed");
+                _logger.LogInformation($"{username} from {teamName} of group {group} has subscribed");
             }
             catch (Exception e)
             {

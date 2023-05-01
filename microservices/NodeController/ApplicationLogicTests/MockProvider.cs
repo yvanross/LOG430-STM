@@ -50,7 +50,7 @@ public static class MockProvider
 
         ingressClient.Setup(x => x.GetLogStoreAddressAndPort(It.IsAny<string>())).Returns(Task.FromResult("http://testAddress:8329"));
 
-        ingressClient.Setup(x => x.Subscribe(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(Task.CompletedTask);
+        ingressClient.Setup(x => x.Subscribe(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Returns(Task.CompletedTask);
 
         return ingressClient;
     }

@@ -15,15 +15,19 @@ namespace Entities
 
         public string Role { get; init; }
 
+        public string Group { get; init; }
+
         public LabUser() { }
 
-        public LabUser(string username, string team, string role)
+        public LabUser(string username, string team, string group, string role)
         {
             UserName = username;
 
             Team = team;
             
             Role = role;
+
+            Group = group;
         }
     }
 }

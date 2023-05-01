@@ -17,18 +17,13 @@ public class Ingress
 
     public async Task Register()
     {
-        await Try.WithConsequenceAsync(async () =>
-            {
-                await _ingressClient.Subscribe(
-                    _hostInfo.GetTeamName(),
-                    _hostInfo.GetUsername(),
-                    _hostInfo.GetSecret(),
-                    _hostInfo.GetAddress(),
-                    _hostInfo.GetPort());
-
-                return Task.CompletedTask;
-            },
-            retryCount: 2);
+        await _ingressClient.Subscribe(
+            _hostInfo.GetGroup(),
+            _hostInfo.GetTeamName(),
+            _hostInfo.GetUsername(),
+            _hostInfo.GetSecret(),
+            _hostInfo.GetAddress(),
+            _hostInfo.GetPort());
     }
 
     public async Task<string> GetLogStoreAddressAndPort()

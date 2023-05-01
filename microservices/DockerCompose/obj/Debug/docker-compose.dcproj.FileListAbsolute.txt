@@ -1,2 +1,0 @@
-C:\Users\david\LOG430-STM\microservices\DockerCompose\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\DockerCompose\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache

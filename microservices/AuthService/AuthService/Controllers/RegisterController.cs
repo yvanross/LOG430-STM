@@ -22,10 +22,10 @@ namespace AuthService.Controllers
             _userManager = userManager;
         }
 
-        [HttpPost("{teamName}/{username}")]
-        public async Task<ActionResult> Post([FromRoute] string teamName, [FromRoute] string username, [FromBody] SecretDto payload)
+        [HttpPost("{group}/{teamName}/{username}")]
+        public async Task<ActionResult> Post([FromRoute] string group, [FromRoute] string teamName, [FromRoute] string username, [FromBody] SecretDto payload)
         {
-            _logger.LogInformation($"trying to register {username} of {teamName}");
+            _logger.LogInformation($"trying to register {username} of {teamName} of group {group}");
 
             var secret = payload.Secret;
 
@@ -36,7 +36,7 @@ namespace AuthService.Controllers
 
             try
             {
-                var result = await _userManager.CreateAsync(new LabUser(username, teamName, "User"), secret);
+                var result = await _userManager.CreateAsync(new LabUser(username, teamName, group, "User"), secret);
 
                 if (!result.Succeeded)
                 {

@@ -50,7 +50,7 @@ public class InfluxDbWriteService : ISystemStateWriteService
 
                 _client = new InfluxDBClient(new InfluxDBClientOptions($"http://{_address}")
                 {
-                    Bucket = _hostInfo.GetTeamName(),
+                    Bucket = _hostInfo.GetGroup(),
                     AllowHttpRedirects = true,
                     LogLevel = LogLevel.Basic,
                     Org = Org,
@@ -68,11 +68,12 @@ public class InfluxDbWriteService : ISystemStateWriteService
                 .Field("latency", dto.AverageLatency)
                 .Field("errors", dto.ErrorCount)
                 .Field("report", json)
+                .Tag("User", _hostInfo.GetUsername())
                 .Timestamp(dto.Timestamp, WritePrecision.Ns);
 
             using var writeApi = _client.GetWriteApi();
 
-            writeApi.WritePoint(point, _hostInfo.GetTeamName(), Org);
+            writeApi.WritePoint(point, _hostInfo.GetGroup(), Org);
         });
     }
 }

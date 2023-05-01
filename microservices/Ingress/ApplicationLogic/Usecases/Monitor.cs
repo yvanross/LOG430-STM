@@ -56,7 +56,7 @@ namespace ApplicationLogic.Usecases
 
             if (route is not null)
             {
-                if (await IsPortOpen(node.Address, Convert.ToInt32(node.Port)))
+                //if (await IsPortOpen(node.Address, Convert.ToInt32(node.Port)))
                     route.LastSuccessfulPing = DateTime.UtcNow;
             }
 

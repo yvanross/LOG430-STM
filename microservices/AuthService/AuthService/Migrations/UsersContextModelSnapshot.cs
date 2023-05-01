@@ -42,6 +42,10 @@ namespace AuthService.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("Group")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Id")
                         .HasColumnType("text");
 

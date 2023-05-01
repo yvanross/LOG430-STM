@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AuthService.Migrations
 {
     [DbContext(typeof(UsersContext))]
-    [Migration("20230428183804_InitialCreate")]
+    [Migration("20230430224914_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -44,6 +44,10 @@ namespace AuthService.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("Group")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Id")
                         .HasColumnType("text");

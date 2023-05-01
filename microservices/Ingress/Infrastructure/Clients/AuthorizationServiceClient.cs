@@ -1,4 +1,5 @@
 ﻿using ApplicationLogic.Interfaces;
+using Docker.DotNet.Models;
 using Microsoft.Extensions.Logging;
 using RestSharp;
 
@@ -25,16 +26,16 @@ public class AuthorizationServiceClient : IAuthorizationService
             secret
         });
 
-        var role = await _client.ExecutePostAsync<string?>(req);
+        var tokenRes = await _client.ExecutePostAsync<string?>(req);
 
-        role.ThrowIfError();
+        tokenRes.ThrowIfError();
 
-        return role.Data;
+        return tokenRes.Data;
     }
 
-    public async Task Register(string name, string secret, string teamName)
+    public async Task Register(string name, string secret, string teamName, string group)
     {
-        var req = new RestRequest($"Register/{teamName}/{name}", Method.Post);
+        var req = new RestRequest($"Register/{group}/{teamName}/{name}", Method.Post);
 
         req.AddJsonBody(new
         {
@@ -44,5 +45,18 @@ public class AuthorizationServiceClient : IAuthorizationService
         var role = await _client.ExecutePostAsync(req);
 
         role.ThrowIfError();
+    }
+
+    public async Task<string[]> GetVisibleAccounts(string jwt)
+    {
+        var req = new RestRequest($"User");
+
+        req.AddHeader("Authorization", $"Bearer {jwt}");
+
+        var tokenRes = await _client.ExecuteGetAsync<string[]>(req);
+
+        tokenRes.ThrowIfError();
+
+        return tokenRes.Data;
     }
 }

@@ -25,4 +25,6 @@ public interface IHostInfo
     string GetVersion();
 
     string GetBridgePort();
+    
+    string GetGroup();
 }

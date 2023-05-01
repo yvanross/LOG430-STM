@@ -19,6 +19,7 @@ namespace AuthService.Migrations
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     Team = table.Column<string>(type: "text", nullable: false),
                     Role = table.Column<string>(type: "text", nullable: false),
+                    Group = table.Column<string>(type: "text", nullable: false),
                     Id = table.Column<string>(type: "text", nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),

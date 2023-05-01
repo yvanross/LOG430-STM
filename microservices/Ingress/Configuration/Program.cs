@@ -41,7 +41,6 @@ namespace Configuration
                     options.AllowAnyMethod();
                 }
             );
-            app.UseAuthorization();
 
             app.MapControllers();
 
@@ -56,7 +55,9 @@ namespace Configuration
         {
             ConfigureMassTransit(services);
 
-            services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(IngressController).Assembly)); ;
+            services.AddCors();
+
+            services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(IngressController).Assembly));
 
             services.AddHttpContextAccessor();
 
@@ -75,8 +76,6 @@ namespace Configuration
                 services.AddSingleton<IScheduler, Scheduler>();
 
                 services.AddScoped<Monitor>();
-
-                services.AddScoped<Routing>();
 
                 services.AddScoped<Subscription>();
             }

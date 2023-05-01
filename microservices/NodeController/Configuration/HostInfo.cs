@@ -8,6 +8,8 @@ public class HostInfo : IHostInfo
 
     private const bool CheatsAllowed = true;
 
+    private static readonly string Group = Environment.GetEnvironmentVariable("GROUP")!;
+
     private static readonly string TeamName = Environment.GetEnvironmentVariable("TEAM_NAME")!;
 
     private static readonly string IngressAddress = Environment.GetEnvironmentVariable("INGRESS_ADDRESS")!;
@@ -86,5 +88,10 @@ public class HostInfo : IHostInfo
     public string GetBridgePort()
     {
         return BridgePort;
+    }
+
+    public string GetGroup()
+    {
+        return Group;
     }
 }
