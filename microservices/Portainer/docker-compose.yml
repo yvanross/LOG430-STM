@@ -57,9 +57,9 @@ services:
     labels:
       ARTIFACT_CATEGORY: Database
       ARTIFACT_NAME: NodeStateTimeSerieStorage
-    volumes:
-      - 'influxdb-data:/var/lib/influxdb2'
-      - 'influxdb-config:/etc/influxdb2'
+    #volumes:
+    #  - 'influxdb-data:/var/lib/influxdb2'
+    #  - 'influxdb-config:/etc/influxdb2'
   authservice:
     image: authservice
     container_name: AuthService
@@ -77,9 +77,9 @@ services:
       watch:
         - action: build
           path: AuthService/
-    volumes:
-      - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
-      - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
+    #volumes:
+      #- '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
+      #- '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
   userdb:
     image: postgres
     restart: always
