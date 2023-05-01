@@ -14,7 +14,7 @@ import {interval, startWith, switchMap} from "rxjs";
 export class DashboardComponent implements OnInit {
 
   dataSource = new MatTableDataSource<Row>();
-  displayedColumns: string[] = ['User', 'AverageLatency', 'Errors', 'Message'];
+  displayedColumns: string[] = ['User', 'AverageLatency', 'ErrorCount', 'Message'];
 
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
@@ -30,8 +30,14 @@ export class DashboardComponent implements OnInit {
       .subscribe(response => {
         let rows:Row[] = [];
 
-        for (const [key, values] of response.entries()) {
-          rows.push(new Row(key, values.at(0)));
+        // Iterate over the key-value pairs
+        for (const key in response) {
+          const value: string | undefined = response[key].at(0);
+          if(value)
+          {
+            console.log(`Key: ${key}, Value:`, JSON.parse(value));
+            rows.push(new Row(key, JSON.parse(value)));
+          }
         }
 
         this.dataSource.data = rows;

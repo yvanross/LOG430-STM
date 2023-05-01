@@ -86,17 +86,16 @@ namespace Ingress.Controllers
 
             if (string.IsNullOrEmpty(jwt))
             {
-                return null; //BadRequest("No JWT provided");
+                return null;
             }
 
             var accounts = await _subscription.GetVisibleAccounts(jwt);
 
             var jwtToken = new JwtSecurityToken(jwt);
 
-            // Assuming the role, group, and user are stored with standard claim types
             var group = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.GroupSid)?.Value;
 
-            if (group is null) return null; //Unauthorized("Group couldn't be parsed");
+            if (group is null) return null;
 
             var logs = await _systemStateReadService.ReadLogs(accounts, group);
 

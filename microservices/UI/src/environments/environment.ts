@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  INGRESS_PORT: "32769"
+  INGRESS_PORT: "32669"
 };
 
 /*

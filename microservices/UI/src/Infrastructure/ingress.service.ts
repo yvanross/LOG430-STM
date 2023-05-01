@@ -36,7 +36,7 @@ export class IngressService {
   }
 
   fetchData() {
-    return this.http.get<Map<string, ExperimentReportDto[]>>(this.apiUrl + '/Ingress/GetLogs',
+    return this.http.get<ResponseMap>(this.apiUrl + '/Ingress/GetLogs',
       {
         headers:
           {
@@ -48,4 +48,8 @@ export class IngressService {
   private setToken(response: string) {
     this.token.next(response);
   }
+}
+
+export interface ResponseMap {
+  [key: string]: string[];
 }

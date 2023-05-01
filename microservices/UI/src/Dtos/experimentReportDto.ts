@@ -1,9 +1,9 @@
 import {ArtefactDto} from "./artefactDto";
 
 export class ExperimentReportDto {
-  timestamp: Date | undefined;
-  runningInstances: ArtefactDto[] | undefined;
-  averageLatency: number | undefined;
-  errorCount: number | undefined;
-  message: string | undefined;
+  Timestamp: string | undefined;
+  RunningInstances: ArtefactDto[]| undefined;
+  AverageLatency: number| undefined;
+  ErrorCount: number| undefined;
+  Message: string| undefined;
 }
