@@ -75,12 +75,14 @@ Nous vous fournirons des machines virtuelle pour le déployement des itérations
 
 Vous devez mettre vos sources à jour dans la branche main, et ensuite vous générez un tag correspondant à l'itération ou vous faites votre remise. **Les remises doivent se faire avant minuit le jour de la séance de laboratoire correspondant à la semaine identifié dans le tableau suivant**.
 
-| Semaine   |Tag                 |
-| --------: |:-------------------|
-|         3 | git tag laboratoire-1 |
-|         6 | git tag laboratoire-2 |
-|         9 | git tag laboratoire-3 |
-|        12 | git tag laboratoire-4 |
+Les rapports devront être remis dans Moodle.
+
+| Semaine   |Tag                 | Rapport |
+| --------: |:-------------------|------|
+|         3 | git tag laboratoire-1 | Remise dans Moodle|
+|         6 | git tag laboratoire-2 | Remise dans Moodle |
+|         9 | git tag laboratoire-3 | Remise dans Moodle |
+|        12 | git tag laboratoire-4 | Remise dans Moodle |
 
 * Il y aura des directives supplémentaires pour la remise de la documentation de chaque itération.
 ### Laboratoire #1

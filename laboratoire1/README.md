@@ -80,5 +80,5 @@ En fonctions de vos analyses et de la description sommaire des itérations à ve
 # Génération du rapport
 Utiliser la commande suivante pour générer le PDF de la documentation avec l'outil [Pandoc](https://pandoc.org)
 ```bash
-pandoc --verbose documentationArchitecture.md ../doc/vues-module.md ../doc/footer.md ../doc/vues-cetc.md ../doc/footer.md ../doc/vues-allocation.md ../doc/footer.md ../doc/telemetrie.md ../doc/footer.md ../doc/cu01.md ../doc/footer.md ../doc/cu05.md ../doc/footer.md ../doc/cu06.md ../doc/footer.md ../doc/cu09.md ../doc/footer.md  -o documentationArchitecture.pdf && open documentationArchitecture.pdf
+pandoc --verbose documentationArchitecture.md ../doc/telemetrie.md ../doc/footer.md ../doc/vues-module.md ../doc/footer.md ../doc/vues-cetc.md ../doc/footer.md ../doc/vues-allocation.md ../doc/footer.md  ameliorations.md ../doc/footer.md ../doc/cu01.md ../doc/footer.md ../doc/cu05.md ../doc/footer.md ../doc/cu06.md ../doc/footer.md ../doc/cu09.md ../doc/footer.md  -o documentationArchitecture.pdf && open documentationArchitecture.pdf
 ```
