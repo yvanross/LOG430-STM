@@ -14,8 +14,8 @@
 - Le système ne doit pas prendre beaucoup de temps pour afficher le résultat de la comparaison.
 - Vous devez documenter la latence normale de chaque service et documenter la latence du service de comparaison.
 
-### [CU02 ChaosMonkey](#cu02) {#p-cu02}
-- Aucune perturbation de performance des microservices ne devrait être perceptible par l'usager.
+### [CU02 ChaosMonkey disponibilité](#cu02) {#p-cu02}
+- Aucune perturbation de disponibilité des microservices ne devrait être perceptible par l'usager.
 
 ### [CU03 Impact écologique](#cu03) {#p-cu03}
 - Le service doit avoir un temps de réponse de moins de 1 seconde.
@@ -42,6 +42,9 @@
   
 ### [CU10 Météo](#cu10) {#p-cu10}
 - Le service de météo doit avoir un temps de réponse de moins de 1 seconde.
+
+### [CU11 ChaosMonkey performance](#cu11) {#p-cu11}
+- Aucune perturbation de performance des microservices ne devrait être perceptible par l'usager.
 
 ## Conception pilotée par les attributs
   
@@ -78,9 +81,6 @@
   <span style="color:red">nom de la tactique</span>
 
   <span style="color:red">Diagramme(s) de séquence ou autre information pertinente démontrant la réalisation de(s) tactique(s)</span>
-
-
-
 
 
 ### Relation entre les éléments architecturale et les exigences
