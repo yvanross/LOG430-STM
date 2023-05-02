@@ -17,16 +17,19 @@ namespace Infrastructure.Docker;
 /// </summary>
 public class LocalDockerClient : IEnvironmentClient
 {
-    private readonly DockerClient _dockerClient;
-
+    private static DockerClient? _dockerClient;
     private readonly ILogger _logger;
     private readonly IHostInfo _hostInfo;
+    private const int timeout = 1000;
+
 
     public LocalDockerClient(ILogger<LocalDockerClient> logger, IHostInfo hostInfo)
     {
         _logger = logger;
         _hostInfo = hostInfo;
-        _dockerClient = new DockerClientConfiguration(new Uri($"http://{hostInfo.GetAddress()}:2375")).CreateClient();
+        _dockerClient ??= new DockerClientConfiguration(
+                new Uri("http://host.docker.internal:2375"), defaultTimeout:TimeSpan.FromSeconds(5))
+            .CreateClient();
     }
 
     public async Task<ImmutableList<string>?> GetRunningServices(string[]? statuses = default)
@@ -35,28 +38,23 @@ public class LocalDockerClient : IEnvironmentClient
 
         return await Try.WithConsequenceAsync(async () =>
         {
-            var containers = await _dockerClient.Containers.ListContainersAsync(new ContainersListParameters()
+            var containers = await ForceTimeout(_dockerClient!.Containers.ListContainersAsync(new ContainersListParameters()
             {
                 Filters = new Dictionary<string, IDictionary<string, bool>>()
                 {
                     { "status", statuses.ToDictionary(k => k, v => true) }
                 }
-            });
+            }));
 
             return containers.Select(c => c.ID).ToImmutableList();
-        }, retryCount: 2, autoThrow: false).ConfigureAwait(false);
-    }
-
-    public async Task<MultiplexedStream> GetContainerLogs(string containerId)
-    {
-        return await _dockerClient.Containers.GetContainerLogsAsync(containerId, true, new ContainerLogsParameters());
+        }, retryCount: 2, autoThrow: false);
     }
 
     public async Task<(ContainerInfo CuratedInfo, IContainerConfig RawConfig)> GetContainerInfo(string containerId)
     {
         return await Try.WithConsequenceAsync(async () =>
         {
-            var container = await _dockerClient.Containers.InspectContainerAsync(containerId);
+            var container = await ForceTimeout(_dockerClient!.Containers.InspectContainerAsync(containerId));
 
             var labels = container.Config.Labels
                 .Where(kv => Enum.TryParse(typeof(ServiceLabelsEnum), kv.Key, true, out _))
@@ -88,7 +86,7 @@ public class LocalDockerClient : IEnvironmentClient
                 ContainerPort = ports.containerPort ?? string.Empty,
             });
         },
-        retryCount: 2, autoThrow: false).ConfigureAwait(false);
+        retryCount: 2, autoThrow: false);
 
         (string? hostPort, string? containerPort) GetPortForDefaultProtocols(ContainerInspectResponse container)
         {
@@ -145,7 +143,7 @@ public class LocalDockerClient : IEnvironmentClient
             containerConfig.Config.HostConfig.PortBindings = exposedPorts;
 
 
-            containerResponse = await _dockerClient.Containers.CreateContainerAsync(new CreateContainerParameters
+            containerResponse = await ForceTimeout(_dockerClient.Containers.CreateContainerAsync(new CreateContainerParameters
             {
                 HostConfig = containerConfig.Config.HostConfig,
                 Env = env,
@@ -153,9 +151,9 @@ public class LocalDockerClient : IEnvironmentClient
                 Image = containerConfig.Config.Image,
                 Name = newContainerName,
                 ExposedPorts = new Dictionary<string, EmptyStruct>() { { exposedPorts.Keys.First(), new EmptyStruct() } }
-            });
+            }));
 
-            _ = await _dockerClient.Containers.StartContainerAsync(containerResponse.ID, new ContainerStartParameters());
+            _ = await ForceTimeout(_dockerClient.Containers.StartContainerAsync(containerResponse.ID, new ContainerStartParameters()));
 
             return containerResponse;
         },
@@ -165,17 +163,16 @@ public class LocalDockerClient : IEnvironmentClient
                 _logger.LogDebug(e.StackTrace);
 
                 if (containerResponse is not null)
-                    await RemoveContainerInstance(containerResponse.ID, true).ConfigureAwait(false);
+                    await RemoveContainerInstance(containerResponse.ID, true);
             },
             autoThrow: false,
-            retryCount: 2).ConfigureAwait(false);
+            retryCount: 2);
     }
 
     public async Task GarbageCollection()
     {
-        await Try.WithConsequenceAsync(async () => await _dockerClient.Containers.PruneContainersAsync(
-            new ContainersPruneParameters(),
-            new CancellationTokenSource(50).Token), autoThrow: false);
+        await Try.WithConsequenceAsync(async () => await ForceTimeout(_dockerClient.Containers.PruneContainersAsync(
+            new ContainersPruneParameters())), autoThrow: false);
     }
 
     public async Task SetResources(IPodInstance podInstance, long nanoCpus, long memory)
@@ -184,26 +181,26 @@ public class LocalDockerClient : IEnvironmentClient
         {
             foreach (var service in podInstance.ServiceInstances)
             {
-                await _dockerClient.Containers.UpdateContainerAsync(service.ContainerInfo!.Id,
+                await ForceTimeout(_dockerClient!.Containers.UpdateContainerAsync(service.ContainerInfo!.Id,
                     new ContainerUpdateParameters()
                     {
                         NanoCPUs = nanoCpus,
                         Memory = memory,
-                    });
+                    }));
             }
 
             return Task.CompletedTask;
-        }, retryCount: 2, autoThrow: false).ConfigureAwait(false);
+        }, retryCount: 2, autoThrow: false);
     }
 
     public async Task RemoveContainerInstance(string containerId, bool quiet = false)
     {
         await Try.WithConsequenceAsync(async () =>
         {
-            var poolContainers = await _dockerClient.Containers.ListContainersAsync(new ContainersListParameters());
+            var poolContainers = await ForceTimeout(_dockerClient!.Containers.ListContainersAsync(new ContainersListParameters()));
 
             if(poolContainers.Any(c=>c.ID.Equals(containerId)))
-                await _dockerClient.Containers.RemoveContainerAsync(containerId, new ContainerRemoveParameters() { Force = true });
+                await ForceTimeout(_dockerClient.Containers.RemoveContainerAsync(containerId, new ContainerRemoveParameters() { Force = true }));
 
             return Task.CompletedTask;
         }, retryCount: 2, autoThrow: false,
@@ -216,7 +213,7 @@ public class LocalDockerClient : IEnvironmentClient
                 }
                 
                 return Task.CompletedTask;
-            }).ConfigureAwait(false);
+            });
     }
 
     [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -233,5 +230,31 @@ public class LocalDockerClient : IEnvironmentClient
                 }
             }
         };
+    }
+
+    private static async Task ForceTimeout(Task t)
+    {
+        var token = Task.Delay(timeout);
+
+        var completedTask = await Task.WhenAny(t, token);
+
+        if (completedTask == token)
+        {
+            throw new TimeoutException("Docker Daemon jammed again, forcing timeout");
+        }
+    }
+
+    private static async Task<T> ForceTimeout<T>(Task<T> t)
+    {
+        var token = Task.Delay(timeout);
+
+        var completedTask = await Task.WhenAny(t, token);
+
+        if (completedTask == token)
+        {
+            throw new TimeoutException("Docker Daemon jammed again, forcing timeout");
+        }
+
+        return t.Result;
     }
 }

@@ -22,8 +22,7 @@ public class InfluxDbReadService : ISystemStateReadService
         _hostInfo = hostInfo;
     }
 
-    public async Task<ConcurrentDictionary<string, IEnumerable<object?>>> ReadLogs(IEnumerable<string> names,
-        string group)
+    public async Task<ConcurrentDictionary<string, IEnumerable<object?>>> ReadLogs(IEnumerable<string> names, string group)
     {
         await EstablishConnection(group);
 
@@ -63,10 +62,11 @@ public class InfluxDbReadService : ISystemStateReadService
         static string GetQuery(string group, string name) =>
         $"""
             from(bucket: "{group}")
-            |> range(start: -12h)
+            |> range(start: -1m)
             |> filter(fn: (r) => r._measurement == "experiment-report")
             |> filter(fn: (r) => r._field == "report")
             |> filter(fn: (r) => r.User == "{name}")
+            |> last()
         """;
 
         return reports;

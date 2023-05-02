@@ -36,8 +36,8 @@ public class TaskScheduling
         _logger.LogInformation("# Preparation Complete, scheduling... #");
 
         _scheduler.TryAddTask(nameof(_servicePool.DiscoverServices), _servicePool.DiscoverServices);
-        //readModel.GetScheduler().TryAddTask(nameof(monitor.RemoveOrReplaceDeadPodsFromModel), monitor.RemoveOrReplaceDeadPodsFromModel);
-        //_scheduler.TryAddTask(nameof(_monitor.MatchInstanceDemandOnPods), _monitor.MatchInstanceDemandOnPods);
+        _scheduler.TryAddTask(nameof(_monitor.RemoveOrReplaceDeadPodsFromModel), _monitor.RemoveOrReplaceDeadPodsFromModel);
+        _scheduler.TryAddTask(nameof(_monitor.MatchInstanceDemandOnPods), _monitor.MatchInstanceDemandOnPods);
         //readModel.GetScheduler().TryAddTask(nameof(monitor.GarbageCollection), monitor.GarbageCollection);
     }
 }

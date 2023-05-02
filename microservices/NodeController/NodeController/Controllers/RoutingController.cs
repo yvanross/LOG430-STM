@@ -28,14 +28,7 @@ namespace NodeController.Controllers
         {
             return Ok(Try.WithConsequenceAsync(() =>
             {
-                _logger.LogInformation($"Finding best route for {caller} to {serviceType} in {Enum.GetName(mode)} mode");
-
                 var routingDatas = _routing.RouteByDestinationType(caller, serviceType, mode).ToList();
-
-                foreach (var routingData in routingDatas)
-                {
-                    _logger.LogInformation($"routing service to {routingData.Address}");
-                }
 
                 return Task.FromResult(routingDatas);
             }, retryCount: 2).Result);

@@ -36,11 +36,29 @@ namespace Ingress.Controllers
             This endpoint takes a json body of the same format as the NodeController Begin endpoint.
             It simply forwards the body to the right client (teams).
         """)]
-        public async Task<IActionResult> BeginExperiment([FromQuery] string[] targetTeams)
+        public async Task<IActionResult> BeginExperiment(bool includeAllVisibleAccounts)
         {
+            var jwt = string.Empty;
+
+            if (HttpContext.Request.Headers.TryGetValue("Authorization", out var authorizationHeader))
+            {
+                jwt = authorizationHeader.ToString().Substring("Bearer ".Length).Trim();
+            }
+
+            if (string.IsNullOrEmpty(jwt))
+            {
+                return Unauthorized();
+            }
+
+            var jwtToken = new JwtSecurityToken(jwt);
+
+            var name = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+
+            var accounts = includeAllVisibleAccounts? await _subscription.GetVisibleAccounts(jwt) : new [] {name};
+
             var requestBody = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
 
-            await Parallel.ForEachAsync(targetTeams, async (team, _) =>
+            await Parallel.ForEachAsync(accounts, async (team, _) =>
             {
                 try
                 {

@@ -1,0 +1,16 @@
+@startuml
+
+node "Docker Desktop" {
+    component NodeController as nodeC
+    component TripComparator as tc
+    component RouteTimeProvider as rtp
+    component Stm
+    queue RabbitMQ as mq
+}
+nodeC ..> mq : AMQP protocol
+nodeC <.. mq : AMQP protocol
+mq ..> tc : AMQP protocol
+mq <.. tc : AMQP protocol
+tc -(0-> rtp : Get
+tc -(0-> Stm : Get/Post
+@enduml

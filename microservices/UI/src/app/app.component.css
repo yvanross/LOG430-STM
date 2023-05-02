@@ -1,5 +1,7 @@
 .sidenav-container {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidenav {
@@ -10,3 +12,4 @@
 .active {
   background-color: rgba(0, 0, 0, 0.1);
 }
+

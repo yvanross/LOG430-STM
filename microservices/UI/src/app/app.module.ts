@@ -13,6 +13,11 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatListModule} from "@angular/material/list";
 import {RouterOutlet} from "@angular/router";
 import { AppRoutingModule } from './app-routing.module';
+import {MatCardModule} from "@angular/material/card";
+import {MatInputModule} from "@angular/material/input";
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatTabsModule} from "@angular/material/tabs";
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   declarations: [
@@ -21,19 +26,24 @@ import { AppRoutingModule } from './app-routing.module';
     DashboardComponent,
     ChaosDashboardComponent,
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    MatTableModule,
-    MatSortModule,
-    BrowserAnimationsModule,
-    ReactiveFormsModule,
-    MatSidenavModule,
-    MatListModule,
-    RouterOutlet,
-    AppRoutingModule
-  ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpClientModule,
+        MatTableModule,
+        MatSortModule,
+        BrowserAnimationsModule,
+        ReactiveFormsModule,
+        MatSidenavModule,
+        MatListModule,
+        RouterOutlet,
+        AppRoutingModule,
+        MatCardModule,
+        MatInputModule,
+        MatExpansionModule,
+        MatTabsModule,
+        MatButtonModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

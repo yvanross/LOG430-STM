@@ -30,6 +30,7 @@ namespace Configuration
                 var app = builder.Build();
 
                 app.UseSwagger();
+                
                 app.UseSwaggerUI();
 
                 app.UseHttpsRedirection();
@@ -55,7 +56,7 @@ namespace Configuration
         {
             ConfigureMassTransit(services).Wait();
 
-            services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(DebugController).Assembly)); ; ;
+            services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(DebugController).Assembly));
 
             services.AddEndpointsApiExplorer();
 

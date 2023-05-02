@@ -8,11 +8,11 @@ namespace ApplicationLogic.Services;
 
 public class SchedulerService : IScheduler
 {
-    private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(100));
+    private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(1000));
 
     private ImmutableDictionary<string, Func<Task>> _tasks = ImmutableDictionary<string, Func<Task>>.Empty;
 
-    private ILogger _logger;
+    private readonly ILogger _logger;
 
     public SchedulerService(ILogger<SchedulerService> logger)
     {
@@ -22,9 +22,8 @@ public class SchedulerService : IScheduler
 
     public void TryAddTask(string name, Func<Task> func)
     {
-        ImmutableInterlocked.TryAdd(ref _tasks, func.Method.Name, func);
-
-        _logger.LogInformation($"# Task: {name} has been scheduled #");
+        if(ImmutableInterlocked.TryAdd(ref _tasks, func.Method.Name, func))
+            _logger.LogInformation($"# Task: {name} has been scheduled #");
     }
 
     public void TryRemoveTask(string name)
@@ -34,7 +33,7 @@ public class SchedulerService : IScheduler
 
     private async Task BeginScheduling()
     {
-        while (await _periodicTimer.WaitForNextTickAsync().ConfigureAwait(false))
+        while (await _periodicTimer.WaitForNextTickAsync())
         {
             foreach (var task in _tasks)
             {

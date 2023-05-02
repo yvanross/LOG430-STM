@@ -9,7 +9,7 @@ namespace ApplicationLogic.Use_Cases;
 
 public class TrackBusUC
 {
-    private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(10));
+    private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(100));
 
     //todo use a better data structure
     private readonly ConcurrentQueue<IBusTracking> _trackingQueue = new();

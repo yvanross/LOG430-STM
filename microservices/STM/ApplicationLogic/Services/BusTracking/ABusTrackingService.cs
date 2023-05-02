@@ -29,8 +29,6 @@ public abstract class ABusTrackingService : ITrackingService
 
         var tracking = Track();
 
-        Logger.LogInformation(tracking.Item1.Message);
-
         return tracking;
     }
 

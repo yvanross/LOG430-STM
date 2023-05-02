@@ -16,7 +16,7 @@ namespace ApplicationLogic.Usecases
 
         private readonly ILogger? _logger;
 
-        private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(5));
+        private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(100));
 
         private int _averageCarTravelTime;
 

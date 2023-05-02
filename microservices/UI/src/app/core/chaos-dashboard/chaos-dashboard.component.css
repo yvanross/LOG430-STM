@@ -1,0 +1,20 @@
+.chaos-form {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+
+.chaos-card {
+  justify-content: center;
+  width: 100%;
+  max-width: 960px;
+}
+
+mat-form-field {
+  width: 100%;
+  margin: 8px 0;
+}
+
+mat-expansion-panel {
+  margin: 16px 0;
+}

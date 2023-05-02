@@ -66,9 +66,7 @@ public class MassTransitRabbitMq : IMqConfigurator
                 {
                     endpoint.ConfigureConsumeTopology = false;
 
-                    endpoint.Consumer(typeof(BusPositionUpdatedMqController), (_) => new BusPositionUpdatedMqController(
-                        _serviceProvider.GetRequiredService<ExperimentMonitoring>(),
-                        _serviceProvider.GetRequiredService<IScheduler>()));
+                    endpoint.Consumer(typeof(BusPositionUpdatedMqController), (_) => new BusPositionUpdatedMqController(_serviceProvider.GetRequiredService<ExperimentMonitoring>()));
 
                     endpoint.Bind<BusPositionUpdated>(binding =>
                     {

@@ -13,13 +13,15 @@ public class ExperimentMqController : IConsumer<ExperimentDto>
     private readonly IScheduler _scheduler;
     private readonly ILogger<ExperimentMqController> _logger;
     private readonly IHostInfo _hostInfo;
+    private readonly ExperimentMonitoring _experimentMonitoring;
 
-    public ExperimentMqController(ChaosExperiment chaosExperiment, IScheduler scheduler, ILogger<ExperimentMqController> logger, IHostInfo hostInfo)
+    public ExperimentMqController(ChaosExperiment chaosExperiment, IScheduler scheduler, ILogger<ExperimentMqController> logger, IHostInfo hostInfo, ExperimentMonitoring experimentMonitoring)
     {
         _chaosExperiment = chaosExperiment;
         _scheduler = scheduler;
         _logger = logger;
         _hostInfo = hostInfo;
+        _experimentMonitoring = experimentMonitoring;
     }
 
     public async Task Consume(ConsumeContext<ExperimentDto> context)
@@ -47,7 +49,9 @@ public class ExperimentMqController : IConsumer<ExperimentDto>
 
         _logger.LogInformation("Scheduling incremental disruptions and analysis...");
 
-        //_scheduler.TryAddTask(nameof(_chaosExperiment.InduceChaos), _chaosExperiment.InduceChaos);
+        _scheduler.TryAddTask(nameof(_experimentMonitoring.LogExperimentResults), _experimentMonitoring.LogExperimentResults);
+
+        _scheduler.TryAddTask(nameof(_chaosExperiment.InduceChaos), _chaosExperiment.InduceChaos);
 
         _logger.LogInformation("Scheduling completed, good luck");
     }

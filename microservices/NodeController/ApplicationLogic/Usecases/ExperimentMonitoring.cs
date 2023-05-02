@@ -37,9 +37,9 @@ public class ExperimentMonitoring
         SetMessage(busPositionUpdated.Message);
     }
 
-    public Task LogExperimentResults()
+    public async Task LogExperimentResults()
     {
-        _ = _systemStateWriteService.Log(new ExperimentReport()
+        await _systemStateWriteService.Log(new ExperimentReport()
         {
             ServiceTypes = _readService.GetAllServiceTypes().ToList(),
             RunningInstances = _readService.GetAllServices().ToList(),
@@ -50,13 +50,11 @@ public class ExperimentMonitoring
                 Message = GetMessage()
             }
         });
-
-        return Task.CompletedTask;
     }
 
     private double GetAverageLatency()
     {
-        return Convert.ToDouble(GetSagaDuration() / GetProcessedMessageCount());
+        return Convert.ToDouble(GetSagaDuration()) / Convert.ToDouble(GetProcessedMessageCount());
     }
 
 

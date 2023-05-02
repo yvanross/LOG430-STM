@@ -1,51 +1,76 @@
-<form [formGroup]="chaosForm" (ngSubmit)="onSubmit()">
-  <div formGroupName="ChaosCodex">
-    <h1>Experiment</h1>
-    <div formGroupName="ChaosConfigs">
-      <div *ngFor="let configName of ['Computation', 'Database', 'Connector']">
-        <h2>{{ configName }}</h2>
-        <div [formGroupName]="configName">
-          <div formGroupName="Value">
-            <label>NanoCpus:</label>
-            <input type="number" formControlName="NanoCpus">
-            <label>Memory:</label>
-            <input type="number" formControlName="Memory">
-            <label>MaxNumberOfPods:</label>
-            <input type="number" formControlName="MaxNumberOfPods">
-            <label>KillRate:</label>
-            <input type="number" formControlName="KillRate">
+<form [formGroup]="chaosForm" (ngSubmit)="onSubmit()" class="chaos-form">
+  <mat-card class="chaos-card">
+    <mat-card-title>Chaos Dashboard</mat-card-title>
+    <mat-card-content>
+      <!-- ChaosCodex -->
+      <div formGroupName="ChaosCodex">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Chaos Codex</mat-panel-title>
+          </mat-expansion-panel-header>
+          <!-- ChaosConfigs -->
+          <div formGroupName="ChaosConfigs">
+            <mat-tab-group>
+              <mat-tab *ngFor="let configName of ['Computation', 'Database', 'Connector']" label="{{ configName }}">
+                <div [formGroupName]="configName">
+                  <div formGroupName="Value">
+                    <mat-form-field appearance="outline">
+                      <mat-label>NanoCpus</mat-label>
+                      <input matInput type="number" formControlName="NanoCpus">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Memory</mat-label>
+                      <input matInput type="number" formControlName="Memory">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label>MaxNumberOfPods</mat-label>
+                      <input matInput type="number" formControlName="MaxNumberOfPods">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label>KillRate</mat-label>
+                      <input matInput type="number" formControlName="KillRate">
+                    </mat-form-field>
+                  </div>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
           </div>
-        </div>
+          <!-- Other ChaosCodex properties -->
+          <mat-form-field appearance="outline">
+            <mat-label>Acceptable Average Latency In Ms</mat-label>
+            <input matInput type="number" formControlName="AcceptableAverageLatencyInMs">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>End Test At</mat-label>
+            <input matInput type="datetime-local" formControlName="EndTestAt">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Start Test At</mat-label>
+            <input matInput type="datetime-local" formControlName="StartTestAt">
+          </mat-form-field>
+        </mat-expansion-panel>
       </div>
+      <!-- Coordinates -->
+      <div formGroupName="Coordinates">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>Coordinates</mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-form-field appearance="outline">
+            <mat-label>Starting Coordinates</mat-label>
+            <input matInput type="text" formControlName="StartingCoordinates">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Destination Coordinates</mat-label>
+            <input matInput type="text" formControlName="DestinationCoordinates">
+          </mat-form-field>
+        </mat-expansion-panel>
+      </div>
+    </mat-card-content>
+    <div style="text-align: center;">
+      <mat-card-actions>
+        <button mat-raised-button type="submit">Begin</button>
+      </mat-card-actions>
     </div>
-
-    <div>
-      <label>Acceptable Average Latency In Ms:</label>
-      <input type="number" formControlName="AcceptableAverageLatencyInMs">
-    </div>
-
-    <div>
-      <label>End Test At:</label>
-      <input type="datetime-local" formControlName="EndTestAt">
-    </div>
-
-    <div>
-      <label>Start Test At:</label>
-      <input type="datetime-local" formControlName="StartTestAt">
-    </div>
-  </div>
-
-  <div formGroupName="Coordinates">
-    <h2>Coordinates</h2>
-    <div>
-      <label>Starting Coordinates:</label>
-      <input type="text" formControlName="StartingCoordinates">
-    </div>
-    <div>
-      <label>Destination Coordinates:</label>
-      <input type="text" formControlName="DestinationCoordinates">
-    </div>
-  </div>
-
-  <button type="submit">Send</button>
+  </mat-card>
 </form>

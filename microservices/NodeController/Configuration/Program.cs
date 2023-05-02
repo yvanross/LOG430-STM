@@ -19,6 +19,7 @@ using MqContracts;
 using RabbitMQ.Client;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.Extensions.Hosting;
 
 namespace Configuration
 {
@@ -144,7 +145,7 @@ namespace Configuration
                         endpoint.Bind<ExperimentDto>(binding =>
                         {
                             binding.ExchangeType = ExchangeType.Topic;
-                            binding.RoutingKey = $"{hostInfo.GetTeamName()}-{hostInfo.GetUsername()}";
+                            binding.RoutingKey = hostInfo.GetUsername();
                         });
 
                         endpoint.ConfigureConsumer<ExperimentMqController>(context);
