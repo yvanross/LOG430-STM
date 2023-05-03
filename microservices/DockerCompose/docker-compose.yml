@@ -33,10 +33,7 @@ services:
       MQ_SERVICE_NAME: EventStream
       CUSTOM_CONTAINER_PORTS_DISCOVERY: 5672
       BRIDGE_PORT: 32674
-    volumes:
-      - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
-      - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
-  
+        
   event-store:
     container_name: EventStream
     image: 'rabbitmq:3.12-rc-management'
@@ -123,3 +120,4 @@ services:
       ARTIFACT_NAME: STM
     depends_on:
       - nodecontroller
+    

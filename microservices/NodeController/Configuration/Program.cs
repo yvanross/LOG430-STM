@@ -111,7 +111,7 @@ namespace Configuration
 
                 services.AddScoped<IPodWriteService, PodWriteService>();
 
-                services.AddScoped<IEnvironmentClient, LocalDockerClient>();
+                services.AddTransient<IEnvironmentClient, LocalDockerClient>();
 
                 services.AddScoped<IIngressClient, IngressClient>();
             }

@@ -9,27 +9,27 @@ using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
 using Microsoft.Extensions.Logging;
 using Try = ApplicationLogic.Extensions.Try;
+using Version = System.Version;
 
 namespace Infrastructure.Docker;
 
-/// <summary>
-/// This is for testing purposes on Docker Desktop
-/// </summary>
-public class LocalDockerClient : IEnvironmentClient
+public class LocalDockerClient : IEnvironmentClient, IDisposable
 {
-    private static DockerClient? _dockerClient;
+    private readonly DockerClient? _dockerClient;
     private readonly ILogger _logger;
     private readonly IHostInfo _hostInfo;
-    private const int timeout = 1000;
+    private const int Timeout = 1000000000;
 
 
     public LocalDockerClient(ILogger<LocalDockerClient> logger, IHostInfo hostInfo)
     {
         _logger = logger;
         _hostInfo = hostInfo;
-        _dockerClient ??= new DockerClientConfiguration(
-                new Uri("http://host.docker.internal:2375"), defaultTimeout:TimeSpan.FromSeconds(5))
-            .CreateClient();
+        var dockerConfig = new DockerClientConfiguration(
+                new Uri("tcp://host.docker.internal:2375"), defaultTimeout:TimeSpan.FromSeconds(30),
+                namedPipeConnectTimeout:TimeSpan.FromSeconds(30));
+
+        _dockerClient = dockerConfig.CreateClient();
     }
 
     public async Task<ImmutableList<string>?> GetRunningServices(string[]? statuses = default)
@@ -114,7 +114,7 @@ public class LocalDockerClient : IEnvironmentClient
             }
 
             var hostPort = portBinding?.FirstOrDefault(p => string.IsNullOrEmpty(p.HostPort) is false)?.HostPort;
-            
+
             return (hostPort, containerPort);
         }
     }
@@ -234,7 +234,7 @@ public class LocalDockerClient : IEnvironmentClient
 
     private static async Task ForceTimeout(Task t)
     {
-        var token = Task.Delay(timeout);
+        var token = Task.Delay(Timeout);
 
         var completedTask = await Task.WhenAny(t, token);
 
@@ -244,9 +244,13 @@ public class LocalDockerClient : IEnvironmentClient
         }
     }
 
-    private static async Task<T> ForceTimeout<T>(Task<T> t)
+    private static int call = 0;
+
+    private async Task<T> ForceTimeout<T>(Task<T> t)
     {
-        var token = Task.Delay(timeout);
+        _logger.LogInformation("call " + call);
+        call++;
+        var token = Task.Delay(Timeout);
 
         var completedTask = await Task.WhenAny(t, token);
 
@@ -256,5 +260,10 @@ public class LocalDockerClient : IEnvironmentClient
         }
 
         return t.Result;
+    }
+
+    public void Dispose()
+    {
+        _dockerClient?.Dispose();
     }
 }
