@@ -57,11 +57,7 @@ Vos Kanban doivent avoir au minimum les colonnes suivantes:
 Ces données serviront pour la réalisation d'une vue de type allocation.
 
 ## Directive de déploiement
-Vous pouvez déployer votre solution de l'itération #1 sur n'importe quel serveur. 
-
-Nous vous fournirons des machines virtuelle pour le déployement des itérations #2, #3 et #4.  Vous pouvez aussi utiliser votre propre serveur.
-
-
+Vous devez déployer vos solutions de chaque itération sur docker desktop sur votre propre ordinateur. 
 
 ## Directive de Démonstration
 - Vous n'aurez droit qu'à une seule démonstration pour l'intégration et/ou l'implémentation de chaque exigence. 
