@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Dao;
@@ -17,14 +16,10 @@ namespace ApplicationLogic.Usecases
         public static ImmutableHashSet<string> BannedIds = ImmutableHashSet<string>.Empty;
 
         private readonly IPodWriteService _podWriteService;
-        
         private readonly IPodReadService _podReadService;
-
         private readonly IEnvironmentClient _environmentClient;
-
         private readonly ILogger _logger;
-
-        private string _nodeAddress;
+        private readonly IHostInfo _hostInfo;
 
         public ServicePoolDiscovery(IPodWriteService podWriteService, IPodReadService podReadService, IEnvironmentClient environmentClient, ILogger<ServicePoolDiscovery> logger, IHostInfo hostInfo)
         {
@@ -32,8 +27,7 @@ namespace ApplicationLogic.Usecases
             _podReadService = podReadService;
             _environmentClient = environmentClient;
             _logger = logger;
-            _nodeAddress = hostInfo.GetAddress();
-
+            _hostInfo = hostInfo;
         }
 
         public async Task DiscoverServices()
@@ -50,9 +44,9 @@ namespace ApplicationLogic.Usecases
 
                 if(newService is null) continue;
 
-                CreateServiceType(service);
+                RegisterServiceType(service);
 
-                CreateOrUpdatePodInstance(service, newService, newPodId);
+                RegisterOrUpdatePodInstance(service, newService, newPodId);
             }
 
             async Task<List<string>> GetUnregisteredServices()
@@ -62,7 +56,10 @@ namespace ApplicationLogic.Usecases
                 var registeredServices = _podReadService.GetAllServices()
                     .Where(s=>s.ContainerInfo is not null && s.ServiceStatus is not LaunchedState).DistinctBy(s=>s.Id).ToDictionary(s => s.ContainerInfo!.Id);
 
-                var filterServices = runningServicesIds?.Where(runningService => BannedIds.Contains(runningService) is false && registeredServices.ContainsKey(runningService) is false).ToList();
+                var filterServices = runningServicesIds?.Where(runningService => 
+                    BannedIds.Contains(runningService) is false &&
+                    registeredServices.ContainsKey(runningService) is false &&
+                    runningService.Equals(_hostInfo.GetContainerId()) is false).ToList();
                 
                 return filterServices ?? new List<string>();
             }
@@ -78,7 +75,7 @@ namespace ApplicationLogic.Usecases
                     {
                         Id = service.RawConfig.Config.Config.Env.First(e => e.ToString().StartsWith("ID="))[3..],
                         ContainerInfo = service.CuratedInfo,
-                        Address = _nodeAddress,
+                        Address = _hostInfo.GetAddress(),
                         Type = GetArtifactName(service.CuratedInfo.Labels),
                         PodId = GetPodId(service.CuratedInfo.Labels) ?? newPodId,
                         ServiceStatus = new ReadyState()
@@ -97,7 +94,7 @@ namespace ApplicationLogic.Usecases
                 return null;
             }
 
-            void CreateServiceType((ContainerInfo CuratedInfo, IContainerConfig RawConfig) service)
+            void RegisterServiceType((ContainerInfo CuratedInfo, IContainerConfig RawConfig) service)
             {
                 var curatedInfoLabels = service.CuratedInfo.Labels;
 
@@ -112,10 +109,10 @@ namespace ApplicationLogic.Usecases
                     PodName = podType
                 };
 
-                UpdateOrCreatePodType(podType, service, serviceType);
+                UpdateOrRegisterPodType(podType, service, serviceType);
             }
 
-            void UpdateOrCreatePodType(string podType, (ContainerInfo CuratedInfo, IContainerConfig RawConfig) service, IServiceType serviceType)
+            void UpdateOrRegisterPodType(string podType, (ContainerInfo CuratedInfo, IContainerConfig RawConfig) service, IServiceType serviceType)
             {
                 var pod = _podReadService.GetPodType(podType);
 
@@ -131,7 +128,7 @@ namespace ApplicationLogic.Usecases
                 }
             }
 
-            void CreateOrUpdatePodInstance((ContainerInfo CuratedInfo, IContainerConfig RawConfig) service, IServiceInstance newService, string newPodId)
+            void RegisterOrUpdatePodInstance((ContainerInfo CuratedInfo, IContainerConfig RawConfig) service, IServiceInstance newService, string newPodId)
             {
                 var podId = GetPodId(service.CuratedInfo.Labels) ?? newPodId;
 

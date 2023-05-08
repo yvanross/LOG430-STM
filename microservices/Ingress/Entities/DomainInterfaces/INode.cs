@@ -2,9 +2,15 @@
 
 public interface INode
 {
-    public string Name { get; set; }
+    string Name { get; set; }
 
-    public INodeState ServiceStatus { get; set; }
+    INodeState ServiceStatus { get; set; }
 
-    public DateTime LastSuccessfulPing { get; set; }
+    DateTime LastSuccessfulPing { get; set; }
+
+    string Version { get; set; }
+
+    bool Secure { get; set; }
+    
+    bool Dirty { get; set; }
 }

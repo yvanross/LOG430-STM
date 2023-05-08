@@ -23,7 +23,8 @@ public class AuthorizationServiceClient : IAuthorizationService
 
         req.AddJsonBody(new
         {
-            secret
+            Role = "User",
+            Secret = secret
         });
 
         var tokenRes = await _client.ExecutePostAsync<string?>(req);
@@ -39,7 +40,8 @@ public class AuthorizationServiceClient : IAuthorizationService
 
         req.AddJsonBody(new
         {
-            secret
+            Role = "User",
+            Secret = secret
         });
 
         var role = await _client.ExecutePostAsync(req);
@@ -58,5 +60,14 @@ public class AuthorizationServiceClient : IAuthorizationService
         tokenRes.ThrowIfError();
 
         return tokenRes.Data;
+    }
+
+    public async Task Remove(string nodeName)
+    {
+        var req = new RestRequest($"User/{nodeName}");
+
+        var res = await _client.DeleteAsync(req);
+
+        res.ThrowIfError();
     }
 }

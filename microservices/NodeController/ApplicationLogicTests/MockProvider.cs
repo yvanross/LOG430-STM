@@ -1,6 +1,5 @@
 ﻿using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Interfaces;
-using Docker.DotNet.Models;
 using Entities.BusinessObjects.Live;
 using Entities.BusinessObjects.States;
 using Entities.DomainInterfaces.Live;
@@ -9,8 +8,8 @@ using Entities.DomainInterfaces.ResourceManagement;
 using Moq;
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
+using IO.Swagger.Models;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace ApplicationLogicTests;
 
@@ -225,10 +224,10 @@ public static class MockProvider
         var serviceType = new Mock<IServiceType>();
 
         var containerConfig = new Mock<IContainerConfig>();
-
+        /*
         var response = new ContainerInspectResponse
         {
-            Config = new Config()
+            Config = new
             {
                 Env = new List<string>() { $"ID=ServiceType{serviceTypeNb}" }
             }
@@ -240,7 +239,7 @@ public static class MockProvider
         serviceType.Setup(x => x.ContainerConfig).Returns(containerConfig.Object);
         serviceType.Setup(x => x.IsPodSidecar).Returns(false);
         serviceType.Setup(x => x.Type).Returns($"ServiceType{serviceTypeNb}");
-
+        */
         return serviceType;
     }
 
@@ -292,14 +291,11 @@ public static class MockProvider
 
         environmentClient.Setup(x => x.IncreaseByOneNumberOfInstances(
                 It.IsAny<IContainerConfig>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-            .Returns(Task.FromResult(new CreateContainerResponse()
-            {
-                ID = serviceInstance2.Id
-            })!).Verifiable();
+            .Returns(Task.FromResult(serviceInstance2.Id)).Verifiable();
 
         environmentClient.Setup(x => x.RemoveContainerInstance(It.IsAny<string>(), It.IsAny<bool>())).Returns(Task.CompletedTask);
 
-        environmentClient.Setup(x => x.SetResources(It.IsAny<IPodInstance>(), It.IsAny<long>(), It.IsAny<long>()))
+        environmentClient.Setup(x => x.SetResources(It.IsAny<IPodInstance>(), It.IsAny<long>()))
             .Returns(Task.CompletedTask);
 
         return environmentClient;

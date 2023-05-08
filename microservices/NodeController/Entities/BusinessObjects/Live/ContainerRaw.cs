@@ -1,9 +1,9 @@
-﻿using Docker.DotNet.Models;
-using Entities.DomainInterfaces.Live;
+﻿using Entities.DomainInterfaces.Live;
+using IO.Swagger.Models;
 
 namespace Entities.BusinessObjects.Live;
 
-public class ContainerConfig : IContainerConfig
+public class ContainerRaw : IContainerConfig
 {
     public ContainerInspectResponse Config { get; set; }
 

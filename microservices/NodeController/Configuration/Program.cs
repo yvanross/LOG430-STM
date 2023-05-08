@@ -7,19 +7,15 @@ using Infrastructure.Ingress;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NodeController.Controllers;
-using System.Net.Mail;
 using ApplicationLogic.Converters;
 using Entities.DomainInterfaces.ResourceManagement;
-using HostInfo = Configuration.HostInfo;
 using ApplicationLogic.Interfaces.Dao;
 using Monitor = ApplicationLogic.Usecases.Monitor;
 using MqContracts;
 using RabbitMQ.Client;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.Extensions.Hosting;
 
 namespace Configuration
 {
@@ -104,6 +100,8 @@ namespace Configuration
                 services.AddSingleton<IMqConfigurator, MassTransitRabbitMq>();
 
                 services.AddScoped<ISystemStateWriteService, InfluxDbWriteService>();
+                
+                services.AddScoped<IHeartbeatService, MassTransitRabbitMqClient>();
 
                 services.AddScoped<IDataStreamService, MassTransitRabbitMqClient>();
 
@@ -111,7 +109,7 @@ namespace Configuration
 
                 services.AddScoped<IPodWriteService, PodWriteService>();
 
-                services.AddTransient<IEnvironmentClient, LocalDockerClient>();
+                services.AddScoped<IEnvironmentClient, LocalDockerClient>();
 
                 services.AddScoped<IIngressClient, IngressClient>();
             }
@@ -131,15 +129,23 @@ namespace Configuration
             {
                 x.AddConsumer<ExperimentMqController>();
                 x.AddConsumer<BusPositionUpdatedMqController>();
+                x.AddConsumer<AckErrorMqController>();
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(reformattedAddress);
 
                     cfg.Message<ExperimentDto>(m => m.SetEntityName("begin_experiment"));
+                    
+                    cfg.Message<AckErrorMqController>(m => m.SetEntityName("ack_error_event"));
+                    
+                    cfg.Message<HeartBeatDto>(m => m.SetEntityName("heartBeat"));
+                    cfg.Publish<HeartBeatDto>(p => p.ExchangeType = ExchangeType.Topic);
 
                     cfg.ReceiveEndpoint(uniqueQueueName, endpoint =>
                     {
+                        endpoint.QueueExpiration = TimeSpan.FromDays(2);
+                        
                         endpoint.ConfigureConsumeTopology = false;
 
                         endpoint.Bind<ExperimentDto>(binding =>
@@ -148,7 +154,14 @@ namespace Configuration
                             binding.RoutingKey = hostInfo.GetUsername();
                         });
 
+                        endpoint.Bind<AckErrorMqController>(binding =>
+                        {
+                            binding.ExchangeType = ExchangeType.Topic;
+                            binding.RoutingKey = hostInfo.GetUsername();
+                        });
+
                         endpoint.ConfigureConsumer<ExperimentMqController>(context);
+                        endpoint.ConfigureConsumer<AckErrorMqController>(context);
                     });
                 });
             });

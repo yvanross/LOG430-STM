@@ -4,6 +4,11 @@ namespace Entities.BusinessObjects.States;
 
 public class UnknownState : INodeState
 {
+    public string GetStateName()
+    {
+        return "Unknown";
+    }
+
     public void EvaluateState(INode node)
     {
         var deltaTime = DateTime.UtcNow.Subtract(node.LastSuccessfulPing);

@@ -9,14 +9,4 @@ public class ReadyState : IServiceState
     {
         return "Ready";
     }
-
-    public void EvaluateState(IServiceInstance serviceInstance)
-    {
-        var deltaTime = DateTime.UtcNow.Subtract(serviceInstance.LastHeartbeat);
-
-        if (deltaTime > TimeSpan.FromSeconds(2))
-        {
-            serviceInstance.ServiceStatus = new UnresponsiveState();
-        }
-    }
 }

@@ -3,9 +3,6 @@ x-conf:
   - env:
       - 'http://+:80'
       - EventStream
-  - vol:
-      - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
-      - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
 x-variables:
   SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
   NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
@@ -33,7 +30,6 @@ services:
       MQ_SERVICE_NAME: EventStream
       CUSTOM_CONTAINER_PORTS_DISCOVERY: 5672
       BRIDGE_PORT: 32674
-        
   event-store:
     container_name: EventStream
     image: 'rabbitmq:3.12-rc-management'
@@ -46,7 +42,6 @@ services:
       ARTIFACT_CATEGORY: Connector
       ARTIFACT_NAME: EventStream
       MINIMUM_NUMBER_OF_INSTANCES: 1
-
   routetimeprovider:
     container_name: RouteTimeProvider
     image: routetimeprovider
@@ -62,12 +57,10 @@ services:
       API_KEY: '${TOMTOM}'
     ports:
       - '32772:80'
-    volumes:
-      - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
-      - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
     labels:
       ARTIFACT_CATEGORY: Computation
       ARTIFACT_NAME: RouteTimeProvider
+      MINIMUM_NUMBER_OF_INSTANCES: 2
     depends_on:
       - nodecontroller
   tripcomparator:
@@ -85,12 +78,6 @@ services:
       MQ_SERVICE_NAME: EventStream
     ports:
       - '32773:80'
-    volumes:
-      - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
-      - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
-    deploy:
-      restart_policy:
-        condition: on-failure
     labels:
       ARTIFACT_CATEGORY: Computation
       MINIMUM_NUMBER_OF_INSTANCES: 1
@@ -112,12 +99,8 @@ services:
       API_KEY: '${STM}'
     ports:
       - '32774:80'
-    volumes:
-      - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
-      - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
     labels:
       ARTIFACT_CATEGORY: Computation
       ARTIFACT_NAME: STM
     depends_on:
       - nodecontroller
-    

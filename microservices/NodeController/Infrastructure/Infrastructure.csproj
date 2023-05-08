@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Docker.DotNet" Version="3.125.14" />
     <PackageReference Include="InfluxDB.Client" Version="4.11.0" />
     <PackageReference Include="MassTransit" Version="8.0.15" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.15" />

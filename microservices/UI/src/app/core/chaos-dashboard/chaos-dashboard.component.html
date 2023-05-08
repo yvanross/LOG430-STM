@@ -1,6 +1,10 @@
 <form [formGroup]="chaosForm" (ngSubmit)="onSubmit()" class="chaos-form">
   <mat-card class="chaos-card">
-    <mat-card-title>Chaos Dashboard</mat-card-title>
+    <mat-card-header>
+      <mat-card-title>
+        Chaos Experiment Configuration
+      </mat-card-title>
+    </mat-card-header>
     <mat-card-content>
       <!-- ChaosCodex -->
       <div formGroupName="ChaosCodex">
@@ -15,20 +19,20 @@
                 <div [formGroupName]="configName">
                   <div formGroupName="Value">
                     <mat-form-field appearance="outline">
-                      <mat-label>NanoCpus</mat-label>
-                      <input matInput type="number" formControlName="NanoCpus">
+                      <mat-label>NanoCpus (10^-9 Cores)</mat-label>
+                      <input matInput type="number" [min]="10000000" [max]="10000000000" formControlName="NanoCpus">
                     </mat-form-field>
                     <mat-form-field appearance="outline">
-                      <mat-label>Memory</mat-label>
-                      <input matInput type="number" formControlName="Memory">
+                      <mat-label>Memory (bites)</mat-label>
+                      <input matInput type="number" [min]="16000000" [max]="2000000000" formControlName="Memory">
                     </mat-form-field>
                     <mat-form-field appearance="outline">
-                      <mat-label>MaxNumberOfPods</mat-label>
+                      <mat-label>Max Number Of Pods</mat-label>
                       <input matInput type="number" formControlName="MaxNumberOfPods">
                     </mat-form-field>
                     <mat-form-field appearance="outline">
-                      <mat-label>KillRate</mat-label>
-                      <input matInput type="number" formControlName="KillRate">
+                      <mat-label>Kills/Min</mat-label>
+                      <input matInput type="number" [max]="60" formControlName="KillRate">
                     </mat-form-field>
                   </div>
                 </div>
@@ -41,12 +45,12 @@
             <input matInput type="number" formControlName="AcceptableAverageLatencyInMs">
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>End Test At</mat-label>
-            <input matInput type="datetime-local" formControlName="EndTestAt">
-          </mat-form-field>
-          <mat-form-field appearance="outline">
             <mat-label>Start Test At</mat-label>
             <input matInput type="datetime-local" formControlName="StartTestAt">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>End Test At</mat-label>
+            <input matInput type="datetime-local" formControlName="EndTestAt">
           </mat-form-field>
         </mat-expansion-panel>
       </div>

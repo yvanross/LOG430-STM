@@ -18,6 +18,8 @@ import {MatInputModule} from "@angular/material/input";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatButtonModule} from "@angular/material/button";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -26,24 +28,26 @@ import {MatButtonModule} from "@angular/material/button";
     DashboardComponent,
     ChaosDashboardComponent,
   ],
-    imports: [
-        BrowserModule,
-        FormsModule,
-        HttpClientModule,
-        MatTableModule,
-        MatSortModule,
-        BrowserAnimationsModule,
-        ReactiveFormsModule,
-        MatSidenavModule,
-        MatListModule,
-        RouterOutlet,
-        AppRoutingModule,
-        MatCardModule,
-        MatInputModule,
-        MatExpansionModule,
-        MatTabsModule,
-        MatButtonModule
-    ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    MatTableModule,
+    MatSortModule,
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
+    MatSidenavModule,
+    MatListModule,
+    RouterOutlet,
+    AppRoutingModule,
+    MatCardModule,
+    MatInputModule,
+    MatExpansionModule,
+    MatTabsModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatIconModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

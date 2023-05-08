@@ -92,6 +92,19 @@
           "lib/netstandard2.0/JsonSubTypes.dll": {}
         }
       },
+      "MassTransit.Abstractions/8.0.15": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/MassTransit.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/MassTransit.Abstractions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.AspNetCore.OpenApi/7.0.3": {
         "type": "package",
         "dependencies": {
@@ -3609,6 +3622,27 @@
         "lib/net47/JsonSubTypes.dll",
         "lib/netstandard1.3/JsonSubTypes.dll",
         "lib/netstandard2.0/JsonSubTypes.dll"
+      ]
+    },
+    "MassTransit.Abstractions/8.0.15": {
+      "sha512": "mrTptFjSiHAcnfJcE3qk07403g7TO6Z8GGZqmWVnobMvUFhkBunSTnRdAlv4r0HAeAdz/EU5RefZnw5LgI+Rig==",
+      "type": "package",
+      "path": "masstransit.abstractions/8.0.15",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "NuGet.README.md",
+        "lib/net462/MassTransit.Abstractions.dll",
+        "lib/net462/MassTransit.Abstractions.xml",
+        "lib/net6.0/MassTransit.Abstractions.dll",
+        "lib/net6.0/MassTransit.Abstractions.xml",
+        "lib/netstandard2.0/MassTransit.Abstractions.dll",
+        "lib/netstandard2.0/MassTransit.Abstractions.xml",
+        "lib/netstandard2.1/MassTransit.Abstractions.dll",
+        "lib/netstandard2.1/MassTransit.Abstractions.xml",
+        "masstransit.abstractions.8.0.15.nupkg.sha512",
+        "masstransit.abstractions.nuspec",
+        "mt-logo-small.png"
       ]
     },
     "Microsoft.AspNetCore.OpenApi/7.0.3": {
@@ -10421,6 +10455,7 @@
       "ApplicationLogic >= 1.0.0",
       "Docker.DotNet >= 3.125.13",
       "InfluxDB.Client >= 4.11.0",
+      "MassTransit.Abstractions >= 8.0.15",
       "Microsoft.AspNetCore.OpenApi >= 7.0.3",
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.17.2",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 7.0.4",
@@ -10487,6 +10522,10 @@
           "InfluxDB.Client": {
             "target": "Package",
             "version": "[4.11.0, )"
+          },
+          "MassTransit.Abstractions": {
+            "target": "Package",
+            "version": "[8.0.15, )"
           },
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",

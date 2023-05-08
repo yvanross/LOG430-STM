@@ -93,6 +93,14 @@
           }
         }
       },
+      "MassTransit.Abstractions/8.0.15": {
+        "runtime": {
+          "lib/net6.0/MassTransit.Abstractions.dll": {
+            "assemblyVersion": "8.0.15.0",
+            "fileVersion": "8.0.15.0"
+          }
+        }
+      },
       "Microsoft.AspNetCore.OpenApi/7.0.3": {
         "dependencies": {
           "Microsoft.OpenApi": "1.4.3"
@@ -2492,6 +2500,7 @@
           "ApplicationLogic": "1.0.0",
           "Docker.DotNet": "3.125.13",
           "InfluxDB.Client": "4.11.0",
+          "MassTransit.Abstractions": "8.0.15",
           "Microsoft.AspNetCore.OpenApi": "7.0.3",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.17.2",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "7.0.4",
@@ -2569,6 +2578,13 @@
       "sha512": "sha512-1Po+Ypf0SjCeEKx5+C89Nb5OgTcqNvfS3uTI46MUM+KEp6Rq/M0h+vVsTUt/6DFRwZMTpsAJM4yJrZmEObVANA==",
       "path": "jsonsubtypes/2.0.1",
       "hashPath": "jsonsubtypes.2.0.1.nupkg.sha512"
+    },
+    "MassTransit.Abstractions/8.0.15": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-mrTptFjSiHAcnfJcE3qk07403g7TO6Z8GGZqmWVnobMvUFhkBunSTnRdAlv4r0HAeAdz/EU5RefZnw5LgI+Rig==",
+      "path": "masstransit.abstractions/8.0.15",
+      "hashPath": "masstransit.abstractions.8.0.15.nupkg.sha512"
     },
     "Microsoft.AspNetCore.OpenApi/7.0.3": {
       "type": "package",

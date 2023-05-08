@@ -1,5 +1,4 @@
 ﻿using ApplicationLogic.Interfaces;
-using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Usecases;
 using Entities.DomainInterfaces.ResourceManagement;
 using MassTransit;
@@ -28,18 +27,9 @@ public class ExperimentMqController : IConsumer<ExperimentDto>
     {
         var experiment = context.Message;
 
-        _logger.LogInformation("Checking pool sanity...");
-
-        if (ServicePoolDiscovery.BannedIds.Any() && _hostInfo.GetCheatsAllowed() is false)
-        {
-            _logger.LogCritical("Pool compromised by unregistered services, flagging as cheating");
-
-            return;
-        }
-
-        _logger.LogInformation("Pool sane");
-
         _logger.LogInformation("Creating experiment...");
+
+        _hostInfo.SetIsDirty(true);
 
         _chaosExperiment.SetChaosCodex(experiment.ChaosCodex);
 

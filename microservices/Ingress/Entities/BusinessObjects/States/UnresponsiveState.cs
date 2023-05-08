@@ -4,6 +4,11 @@ namespace Entities.BusinessObjects.States;
 
 public class UnresponsiveState : INodeState
 {
+    public string GetStateName()
+    {
+        return "Unresponsive";
+    }
+
     public void EvaluateState(INode node)
     {
         var deltaTime = DateTime.UtcNow.Subtract(node.LastSuccessfulPing);

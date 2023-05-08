@@ -12,4 +12,8 @@ public class Node : INode
     public DateTime LastSuccessfulPing { get; set; } = DateTime.UtcNow;
     
     public required string Version { get; set; }
+
+    public bool Secure { get; set; } = false;
+
+    public bool Dirty { get; set; } = true;
 }

@@ -7,4 +7,6 @@ public interface IAuthorizationService
     Task Register(string name, string secret, string teamName, string group);
 
     Task<string[]> GetVisibleAccounts(string jwt);
+
+    Task Remove(string nodeName);
 }

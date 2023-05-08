@@ -3,6 +3,7 @@ using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Services;
 using Entities.DomainInterfaces.Live;
+using Microsoft.Extensions.Logging;
 
 namespace ApplicationLogic.Usecases
 {
@@ -10,13 +11,16 @@ namespace ApplicationLogic.Usecases
     {
         private readonly IPodReadService _readServiceService;
 
+        private readonly ILogger<Monitor> _logger;
+
         private readonly ResourceManagementService _resourceManagementService;
 
         private readonly IEnvironmentClient _client;
 
-        public Monitor(IEnvironmentClient client, IPodReadService readServiceService, IPodWriteService writeServiceService)
+        public Monitor(IEnvironmentClient client, IPodReadService readServiceService, IPodWriteService writeServiceService, ILogger<Monitor> logger)
         {
             _readServiceService = readServiceService;
+            _logger = logger;
             _client = client;
             _resourceManagementService = new ResourceManagementService(client, readServiceService, writeServiceService);
         }
@@ -37,6 +41,8 @@ namespace ApplicationLogic.Usecases
                 if (podCount < podType.MinimumNumberOfInstances)
                 {
                     await _resourceManagementService.IncreaseNumberOfPodInstances(podType.Type).ConfigureAwait(false);
+
+                    _logger.LogCritical("matching pod demand...");
                 }
             }
         }
@@ -60,10 +66,14 @@ namespace ApplicationLogic.Usecases
                         if (IsNumberOfRunningInstancesGreaterThanRequired(podInstance, minNumberOfInstances))
                         {
                             await _resourceManagementService.RemovePodInstance(podInstance).ConfigureAwait(false);
+
+                            _logger.LogCritical("i killed a pod because we had too many already");
                         }
                         else
                         {
                             await _resourceManagementService.ReplacePodInstance(podInstance).ConfigureAwait(false);
+
+                            _logger.LogCritical("i replaced a pod because we think it was dead");
                         }
                     }
                 }

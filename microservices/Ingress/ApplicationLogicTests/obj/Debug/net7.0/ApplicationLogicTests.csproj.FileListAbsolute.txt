@@ -340,3 +340,4 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogi
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.IdentityModel.Logging.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\Ingress\ApplicationLogicTests\bin\Debug\net7.0\MassTransit.Abstractions.dll

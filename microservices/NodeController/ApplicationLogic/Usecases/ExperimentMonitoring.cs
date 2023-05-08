@@ -1,4 +1,5 @@
-﻿using ApplicationLogic.Interfaces;
+﻿using System.Diagnostics;
+using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Dao;
 using Entities.BusinessObjects.Live;
 using Entities.BusinessObjects.ResourceManagement;
@@ -19,6 +20,10 @@ public class ExperimentMonitoring
     
     private static string _message = "";
 
+    private static Stopwatch? _stopwatch;
+
+    private readonly object _lock = new ();
+
     public ExperimentMonitoring(ISystemStateWriteService systemStateWriteService, IPodReadService readService)
     {
         _systemStateWriteService = systemStateWriteService;
@@ -35,6 +40,12 @@ public class ExperimentMonitoring
         IncrementProcessedMessageCount();
 
         SetMessage(busPositionUpdated.Message);
+
+        if(_stopwatch is null)
+            lock (_lock)
+            {
+                _stopwatch = Stopwatch.StartNew();
+            }
     }
 
     public async Task LogExperimentResults()
@@ -54,7 +65,7 @@ public class ExperimentMonitoring
 
     private double GetAverageLatency()
     {
-        return Convert.ToDouble(GetSagaDuration()) / Convert.ToDouble(GetProcessedMessageCount());
+        return Convert.ToDouble(_stopwatch?.Elapsed.TotalMilliseconds ?? 1) / Convert.ToDouble(GetProcessedMessageCount());
     }
 
 

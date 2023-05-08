@@ -18,3 +18,10 @@ mat-form-field {
 mat-expansion-panel {
   margin: 16px 0;
 }
+
+.mat-card-header {
+  margin: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

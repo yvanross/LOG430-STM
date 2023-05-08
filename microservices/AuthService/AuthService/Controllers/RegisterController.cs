@@ -36,7 +36,7 @@ namespace AuthService.Controllers
 
             try
             {
-                var result = await _userManager.CreateAsync(new LabUser(username, teamName, group, "User"), secret);
+                var result = await _userManager.CreateAsync(new LabUser(username, teamName, group, payload.Role), secret);
 
                 if (!result.Succeeded)
                 {

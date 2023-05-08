@@ -16,7 +16,7 @@ namespace ApplicationLogic.Usecases
 
         private readonly ILogger? _logger;
 
-        private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(100));
+        private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(10));
 
         private int _averageCarTravelTime;
 
@@ -70,7 +70,7 @@ namespace ApplicationLogic.Usecases
 
                 var busPosition = new BusPosition()
                 {
-                    Message = trackingResult.Message + $", by car it takes {_averageCarTravelTime}",
+                    Message = trackingResult.Message + $"\nCar: {_averageCarTravelTime} seconds",
                     Seconds = Convert.ToInt32(trackingResult.Duration),
                 };
 

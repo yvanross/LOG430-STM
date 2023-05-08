@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "O6RZUKv0XHJ7v6IND7JRhgfXMLnTPGUv5mg1JL0bAEq1YBnY2o0ACDmEwFkTJXvIC7gWjl3xKFhBIKgKeOCxyQ==",
+  "dgSpecHash": "x4OmwdtmhM7fEpppL35tDvyV4shakJfLeo/2QmMq+FV93H/gNTAGDrZM2TYuOYr5BZgArwLjUC2tAFF33XmXRA==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ingress\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
   "expectedPackageFiles": [
@@ -11,6 +11,7 @@
     "C:\\Users\\david\\.nuget\\packages\\influxdb.client\\4.11.0\\influxdb.client.4.11.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\influxdb.client.core\\4.11.0\\influxdb.client.core.4.11.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\jsonsubtypes\\2.0.1\\jsonsubtypes.2.0.1.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\masstransit.abstractions\\8.0.15\\masstransit.abstractions.8.0.15.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.3\\microsoft.aspnetcore.openapi.7.0.3.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.razor.language\\6.0.11\\microsoft.aspnetcore.razor.language.6.0.11.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",

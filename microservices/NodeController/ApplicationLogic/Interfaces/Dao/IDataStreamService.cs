@@ -1,6 +1,4 @@
-﻿using Entities.DomainInterfaces.Live;
-
-namespace ApplicationLogic.Interfaces.Dao;
+﻿namespace ApplicationLogic.Interfaces.Dao;
 
 public interface IDataStreamService
 {

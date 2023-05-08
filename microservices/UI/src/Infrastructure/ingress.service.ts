@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {environment} from "../environments/environment";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {BehaviorSubject} from "rxjs";
+import {StateRequestDto} from "../Dtos/experimentReportDto";
 
 @Injectable({
   providedIn: 'root'
@@ -55,7 +56,7 @@ export class IngressService {
   }
 
   fetchData() {
-    return this.http.get<ResponseMap>(this.apiUrl + '/Ingress/GetLogs',
+    return this.http.get<ResponseMap>(this.apiUrl + '/Ingress/GetStates',
       {
         headers:
           {
@@ -70,5 +71,5 @@ export class IngressService {
 }
 
 export interface ResponseMap {
-  [key: string]: string[];
+  [key: string]: StateRequestDto;
 }

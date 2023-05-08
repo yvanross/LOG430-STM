@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-
-namespace Entities.DomainInterfaces.ResourceManagement;
+﻿namespace Entities.DomainInterfaces.ResourceManagement;
 
 public interface IScheduler
 {

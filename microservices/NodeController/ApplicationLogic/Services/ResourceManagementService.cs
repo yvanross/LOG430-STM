@@ -24,13 +24,12 @@ public class ResourceManagementService
 
     public async Task RemovePodInstance(IPodInstance podInstance)
     {
-        _writeServiceService.TryRemovePod(podInstance);
-
         foreach (var serviceInstance in podInstance.ServiceInstances)
         {
-            if (serviceInstance.ContainerInfo is not null)
-                await _environmentClient.RemoveContainerInstance(serviceInstance.ContainerInfo.Id);
+            await _environmentClient.RemoveContainerInstance(serviceInstance.ContainerInfo.Id);
         }
+
+        _writeServiceService.TryRemovePod(podInstance);
     }
 
     public async Task ReplacePodInstance(IPodInstance podInstance)
@@ -47,17 +46,20 @@ public class ResourceManagementService
 
                 if (serviceType is not null)
                 {
-                    var creationInfo = await _environmentClient.IncreaseByOneNumberOfInstances(serviceType.ContainerConfig, $"{serviceType.Type}-{Random.Shared.Next(0, int.MaxValue)}", serviceInstance.Id, serviceInstance.PodId);
+                    var creationId = await _environmentClient.IncreaseByOneNumberOfInstances(serviceType.ContainerConfig, $"{serviceType.Type}-{Random.Shared.Next(0, int.MaxValue)}", serviceInstance.Id, serviceInstance.PodId);
 
-                    var containerInfo = await _environmentClient.GetContainerInfo(creationInfo!.ID);
+                    var containerInfo = await _environmentClient.GetContainerInfo(creationId);
 
                     serviceInstance.ContainerInfo = containerInfo.CuratedInfo;
                 }
             }
-        }
-        finally
-        {
+
             _writeServiceService.AddOrUpdatePod(podInstance);
+
+        }
+        catch
+        {
+            await RemovePodInstance(podInstance);
         }
     }
 
@@ -83,7 +85,7 @@ public class ResourceManagementService
 
                         var creationInfo = await _environmentClient.IncreaseByOneNumberOfInstances(serviceType.ContainerConfig, newContainerName, newServiceInstance.Id, newServiceInstance.PodId);
 
-                        var containerInfo = await _environmentClient.GetContainerInfo(creationInfo!.ID);
+                        var containerInfo = await _environmentClient.GetContainerInfo(creationInfo);
 
                         newServiceInstance.ContainerInfo = containerInfo.CuratedInfo;
                     }
@@ -130,6 +132,10 @@ public class ResourceManagementService
 
     public async Task SetResources(IPodInstance podInstance, long nanoCpus, long memory)
     {
-        await _environmentClient.SetResources(podInstance, nanoCpus, memory);
+        await _environmentClient.SetResources(podInstance, nanoCpus);
+
+        //todo aware of possible race condition but highly unlikely considering the use case (call to this is single threaded)
+        _readServiceService.GetAllServiceTypes()
+            .ForEach(serviceTypes => serviceTypes.ContainerConfig.Config.HostConfig.Memory = memory);
     }
 }

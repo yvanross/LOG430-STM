@@ -1,60 +1,77 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 using ApplicationLogic.Interfaces;
-using Docker.DotNet;
-using Docker.DotNet.Models;
 using Entities.BusinessObjects.Live;
 using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
+using IO.Swagger.Models;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Polly;
+using Polly.Retry;
+using RestSharp;
+using ContainerInspectResponse = IO.Swagger.Models.ContainerInspectResponse;
 using Try = ApplicationLogic.Extensions.Try;
-using Version = System.Version;
 
 namespace Infrastructure.Docker;
 
-public class LocalDockerClient : IEnvironmentClient, IDisposable
+public class LocalDockerClient : IEnvironmentClient
 {
-    private readonly DockerClient? _dockerClient;
+    private readonly RestClient _restClient;
     private readonly ILogger _logger;
     private readonly IHostInfo _hostInfo;
     private const int Timeout = 1000000000;
-
 
     public LocalDockerClient(ILogger<LocalDockerClient> logger, IHostInfo hostInfo)
     {
         _logger = logger;
         _hostInfo = hostInfo;
-        var dockerConfig = new DockerClientConfiguration(
-                new Uri("tcp://host.docker.internal:2375"), defaultTimeout:TimeSpan.FromSeconds(30),
-                namedPipeConnectTimeout:TimeSpan.FromSeconds(30));
-
-        _dockerClient = dockerConfig.CreateClient();
+        _restClient = new RestClient("http://host.docker.internal:2375");
     }
 
     public async Task<ImmutableList<string>?> GetRunningServices(string[]? statuses = default)
     {
+        var retryPolicy = Policy
+            .Handle<Exception>()
+            .WaitAndRetryAsync(2, (_) => TimeSpan.FromMilliseconds(100));
+
         statuses ??= new[] { "running" };
 
-        return await Try.WithConsequenceAsync(async () =>
+        return await retryPolicy.ExecuteAsync(async () =>
         {
-            var containers = await ForceTimeout(_dockerClient!.Containers.ListContainersAsync(new ContainersListParameters()
-            {
-                Filters = new Dictionary<string, IDictionary<string, bool>>()
+            var restRequest = new RestRequest("containers/json");
+
+            restRequest.AddQueryParameter("filters", JsonConvert.SerializeObject(
+                new Dictionary<string, IDictionary<string, bool>>()
                 {
                     { "status", statuses.ToDictionary(k => k, v => true) }
-                }
-            }));
+                }));
 
-            return containers.Select(c => c.ID).ToImmutableList();
-        }, retryCount: 2, autoThrow: false);
+            var res = await _restClient.GetAsync(restRequest);
+
+            var containers = JsonConvert.DeserializeObject<ContainerSummary[]>(res.Content);
+
+            return containers.Select(c => c.Id).ToImmutableList();
+        });
     }
 
     public async Task<(ContainerInfo CuratedInfo, IContainerConfig RawConfig)> GetContainerInfo(string containerId)
     {
-        return await Try.WithConsequenceAsync(async () =>
+        var retryPolicy = Policy
+            .Handle<Exception>()
+            .WaitAndRetryAsync(2, (_) => TimeSpan.FromMilliseconds(100));
+
+        return await retryPolicy.ExecuteAsync(async () =>
         {
-            var container = await ForceTimeout(_dockerClient!.Containers.InspectContainerAsync(containerId));
+            var restRequest = new RestRequest($"containers/{containerId}/json");
+
+            var res = await _restClient.GetAsync(restRequest);
+
+            var container = JsonConvert.DeserializeObject<ContainerInspectResponse>(res.Content);
 
             var labels = container.Config.Labels
                 .Where(kv => Enum.TryParse(typeof(ServiceLabelsEnum), kv.Key, true, out _))
@@ -69,24 +86,23 @@ public class LocalDockerClient : IEnvironmentClient, IDisposable
             var ports = GetPortForDefaultProtocols(container);
 
             return (
-            CuratedInfo: new ContainerInfo()
-            {
-                Id = container.ID,
-                Name = container.Name[1..] ?? string.Empty,
-                ImageName = container.Image,
-                Status = container.State.Status,
-                HostPort = ports.hostPort ?? string.Empty,
-                Labels = labelDict,
-                NanoCpus = container.HostConfig.NanoCPUs,
-                Memory = container.HostConfig.Memory,
-            },
-            RawConfig: new ContainerConfig()
-            {
-                Config = container,
-                ContainerPort = ports.containerPort ?? string.Empty,
-            });
-        },
-        retryCount: 2, autoThrow: false);
+                CuratedInfo: new ContainerInfo()
+                {
+                    Id = container.Id,
+                    Name = container.Name[1..] ?? string.Empty,
+                    ImageName = container.Image,
+                    Status = container.State.ToString(),
+                    HostPort = ports.hostPort ?? string.Empty,
+                    Labels = labelDict,
+                    NanoCpus = container.HostConfig.NanoCpus ?? -1L,
+                    Memory = container.HostConfig.Memory
+                },
+                RawConfig: new ContainerRaw()
+                {
+                    Config = container,
+                    ContainerPort = ports.containerPort ?? string.Empty,
+                });
+        });
 
         (string? hostPort, string? containerPort) GetPortForDefaultProtocols(ContainerInspectResponse container)
         {
@@ -104,11 +120,12 @@ public class LocalDockerClient : IEnvironmentClient, IDisposable
 
             foreach (var portNumber in containerPorts)
             {
-                portBinding = container.HostConfig.PortBindings.FirstOrDefault(kv => kv.Key.Equals(portNumber)).Value;
+                container.HostConfig.PortBindings.TryGetValue(portNumber, out var ports);
 
-                if (portBinding is not null)
+                if (ports is not null)
                 {
                     containerPort = portNumber;
+                    portBinding = ports;
                     break;
                 }
             }
@@ -119,13 +136,13 @@ public class LocalDockerClient : IEnvironmentClient, IDisposable
         }
     }
 
-    public async Task<CreateContainerResponse?> IncreaseByOneNumberOfInstances(IContainerConfig containerConfig, string newContainerName, string serviceId, string podId)
+    public async Task<string?> IncreaseByOneNumberOfInstances(IContainerConfig containerConfig, string newContainerName, string serviceId, string podId)
     {
-        CreateContainerResponse? containerResponse = null;
+        string? creationId = null;
 
         return await Try.WithConsequenceAsync(async () =>
         {
-            var env = (List<string>)containerConfig.Config.Config.Env;
+            var env = containerConfig.Config.Config.Env;
 
             env.RemoveAll(e => e.ToString().StartsWith("ID="));
 
@@ -140,70 +157,118 @@ public class LocalDockerClient : IEnvironmentClient, IDisposable
 
             containerConfig.Config.HostConfig.RestartPolicy = null;
             containerConfig.Config.HostConfig.AutoRemove = true;
-            containerConfig.Config.HostConfig.PortBindings = exposedPorts;
+            containerConfig.Config.HostConfig.PortBindings = new PortMap();
 
+            foreach (var ports in exposedPorts)
+            {
+                containerConfig.Config.HostConfig.PortBindings.Add(ports.Key, ports.Value);
+            }
 
-            containerResponse = await ForceTimeout(_dockerClient.Containers.CreateContainerAsync(new CreateContainerParameters
+            var restRequest = new RestRequest($"containers/create");
+
+            var payload = new
             {
                 HostConfig = containerConfig.Config.HostConfig,
                 Env = env,
                 Labels = containerConfig.Config.Config.Labels,
                 Image = containerConfig.Config.Image,
-                Name = newContainerName,
-                ExposedPorts = new Dictionary<string, EmptyStruct>() { { exposedPorts.Keys.First(), new EmptyStruct() } }
-            }));
+                ExposedPorts = new Dictionary<string, object>() { { $"{exposedPorts.Keys.First()}", new() } }
+            };
 
-            _ = await ForceTimeout(_dockerClient.Containers.StartContainerAsync(containerResponse.ID, new ContainerStartParameters()));
+            var serializedPayload = JsonConvert.SerializeObject(payload);
 
-            return containerResponse;
+            restRequest.RequestFormat = DataFormat.Json;
+
+            restRequest.AddBody(serializedPayload);
+
+            restRequest.AddQueryParameter("name", newContainerName);
+
+            var res = await _restClient.PostAsync(restRequest);
+
+            var containerCreateResponse = JsonConvert.DeserializeObject<ContainerCreateResponse>(res.Content);
+
+            creationId = containerCreateResponse.Id;
+
+            restRequest = new RestRequest($"containers/{creationId}/start");
+
+            res = await _restClient.PostAsync(restRequest);
+
+            return containerCreateResponse.Id;
         },
             onFailure: async (e, _) =>
             {
-                _logger.LogCritical(e.Message);
-                _logger.LogDebug(e.StackTrace);
+                _logger.LogCritical(e.ToString());
 
-                if (containerResponse is not null)
-                    await RemoveContainerInstance(containerResponse.ID, true);
+                if (creationId is not null)
+                    await RemoveContainerInstance(creationId, true);
             },
             autoThrow: false,
             retryCount: 2);
     }
 
-    public async Task GarbageCollection()
+    public Task GarbageCollection()
     {
+        /*
         await Try.WithConsequenceAsync(async () => await ForceTimeout(_dockerClient.Containers.PruneContainersAsync(
-            new ContainersPruneParameters())), autoThrow: false);
+            new ContainersPruneParameters())), autoThrow: false);*/
+        return Task.FromResult(0);
     }
 
-    public async Task SetResources(IPodInstance podInstance, long nanoCpus, long memory)
+    public async Task SetResources(IPodInstance podInstance, long nanoCpus)
     {
-        await Try.WithConsequenceAsync(async () =>
+        var retryPolicy = Policy
+            .Handle<Exception>()
+            .WaitAndRetryAsync(2, (_) => TimeSpan.FromMilliseconds(100));
+
+                await retryPolicy.ExecuteAsync(async () =>
         {
-            foreach (var service in podInstance.ServiceInstances)
+            try
             {
-                await ForceTimeout(_dockerClient!.Containers.UpdateContainerAsync(service.ContainerInfo!.Id,
-                    new ContainerUpdateParameters()
+                foreach (var service in podInstance.ServiceInstances)
+                {
+                    var restRequest = new RestRequest($"containers/{service.ContainerInfo!.Id}/update");
+
+                    var payload = JsonConvert.SerializeObject(new
                     {
-                        NanoCPUs = nanoCpus,
-                        Memory = memory,
-                    }));
+                        NanoCpus = nanoCpus,
+                    });
+
+                    restRequest.RequestFormat = DataFormat.Json;
+
+                    restRequest.AddBody(payload);
+
+                    var res = await _restClient.PostAsync<ContainerUpdateResponse>(restRequest);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogCritical(e.ToString());
+                throw;
             }
 
             return Task.CompletedTask;
-        }, retryCount: 2, autoThrow: false);
+        });
     }
 
     public async Task RemoveContainerInstance(string containerId, bool quiet = false)
     {
         await Try.WithConsequenceAsync(async () =>
         {
-            var poolContainers = await ForceTimeout(_dockerClient!.Containers.ListContainersAsync(new ContainersListParameters()));
+            var poolContainers = await GetRunningServices();
 
-            if(poolContainers.Any(c=>c.ID.Equals(containerId)))
-                await ForceTimeout(_dockerClient.Containers.RemoveContainerAsync(containerId, new ContainerRemoveParameters() { Force = true }));
+            if (poolContainers.Any(c => c.Equals(containerId)))
+            {
+                var restRequest = new RestRequest($"containers/{containerId}");
+
+               restRequest.AddQueryParameter("v", true);
+
+               restRequest.AddQueryParameter("force", true);
+
+               var res = await _restClient.DeleteAsync(restRequest);
+            }
 
             return Task.CompletedTask;
-        }, retryCount: 2, autoThrow: false,
+        }, retryCount: 2, autoThrow: !quiet,
             onFailure: (e, _) =>
             {
                 if (quiet is false)
@@ -230,40 +295,5 @@ public class LocalDockerClient : IEnvironmentClient, IDisposable
                 }
             }
         };
-    }
-
-    private static async Task ForceTimeout(Task t)
-    {
-        var token = Task.Delay(Timeout);
-
-        var completedTask = await Task.WhenAny(t, token);
-
-        if (completedTask == token)
-        {
-            throw new TimeoutException("Docker Daemon jammed again, forcing timeout");
-        }
-    }
-
-    private static int call = 0;
-
-    private async Task<T> ForceTimeout<T>(Task<T> t)
-    {
-        _logger.LogInformation("call " + call);
-        call++;
-        var token = Task.Delay(Timeout);
-
-        var completedTask = await Task.WhenAny(t, token);
-
-        if (completedTask == token)
-        {
-            throw new TimeoutException("Docker Daemon jammed again, forcing timeout");
-        }
-
-        return t.Result;
-    }
-
-    public void Dispose()
-    {
-        _dockerClient?.Dispose();
     }
 }

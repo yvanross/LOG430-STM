@@ -3,7 +3,6 @@ using ApplicationLogic.Usecases;
 using Entities.DomainInterfaces.ResourceManagement;
 using Infrastructure.Interfaces;
 using MassTransit;
-using MassTransit.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MqContracts;
 using NodeController.Controllers;

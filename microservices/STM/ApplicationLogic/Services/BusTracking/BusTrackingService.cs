@@ -32,7 +32,7 @@ public class BusTrackingService : ABusTrackingService
 
         return (new Entities.Concretions.BusTracking()
         {
-            Message = $"Bus {Bus.Name} is on its way to the target stop, it did {prediction * 100}% of the way in {DeltaTime(_crossedFirstStopTime).TotalSeconds} seconds",
+            Message = $"Bus {Bus.Name}:\n{Convert.ToInt32(prediction * 100)}% in {Convert.ToInt32(DeltaTime(_crossedFirstStopTime).TotalSeconds)} seconds",
             Duration = DeltaTime(_startingTime).TotalMilliseconds
         }, this);
     }

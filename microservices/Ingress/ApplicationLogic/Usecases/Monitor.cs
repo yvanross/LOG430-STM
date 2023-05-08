@@ -3,23 +3,28 @@ using ApplicationLogic.Interfaces;
 using Entities.BusinessObjects.States;
 using Entities.DomainInterfaces;
 using System.Net.Sockets;
+using ApplicationLogic.Interfaces.Dao;
 using Microsoft.Extensions.Logging;
+using MqContracts;
+using Newtonsoft.Json;
 
 namespace ApplicationLogic.Usecases
 {
     public class Monitor
     {
         private readonly IRepositoryRead _readModel;
-
         private readonly IRepositoryWrite _writeModel;
-
         private readonly ILogger _logger;
+        private readonly IAuthorizationService _authService;
+        private readonly IAckErrorEmitter<AckErrorDto> _ackErrorEmitter;
 
-        public Monitor(IRepositoryRead readModel, IRepositoryWrite writeModel, ILogger logger)
+        public Monitor(IRepositoryRead readModel, IRepositoryWrite writeModel, ILogger<Monitor> logger, IAuthorizationService authService, IAckErrorEmitter<AckErrorDto> ackErrorEmitter)
         {
             _readModel = readModel;
             _writeModel = writeModel;
             _logger = logger;
+            _authService = authService;
+            _ackErrorEmitter = ackErrorEmitter;
         }
 
         public async Task BeginProcessingHeartbeats()
@@ -31,8 +36,6 @@ namespace ApplicationLogic.Usecases
                 //if empty or null
                 if ((routes?.Any() ?? true) is false) return Task.FromResult(Task.CompletedTask);
 
-                await Parallel.ForEachAsync(routes!, async (node, _) => await Acknowledge(node));
-
                 var unknownStateRoutes = routes!.Where(node =>
                 {
                     node.ServiceStatus?.EvaluateState(node);
@@ -43,6 +46,9 @@ namespace ApplicationLogic.Usecases
                 foreach (var node in unknownStateRoutes)
                 {
                     _logger.LogCritical($"Lost connection to {node.Name}, last known state {node.LastSuccessfulPing}");
+
+                    await _authService.Remove(node.Name);
+
                     _writeModel.RemoveNode(node);
                 }
 
@@ -50,30 +56,20 @@ namespace ApplicationLogic.Usecases
             }, retryCount: int.MaxValue);
         }
 
-        private async Task Acknowledge(INode node)
+        public void TryAcknowledge(string name, string version, bool secure, bool dirty)
         {
-            var route = _readModel.ReadNodeById(node.Name);
+            var route = _readModel.ReadNodeById(name);
 
             if (route is not null)
             {
-                //if (await IsPortOpen(node.Address, Convert.ToInt32(node.Port)))
-                    route.LastSuccessfulPing = DateTime.UtcNow;
+                route.LastSuccessfulPing = DateTime.UtcNow;
+                route.Version = version;
+                route.Secure = secure;
+                route.Dirty = dirty;
             }
-
-            static async Task<bool> IsPortOpen(string host, int port)
+            else
             {
-                using var tcpClient = new TcpClient();
-
-                try
-                {
-                    await tcpClient.ConnectAsync(host, port).WaitAsync(TimeSpan.FromMilliseconds(100));
-
-                    return tcpClient.Connected;
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
+                _ackErrorEmitter.Produce(name, new AckErrorDto());
             }
         }
     }

@@ -31,12 +31,14 @@ namespace AuthService.Controllers
 
             if (HttpContext.Request.Headers.TryGetValue("Authorization", out var authorizationHeader))
             {
-                jwt = authorizationHeader.ToString().Substring("Bearer ".Length).Trim();
+                var substring = "Bearer ";
+
+                jwt = authorizationHeader.ToString().Length > substring.Length ? authorizationHeader.ToString().Substring(substring.Length).Trim() : string.Empty;
             }
 
             if (string.IsNullOrEmpty(jwt))
             {
-                return BadRequest("No JWT provided");
+                return Ok(_userManager.Users.Select(u => u.UserName).ToArray());
             }
 
             var jwtToken = new JwtSecurityToken(jwt);
@@ -53,7 +55,7 @@ namespace AuthService.Controllers
 
             if (role.Equals("Admin"))
             {
-                users = await _userManager.GetUsersInRoleAsync("User");
+                users = _userManager.Users.Where(u=>u.Role.Equals("User")).ToList();
             }
             else
             {
@@ -62,5 +64,22 @@ namespace AuthService.Controllers
 
             return Ok(users.Where(u => u.Group.Equals(group)).Select(u=>u.UserName).ToArray());
         }
+
+        [HttpDelete("{name}")]
+        public async Task<ActionResult> Delete([FromRoute] string name)
+        {
+            var user = await _userManager.FindByNameAsync(name);
+
+            if (user is not null && user.Role.Equals("Admin") is false)
+            {
+                var result = await _userManager.DeleteAsync(user);
+
+                return result.Succeeded ? Ok(result) : BadRequest(result.Errors);
+            }
+
+            return Ok();
+        }
+
+
     }
 }

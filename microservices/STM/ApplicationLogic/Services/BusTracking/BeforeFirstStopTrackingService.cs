@@ -36,7 +36,7 @@ public class BeforeFirstStopTrackingService : ABusTrackingService
 
         return (new Entities.Concretions.BusTracking()
         {
-            Message = $"Bus {Bus.Name} is not yet at the first stop, it did {prediction * 100}% of the way in {DeltaTime(_startingTime).TotalSeconds} seconds, expected to reach the first stop in {_originalEta - DeltaTime(_startingTime).TotalSeconds} seconds",
+            Message = $"Bus {Bus.Name}:\nNot yet at first stop.\n{Convert.ToInt32(prediction * 100)}% in {Convert.ToInt32(DeltaTime(_startingTime).TotalSeconds)} seconds",
             Duration = DeltaTime(_startingTime).TotalMilliseconds,
         }, this);
     }

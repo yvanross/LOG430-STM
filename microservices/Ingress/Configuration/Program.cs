@@ -14,6 +14,7 @@ using MassTransit;
 using Monitor = ApplicationLogic.Usecases.Monitor;
 using MqContracts;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Polly;
 
 namespace Configuration
 {
@@ -95,6 +96,8 @@ namespace Configuration
                 services.AddScoped<IRepositoryWrite, RepositoryWrite>();
                 
                 services.AddScoped<IDataStream, MassTransitRabbitMqClient<ExperimentDto>>();
+
+                services.AddScoped<IAckErrorEmitter<AckErrorDto>, MassTransitRabbitMqClient<AckErrorDto>>();
             }
         }
 
@@ -104,15 +107,38 @@ namespace Configuration
 
             var reformattedAddress = $"rabbitmq://{hostInfo.GetAddress()}:{hostInfo.GetBridgePort()}";
 
+            var baseQueueName = $"nodecontroller_to_ingress.event";
+
+            var uniqueQueueName = $"{baseQueueName}.{Guid.NewGuid()}";
+
             services.AddMassTransit(x =>
             {
-                x.UsingRabbitMq((_, cfg) =>
+                x.AddConsumer<HeartBeatIngressControllerMq>();
+
+                x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(reformattedAddress);
 
                     cfg.Message<ExperimentDto>(topologyConfigurator => topologyConfigurator.SetEntityName("begin_experiment"));
-
                     cfg.Publish<ExperimentDto>(p => p.ExchangeType = ExchangeType.Topic);
+
+                    cfg.Message<AckErrorDto>(m => m.SetEntityName("ack_error_event"));
+                    cfg.Publish<AckErrorDto>(p => p.ExchangeType = ExchangeType.Topic);
+
+                    cfg.Message<HeartBeatDto>(m => m.SetEntityName("heartBeat"));
+                    
+                    cfg.ReceiveEndpoint(uniqueQueueName, endpoint =>
+                    {
+                        endpoint.ConfigureConsumeTopology = false;
+
+                        endpoint.Bind<HeartBeatDto>(binding =>
+                        {
+                            binding.ExchangeType = ExchangeType.Topic;
+                            binding.RoutingKey = "heartBeat_event";
+                        });
+
+                        endpoint.ConfigureConsumer<HeartBeatIngressControllerMq>(context);
+                    });
                 });
             });
         }

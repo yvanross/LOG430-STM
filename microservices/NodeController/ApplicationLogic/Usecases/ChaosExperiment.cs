@@ -1,28 +1,30 @@
 ﻿using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Services;
-using Entities.BusinessObjects.ResourceManagement;
-using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.ResourceManagement;
+using Microsoft.Extensions.Logging;
 
 namespace ApplicationLogic.Usecases;
 
 public class ChaosExperiment
 {
-    public int KillsThisMinute { get; private set; }
-
     private readonly IPodReadService _readServiceService;
 
     private readonly IDataStreamService _streamService;
+
+    private readonly ILogger<ChaosExperiment> _logger;
 
     private readonly ResourceManagementService _resourceManagementService;
    
     private IChaosCodex _codex;
 
-    public ChaosExperiment(IEnvironmentClient environmentClient, IPodReadService readServiceService, IPodWriteService writeServiceService, IDataStreamService streamService)
+    private int _killCount;
+
+    public ChaosExperiment(IEnvironmentClient environmentClient, IPodReadService readServiceService, IPodWriteService writeServiceService, IDataStreamService streamService, ILogger<ChaosExperiment> logger)
     {
         _readServiceService = readServiceService;
         _streamService = streamService;
+        _logger = logger;
         _resourceManagementService = new ResourceManagementService(environmentClient, readServiceService, writeServiceService);
     }
 
@@ -37,26 +39,27 @@ public class ChaosExperiment
     {
         if (DateTime.UtcNow < _codex.EndTestAt && _codex.StartTestAt < DateTime.UtcNow)
         {
+            var totalDuration = (GetSecondsSinceEpoch(_codex.EndTestAt) - GetSecondsSinceEpoch(_codex.StartTestAt));
+            var currentPoint = (GetSecondsSinceEpoch(DateTime.UtcNow) - GetSecondsSinceEpoch(_codex.StartTestAt));
+
             var completionPercentage =
-                (GetSecondsSinceEpoch(DateTime.UtcNow) - GetSecondsSinceEpoch(_codex.StartTestAt)) /
-                (GetSecondsSinceEpoch(_codex.EndTestAt) - GetSecondsSinceEpoch(_codex.StartTestAt));
+                currentPoint /
+                totalDuration;
 
             foreach (var kv in _codex.ChaosConfigs.OrderBy(_ => Random.Shared.Next()))
             {
                 var chaosConfig = kv.Value;
                 var category = Enum.GetName(kv.Key);
 
-                var currentSecond = DateTime.UtcNow.Second;
+                var func = (double x) => (chaosConfig.KillRate / 60.0) * (x / totalDuration);
 
-                if (currentSecond < 1)
-                    KillsThisMinute = 0;
+                var expectedKillCountAtThisMoment = DefiniteIntegralService.TrapezoidalRule(0, currentPoint, func);
 
-                var killRate = chaosConfig.KillRate * completionPercentage;
-                var maxNumberOfPods = chaosConfig.MaxNumberOfPods;
                 var memory = (long)(chaosConfig.Memory / completionPercentage);
+
                 var nanoCpus = (long)(chaosConfig.NanoCpus / completionPercentage);
 
-                await ChaosMonkey(killRate, currentSecond, maxNumberOfPods, category);
+                await ChaosMonkey(expectedKillCountAtThisMoment, chaosConfig.MaxNumberOfPods, category);
 
                 await SetResourcesOnPods(category, nanoCpus, memory);
             }
@@ -65,15 +68,15 @@ public class ChaosExperiment
         double GetSecondsSinceEpoch(DateTime datetime) => (datetime - DateTime.UnixEpoch).TotalSeconds;
     }
 
-    private async Task ChaosMonkey(double killRate, int currentSecond, double maxNumberOfPods, string? category)
+    private async Task ChaosMonkey(double expectedKillCountAtThisMoment, double maxNumberOfPods, string? category)
     {
-        var expectedKillCount = (int)((killRate / 60.0) * currentSecond);
+        var overPodLimit = Math.Max(_readServiceService.GetAllPods().Count - maxNumberOfPods - expectedKillCountAtThisMoment, 0);
 
-        var overPodLimit = Math.Max(_readServiceService.GetAllPods().Count - maxNumberOfPods - expectedKillCount, 0);
+        expectedKillCountAtThisMoment += overPodLimit;
 
-        expectedKillCount += Convert.ToInt32(overPodLimit);
+        int maxKills = Convert.ToInt32(expectedKillCountAtThisMoment);
 
-        for (var i = KillsThisMinute; i < expectedKillCount; i++)
+        for (var i = _killCount; i < maxKills; i++)
         {
             var podsOfType = _readServiceService.GetAllPodTypes()
                 .FindAll(podType => podType.ServiceTypes
@@ -85,10 +88,13 @@ public class ChaosExperiment
                 .MinBy(_ => Random.Shared.Next());
 
             if (podToKill is not null)
+            {
+                
                 await _resourceManagementService.RemovePodInstance(podToKill);
-        }
 
-        KillsThisMinute += expectedKillCount;
+                _killCount++;
+            }
+        }
     }
 
     private async Task SetResourcesOnPods(string? category, long nanoCpus, long memory)
@@ -98,9 +104,10 @@ public class ChaosExperiment
                 .Any(serviceType => serviceType.ArtifactType.Equals(category)))
             .ToDictionary(p => p.Type);
 
-        foreach (var pod in _readServiceService.GetAllPods().Where(p => podsOfTypeDict.ContainsKey(p.Type)))
-        {
+        var pod = _readServiceService.GetAllPods().Where(p => podsOfTypeDict.ContainsKey(p.Type))
+            .MinBy(_ => Random.Shared.Next());
+
+        if (pod is not null)
             await _resourceManagementService.SetResources(pod, nanoCpus, memory);
-        }
     }
 }

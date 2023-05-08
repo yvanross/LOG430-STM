@@ -44,6 +44,7 @@ services:
   node-state-time-serie-storage:
     image: 'influxdb:latest'
     container_name: NodeStateTimeSerieStorage
+    restart: always
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=guest
@@ -73,13 +74,6 @@ services:
       ASPNETCORE_URLS: 'http://+:80'
       POSTGRES_PORT: 32672
       SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
-    x-develop:
-      watch:
-        - action: build
-          path: AuthService/
-    volumes:
-      - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
-      - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
   userdb:
     image: postgres
     restart: always
@@ -87,6 +81,9 @@ services:
       POSTGRES_PASSWORD: secret
     ports:
       - '32672:5432'
+    volumes:
+      - 'user-db:/var/lib/postgresql/data'
+
   adminer:
     image: adminer
     restart: always
@@ -102,3 +99,4 @@ services:
 volumes:
   influxdb-data: null
   influxdb-config: null
+  user-db: null

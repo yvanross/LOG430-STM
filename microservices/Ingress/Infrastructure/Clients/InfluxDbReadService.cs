@@ -1,8 +1,10 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Immutable;
+using System.Linq;
 using ApplicationLogic.Interfaces;
 using Entities.DomainInterfaces;
 using InfluxDB.Client;
+using Microsoft.Extensions.Logging;
 using Polly;
 using LogLevel = InfluxDB.Client.Core.LogLevel;
 
@@ -11,31 +13,32 @@ namespace Infrastructure.Clients;
 public class InfluxDbReadService : ISystemStateReadService
 {
     private readonly IHostInfo _hostInfo;
+    private readonly ILogger<InfluxDBClient> _logger;
     private static InfluxDBClient? _client;
-
 
     private static string _address = null!;
     private const string Org = "ets";
 
-    public InfluxDbReadService(IHostInfo hostInfo)
+    public InfluxDbReadService(IHostInfo hostInfo, ILogger<InfluxDBClient> logger)
     {
         _hostInfo = hostInfo;
+        _logger = logger;
     }
 
-    public async Task<ConcurrentDictionary<string, IEnumerable<object?>>> ReadLogs(IEnumerable<string> names, string group)
+    public async Task<ConcurrentDictionary<string, object?>> GetStates(IEnumerable<string> names, string group)
     {
         await EstablishConnection(group);
 
         var queryable = _client.GetQueryApi();
 
-        var reports = new ConcurrentDictionary<string, IEnumerable<object?>>();
+        var reports = new ConcurrentDictionary<string, object?>();
 
         var retryPolicy = Policy
             .Handle<Exception>()
             .WaitAndRetryAsync(10, retryAttempt => TimeSpan.FromMilliseconds(Math.Pow(2, retryAttempt)),
                 (exception, delay, retryCount, _) =>
                 {
-                    Console.WriteLine($"Operation failed with exception: {exception.Message}. Waiting {delay} before next retry. Retry attempt {retryCount}.");
+                    _logger.LogCritical($"Operation failed with exception: {exception.Message}. Waiting {delay} before next retry. Retry attempt {retryCount}.");
                 });
 
         try
@@ -46,17 +49,18 @@ public class InfluxDbReadService : ISystemStateReadService
                 {
                     var res = await queryable.QueryAsync(GetQuery(group, name), Org, cancellationToken);
 
-                    var bucketReports = res
-                        .SelectMany(table => table.Records)
-                        .Select(record => record.Values["_value"]);
+                    var bucketReport = res?
+                        .SelectMany(table => table.Records)?
+                        .Select(record => record.Values["_value"])
+                        .FirstOrDefault();
 
-                    reports.AddOrUpdate(name, _ => bucketReports, (_, _) => bucketReports);
+                    reports.AddOrUpdate(name, _ => bucketReport, (_, _) => bucketReport);
                 });
             });
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            _logger.LogInformation(e.ToString());
         }
 
         static string GetQuery(string group, string name) =>

@@ -1,6 +1,10 @@
-<div class="container">
-  <h1>Real Time Updates</h1>
-  <div class="mat-elevation-z8">
+<mat-card class="chaos-card">
+  <mat-card-header>
+    <mat-card-title>
+      Realtime Updates
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
     <mat-table [dataSource]="dataSource">
       <!-- Property 1 Column -->
       <ng-container matColumnDef="User">
@@ -8,28 +12,65 @@
         <mat-cell *matCellDef="let element">{{element.User}}</mat-cell>
       </ng-container>
 
-      <!-- Property 2 Column -->
+      <ng-container matColumnDef="Connected">
+        <mat-header-cell *matHeaderCellDef>Connected</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+         <mat-icon class="connection-circle" [ngClass]="getConnectionQualityClass(element.StateRequest.state)">wifi</mat-icon>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Secure">
+        <mat-header-cell *matHeaderCellDef>Secure</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <mat-icon class="connection-circle" [ngClass]="getSecurityClass(element.StateRequest.secure)">security</mat-icon>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Dirty">
+        <mat-header-cell *matHeaderCellDef>Dirty</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <mat-icon class="connection-circle" [ngClass]="getIsDirtyClass(element.StateRequest.dirty)">warning</mat-icon>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Version">
+        <mat-header-cell *matHeaderCellDef>Version</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.StateRequest.version}}</mat-cell>
+      </ng-container>
+
       <ng-container matColumnDef="AverageLatency">
-        <mat-header-cell *matHeaderCellDef>AverageLatency</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{element.ExperimentReport.AverageLatency}}</mat-cell>
+        <mat-header-cell *matHeaderCellDef>Average Latency (ms)</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.StateRequest.experimentReportDto.AverageLatency}}</mat-cell>
       </ng-container>
 
-      <!-- Property 2 Column -->
       <ng-container matColumnDef="ErrorCount">
-        <mat-header-cell *matHeaderCellDef>ErrorCount</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{element.ExperimentReport.ErrorCount}}</mat-cell>
+        <mat-header-cell *matHeaderCellDef>Error Count</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.StateRequest.experimentReportDto.ErrorCount}}</mat-cell>
       </ng-container>
 
-      <!-- Property 2 Column -->
       <ng-container matColumnDef="Message">
         <mat-header-cell *matHeaderCellDef>Message</mat-header-cell>
-        <mat-cell *matCellDef="let element">{{element.ExperimentReport.Message}}</mat-cell>
+        <mat-cell *matCellDef="let element">{{element.StateRequest.experimentReportDto.Message}}</mat-cell>
       </ng-container>
 
+      <ng-container matColumnDef="Computation">
+        <mat-header-cell *matHeaderCellDef>Computation</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.Computation}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Connector">
+        <mat-header-cell *matHeaderCellDef>Connector</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.Connector}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="Database">
+        <mat-header-cell *matHeaderCellDef>Database</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.Database}}</mat-cell>
+      </ng-container>
       <!-- Table Header -->
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <!-- Table Rows -->
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
-  </div>
-</div>
+  </mat-card-content>
+</mat-card>

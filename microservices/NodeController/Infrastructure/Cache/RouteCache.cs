@@ -1,9 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Immutable;
-using ApplicationLogic.Services;
 using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
-using Entities.DomainInterfaces.ResourceManagement;
 
 namespace Infrastructure.Cache;
 

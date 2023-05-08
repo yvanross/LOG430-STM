@@ -1,8 +1,5 @@
 ﻿using ApplicationLogic.Usecases;
 using Entities.DomainInterfaces.ResourceManagement;
-using Infrastructure.Dao;
-using Infrastructure.Docker;
-using Infrastructure.Ingress;
 using Microsoft.Extensions.Logging;
 using Monitor = ApplicationLogic.Usecases.Monitor;
 
@@ -29,15 +26,13 @@ public class TaskScheduling
     {
         _logger.LogInformation("# Schedule Recurring Tasks #");
 
-        _ingress.Register().Wait();
-
-        _ingress.GetLogStoreAddressAndPort().Wait();
+        _ = _ingress.Register();
 
         _logger.LogInformation("# Preparation Complete, scheduling... #");
 
         _scheduler.TryAddTask(nameof(_servicePool.DiscoverServices), _servicePool.DiscoverServices);
         _scheduler.TryAddTask(nameof(_monitor.RemoveOrReplaceDeadPodsFromModel), _monitor.RemoveOrReplaceDeadPodsFromModel);
         _scheduler.TryAddTask(nameof(_monitor.MatchInstanceDemandOnPods), _monitor.MatchInstanceDemandOnPods);
-        //readModel.GetScheduler().TryAddTask(nameof(monitor.GarbageCollection), monitor.GarbageCollection);
+        _scheduler.TryAddTask(nameof(_ingress.HeartBeat), _ingress.HeartBeat);
     }
 }

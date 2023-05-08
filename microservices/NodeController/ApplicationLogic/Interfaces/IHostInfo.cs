@@ -27,4 +27,12 @@ public interface IHostInfo
     string GetBridgePort();
     
     string GetGroup();
+    
+    bool GetSecure();
+    
+    public bool GetIsDirty();
+
+    public void SetIsDirty(bool dirty);
+
+    string GetContainerId();
 }

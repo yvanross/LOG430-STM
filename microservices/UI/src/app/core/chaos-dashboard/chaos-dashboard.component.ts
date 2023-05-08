@@ -91,7 +91,7 @@ export class ChaosDashboardComponent implements OnInit {
       Computation: {
         Key: 0,
         Value: {
-          NanoCpus: 0,
+          NanoCpus: 10000000000,
           Memory: 0,
           MaxNumberOfPods: 100,
           KillRate: 0

@@ -1,14 +1,11 @@
 ﻿using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.OutGoing;
-using ApplicationLogic.Usecases;
 using Entities.DomainInterfaces.ResourceManagement;
 using InfluxDB.Client;
 using InfluxDB.Client.Api.Domain;
 using InfluxDB.Client.Core;
 using InfluxDB.Client.Writes;
-using Infrastructure.Docker;
-using Infrastructure.Ingress;
 using Newtonsoft.Json;
 using Polly;
 

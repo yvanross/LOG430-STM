@@ -1,10 +1,11 @@
 ﻿using ApplicationLogic.Interfaces.Dao;
 using MassTransit;
+using MqContracts;
 using Newtonsoft.Json;
 
 namespace Infrastructure.Dao;
 
-public class MassTransitRabbitMqClient<T> : IDataStream
+public class MassTransitRabbitMqClient<T> : IDataStream, IAckErrorEmitter<T>
 {
     private readonly IPublishEndpoint _publishEndpoint;
 
@@ -19,8 +20,12 @@ public class MassTransitRabbitMqClient<T> : IDataStream
 
         if (tMessage is null) throw new NullReferenceException("Deserialized message was null");
 
-        await _publishEndpoint.Publish(
-            tMessage,
+        await Produce(routingKey, tMessage);
+    }
+
+    public async Task Produce(string routingKey, T message)
+    {
+        await _publishEndpoint.Publish(message,
             x => { x.SetRoutingKey(routingKey); });
     }
 }

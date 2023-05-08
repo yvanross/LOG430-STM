@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using Docker.DotNet.Models;
 using Entities.BusinessObjects.Live;
 using Entities.DomainInterfaces.Live;
 
@@ -9,7 +8,7 @@ public interface IEnvironmentClient
 {
     public Task<ImmutableList<string>?> GetRunningServices(string[]? statuses = default);
 
-    public Task<CreateContainerResponse?> IncreaseByOneNumberOfInstances(IContainerConfig containerConfig,
+    public Task<string?> IncreaseByOneNumberOfInstances(IContainerConfig containerConfig,
         string newContainerName, string serviceId, string podId);
 
     public Task RemoveContainerInstance(string containerId, bool quiet = false);
@@ -18,5 +17,5 @@ public interface IEnvironmentClient
 
     Task GarbageCollection();
 
-    Task SetResources(IPodInstance podInstance, long nanoCpus, long memory);
+    Task SetResources(IPodInstance podInstance, long nanoCpus);
 }

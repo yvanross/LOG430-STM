@@ -1,4 +1,4 @@
-﻿using Docker.DotNet.Models;
+﻿using IO.Swagger.Models;
 
 namespace Entities.DomainInterfaces.Live;
 

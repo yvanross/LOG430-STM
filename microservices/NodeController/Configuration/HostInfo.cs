@@ -1,4 +1,7 @@
 ﻿using ApplicationLogic.Interfaces;
+using ApplicationLogic.Usecases;
+using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace Configuration;
 
@@ -29,6 +32,37 @@ public class HostInfo : IHostInfo
     private static readonly string Username = Environment.GetEnvironmentVariable("USERNAME")!;
 
     private static readonly string BridgePort = Environment.GetEnvironmentVariable("BRIDGE_PORT")!;
+
+    private static readonly string ContainerId;
+
+    private static bool _secure = true;
+   
+    private static bool _dirty = false;
+    
+    static HostInfo()
+    {
+        try
+        {
+            var cgroupFilePath = "/proc/self/cgroup";
+            if (File.Exists(cgroupFilePath))
+            {
+                var lines = File.ReadAllLines(cgroupFilePath);
+                var containerIdLine = lines.FirstOrDefault(line => line.Contains("docker"));
+                if (containerIdLine != null)
+                {
+                    var match = Regex.Match(containerIdLine, @"[0-9a-fA-F]{64}");
+                    if (match.Success)
+                    {
+                        ContainerId = match.Value;
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
 
     public string GetTeamName()
     {
@@ -93,5 +127,25 @@ public class HostInfo : IHostInfo
     public string GetGroup()
     {
         return Group;
+    }
+
+    public bool GetSecure()
+    {
+        return ServicePoolDiscovery.BannedIds.Any() is false;
+    }
+
+    public bool GetIsDirty()
+    {
+        return _dirty;
+    }
+
+    public void SetIsDirty(bool dirty)
+    {
+        _dirty = dirty;
+    }
+
+    public string GetContainerId()
+    {
+        return ContainerId;
     }
 }

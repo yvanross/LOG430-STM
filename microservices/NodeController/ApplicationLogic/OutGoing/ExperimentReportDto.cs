@@ -21,7 +21,7 @@ public class ExperimentReportDto
         return new ExperimentReportDto
         {
             Timestamp = experimentReport.Timestamp,
-            AverageLatency = experimentReport.ExperimentResult?.AverageLatency ?? -1.0,
+            AverageLatency = Math.Round(experimentReport.ExperimentResult?.AverageLatency ?? -1.0, 3),
             ErrorCount = experimentReport.ExperimentResult?.ErrorCount ?? default,
             Message = experimentReport.ExperimentResult?.Message ?? string.Empty,
             RunningInstances = experimentReport.RunningInstances

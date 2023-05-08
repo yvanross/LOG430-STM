@@ -8,6 +8,8 @@ using Entities.DomainInterfaces;
 using ApplicationLogic.Interfaces.Dao;
 using System.Security.Principal;
 using System.Linq;
+using ApplicationLogic.Interfaces;
+using Entities.BusinessObjects.States;
 
 namespace Ingress.Controllers
 {
@@ -18,14 +20,16 @@ namespace Ingress.Controllers
         private readonly ILogger<IngressController> _logger;
         private readonly IDataStream _dataStream;
         private readonly Subscription _subscription;
+        private readonly IRepositoryRead _repositoryRead;
         private readonly ISystemStateReadService _systemStateReadService;
 
         public IngressController(ILogger<IngressController> logger, IDataStream dataStream, ISystemStateReadService systemStateReadService,
-                                    Subscription subscription)
+                                    Subscription subscription, IRepositoryRead repositoryRead)
         {
             _logger = logger;
             _dataStream = dataStream;
             _subscription = subscription;
+            _repositoryRead = repositoryRead;
             _systemStateReadService = systemStateReadService;
         }
 
@@ -90,10 +94,10 @@ namespace Ingress.Controllers
         }
 
         [HttpGet,
-         ActionName(nameof(GetLogs)),
+         ActionName(nameof(GetStates)),
          SwaggerOperation("Authorizes or invalidates the sent credential if a user with the same name exists. Otherwise, it creates a new user with the sent credentials"
          )]
-        public async Task<Dictionary<string, IEnumerable<object?>>> GetLogs()
+        public async Task<Dictionary<string, StateRequestDto>> GetStates()
         {
             var jwt = string.Empty;
 
@@ -115,9 +119,21 @@ namespace Ingress.Controllers
 
             if (group is null) return null;
 
-            var logs = await _systemStateReadService.ReadLogs(accounts, group);
+            var logs = await _systemStateReadService.GetStates(accounts, group);
 
-            var logDictionary = logs.ToDictionary(kv => (kv.Key), kv => kv.Value);
+            var logDictionary = logs.ToDictionary(kv => (kv.Key), kv =>
+            {
+                var node = _repositoryRead.ReadNodeById(kv.Key);
+
+                return new StateRequestDto()
+                {
+                    ExperimentReportDto = kv.Value,
+                    State = node?.ServiceStatus.GetStateName() ?? new UnresponsiveState().GetStateName(),
+                    Version = node?.Version ?? "No Data",
+                    Secure = node?.Secure ?? false,
+                    Dirty = node?.Dirty ?? true,
+                };
+            });
 
             return logDictionary;
         }

@@ -1,9 +1,7 @@
 ﻿using ApplicationLogic.Extensions;
-using ApplicationLogic.Services;
 using ApplicationLogic.Usecases;
 using Entities.BusinessObjects.Live;
 using Entities.DomainInterfaces.ResourceManagement;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace NodeController.Controllers
