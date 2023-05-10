@@ -1,43 +1,54 @@
-﻿using Ambassador;
-using Ambassador.BusinessObjects;
-using Ambassador.BusinessObjects.InterServiceRequests;
-using Ambassador.Controllers;
+﻿using ApplicationLogic.Interfaces.Policies;
 using Entities.DomainInterfaces;
 using Newtonsoft.Json;
+using ServiceMeshHelper;
+using ServiceMeshHelper.Bo;
+using ServiceMeshHelper.Bo.InterServiceRequests;
+using ServiceMeshHelper.Controllers;
 
-namespace TripComparator.External;
+namespace Infrastructure.Clients;
 
 public class RouteTimeProviderClient : IRouteTimeProvider
 {
-    public async Task<int> GetTravelTimeInSeconds(string startingCoordinates, string destinationCoordinates)
+    private readonly IInfiniteRetryPolicy<RouteTimeProviderClient> _infiniteRetry;
+
+    public RouteTimeProviderClient(IInfiniteRetryPolicy<RouteTimeProviderClient> infiniteRetry)
     {
-        var res = await RestController.Get(new GetRoutingRequest()
+        _infiniteRetry = infiniteRetry;
+    }
+    
+    public Task<int> GetTravelTimeInSeconds(string startingCoordinates, string destinationCoordinates)
+    {
+        return _infiniteRetry.ExecuteAsync(async () =>
         {
-            TargetService = "RouteTimeProvider",
-            Endpoint = $"RouteTime/Get",
-            Params = new List<NameValue>()
+            var res = await RestController.Get(new GetRoutingRequest()
             {
-                new ()
+                TargetService = "RouteTimeProvider",
+                Endpoint = $"RouteTime/Get",
+                Params = new List<NameValue>()
                 {
-                    Name = "startingCoordinates",
-                    Value = startingCoordinates
+                    new()
+                    {
+                        Name = "startingCoordinates",
+                        Value = startingCoordinates
+                    },
+                    new()
+                    {
+                        Name = "destinationCoordinates",
+                        Value = destinationCoordinates
+                    },
                 },
-                new ()
-                {
-                    Name = "destinationCoordinates",
-                    Value = destinationCoordinates
-                },
-            },
-            Mode = LoadBalancingMode.Broadcast
+                Mode = LoadBalancingMode.Broadcast
+            });
+
+            var times = new List<int>();
+
+            await foreach (var result in res!.ReadAllAsync())
+            {
+                times.Add(JsonConvert.DeserializeObject<int>(result.Content));
+            }
+
+            return (int)times.Average();
         });
-
-        var times = new List<int>();
-
-        await foreach (var result in res!.ReadAllAsync())
-        {
-            times.Add(JsonConvert.DeserializeObject<int>(result.Content));
-        }
-
-        return (int)times.Average();
     }
 }

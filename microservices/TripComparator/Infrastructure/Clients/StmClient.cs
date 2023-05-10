@@ -1,79 +1,96 @@
 ﻿using System.Net;
 using System.Runtime.Serialization;
-using Ambassador;
-using Ambassador.BusinessObjects;
-using Ambassador.BusinessObjects.InterServiceRequests;
-using Ambassador.Controllers;
+using ApplicationLogic.Interfaces.Policies;
 using Entities.BusinessObjects;
 using Entities.DomainInterfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using RestSharp;
+using ServiceMeshHelper;
+using ServiceMeshHelper.Bo;
+using ServiceMeshHelper.Bo.InterServiceRequests;
+using ServiceMeshHelper.Controllers;
 using TripComparator.DTO;
 
-namespace TripComparator.External;
+namespace Infrastructure.Clients;
 
 public class StmClient : IBusInfoProvider
 {
     readonly ILogger _logger;
+    private readonly IBackOffRetryPolicy<StmClient> _backOffRetry;
+    private readonly IInfiniteRetryPolicy<StmClient> _infiniteRetry;
 
-    public StmClient(ILogger<StmClient> logger)
+    public StmClient(ILogger<StmClient> logger, IBackOffRetryPolicy<StmClient> backOffRetry, IInfiniteRetryPolicy<StmClient> infiniteRetry)
     {
         _logger = logger;
+        _backOffRetry = backOffRetry;
+        _infiniteRetry = infiniteRetry;
     }
 
-    public async Task<IEnumerable<IStmBus?>> GetBestBus(string startingCoordinates, string destinationCoordinates)
+    public Task<IEnumerable<IStmBus?>> GetBestBus(string startingCoordinates, string destinationCoordinates)
     {
-        var channel = await RestController.Get(new GetRoutingRequest()
+        return _infiniteRetry.ExecuteAsync(async () =>
         {
-            TargetService = "STM",
-            Endpoint = $"Finder/OptimalBuses",
-            Params = new List<NameValue>()
+            var channel = await RestController.Get(new GetRoutingRequest()
             {
-                new ()
+                TargetService = "STM",
+                Endpoint = $"Finder/OptimalBuses",
+                Params = new List<NameValue>()
                 {
-                    Name = "fromLatitudeLongitude",
-                    Value = startingCoordinates
+                    new()
+                    {
+                        Name = "fromLatitudeLongitude",
+                        Value = startingCoordinates
+                    },
+                    new()
+                    {
+                        Name = "toLatitudeLongitude",
+                        Value = destinationCoordinates
+                    },
                 },
-                new ()
-                {
-                    Name = "toLatitudeLongitude",
-                    Value = destinationCoordinates
-                },
-            },
-            Mode = LoadBalancingMode.RoundRobin
+                Mode = LoadBalancingMode.RoundRobin
+            });
+
+            IEnumerable<IStmBus?> busDto = Enumerable.Empty<IStmBus>();
+
+            await foreach (var res in channel.ReadAllAsync())
+            {
+                busDto = JsonConvert.DeserializeObject<IEnumerable<StmBusDto>>(res.Content);
+
+                break;
+            }
+
+            return busDto;
         });
-
-        var res = await channel!.ReadAsync();
-
-        IEnumerable<StmBusDto?>? busDto = JsonConvert.DeserializeObject<IEnumerable<StmBusDto>>(res.Content);
-
-        return busDto;
     }
 
-    public async Task BeginTracking(IStmBus? stmBus)
+    public Task BeginTracking(IStmBus? stmBus)
     {
         if(stmBus is not StmBusDto busDto) throw new InvalidDataContractException("Make sure to not alter the type stored in the collection returned by GetBestBus");
 
-        _ = await RestController.Post(new PostRoutingRequest<StmBusDto>()
+        return _infiniteRetry.ExecuteAsync(async () =>
         {
-            TargetService = "STM",
-            Endpoint = $"Track/BeginTracking",
-            Payload = busDto,
-            Mode = LoadBalancingMode.RoundRobin
+            _ = await RestController.Post(new PostRoutingRequest<StmBusDto>()
+            {
+                TargetService = "STM",
+                Endpoint = $"Track/BeginTracking",
+                Payload = busDto,
+                Mode = LoadBalancingMode.RoundRobin
+            });
         });
     }
 
-    public async Task<IBusTracking?> GetTrackingUpdate(string busId)
+    public Task<IBusTracking?> GetTrackingUpdate(string busId)
     {
-        try
+        return _backOffRetry.ExecuteAsync<IBusTracking?>(async () =>
         {
-            var res = await RestController.Get(new GetRoutingRequest()
+            var channel = await RestController.Get(new GetRoutingRequest()
             {
                 TargetService = "STM",
                 Endpoint = $"Track/GetTrackingUpdate",
                 Params = new List<NameValue>()
                 {
-                    new ()
+                    new()
                     {
                         Name = "busId",
                         Value = busId
@@ -82,22 +99,21 @@ public class StmClient : IBusInfoProvider
                 Mode = LoadBalancingMode.RoundRobin
             });
 
-            var data = await res!.ReadAsync();
+            RestResponse? data = null;
 
-            if (data.IsSuccessStatusCode && data.StatusCode.Equals(HttpStatusCode.NoContent) is false)
+            await foreach (var res in channel.ReadAllAsync())
             {
-                var busTracking = JsonConvert.DeserializeObject<BusTracking>(data.Content);
+                data = res;
 
-                return busTracking;
+                break;
             }
 
-            _logger?.LogInformation($"{nameof(GetTrackingUpdate)} resulted in {data.StatusDescription}");
-        }
-        catch (Exception e)
-        {
-            _logger?.LogError(e.ToString());
-        }
+            if (data is null || !data.IsSuccessStatusCode || data.StatusCode.Equals(HttpStatusCode.NoContent)) return null;
 
-        return null;
+            var busTracking = JsonConvert.DeserializeObject<BusTracking>(data.Content);
+
+            return busTracking;
+
+        });
     }
 }

@@ -8,11 +8,10 @@
     ".NETCoreApp,Version=v7.0": {
       "STMTests/1.0.0": {
         "dependencies": {
-          "GTFS": "1.0.0",
+          "Controllers": "1.0.0",
           "MSTest.TestAdapter": "3.0.2",
           "MSTest.TestFramework": "3.0.2",
           "Microsoft.NET.Test.Sdk": "17.5.0",
-          "STM": "1.0.0",
           "coverlet.collector": "3.2.0",
           "Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions": "14.0.0.0"
         },
@@ -55,11 +54,11 @@
         }
       },
       "coverlet.collector/3.2.0": {},
-      "Google.Protobuf/3.22.0": {
+      "Google.Protobuf/3.23.0": {
         "runtime": {
           "lib/net5.0/Google.Protobuf.dll": {
-            "assemblyVersion": "3.22.0.0",
-            "fileVersion": "3.22.0.0"
+            "assemblyVersion": "3.23.0.0",
+            "fileVersion": "3.23.0.0"
           }
         }
       },
@@ -950,38 +949,47 @@
       },
       "ApplicationLogic/1.0.0": {
         "dependencies": {
-          "GTFS": "1.0.0",
+          "Entities.Common": "1.0.0",
+          "Entities.Gtfs": "1.0.0",
+          "Entities.Transit": "1.0.0",
+          "Google.Protobuf": "3.23.0",
           "Microsoft.Extensions.Logging": "7.0.0"
         },
         "runtime": {
           "ApplicationLogic.dll": {}
         }
       },
-      "Entities/1.0.0": {
-        "runtime": {
-          "Entities.dll": {}
-        }
-      },
-      "GTFS/1.0.0": {
-        "dependencies": {
-          "Entities": "1.0.0",
-          "Google.Protobuf": "3.22.0"
-        },
-        "runtime": {
-          "GTFS.dll": {}
-        }
-      },
-      "STM/1.0.0": {
+      "Controllers/1.0.0": {
         "dependencies": {
           "ApplicationLogic": "1.0.0",
-          "Google.Protobuf": "3.22.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.3",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.17.0",
           "RestSharp": "108.0.3",
           "Swashbuckle.AspNetCore": "6.5.0"
         },
         "runtime": {
-          "STM.dll": {}
+          "Controllers.dll": {}
+        }
+      },
+      "Entities.Common/1.0.0": {
+        "runtime": {
+          "Entities.Common.dll": {}
+        }
+      },
+      "Entities.Gtfs/1.0.0": {
+        "dependencies": {
+          "Entities.Common": "1.0.0"
+        },
+        "runtime": {
+          "Entities.Gtfs.dll": {}
+        }
+      },
+      "Entities.Transit/1.0.0": {
+        "dependencies": {
+          "Entities.Common": "1.0.0"
+        },
+        "runtime": {
+          "Entities.Transit.dll": {}
         }
       },
       "Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions/14.0.0.0": {
@@ -1021,12 +1029,12 @@
       "path": "coverlet.collector/3.2.0",
       "hashPath": "coverlet.collector.3.2.0.nupkg.sha512"
     },
-    "Google.Protobuf/3.22.0": {
+    "Google.Protobuf/3.23.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-UE1TRMrBBBmnA8xbqzTvX4sSwn+2W/Xxrs/v5Aws/7C8RD6fY6STi1eAnCu7Ez93oHcPdpyStGnFel/aIB407Q==",
-      "path": "google.protobuf/3.22.0",
-      "hashPath": "google.protobuf.3.22.0.nupkg.sha512"
+      "sha512": "sha512-sH4Jlv/vJQCqvYR9//Ia6RaDgG1HMTFlddBhSz5sbr9rQYYUuJ38SpOBv/m3mKkRfC6/ZdUtFQNczvAiYnIeqw==",
+      "path": "google.protobuf/3.23.0",
+      "hashPath": "google.protobuf.3.23.0.nupkg.sha512"
     },
     "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
       "type": "package",
@@ -1565,17 +1573,22 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Entities/1.0.0": {
+    "Controllers/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "GTFS/1.0.0": {
+    "Entities.Common/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "STM/1.0.0": {
+    "Entities.Gtfs/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Entities.Transit/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -1,4 +1,4 @@
-﻿namespace Ambassador.BusinessObjects;
+﻿namespace ServiceMeshHelper.Bo;
 
 public class NameValue
 {

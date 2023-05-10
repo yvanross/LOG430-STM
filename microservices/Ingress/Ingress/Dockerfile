@@ -7,7 +7,6 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["Nuget/Ambassador.1.1.0.nupkg", "Ingress/"]
 COPY ["Ingress/Ingress/nuget.config", ""]
 COPY ["Ingress/Ingress/Ingress.csproj", "Ingress/"]
 COPY ["Ingress/ApplicationLogic/ApplicationLogic.csproj", "ApplicationLogic/"]

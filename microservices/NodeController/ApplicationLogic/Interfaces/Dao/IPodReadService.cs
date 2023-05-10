@@ -10,19 +10,19 @@ public interface IPodReadService
 
     IPodInstance? GetPodById(string id);
 
-    ImmutableList<IPodInstance> GetPodInstances(string podType);
+    ImmutableList<IPodInstance> GetPodInstances(string? podType);
 
     ImmutableList<IPodInstance> GetAllPods();
 
     ImmutableList<IPodType> GetAllPodTypes();
 
-    IPodType? GetPodType(string podType);
+    IPodType? GetPodType(string? podType);
 
     //----------------------------------------------------------------
 
     IServiceInstance? GetServiceById(string id);
 
-    ImmutableList<IServiceInstance> GetServiceInstances(string serviceType);
+    ImmutableList<IServiceInstance> GetServiceInstances(string? serviceType);
 
     ImmutableList<IServiceInstance> GetAllServices();
 

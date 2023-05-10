@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import {environment} from "../environments/environment";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, delay, exhaustMap, Observable, retry, share, Subject, switchMap} from "rxjs";
 import {StateRequestDto} from "../Dtos/experimentReportDto";
+import {IChaosExperimentDto} from "../Dtos/IChaosExperimentDto";
+import {IAuthDto} from "../Dtos/IAuthDto";
 
 @Injectable({
   providedIn: 'root'
@@ -13,41 +15,33 @@ export class IngressService {
 
   private token = new BehaviorSubject("");
 
-  private username : string | undefined;
+  private static requestLogin$ = new Subject<IAuthDto>();
+  private static requestBeginExperiment$ = new Subject<IChaosExperimentDto>();
+  private static requestFetchData$ = new Subject();
 
-  constructor(private http: HttpClient) { }
+  private static responseFetchData$ : Observable<ResponseMap>;
 
-  login(username: string, password: string) {
-    const body = {
-      name: username,
-      secret: password
-    };
-
-    this.username = username
-
-    this.http.post(this.apiUrl + '/Ingress/Authorize', body,
-      {
-        responseType: 'text'
-      })
-      .subscribe((response : string) => {
-      this.setToken(response.toString())
-    });
+  constructor(private http: HttpClient) {
+    this.ngOnInit()
   }
 
-  beginExperiment(body : any, wholeTeam : boolean)
-  {
-    const queryParams = new HttpParams()
-      .set('includeAllVisibleAccounts', wholeTeam)
+  login(authDto : IAuthDto) {
+    IngressService.requestLogin$.next(authDto);
+  }
 
-    this.http.post(this.apiUrl + '/Ingress/BeginExperiment', body, {
-      params: queryParams,
-      headers:
-        {
-          'Authorization' : 'Bearer ' + this.token.value
-        },
-    }).subscribe(response => {
-      console.log('Chaos data submitted successfully', response);
-    });;
+  beginExperiment(body : IChaosExperimentDto, wholeTeam : boolean)
+  {
+    IngressService.requestBeginExperiment$.next(body);
+  }
+
+  fetchData() {
+    IngressService.requestFetchData$.next({});
+
+    return IngressService.responseFetchData$;
+  }
+
+  private setToken(response: string) {
+    this.token.next(response);
   }
 
   getAuthenticationStatus()
@@ -55,18 +49,40 @@ export class IngressService {
     return this.token;
   }
 
-  fetchData() {
-    return this.http.get<ResponseMap>(this.apiUrl + '/Ingress/GetStates',
-      {
-        headers:
-          {
-            'Authorization' : 'Bearer ' + this.token.value
-          },
-      })
-  }
+  ngOnInit(): void
+  {
+    IngressService.requestLogin$
+      .pipe(
+        switchMap( (authBody) =>
+          this.http.post(this.apiUrl + '/Ingress/Authorize', authBody,
+            {
+              responseType: 'text'
+            })
+            .pipe(retry({delay : 1000}))
+        ))
+      .subscribe((response : string) => this.setToken(response.toString()));
 
-  private setToken(response: string) {
-    this.token.next(response);
+    IngressService.requestBeginExperiment$
+      .pipe(
+        switchMap( (experimentBody) =>
+          this.http.post(this.apiUrl + '/Ingress/BeginExperiment', experimentBody, {
+            headers: { 'Authorization' : 'Bearer ' + this.token.value}
+          })
+            .pipe(retry({delay : 1000}))
+        ))
+       .subscribe(response => console.log('Chaos data submitted successfully', response))
+
+    IngressService.responseFetchData$ = IngressService.requestFetchData$
+      .pipe(
+        exhaustMap( () =>
+          this.http.get<ResponseMap>(this.apiUrl + '/Ingress/GetStates', {
+              headers:
+                {
+                  'Authorization' : 'Bearer ' + this.token.value
+                },
+            })
+            .pipe(retry({delay : 1000}))
+        ), share())
   }
 }
 

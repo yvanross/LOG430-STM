@@ -2,6 +2,7 @@
 using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Services;
+using Entities.BusinessObjects.Live;
 using Entities.DomainInterfaces.Live;
 using Microsoft.Extensions.Logging;
 
@@ -76,14 +77,33 @@ namespace ApplicationLogic.Usecases
                             _logger.LogCritical("i replaced a pod because we think it was dead");
                         }
                     }
+
+                    if (PodServicesAllNecessaryInstances(podInstance) is false)
+                    {
+                        await _resourceManagementService.RemovePodInstance(podInstance).ConfigureAwait(false);
+                        
+                        await _resourceManagementService.IncreaseNumberOfPodInstances(podInstance.Type).ConfigureAwait(false);
+                    }
                 }
 
                 return Task.CompletedTask;
             }, retryCount: 2).ConfigureAwait(false);
 
+            bool PodServicesAllNecessaryInstances(IPodInstance podInstance)
+            {
+                var podType = _readServiceService.GetPodType(podInstance.Type)!;
+
+                return podType.ServiceTypes
+                    .All(serviceType => podInstance.ServiceInstances.
+                        Any(serviceInstance => serviceInstance.Type.Equals(serviceType.Type)));
+            }
+
             bool IsAnyPodServiceDown(IPodInstance podInstance, HashSet<string> runningContainerIds)
             {
-                return podInstance.ServiceInstances.Any(serviceInstance => runningContainerIds.Contains(serviceInstance.ContainerInfo?.Id ?? string.Empty)) is false;
+                var anyServiceDown = podInstance.ServiceInstances.Any(serviceInstance =>
+                    runningContainerIds.Contains(serviceInstance.ContainerInfo?.Id ?? string.Empty) is false);
+
+                return anyServiceDown;
             }
 
             bool IsNumberOfRunningInstancesGreaterThanRequired(IPodInstance podInstance, int minNumberOfInstances)

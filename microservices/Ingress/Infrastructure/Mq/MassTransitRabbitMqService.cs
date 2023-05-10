@@ -26,6 +26,10 @@ public class MassTransitRabbitMqClient<T> : IDataStream, IAckErrorEmitter<T>
     public async Task Produce(string routingKey, T message)
     {
         await _publishEndpoint.Publish(message,
-            x => { x.SetRoutingKey(routingKey); });
+            x =>
+            {
+                x.SetRoutingKey(routingKey); 
+                x.TimeToLive = TimeSpan.FromSeconds(5);
+            });
     }
 }

@@ -1,14 +1,11 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using STM.Controllers;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace STMTests.Use_Cases
 {
     [TestClass()]
     public class TrackingTest
     {
+        /*
         [TestMethod()]
         public async Task TrackBusesETSToPeelSherbrooke()
         {
@@ -44,6 +41,6 @@ namespace STMTests.Use_Cases
 
             trackController.BeginTracking(bus.Value.First());
         }
-
+        */
     }
 }

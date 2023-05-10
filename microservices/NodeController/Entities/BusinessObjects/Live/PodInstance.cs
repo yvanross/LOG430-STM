@@ -6,7 +6,7 @@ namespace Entities.BusinessObjects.Live;
 public class PodInstance : IPodInstance
 {
     public required string Id { get; set; } 
-    public required string Type { get; init; }
+    public required string? Type { get; init; }
     public required ImmutableList<IServiceInstance> ServiceInstances { get; set; }
 
     public bool Equals(IPodInstance? other)

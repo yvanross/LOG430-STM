@@ -9,7 +9,7 @@ internal static class RouteCache
 {
     private static readonly ConcurrentDictionary<string, IPodInstance> PodInstances = new ();
     
-    private static readonly ConcurrentDictionary<string, IPodType> PodTypes = new ();
+    private static readonly ConcurrentDictionary<string?, IPodType> PodTypes = new ();
 
     internal static ImmutableList<IPodInstance> GetPodInstances()
     {

@@ -1,4 +1,6 @@
-﻿namespace Ambassador.BusinessObjects;
+﻿using System.Collections.Generic;
+
+namespace ServiceMeshHelper.Bo;
 
 public class RoutingData
 {

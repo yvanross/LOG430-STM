@@ -1,6 +1,7 @@
 ﻿using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Services;
+using Entities.DomainInterfaces.Planned;
 using Entities.DomainInterfaces.ResourceManagement;
 using Microsoft.Extensions.Logging;
 
@@ -108,6 +109,6 @@ public class ChaosExperiment
             .MinBy(_ => Random.Shared.Next());
 
         if (pod is not null)
-            await _resourceManagementService.SetResources(pod, nanoCpus, memory);
+            await _resourceManagementService.SetResources(pod, nanoCpus > 100000000 ? 0 : nanoCpus, memory > 200000000 ? 0 : memory);
     }
 }

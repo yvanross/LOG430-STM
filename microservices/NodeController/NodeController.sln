@@ -11,17 +11,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationLogicTests", "Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NodeController", "NodeController\NodeController.csproj", "{CA23A3EB-B02B-4FD5-ACC3-1B9EC1A23C20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configuration", "Configuration\Configuration.csproj", "{F1566209-53EC-40A6-9312-6EDCBB22E983}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration", "Configuration\Configuration.csproj", "{F1566209-53EC-40A6-9312-6EDCBB22E983}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 0", "Layer 0", "{A06FAD10-161A-4AAB-A944-6B8828121A16}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 0 - Domain", "Layer 0 - Domain", "{A06FAD10-161A-4AAB-A944-6B8828121A16}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 1", "Layer 1", "{DD1CBEF8-1B67-4550-99BB-4A489A7671EC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 1 - Application", "Layer 1 - Application", "{DD1CBEF8-1B67-4550-99BB-4A489A7671EC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 2", "Layer 2", "{DA3A1DC5-AB00-4284-B3CF-D4C6DC050197}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 2 - Adapters", "Layer 2 - Adapters", "{DA3A1DC5-AB00-4284-B3CF-D4C6DC050197}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 3", "Layer 3", "{BB52BBBF-8D38-498C-856E-128C86F88456}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 3 - Cross-Cutting Concerns", "Layer 3 - Cross-Cutting Concerns", "{BB52BBBF-8D38-498C-856E-128C86F88456}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{660A4C78-D6D1-4ADD-A767-7D06B3EC5F55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{660A4C78-D6D1-4ADD-A767-7D06B3EC5F55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

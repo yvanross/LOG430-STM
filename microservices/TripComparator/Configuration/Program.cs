@@ -1,8 +1,10 @@
-using Ambassador;
-using Ambassador.Controllers;
 using ApplicationLogic.Interfaces;
+using ApplicationLogic.Interfaces.Policies;
 using ApplicationLogic.Usecases;
+using Configuration.Policies;
+using Controllers.Controllers;
 using Entities.DomainInterfaces;
+using Infrastructure.Clients;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -10,7 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MqContracts;
 using Polly;
 using RabbitMQ.Client;
-using TripComparator.Controllers;
+using ServiceMeshHelper;
+using ServiceMeshHelper.Controllers;
 using TripComparator.External;
 using HostInfo = TripComparator.External.HostInfo;
 
@@ -63,7 +66,11 @@ namespace Configuration
             services.AddSwaggerGen();
 
             services.AddSingleton<IHostInfo, HostInfo>();
-            
+
+            services.AddScoped(typeof(IInfiniteRetryPolicy<>), typeof(InfiniteRetryPolicy<>));
+
+            services.AddScoped(typeof(IBackOffRetryPolicy<>), typeof(BackOffRetryPolicy<>));
+
             services.AddScoped<CompareTimes>();
             
             services.AddScoped<IRouteTimeProvider, RouteTimeProviderClient>();
@@ -75,6 +82,9 @@ namespace Configuration
 
         private static async Task ConfigureMassTransit(IServiceCollection services)
         {
+            //Leaving some time for the node controller to map the pool
+            await Task.Delay(5000);
+
             var mq = (await RestController.GetAddress(HostInfo.MqServiceName, LoadBalancingMode.RoundRobin)).FirstOrDefault();
 
             var reformattedAddress = $"rabbitmq{mq!.Address[4..]}";

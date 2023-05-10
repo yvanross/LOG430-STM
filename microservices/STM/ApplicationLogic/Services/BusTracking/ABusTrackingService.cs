@@ -1,29 +1,26 @@
 ﻿using System.Collections.Immutable;
 using ApplicationLogic.Interfaces;
-using Entities.Domain;
+using Entities.Transit.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ApplicationLogic.Services.BusTracking;
 
-public abstract class ABusTrackingService : ITrackingService
+public abstract class ABusTrackingService
 {
+    internal IBus? Bus { get; set; }
 
-    private protected readonly IBus Bus;
-
-    private protected IStmClient StmClient;
-
+    private protected readonly IStmClient StmClient;
     private protected readonly ILogger? Logger;
 
     private protected uint CurrentStopIndex;
 
-    protected ABusTrackingService(IBus bus, IStmClient stmClient, ILogger? logger)
+    protected ABusTrackingService(IStmClient stmClient, ILogger logger)
     {
-        Bus = bus;
         StmClient = stmClient;
         Logger = logger;
     }
 
-    public (IBusTracking, ITrackingService?) GetUpdate()
+    public (IBusTracking, ABusTrackingService?) GetUpdate()
     {
         UpdateStopIndex();
 
@@ -31,8 +28,6 @@ public abstract class ABusTrackingService : ITrackingService
 
         return tracking;
     }
-
-    private protected abstract (IBusTracking, ITrackingService?) Track();
 
     private void UpdateStopIndex()
     {
@@ -52,4 +47,6 @@ public abstract class ABusTrackingService : ITrackingService
 
     private protected TimeSpan DeltaTime(DateTime? crossedOriginTime)
         => (DateTime.UtcNow - (crossedOriginTime ?? DateTime.UtcNow));
+
+    private protected abstract (IBusTracking, ABusTrackingService?) Track();
 }

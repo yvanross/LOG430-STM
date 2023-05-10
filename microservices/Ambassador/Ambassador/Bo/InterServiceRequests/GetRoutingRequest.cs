@@ -1,5 +1,5 @@
 ﻿
-namespace Ambassador.BusinessObjects.InterServiceRequests;
+namespace ServiceMeshHelper.Bo.InterServiceRequests;
 
 public class GetRoutingRequest : ServiceRoutingRequest
 {

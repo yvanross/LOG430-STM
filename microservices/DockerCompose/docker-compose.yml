@@ -42,6 +42,7 @@ services:
       ARTIFACT_CATEGORY: Connector
       ARTIFACT_NAME: EventStream
       MINIMUM_NUMBER_OF_INSTANCES: 1
+
   routetimeprovider:
     container_name: RouteTimeProvider
     image: routetimeprovider
@@ -63,6 +64,7 @@ services:
       MINIMUM_NUMBER_OF_INSTANCES: 2
     depends_on:
       - nodecontroller
+
   tripcomparator:
     container_name: TripComparator
     image: tripcomparator
@@ -80,17 +82,18 @@ services:
       - '32773:80'
     labels:
       ARTIFACT_CATEGORY: Computation
-      MINIMUM_NUMBER_OF_INSTANCES: 1
+      MINIMUM_NUMBER_OF_INSTANCES: 2
       ARTIFACT_NAME: TripComparator
     depends_on:
       - nodecontroller
+
   stm:
     container_name: STM
     image: stm
     restart: always
     build:
       context: ../
-      dockerfile: STM/STM/Dockerfile
+      dockerfile: STM/Controllers/Dockerfile
     environment:
       SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
       NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'

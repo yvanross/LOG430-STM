@@ -55,9 +55,6 @@ services:
       - INFLUXD_LOG_LEVEL=debug
     ports:
       - '32670:8086'
-    labels:
-      ARTIFACT_CATEGORY: Database
-      ARTIFACT_NAME: NodeStateTimeSerieStorage
     volumes:
       - 'influxdb-data:/var/lib/influxdb2'
       - 'influxdb-config:/etc/influxdb2'

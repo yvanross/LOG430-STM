@@ -52,7 +52,7 @@
           "build/netstandard1.0/coverlet.collector.targets": {}
         }
       },
-      "Google.Protobuf/3.22.0": {
+      "Google.Protobuf/3.23.0": {
         "type": "package",
         "compile": {
           "lib/net5.0/Google.Protobuf.dll": {
@@ -1541,7 +1541,10 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
-          "GTFS": "1.0.0",
+          "Entities.Common": "1.0.0",
+          "Entities.Gtfs": "1.0.0",
+          "Entities.Transit": "1.0.0",
+          "Google.Protobuf": "3.23.0",
           "Microsoft.Extensions.Logging": "7.0.0"
         },
         "compile": {
@@ -1551,50 +1554,61 @@
           "bin/placeholder/ApplicationLogic.dll": {}
         }
       },
-      "Entities/1.0.0": {
+      "Controllers/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
-        "compile": {
-          "bin/placeholder/Entities.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Entities.dll": {}
-        }
-      },
-      "GTFS/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
-        "dependencies": {
-          "Entities": "1.0.0",
-          "Google.Protobuf": "3.22.0"
-        },
-        "compile": {
-          "bin/placeholder/GTFS.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/GTFS.dll": {}
-        }
-      },
-      "STM/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
           "ApplicationLogic": "1.0.0",
-          "Google.Protobuf": "3.22.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.3",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.17.0",
           "RestSharp": "108.0.3",
           "Swashbuckle.AspNetCore": "6.5.0"
         },
         "compile": {
-          "bin/placeholder/STM.dll": {}
+          "bin/placeholder/Controllers.dll": {}
         },
         "runtime": {
-          "bin/placeholder/STM.dll": {}
+          "bin/placeholder/Controllers.dll": {}
         },
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
         ]
+      },
+      "Entities.Common/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/Entities.Common.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Entities.Common.dll": {}
+        }
+      },
+      "Entities.Gtfs/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "Entities.Common": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Entities.Gtfs.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Entities.Gtfs.dll": {}
+        }
+      },
+      "Entities.Transit/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "Entities.Common": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Entities.Transit.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Entities.Transit.dll": {}
+        }
       }
     }
   },
@@ -1690,14 +1704,14 @@
         "coverlet.collector.nuspec"
       ]
     },
-    "Google.Protobuf/3.22.0": {
-      "sha512": "UE1TRMrBBBmnA8xbqzTvX4sSwn+2W/Xxrs/v5Aws/7C8RD6fY6STi1eAnCu7Ez93oHcPdpyStGnFel/aIB407Q==",
+    "Google.Protobuf/3.23.0": {
+      "sha512": "sH4Jlv/vJQCqvYR9//Ia6RaDgG1HMTFlddBhSz5sbr9rQYYUuJ38SpOBv/m3mKkRfC6/ZdUtFQNczvAiYnIeqw==",
       "type": "package",
-      "path": "google.protobuf/3.22.0",
+      "path": "google.protobuf/3.23.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "google.protobuf.3.22.0.nupkg.sha512",
+        "google.protobuf.3.23.0.nupkg.sha512",
         "google.protobuf.nuspec",
         "lib/net45/Google.Protobuf.dll",
         "lib/net45/Google.Protobuf.pdb",
@@ -4865,29 +4879,33 @@
       "path": "../ApplicationLogic/ApplicationLogic.csproj",
       "msbuildProject": "../ApplicationLogic/ApplicationLogic.csproj"
     },
-    "Entities/1.0.0": {
+    "Controllers/1.0.0": {
       "type": "project",
-      "path": "../Entities/Entities.csproj",
-      "msbuildProject": "../Entities/Entities.csproj"
+      "path": "../Controllers/Controllers.csproj",
+      "msbuildProject": "../Controllers/Controllers.csproj"
     },
-    "GTFS/1.0.0": {
+    "Entities.Common/1.0.0": {
       "type": "project",
-      "path": "../StaticGTFS/GTFS.csproj",
-      "msbuildProject": "../StaticGTFS/GTFS.csproj"
+      "path": "../Entities.Common/Entities.Common.csproj",
+      "msbuildProject": "../Entities.Common/Entities.Common.csproj"
     },
-    "STM/1.0.0": {
+    "Entities.Gtfs/1.0.0": {
       "type": "project",
-      "path": "../STM/STM.csproj",
-      "msbuildProject": "../STM/STM.csproj"
+      "path": "../Entities.Gtfs/Entities.Gtfs.csproj",
+      "msbuildProject": "../Entities.Gtfs/Entities.Gtfs.csproj"
+    },
+    "Entities.Transit/1.0.0": {
+      "type": "project",
+      "path": "../Entities.Transit/Entities.Transit.csproj",
+      "msbuildProject": "../Entities.Transit/Entities.Transit.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net7.0": [
-      "GTFS >= 1.0.0",
+      "Controllers >= 1.0.0",
       "MSTest.TestAdapter >= 3.0.2",
       "MSTest.TestFramework >= 3.0.2",
       "Microsoft.NET.Test.Sdk >= 17.5.0",
-      "STM >= 1.0.0",
       "coverlet.collector >= 3.2.0"
     ]
   },
@@ -4924,11 +4942,8 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj": {
-              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj"
-            },
-            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\STM\\STM.csproj": {
-              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\STM\\STM.csproj"
+            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\Controllers\\Controllers.csproj": {
+              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\Controllers\\Controllers.csproj"
             }
           }
         }

@@ -1,10 +1,10 @@
 ﻿using System.Dynamic;
-using Entities.DomainInterfaces;
-using RestSharp;
 using System.Web;
+using Entities.DomainInterfaces;
 using Newtonsoft.Json;
+using RestSharp;
 
-namespace PLACEHOLDER.External;
+namespace RouteTimeProvider.External;
 
 public class TomTomClient : IRouteTimeProvider
 {

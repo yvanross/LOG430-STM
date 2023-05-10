@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Dao;
 using Entities.BusinessObjects.Live;
@@ -38,15 +39,27 @@ namespace ApplicationLogic.Usecases
             {
                 var newPodId = Guid.NewGuid().ToString();
 
-                var service = await _environmentClient.GetContainerInfo(unregisteredService);
+                var container = await _environmentClient.GetContainerInfo(unregisteredService);
 
-                var newService = CreateService(service, newPodId);
+                try
+                {
+                    var serviceType = CreateServiceType(container);
 
-                if(newService is null) continue;
+                    UpdateOrRegisterPodType(container, serviceType);
 
-                RegisterServiceType(service);
+                    var newService = CreateService(container, newPodId);
 
-                RegisterOrUpdatePodInstance(service, newService, newPodId);
+                    if (newService is null) continue;
+
+                    RegisterOrUpdatePodInstance(container, newService, newPodId);
+                }
+                catch
+                {
+                    // ignore because we don't control the assigned Ids, they are set in the docker compose
+                    _logger.LogWarning("Invalid Service configuration found in container pool");
+
+                    ImmutableInterlocked.Update(ref BannedIds, (set) => set.Add(container.CuratedInfo.Id));
+                }
             }
 
             async Task<List<string>> GetUnregisteredServices()
@@ -54,88 +67,75 @@ namespace ApplicationLogic.Usecases
                 var runningServicesIds = await _environmentClient.GetRunningServices();
 
                 var registeredServices = _podReadService.GetAllServices()
-                    .Where(s=>s.ContainerInfo is not null && s.ServiceStatus is not LaunchedState).DistinctBy(s=>s.Id).ToDictionary(s => s.ContainerInfo!.Id);
+                    .Where(s => s.ContainerInfo is not null && s.ServiceStatus is not LaunchedState).DistinctBy(s => s.Id).ToDictionary(s => s.ContainerInfo!.Id);
 
-                var filterServices = runningServicesIds?.Where(runningService => 
+                var filterServices = runningServicesIds?.Where(runningService =>
                     BannedIds.Contains(runningService) is false &&
                     registeredServices.ContainsKey(runningService) is false &&
                     runningService.Equals(_hostInfo.GetContainerId()) is false).ToList();
-                
+
                 return filterServices ?? new List<string>();
             }
 
-            ServiceInstance? CreateService((ContainerInfo CuratedInfo, IContainerConfig RawConfig) service, string newPodId)
+            IServiceType CreateServiceType((ContainerInfo CuratedInfo, IContainerConfig RawConfig) container)
             {
-                try
+                var curatedInfoLabels = container.CuratedInfo.Labels;
+
+                var podType = GetPodTypeName(container.CuratedInfo);
+
+                return new ServiceType()
                 {
-                    if (string.IsNullOrWhiteSpace(service.CuratedInfo.HostPort))
-                        throw new Exception("Port not found, adding to banned id");
-
-                    var newService = new ServiceInstance
-                    {
-                        Id = service.RawConfig.Config.Config.Env.First(e => e.ToString().StartsWith("ID="))[3..],
-                        ContainerInfo = service.CuratedInfo,
-                        Address = _hostInfo.GetAddress(),
-                        Type = GetArtifactName(service.CuratedInfo.Labels),
-                        PodId = GetPodId(service.CuratedInfo.Labels) ?? newPodId,
-                        ServiceStatus = new ReadyState()
-                    };
-
-                    return newService;
-                }
-                catch
-                {
-                    // ignore because we don't control the assigned Ids, they are set in the docker compose
-                    _logger.LogWarning("Invalid Service configuration found in service pool");
-
-                    ImmutableInterlocked.Update(ref BannedIds, (set) => set.Add(service.CuratedInfo.Id));
-                }
-
-                return null;
-            }
-
-            void RegisterServiceType((ContainerInfo CuratedInfo, IContainerConfig RawConfig) service)
-            {
-                var curatedInfoLabels = service.CuratedInfo.Labels;
-
-                var podType = GetArtifactName(curatedInfoLabels);
-
-                var serviceType = new ServiceType()
-                {
-                    ContainerConfig = service.RawConfig,
-                    Type = service.CuratedInfo.Name,
+                    ContainerConfig = container.RawConfig,
+                    Type = GetArtifactName(curatedInfoLabels),
                     ArtifactType = GetArtifactCategory(curatedInfoLabels),
-                    IsPodSidecar = GetIsSidecar(curatedInfoLabels),
+                    DnsAccessibilityModifier = GetDnsAccessibilityModifier(curatedInfoLabels),
                     PodName = podType
                 };
-
-                UpdateOrRegisterPodType(podType, service, serviceType);
             }
 
-            void UpdateOrRegisterPodType(string podType, (ContainerInfo CuratedInfo, IContainerConfig RawConfig) service, IServiceType serviceType)
+            void UpdateOrRegisterPodType((ContainerInfo CuratedInfo, IContainerConfig RawConfig) container, IServiceType newServiceType)
             {
-                var pod = _podReadService.GetPodType(podType);
+                var podTypeName = GetPodTypeName(container.CuratedInfo);
 
-                if (pod is null)
+                var podType = _podReadService.GetPodType(podTypeName);
+
+                if (podType is null || podType.ServiceTypes.Any(serviceType => serviceType.Type.Equals(newServiceType.Type)) is false)
                 {
                     _podWriteService.AddOrUpdatePodType(new PodType()
                     {
-                        Type = podType,
-                        MinimumNumberOfInstances = GetMinimumNumberOfInstances(service.CuratedInfo.Labels),
-                        Gateway = GetIsSidecar(service.CuratedInfo.Labels) ? serviceType : pod?.Gateway ?? default,
-                        ServiceTypes = pod?.ServiceTypes.Add(serviceType) ?? ImmutableList<IServiceType>.Empty.Add(serviceType),
+                        Type = GetPodTypeName(container.CuratedInfo),
+                        MinimumNumberOfInstances = GetMinimumNumberOfInstances(container.CuratedInfo.Labels),
+                        ServiceTypes = podType?.ServiceTypes.Add(newServiceType) ?? ImmutableList<IServiceType>.Empty.Add(newServiceType),
                     });
                 }
             }
 
-            void RegisterOrUpdatePodInstance((ContainerInfo CuratedInfo, IContainerConfig RawConfig) service, IServiceInstance newService, string newPodId)
+            ServiceInstance? CreateService((ContainerInfo CuratedInfo, IContainerConfig RawConfig) service, string newPodId)
             {
-                var podId = GetPodId(service.CuratedInfo.Labels) ?? newPodId;
+                if (string.IsNullOrWhiteSpace(service.CuratedInfo.HostPort))
+                    throw new Exception("Port not found, adding to banned id");
+
+                var newService = new ServiceInstance
+                {
+                    Id = service.RawConfig.Config.Config.Env.First(e => e.ToString().StartsWith("ID="))[3..],
+                    ContainerInfo = service.CuratedInfo,
+                    Address = _hostInfo.GetAddress(),
+                    Type = GetArtifactName(service.CuratedInfo.Labels),
+                    PodId = GetPodId(service.CuratedInfo.Labels) ?? newPodId,
+                    ServiceStatus = new ReadyState()
+                };
+
+                return newService;
+            }
+
+            void RegisterOrUpdatePodInstance((ContainerInfo CuratedInfo, IContainerConfig RawConfig) container, IServiceInstance newService, string newPodId)
+            {
+                var podId = GetPodId(container.CuratedInfo.Labels) ?? newPodId;
 
                 var pod = _podReadService.GetPodById(podId) ?? new PodInstance()
                 {
                     ServiceInstances = ImmutableList<IServiceInstance>.Empty,
-                    Type = GetPodName(service.CuratedInfo.Labels) ?? GetArtifactName(service.CuratedInfo.Labels),
+                    Type = GetPodTypeName(container.CuratedInfo),
                     Id = podId
                 };
 
@@ -143,6 +143,11 @@ namespace ApplicationLogic.Usecases
                 pod.ServiceInstances = pod.ServiceInstances.Add(newService);
 
                 _podWriteService.AddOrUpdatePod(pod);
+            }
+
+            string GetPodTypeName(ContainerInfo curatedInfo)
+            {
+                return GetPodName(curatedInfo.Labels) ?? GetArtifactName(curatedInfo.Labels);
             }
         }
 
@@ -184,11 +189,11 @@ namespace ApplicationLogic.Usecases
             return GetLabelValue(ServiceLabelsEnum.POD_ID, labels);
         }
 
-        private static bool GetIsSidecar(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
+        private static string GetDnsAccessibilityModifier(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
         {
-            bool.TryParse(GetLabelValue(ServiceLabelsEnum.IS_POD_SIDECAR, labels), out var isSidecar);
+            var value = GetLabelValue(ServiceLabelsEnum.DNS, labels);
 
-            return isSidecar;
+            return string.IsNullOrEmpty(value) ? nameof(AccessibilityModifierEnum.Private) : value;
         }
     }
 }

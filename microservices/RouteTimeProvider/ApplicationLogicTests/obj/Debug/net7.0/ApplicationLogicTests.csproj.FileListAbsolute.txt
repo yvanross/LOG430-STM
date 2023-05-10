@@ -229,7 +229,6 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\Appli
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogicTests\bin\Debug\net7.0\ApplicationLogicTests.runtimeconfig.json
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogicTests\bin\Debug\net7.0\ApplicationLogicTests.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogicTests\bin\Debug\net7.0\ApplicationLogicTests.pdb
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogicTests\bin\Debug\net7.0\Ambassador.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.VisualStudio.CodeCoverage.Shim.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.TestPlatform.CoreUtilities.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.TestPlatform.PlatformAbstractions.dll
@@ -345,3 +344,7 @@ C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogicTests\
 C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogicTests\bin\Debug\net7.0\RouteTimeProvider.pdb
 C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogicTests\bin\Debug\net7.0\Entities.pdb
 C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogicTests\bin\Debug\net7.0\Polly.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.DotNet.PlatformAbstractions.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogicTests\bin\Debug\net7.0\Polly.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\ApplicationLogicTests\bin\Debug\net7.0\ServiceMeshHelper.dll

@@ -63,7 +63,7 @@ public class ResourceManagementService
         }
     }
 
-    public async Task IncreaseNumberOfPodInstances(string type)
+    public async Task IncreaseNumberOfPodInstances(string? type)
     {
         var podType = _readServiceService.GetPodType(type);
 

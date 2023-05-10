@@ -12,23 +12,20 @@ namespace ApplicationLogic.Usecases
 
         private readonly IBusInfoProvider _iBusInfoProvider;
 
-        private readonly IDataStreamWriteModel? _dataStreamWriteModel;
+        private readonly IDataStreamWriteModel _dataStreamWriteModel;
 
-        private readonly ILogger? _logger;
-
-        private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(10));
+        private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(50));
 
         private int _averageCarTravelTime;
 
         private IStmBus? _optimalBus;
 
         //Todo tactique modifiablité Injection de dépendance
-        public CompareTimes(IRouteTimeProvider routeTimeProvider, IBusInfoProvider iBusInfoProvider, IDataStreamWriteModel? dataStreamWriteModel, ILogger<CompareTimes> logger)
+        public CompareTimes(IRouteTimeProvider routeTimeProvider, IBusInfoProvider iBusInfoProvider, IDataStreamWriteModel dataStreamWriteModel, ILogger<CompareTimes> logger)
         {
             _routeTimeProvider = routeTimeProvider;
             _iBusInfoProvider = iBusInfoProvider;
             _dataStreamWriteModel = dataStreamWriteModel;
-            _logger = logger;
         }
 
         public async Task<Channel<IBusPositionUpdated>> BeginComparingBusAndCarTime(string startingCoordinates, string destinationCoordinates)
@@ -82,19 +79,9 @@ namespace ApplicationLogic.Usecases
 
         public async Task WriteToStream(ChannelReader<IBusPositionUpdated> channelReader)
         {
-            // allows for local testing without publishing messages to the MQ
-            if (_dataStreamWriteModel is null) return;
-
-            try
+            await foreach (var busPositionUpdated in channelReader!.ReadAllAsync())
             {
-                await foreach (var busPositionUpdated in channelReader!.ReadAllAsync())
-                {
-                    await _dataStreamWriteModel.Produce(busPositionUpdated);
-                }
-            }
-            catch(Exception e)
-            {
-                _logger?.LogError(e.ToString());
+                await _dataStreamWriteModel.Produce(busPositionUpdated);
             }
         }
     }

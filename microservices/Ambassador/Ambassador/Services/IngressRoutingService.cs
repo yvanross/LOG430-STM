@@ -1,24 +1,18 @@
-﻿using Ambassador.BusinessObjects;
-using Ambassador.Health;
-using Ambassador.Properties;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using RestSharp;
+﻿using RestSharp;
+using ServiceMeshHelper.Bo;
 
-namespace Ambassador.Services;
+namespace ServiceMeshHelper.Services;
 
 internal class IngressRoutingService
 {
     private protected static RestClient NodeControllerClient { get; } = new(ContainerService.NodeControllerAddress);
 
-    internal async Task<IEnumerable<RoutingData>> GetServiceRoutingData(string targetService, LoadBalancingMode routingRequestMode)
+    internal async Task<IEnumerable<RoutingData>>  GetServiceRoutingData(string targetService, LoadBalancingMode routingRequestMode)
     {
 
-        var request = new RestRequest("Routing/RouteByServiceType");
+        var request = new RestRequest($"Routing/{targetService}");
 
         request.AddQueryParameter("caller", ContainerService.ServiceId);
-
-        request.AddQueryParameter("serviceType", targetService);
 
         request.AddQueryParameter("mode", routingRequestMode);
 

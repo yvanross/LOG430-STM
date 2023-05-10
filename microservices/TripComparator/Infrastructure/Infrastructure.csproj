@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ambassador" Version="1.0.66" />
     <PackageReference Include="MassTransit.Abstractions" Version="8.0.14" />
+    <PackageReference Include="ServiceMeshHelper" Version="1.0.66" />
   </ItemGroup>
 
   <ItemGroup>

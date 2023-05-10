@@ -19,12 +19,12 @@
                 <div [formGroupName]="configName">
                   <div formGroupName="Value">
                     <mat-form-field appearance="outline">
-                      <mat-label>NanoCpus (10^-9 Cores)</mat-label>
-                      <input matInput type="number" [min]="10000000" [max]="10000000000" formControlName="NanoCpus">
+                      <mat-label>CPUs</mat-label>
+                      <input matInput type="number" [min]="0.01" [max]="10" formControlName="CPUs">
                     </mat-form-field>
                     <mat-form-field appearance="outline">
-                      <mat-label>Memory (bites)</mat-label>
-                      <input matInput type="number" [min]="16000000" [max]="2000000000" formControlName="Memory">
+                      <mat-label>Memory (mb)</mat-label>
+                      <input matInput type="number" [min]="16" [max]="16000" formControlName="Memory">
                     </mat-form-field>
                     <mat-form-field appearance="outline">
                       <mat-label>Max Number Of Pods</mat-label>

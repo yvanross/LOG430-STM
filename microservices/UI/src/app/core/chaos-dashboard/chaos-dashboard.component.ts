@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormBuilder} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
 import {IngressService} from "../../../Infrastructure/ingress.service";
+import {IChaosExperimentDto} from "../../../Dtos/IChaosExperimentDto";
 
 @Component({
   selector: 'app-chaos-dashboard',
@@ -36,8 +37,8 @@ export class ChaosDashboardComponent implements OnInit {
     return this.fb.group({
       Key: [config.Key],
       Value: this.fb.group({
-        NanoCpus: [config.Value.NanoCpus],
-        Memory: [config.Value.Memory],
+        CPUs: [config.Value.NanoCpus / 1000000000],
+        Memory: [config.Value.Memory * 0.000001],
         MaxNumberOfPods: [config.Value.MaxNumberOfPods],
         KillRate: [config.Value.KillRate]
       })
@@ -50,24 +51,24 @@ export class ChaosDashboardComponent implements OnInit {
     const startTestAtLocal = new Date(chaosData.ChaosCodex.StartTestAt);
     const endTestAtLocal = new Date(chaosData.ChaosCodex.EndTestAt);
 
-    const payload = {
+    const payload: IChaosExperimentDto = {
       ChaosCodex:{
         ChaosConfigs: {
           Computation: {
-            NanoCpus: chaosData.ChaosCodex.ChaosConfigs.Computation.Value.NanoCpus,
-            Memory: chaosData.ChaosCodex.ChaosConfigs.Computation.Value.Memory,
+            NanoCpus: chaosData.ChaosCodex.ChaosConfigs.Computation.Value.CPUs * 1000000000,
+            Memory: chaosData.ChaosCodex.ChaosConfigs.Computation.Value.Memory / 0.000001,
             MaxNumberOfPods: chaosData.ChaosCodex.ChaosConfigs.Computation.Value.MaxNumberOfPods,
             KillRate: chaosData.ChaosCodex.ChaosConfigs.Computation.Value.KillRate
           },
           Database: {
-            NanoCpus: chaosData.ChaosCodex.ChaosConfigs.Database.Value.NanoCpus,
-            Memory: chaosData.ChaosCodex.ChaosConfigs.Database.Value.Memory,
+            NanoCpus: chaosData.ChaosCodex.ChaosConfigs.Database.Value.CPUs * 1000000000,
+            Memory: chaosData.ChaosCodex.ChaosConfigs.Database.Value.Memory / 0.000001,
             MaxNumberOfPods: chaosData.ChaosCodex.ChaosConfigs.Database.Value.MaxNumberOfPods,
             KillRate: chaosData.ChaosCodex.ChaosConfigs.Database.Value.KillRate
           },
           Connector: {
-            NanoCpus: chaosData.ChaosCodex.ChaosConfigs.Connector.Value.NanoCpus,
-            Memory: chaosData.ChaosCodex.ChaosConfigs.Connector.Value.Memory,
+            NanoCpus: chaosData.ChaosCodex.ChaosConfigs.Connector.Value.CPUs * 1000000000,
+            Memory: chaosData.ChaosCodex.ChaosConfigs.Connector.Value.Memory / 0.000001,
             MaxNumberOfPods: chaosData.ChaosCodex.ChaosConfigs.Connector.Value.MaxNumberOfPods,
             KillRate: chaosData.ChaosCodex.ChaosConfigs.Connector.Value.KillRate
           }
@@ -92,7 +93,7 @@ export class ChaosDashboardComponent implements OnInit {
         Key: 0,
         Value: {
           NanoCpus: 10000000000,
-          Memory: 0,
+          Memory: 16000000000,
           MaxNumberOfPods: 100,
           KillRate: 0
         }
@@ -100,8 +101,8 @@ export class ChaosDashboardComponent implements OnInit {
       Database: {
         Key: 1,
         Value: {
-          NanoCpus: 0,
-          Memory: 0,
+          NanoCpus: 10000000000,
+          Memory: 16000000000,
           MaxNumberOfPods: 100,
           KillRate: 0
         }
@@ -109,8 +110,8 @@ export class ChaosDashboardComponent implements OnInit {
       Connector: {
         Key: 2,
         Value: {
-          NanoCpus: 0,
-          Memory: 0,
+          NanoCpus: 10000000000,
+          Memory: 16000000000,
           MaxNumberOfPods: 100,
           KillRate: 0
         }

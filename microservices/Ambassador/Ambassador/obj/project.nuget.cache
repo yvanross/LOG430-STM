@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "m05pqcPccXCbklU6Qn6hReT8bIP97xOtYrl5D2loRJTkPL53vP+X/zSYBart4bC/GftkGtNJ+eBrhMY8kjtQgQ==",
+  "dgSpecHash": "2AxihtnsGvjkhBEz4UqADobVwpIJ7zsQ9hSfBlZcr4kVbTJovLHWOwCXB2/s6tk1c74C6pS6P5lT4fm5yFzC3w==",
   "success": true,
-  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj",
+  "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\ServiceMeshHelper.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.aspnetcore.authentication.core\\2.2.0\\microsoft.aspnetcore.authentication.core.2.2.0.nupkg.sha512",

@@ -4,7 +4,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {HttpClient} from "@angular/common/http";
 import {IngressService} from "../../../Infrastructure/ingress.service";
 import {ExperimentReportDto, StateRequestDto} from "../../../Dtos/experimentReportDto";
-import {interval, map, mergeMap, startWith, Subject, Subscription, switchMap, takeUntil, tap} from "rxjs";
+import {exhaustMap, interval, map, mergeMap, startWith, Subject, Subscription, switchMap, takeUntil, tap} from "rxjs";
 
 @Component({
   selector: 'app-dashboard',
@@ -37,14 +37,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
         for (const key in response) {
           let value = response[key];
           if (value) {
-            value.experimentReportDto = !value.experimentReportDto ?
-              {
-                Timestamp: "No Data",
-                AverageLatency: -1,
-                ErrorCount: -1,
-                Message: "No Data",
-                RunningInstances: []
-              } : JSON.parse(value.experimentReportDto!.toString())
+
+            if(!value.experimentReportDto || typeof value.experimentReportDto === 'string' )
+              value.experimentReportDto = !value.experimentReportDto ?
+                {
+                  Timestamp: "No Data",
+                  AverageLatency: -1,
+                  ErrorCount: -1,
+                  Message: "No Data",
+                  RunningInstances: []
+                } : JSON.parse(value.experimentReportDto!.toString())
 
             let experimentDto =  (<ExperimentReportDto>value.experimentReportDto!)
 

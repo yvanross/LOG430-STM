@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "l8rDFCaFpDlPK9Di5jMqFszXNagZDDTfZw0K1qRJYpw7vc+JYOnGYuIrTaXdCM6sbMWjSRIdIZaFQKlzU8PTNw==",
+  "dgSpecHash": "seqnn05s7LwA54e6TRqLBA7WYuaGvDlcYV6uQgcLk4//Vb7nGsJsYKvzHq7KRXetM7tISG1A2VQkTxS7CIIquw==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\STMTests\\STMTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\coverlet.collector\\3.2.0\\coverlet.collector.3.2.0.nupkg.sha512",
-    "C:\\Users\\david\\.nuget\\packages\\google.protobuf\\3.22.0\\google.protobuf.3.22.0.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\google.protobuf\\3.23.0\\google.protobuf.3.23.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.codecoverage\\17.5.0\\microsoft.codecoverage.17.5.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",

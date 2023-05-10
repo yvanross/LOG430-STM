@@ -16,6 +16,8 @@ using MqContracts;
 using RabbitMQ.Client;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using System;
+using NodeController.Controllers.Mq;
 
 namespace Configuration
 {
@@ -62,7 +64,7 @@ namespace Configuration
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.Converters.Add(new ChaosConfigDictionaryConverter());
-            }).PartManager.ApplicationParts.Add(new AssemblyPart(typeof(DebugController).Assembly));
+            }).PartManager.ApplicationParts.Add(new AssemblyPart(typeof(RoutingController).Assembly));
 
             services.AddEndpointsApiExplorer();
 
@@ -91,6 +93,8 @@ namespace Configuration
                 services.AddScoped<Routing>();
 
                 services.AddScoped<ResourceManagementService>();
+
+                services.AddScoped<PlannedResourcesUpdate>();
             }
 
             static void Infrastructure(IServiceCollection services)

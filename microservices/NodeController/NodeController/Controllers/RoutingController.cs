@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace NodeController.Controllers
 {
     [ApiController]
-    [Route("[controller]/[action]")]
+    [Route("[controller]")]
     public class RoutingController : ControllerBase
     {
         private readonly Routing _routing;
@@ -20,9 +20,9 @@ namespace NodeController.Controllers
             _routing = routing;
         }
 
-        [HttpGet]
+        [HttpGet("{serviceType}")]
         [ActionName(nameof(RouteByServiceType))]
-        public ActionResult<IEnumerable<RoutingData>> RouteByServiceType(string caller, string serviceType, LoadBalancingMode mode)
+        public ActionResult<IEnumerable<RoutingData>> RouteByServiceType([FromRoute] string serviceType, string caller, LoadBalancingMode mode)
         {
             return Ok(Try.WithConsequenceAsync(() =>
             {

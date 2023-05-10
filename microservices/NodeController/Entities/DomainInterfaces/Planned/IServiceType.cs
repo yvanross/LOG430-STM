@@ -10,5 +10,5 @@ public interface IServiceType
 
     string ArtifactType { get; set; }
 
-    bool IsPodSidecar { get; set; }
+    string DnsAccessibilityModifier { get; set; }
 }

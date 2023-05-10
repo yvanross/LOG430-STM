@@ -7,7 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["Nuget/Ambassador.*.nupkg", "Controllers/"]
+COPY ["Nuget/ServiceMeshHelper.*.nupkg", "Controllers/"]
 COPY ["TripComparator/Controllers/nuget.config", ""]
 COPY ["TripComparator/Controllers/Controllers.csproj", "Controllers/"]
 COPY ["TripComparator/ApplicationLogic/ApplicationLogic.csproj", "ApplicationLogic/"]

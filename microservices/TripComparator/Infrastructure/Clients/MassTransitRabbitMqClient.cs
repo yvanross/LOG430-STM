@@ -1,36 +1,35 @@
 ﻿using ApplicationLogic.Interfaces;
+using ApplicationLogic.Interfaces.Policies;
 using Entities.DomainInterfaces;
 using MassTransit;
 using MqContracts;
 
-namespace TripComparator.External;
+namespace Infrastructure.Clients;
 
 public class MassTransitRabbitMqClient : IDataStreamWriteModel
 {
     private readonly IPublishEndpoint _publishEndpoint;
+    private readonly IBackOffRetryPolicy<MassTransitRabbitMqClient> _backOffRetry;
 
-    public MassTransitRabbitMqClient(IPublishEndpoint publishEndpoint)
+    public MassTransitRabbitMqClient(IPublishEndpoint publishEndpoint, IBackOffRetryPolicy<MassTransitRabbitMqClient> backOffRetry)
     {
         _publishEndpoint = publishEndpoint;
+        _backOffRetry = backOffRetry;
     }
 
     public async Task Produce(IBusPositionUpdated busPositionUpdated)
     {
-        try
+        await _backOffRetry.ExecuteAsync(async () =>
         {
             await _publishEndpoint.Publish(new BusPositionUpdated()
-            {
-                Message = busPositionUpdated.Message,
-                Seconds = busPositionUpdated.Seconds,
-            },
-            x =>
-            {
-                x.SetRoutingKey("trip_comparison.response");
-            });
-        }
-        catch(Exception e)
-        {
-            Console.WriteLine(e);
-        }
+                {
+                    Message = busPositionUpdated.Message,
+                    Seconds = busPositionUpdated.Seconds,
+                },
+                x =>
+                {
+                    x.SetRoutingKey("trip_comparison.response");
+                });
+        }).ConfigureAwait(false);
     }
 }

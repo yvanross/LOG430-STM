@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Text.RegularExpressions;
 using ApplicationLogic.Interfaces.Dao;
 using Entities.BusinessObjects.Live;
 using Entities.BusinessObjects.States;
@@ -10,26 +11,16 @@ namespace ApplicationLogic.Usecases;
 
 public class Routing
 {
-    private readonly IPodReadService _readServiceService;
+    private readonly IPodReadService _podReadService;
 
-    public Routing(IPodReadService readServiceService)
+    public Routing(IPodReadService podReadService)
     {
-        _readServiceService = readServiceService;
+        _podReadService = podReadService;
     }
 
-    public IEnumerable<RoutingData> RouteByDestinationType(string serviceSourceId, string type, LoadBalancingMode mode)
+    public IEnumerable<RoutingData> RouteByDestinationType(string sourceServiceId, string destinationServiceType, LoadBalancingMode mode)
     {
-        var possibleTargets = HandlePodLocalRouting().Where(service => service.Id.Equals(serviceSourceId) is false).ToList();
-
-        if (possibleTargets.Count < 1)
-        {
-            var podTypes = _readServiceService.GetAllPodTypes().ToDictionary(k => k.Type);
-            var podInstances = _readServiceService.GetAllPods();
-
-            possibleTargets = GetPossibleCommunicationEntryPoints(podTypes, podInstances)
-                .Where(service => service.Id.Equals(serviceSourceId) is false)
-                .Where(s => s.Type.Equals(type)).ToList();
-        }
+        var possibleTargets = GetPossibleTargets(destinationServiceType).ToList();
 
         possibleTargets = LoadBalancing(possibleTargets, mode);
 
@@ -41,33 +32,80 @@ public class Routing
             };
         }
 
-        List<IServiceInstance> GetPossibleCommunicationEntryPoints(IDictionary<string, IPodType> podTypes, ImmutableList<IPodInstance> podInstances)
+        IEnumerable<IServiceInstance> GetPossibleTargets(string type)
         {
-            return podInstances.SelectMany(pod =>
-            {
-                if (podTypes[pod.Type].Gateway is { } gateway)
-                    return new[] { pod.ServiceInstances.FirstOrDefault(p => p.Type.Equals(gateway.Type)) };
+            var (destinationType, destinationNamespace) = GetDestinationNamespaceAndType(type);
 
-                return pod.ServiceInstances.ToArray();
-            }).Where(pod => pod is not null).ToList()!;
+            if (sourceServiceId.Equals("$*$") is false)
+            {
+                var sourcePod = GetSourcePod(sourceServiceId);
+
+                if (sourcePod is null) throw new ArgumentNullException(nameof(sourcePod));
+
+                var checkInLocalPod = CheckInLocalPod(sourcePod, destinationNamespace, destinationType);
+
+                if (checkInLocalPod.Any()) return checkInLocalPod;
+            }
+            
+            var destinationPodTypes = GetDestinationPodType(destinationNamespace, destinationType);
+
+            var destinationPodInstances = destinationPodTypes.SelectMany(podType => _podReadService.GetPodInstances(podType.Type));
+
+            var destinationServices = destinationPodInstances.SelectMany(podInstance => podInstance.ServiceInstances.Where(serviceInstance => serviceInstance.Type.Equals(destinationType)));
+            
+            return destinationServices;
         }
 
-        List<IServiceInstance> HandlePodLocalRouting()
+        (string destinationType, string destinationNamespace) GetDestinationNamespaceAndType(string type)
         {
-            var service = _readServiceService.GetServiceById(serviceSourceId);
+            var namespaceAndType = type.Split('.', StringSplitOptions.TrimEntries);
 
-            if (string.IsNullOrEmpty(service?.PodId) is false && _readServiceService.GetPodById(service.PodId) is { } pod)
-            {
-                var target = pod.ServiceInstances.Where(serviceInstance => serviceInstance.Type.Equals(type));
+            if (namespaceAndType.Any() is false || namespaceAndType.Length > 2)
+                throw new InvalidDataException("Target not well formatted, accepted formats: podName.destinationServiceType or destinationServiceType");
 
-                return target.ToList();
-            }
+            var destinationType = namespaceAndType.Last();
 
-            return new List<IServiceInstance>();
+            var destinationNamespace = namespaceAndType.Length < 2 ? string.Empty : namespaceAndType[0];
+
+            return (destinationType, destinationNamespace);
+        }
+
+        IPodInstance? GetSourcePod(string sourceId)
+        {
+            var podId = _podReadService.GetServiceById(sourceId)?.PodId;
+
+            return podId is null ? null : _podReadService.GetPodById(podId);
+        }
+
+        IEnumerable<IServiceInstance> CheckInLocalPod(IPodInstance sourcePod, string destinationNamespace, string destinationType)
+        {
+            if (string.IsNullOrWhiteSpace(destinationNamespace) is false &&
+                sourcePod.Type.Equals(destinationNamespace, StringComparison.InvariantCultureIgnoreCase) is false) return Enumerable.Empty<IServiceInstance>();
+
+            return sourcePod.ServiceInstances.Where(si => si.Type.Equals(destinationType, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        IEnumerable<IPodType> GetDestinationPodType(string destinationNamespace, string destinationType)
+        {
+            return
+                from podType in _podReadService.GetAllPodTypes()
+                let computedDestinationNamespace = string.IsNullOrWhiteSpace(destinationNamespace)
+                    ? podType.Type
+                    : destinationNamespace
+                where
+                    EqualsIgnoreCase(podType.Type, computedDestinationNamespace) &&
+                    podType.ServiceTypes.Any(serviceType =>
+                        EqualsIgnoreCase(serviceType.Type, destinationType) &&
+                        (EqualsIgnoreCase(serviceType.DnsAccessibilityModifier, Enum.GetName(AccessibilityModifierEnum.Public)) ||
+                            (EqualsIgnoreCase(serviceType.DnsAccessibilityModifier, Enum.GetName(AccessibilityModifierEnum.Private)) &&
+                            EqualsIgnoreCase(computedDestinationNamespace, serviceType.Type))))
+                select podType;
+
+            bool EqualsIgnoreCase (string a, string b) => a.Equals(b, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 
-    public List<IServiceInstance> LoadBalancing(List<IServiceInstance>? services, LoadBalancingMode mode)
+    public List<IServiceInstance> LoadBalancing(List<IServiceInstance> services, LoadBalancingMode mode)
     {
         services = services.Where(t => t.ServiceStatus is ReadyState).ToList();
 

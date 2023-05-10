@@ -7,7 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["Nuget/Ambassador.*.nupkg", "RouteTimeProvider/"]
+COPY ["Nuget/ServiceMeshHelper.*.nupkg", "RouteTimeProvider/"]
 COPY ["RouteTimeProvider/RouteTimeProvider/nuget.config", ""]
 COPY ["RouteTimeProvider/RouteTimeProvider/RouteTimeProvider.csproj", "RouteTimeProvider/"]
 COPY ["RouteTimeProvider/ApplicationLogic/ApplicationLogic.csproj", "ApplicationLogic/"]
@@ -23,4 +23,4 @@ RUN dotnet publish "RouteTimeProvider/RouteTimeProvider.csproj" -c Release -o /a
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "RouteTimeProvider.dll"]
+ENTRYPOINT ["dotnet", "RouteTimeProvider.dll"]	

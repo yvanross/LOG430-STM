@@ -1,7 +1,4 @@
-﻿using Ambassador.BusinessObjects;
-using Microsoft.Extensions.Logging;
-
-namespace Ambassador.Health;
+﻿namespace ServiceMeshHelper.Services;
 
 internal class ContainerService
 {

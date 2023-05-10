@@ -1,19 +1,15 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using System.Text;
 using System.Threading.Channels;
-using Ambassador.BusinessObjects;
-using Ambassador.BusinessObjects.InterServiceRequests;
-using Ambassador.Health;
-using Ambassador.Services;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using System.Threading.Tasks;
 using RestSharp;
+using ServiceMeshHelper.Bo;
+using ServiceMeshHelper.Bo.InterServiceRequests;
+using ServiceMeshHelper.Services;
 
-namespace Ambassador.Usecases
+namespace ServiceMeshHelper.Usecases
 {
     internal class RestUC
     {
@@ -35,7 +31,7 @@ namespace Ambassador.Usecases
                     return ValueTask.CompletedTask;
                 }));
 
-            _ = Task.WhenAll(tasks).ContinueWith(_=>channel.Writer.Complete()).ConfigureAwait(false);
+            _ = Task.WhenAll(tasks).ContinueWith(_=>channel.Writer.Complete());
 
             return channel.Reader;
         }
@@ -58,7 +54,7 @@ namespace Ambassador.Usecases
                         return ValueTask.CompletedTask;
                     }));
 
-            _ = Task.WhenAll(tasks).ContinueWith(_ => channel.Writer.Complete()).ConfigureAwait(false);
+            _ = Task.WhenAll(tasks).ContinueWith(_ => channel.Writer.Complete());
 
             return channel.Reader;
         }

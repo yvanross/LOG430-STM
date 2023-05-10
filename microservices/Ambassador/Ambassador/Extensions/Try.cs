@@ -1,4 +1,4 @@
-﻿namespace Ambassador.Extensions;
+﻿namespace ServiceMeshHelper.Extensions;
 
 internal class Try
 {

@@ -1,9 +1,4 @@
-
-using Ambassador;
-using Ambassador.Controllers;
-using Ambassador.Usecases;
-
-namespace PLACEHOLDER
+namespace RouteTimeProvider
 {
     public class Program
     {

@@ -9,5 +9,5 @@ public enum ServiceLabelsEnum
     //Pod info
     POD_NAME,
     POD_ID,
-    IS_POD_SIDECAR
+    DNS
 }

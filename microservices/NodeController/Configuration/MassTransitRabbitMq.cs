@@ -5,7 +5,7 @@ using Infrastructure.Interfaces;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using MqContracts;
-using NodeController.Controllers;
+using NodeController.Controllers.Mq;
 using RabbitMQ.Client;
 
 namespace Configuration;
@@ -43,7 +43,7 @@ public class MassTransitRabbitMq : IMqConfigurator
 
         if (BusControl is not null) return;
 
-        var mq = _routing.RouteByDestinationType(string.Empty, _hostInfo.GetMQServiceName(), LoadBalancingMode.RoundRobin).FirstOrDefault();
+        var mq = _routing.RouteByDestinationType("$*$", _hostInfo.GetMQServiceName(), LoadBalancingMode.RoundRobin).FirstOrDefault();
 
         if (mq is not null)
         {

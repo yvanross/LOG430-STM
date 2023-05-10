@@ -237,7 +237,7 @@ public static class MockProvider
 
         serviceType.Setup(x => x.ArtifactType).Returns(Enum.GetName(ArtifactTypeEnum.Computation)!);
         serviceType.Setup(x => x.ContainerConfig).Returns(containerConfig.Object);
-        serviceType.Setup(x => x.IsPodSidecar).Returns(false);
+        serviceType.Setup(x => x.DnsAccessibilityModifier).Returns(false);
         serviceType.Setup(x => x.Type).Returns($"ServiceType{serviceTypeNb}");
         */
         return serviceType;

@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     "net6.0": {
-      "Google.Protobuf/3.22.0": {
+      "Google.Protobuf/3.23.0": {
         "type": "package",
         "compile": {
           "lib/net5.0/Google.Protobuf.dll": {
@@ -143,41 +143,53 @@
           "buildTransitive/netcoreapp3.1/_._": {}
         }
       },
-      "Entities/1.0.0": {
+      "Entities.Common/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "compile": {
-          "bin/placeholder/Entities.dll": {}
+          "bin/placeholder/Entities.Common.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Entities.dll": {}
+          "bin/placeholder/Entities.Common.dll": {}
         }
       },
-      "GTFS/1.0.0": {
+      "Entities.Gtfs/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
-          "Entities": "1.0.0",
-          "Google.Protobuf": "3.22.0"
+          "Entities.Common": "1.0.0"
         },
         "compile": {
-          "bin/placeholder/GTFS.dll": {}
+          "bin/placeholder/Entities.Gtfs.dll": {}
         },
         "runtime": {
-          "bin/placeholder/GTFS.dll": {}
+          "bin/placeholder/Entities.Gtfs.dll": {}
+        }
+      },
+      "Entities.Transit/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "Entities.Common": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Entities.Transit.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Entities.Transit.dll": {}
         }
       }
     }
   },
   "libraries": {
-    "Google.Protobuf/3.22.0": {
-      "sha512": "UE1TRMrBBBmnA8xbqzTvX4sSwn+2W/Xxrs/v5Aws/7C8RD6fY6STi1eAnCu7Ez93oHcPdpyStGnFel/aIB407Q==",
+    "Google.Protobuf/3.23.0": {
+      "sha512": "sH4Jlv/vJQCqvYR9//Ia6RaDgG1HMTFlddBhSz5sbr9rQYYUuJ38SpOBv/m3mKkRfC6/ZdUtFQNczvAiYnIeqw==",
       "type": "package",
-      "path": "google.protobuf/3.22.0",
+      "path": "google.protobuf/3.23.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "google.protobuf.3.22.0.nupkg.sha512",
+        "google.protobuf.3.23.0.nupkg.sha512",
         "google.protobuf.nuspec",
         "lib/net45/Google.Protobuf.dll",
         "lib/net45/Google.Protobuf.pdb",
@@ -431,20 +443,28 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Entities/1.0.0": {
+    "Entities.Common/1.0.0": {
       "type": "project",
-      "path": "../Entities/Entities.csproj",
-      "msbuildProject": "../Entities/Entities.csproj"
+      "path": "../Entities.Common/Entities.Common.csproj",
+      "msbuildProject": "../Entities.Common/Entities.Common.csproj"
     },
-    "GTFS/1.0.0": {
+    "Entities.Gtfs/1.0.0": {
       "type": "project",
-      "path": "../StaticGTFS/GTFS.csproj",
-      "msbuildProject": "../StaticGTFS/GTFS.csproj"
+      "path": "../Entities.Gtfs/Entities.Gtfs.csproj",
+      "msbuildProject": "../Entities.Gtfs/Entities.Gtfs.csproj"
+    },
+    "Entities.Transit/1.0.0": {
+      "type": "project",
+      "path": "../Entities.Transit/Entities.Transit.csproj",
+      "msbuildProject": "../Entities.Transit/Entities.Transit.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "GTFS >= 1.0.0",
+      "Entities.Common >= 1.0.0",
+      "Entities.Gtfs >= 1.0.0",
+      "Entities.Transit >= 1.0.0",
+      "Google.Protobuf >= 3.23.0",
       "Microsoft.Extensions.Logging >= 7.0.0"
     ]
   },
@@ -481,8 +501,14 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj": {
-              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\StaticGTFS\\GTFS.csproj"
+            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\Entities.Common\\Entities.Common.csproj": {
+              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\Entities.Common\\Entities.Common.csproj"
+            },
+            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\Entities.Gtfs\\Entities.Gtfs.csproj": {
+              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\Entities.Gtfs\\Entities.Gtfs.csproj"
+            },
+            "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\Entities.Transit\\Entities.Transit.csproj": {
+              "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\STM\\Entities.Transit\\Entities.Transit.csproj"
             }
           }
         }
@@ -497,6 +523,10 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "Google.Protobuf": {
+            "target": "Package",
+            "version": "[3.23.0, )"
+          },
           "Microsoft.Extensions.Logging": {
             "target": "Package",
             "version": "[7.0.0, )"

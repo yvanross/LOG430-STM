@@ -6510,9 +6510,9 @@
   "project": {
     "version": "1.0.66",
     "restore": {
-      "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj",
-      "projectName": "Ambassador",
-      "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\Ambassador.csproj",
+      "projectUniqueName": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\ServiceMeshHelper.csproj",
+      "projectName": "ServiceMeshHelper",
+      "projectPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\ServiceMeshHelper.csproj",
       "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\obj\\",
       "projectStyle": "PackageReference",

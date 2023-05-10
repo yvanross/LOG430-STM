@@ -1,4 +1,4 @@
-﻿namespace Ambassador;
+﻿namespace ServiceMeshHelper;
 
 public enum LoadBalancingMode
 {

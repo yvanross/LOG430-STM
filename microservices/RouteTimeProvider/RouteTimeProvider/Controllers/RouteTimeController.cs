@@ -1,13 +1,10 @@
-using System.Linq.Expressions;
-using Ambassador;
-using Ambassador.Usecases;
 using ApplicationLogic.Usecases;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using PLACEHOLDER.External;
 using Polly;
+using RouteTimeProvider.External;
 
-namespace PLACEHOLDER.Controllers
+namespace RouteTimeProvider.Controllers
 {
     [EnableCors("AllowOrigin")]
     [ApiController]
@@ -16,7 +13,7 @@ namespace PLACEHOLDER.Controllers
     {
         private readonly ILogger<RouteTimeController> _logger;
 
-        private readonly TravelUC _travelUc = new ();
+        private readonly CarTravel _carTravel = new ();
 
         public RouteTimeController(ILogger<RouteTimeController> logger)
         {
@@ -37,7 +34,7 @@ namespace PLACEHOLDER.Controllers
                         _logger.LogError($"Operation failed with exception: {exception.Message}. Waiting {delay} before next retry. Retry attempt {retryCount}.");
                     });
 
-            var travelTime = await retryPolicy.ExecuteAsync(() => _travelUc.GetTravelTimeInSeconds(startingCoordinates, destinationCoordinates, new TomTomClient()));
+            var travelTime = await retryPolicy.ExecuteAsync(() => _carTravel.GetTravelTimeInSeconds(startingCoordinates, destinationCoordinates, new TomTomClient()));
 
             return Ok(travelTime);
         }

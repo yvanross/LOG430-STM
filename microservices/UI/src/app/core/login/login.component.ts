@@ -14,7 +14,11 @@ export class LoginComponent implements OnInit
   constructor(private ingressService: IngressService) { }
 
   onSubmit() {
-    this.ingressService.login(this.username, this.password);
+    this.ingressService.login(
+      {
+        name: this.username,
+        secret: this.password
+      });
   }
 
   ngOnInit(): void {

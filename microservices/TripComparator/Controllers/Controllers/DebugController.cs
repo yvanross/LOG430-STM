@@ -1,7 +1,7 @@
 using ApplicationLogic.Usecases;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TripComparator.Controllers
+namespace Controllers.Controllers
 {
     [ApiController]
     [Route("[controller]")]
