@@ -1,13 +1,14 @@
-![log](./logo-logti.png)
+![log](./doc/assets/logo-logti.png)
 
 # LOG430 Architecture logicielle
 
 # Objectif des laboratoires
 
-L'objectif principal des 4 laboratoires du cours de LOG430 est de vous permettre de maitriser les concepts d'analsyses et de conception d'une architecture logicielle d'un système complexe. Cette architecture sera développé sur la base d'une architecture de microservices. Le système fourni offre un service permettant de faire la comparaison de temps de trajet à partir de donneés sur les autobus de la STM et de services externe fournissant des données sur les automobiles. 
+L'objectif principal des 4 laboratoires du cours de LOG430 est de vous permettre de maitriser les concepts d'analsyses et de conception d'une architecture logicielle d'un système complexe. Cette architecture sera développé sur la base d'une architecture de microservices. Le système fourni offre un service permettant de faire la comparaison de temps de trajet à partir de données sur les autobus de la STM et d'un service externe fournissant des données sur les automobiles. 
 
 # 4 laboratoires (30% de la note finale, 40% implémentation/60% documentation)
-## Laboratoire #1 #1 (3 semaines, 25%)
+
+## Laboratoire #1 (3 semaines, 25%)
   - Intégration des mécaniques de télémétrie
 
 ## Laboratoire #2 #2 (3 semaines, 25%) 
