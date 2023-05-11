@@ -1,12 +1,7 @@
 version: '3.8'
-x-variables:
-  ASPNETCORE_URLS: 'http://+:80'
 services:
   nodecontroller:
-    image: nodecontroller
-    build:
-      context: ../
-      dockerfile: NodeController/NodeController/Dockerfile
+    image: log430/nodecontroller:latest
     container_name: NodeController
     restart: always
     ports:
@@ -20,12 +15,12 @@ services:
       INGRESS_PORT: '${INGRESS_PORT}'
       SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
       NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
-      ASPNETCORE_URLS: 'http://+:80'
       MQ_SERVICE_NAME: EventStream
       CUSTOM_CONTAINER_PORTS_DISCOVERY: 5672
       BRIDGE_PORT: 32674
     depends_on:
       - event-store
+      
   event-store:
     container_name: EventStream
     image: 'rabbitmq:3.12-rc-management'
@@ -49,7 +44,6 @@ services:
     environment:
       SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
       NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
-      ASPNETCORE_URLS: 'http://+:80'
       ID: RouteTimeProvider
       API_KEY: '${TOMTOM}'
     ports:
@@ -57,8 +51,6 @@ services:
     labels:
       ARTIFACT_CATEGORY: Computation
       ARTIFACT_NAME: RouteTimeProvider
-      POD_NAME: Core
-      POD_ID: First
     depends_on:
       - nodecontroller
 
@@ -72,17 +64,13 @@ services:
     environment:
       SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
       NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
-      ASPNETCORE_URLS: 'http://+:80'
       ID: TripComparator
       MQ_SERVICE_NAME: EventStream
     ports:
       - '32773:80'
     labels:
       ARTIFACT_CATEGORY: Computation
-      REPLICAS: 1
       ARTIFACT_NAME: TripComparator
-      POD_NAME: Core
-      POD_ID: First
     depends_on:
       - nodecontroller
 
@@ -96,7 +84,6 @@ services:
     environment:
       SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
       NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
-      ASPNETCORE_URLS: 'http://+:80'
       ID: STM
       API_KEY: '${STM}'
     ports:
@@ -104,7 +91,5 @@ services:
     labels:
       ARTIFACT_CATEGORY: Computation
       ARTIFACT_NAME: STM
-      POD_NAME: Core
-      POD_ID: First
     depends_on:
       - nodecontroller
