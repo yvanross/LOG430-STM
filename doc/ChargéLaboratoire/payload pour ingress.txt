@@ -1,0 +1,42 @@
+{
+    "ChaosCodex": {
+        "ChaosConfigs": {
+            "[Computation, NodeController.Dto.Incoming.ChaosConfigDto]": {
+                "Key": 0,
+                "Value": {
+                    "NanoCpus": 0,
+                    "Memory": 0,
+                    "MaxNumberOfPods": 100,
+                    "KillRate": 0
+                }
+            },
+            "[Database, NodeController.Dto.Incoming.ChaosConfigDto]": {
+                "Key": 1,
+                "Value": {
+                    "NanoCpus": 0,
+                    "Memory": 0,
+                    "MaxNumberOfPods": 100,
+                    "KillRate": 0
+                }
+            },
+            "[Connector, NodeController.Dto.Incoming.ChaosConfigDto]": {
+                "Key": 2,
+                "Value": {
+                    "NanoCpus": 0,
+                    "Memory": 0,
+                    "MaxNumberOfPods": 100,
+                    "KillRate": 0
+                }
+            }
+        },
+        "AcceptableAverageLatencyInMs": 100000,
+        "EndTestAt": "2023-07-08T20:00:23.4011608Z",
+        "StartTestAt": "2023-04-09T20:00:23.4012561Z"
+    },
+    "Coordinates": {
+        "StartingCoordinates": "45.508275469136336, -73.57146349142822",
+        "DestinationCoordinates": "45.49797372251121, -73.58032551009549"
+    }
+}
+
+http://localhost:32769/Ingress/BeginExperiment?targetTeams=CL
