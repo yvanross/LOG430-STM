@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="BusinessObjects\**" />
+    <EmbeddedResource Remove="BusinessObjects\**" />
+    <None Remove="BusinessObjects\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DomainInterfaces\" />
+  </ItemGroup>
+
+</Project>
