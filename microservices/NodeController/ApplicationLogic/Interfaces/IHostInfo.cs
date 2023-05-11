@@ -2,6 +2,8 @@
 
 public interface IHostInfo
 {
+    bool IsIngressConfigValid();
+
     string GetTeamName();
 
     string GetIngressAddress();

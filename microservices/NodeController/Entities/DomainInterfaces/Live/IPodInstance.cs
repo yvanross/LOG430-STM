@@ -6,7 +6,7 @@ public interface IPodInstance : IEquatable<IPodInstance>
 {
     string Id { get; set; }
 
-    string? Type { get; init; }
+    string Type { get; init; }
 
     ImmutableList<IServiceInstance> ServiceInstances { get; set; }
 }

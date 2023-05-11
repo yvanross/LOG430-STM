@@ -46,7 +46,12 @@ public class ResourceManagementService
 
                 if (serviceType is not null)
                 {
-                    var creationId = await _environmentClient.IncreaseByOneNumberOfInstances(serviceType.ContainerConfig, $"{serviceType.Type}-{Random.Shared.Next(0, int.MaxValue)}", serviceInstance.Id, serviceInstance.PodId);
+                    var podTypeName = string.Empty;
+
+                    if (serviceType.Type.Equals(podInstance.Type) is false)
+                        podTypeName = podInstance.Type + "-";
+
+                    var creationId = await _environmentClient.IncreaseByOneNumberOfInstances(serviceType.ContainerConfig, $"{podTypeName}{serviceType.Type}-{Random.Shared.Next(0, int.MaxValue)}", serviceInstance.Id, serviceInstance.PodId);
 
                     var containerInfo = await _environmentClient.GetContainerInfo(creationId);
 
@@ -81,7 +86,12 @@ public class ResourceManagementService
 
                     if (serviceType is not null)
                     {
-                        var newContainerName = $"{newServiceInstance!.Type}-{Random.Shared.Next(0, int.MaxValue)}";
+                        var podTypeName = string.Empty;
+
+                        if (serviceType.Type.Equals(podType.Type) is false)
+                            podTypeName = podType.Type + "-";
+
+                        var newContainerName = $"{podTypeName}{newServiceInstance!.Type}-{Random.Shared.Next(0, int.MaxValue)}";
 
                         var creationInfo = await _environmentClient.IncreaseByOneNumberOfInstances(serviceType.ContainerConfig, newContainerName, newServiceInstance.Id, newServiceInstance.PodId);
 

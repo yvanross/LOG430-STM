@@ -3,8 +3,8 @@
 public enum ArtifactTypeEnum
 {
     Computation,
-    Database,
     Connector,
+    Database,
     Undefined,
     DEBUG
 }

@@ -20,20 +20,20 @@ public class PlannedResourcesUpdate
     public void IncreaseNumberOfPod(string? podTypeName)
     {
         if (_podReadService.GetPodType(podTypeName) is { } podType)
-            podType.MinimumNumberOfInstances++;
+            podType.NumberOfInstances++;
     }
 
     //todo not thread safe
     public void DecreaseNumberOfPod(string? podTypeName)
     {
         if (_podReadService.GetPodType(podTypeName) is { } podType)
-            podType.MinimumNumberOfInstances--;
+            podType.NumberOfInstances--;
     }
 
     public void SetNumberOfPod(string? podTypeName, int numberOfInstances)
     {
         if (_podReadService.GetPodType(podTypeName) is { } podType)
-            podType.MinimumNumberOfInstances = numberOfInstances;
+            podType.NumberOfInstances = numberOfInstances;
     }
 
     //expensive action

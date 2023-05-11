@@ -16,6 +16,7 @@ public class IngressClient : IIngressClient
     public IngressClient(IHostInfo hostInfo)
     {
         _hostInfo = hostInfo;
+
         _client = new($"http://{_hostInfo.GetIngressAddress()}:{_hostInfo.GetIngressPort()}");
     }
 

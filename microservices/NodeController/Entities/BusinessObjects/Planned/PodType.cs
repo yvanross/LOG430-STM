@@ -7,7 +7,7 @@ public class PodType : IPodType
 {
     public required string? Type { get; set; }
 
-    public required int MinimumNumberOfInstances { get; set; }
+    public required int NumberOfInstances { get; set; }
 
     public required ImmutableList<IServiceType> ServiceTypes { get; set; } = ImmutableList<IServiceType>.Empty;
 

@@ -209,7 +209,7 @@ public static class MockProvider
     {
         var podType = new Mock<IPodType>();
 
-        podType.Setup(x => x.MinimumNumberOfInstances).Returns(2);
+        podType.Setup(x => x.NumberOfInstances).Returns(2);
         podType.Setup(x => x.ServiceTypes)
             .Returns(ImmutableList<IServiceType>.Empty.Add(GetServiceTypeMock(1).Object)
                 .Add(GetServiceTypeMock(2).Object));
@@ -319,7 +319,7 @@ public static class MockProvider
 
         containerInfo.Labels.TryAdd(ServiceLabelsEnum.ARTIFACT_CATEGORY, "Computation");
         containerInfo.Labels.TryAdd(ServiceLabelsEnum.ARTIFACT_NAME, $"{podTypeNb}");
-        containerInfo.Labels.TryAdd(ServiceLabelsEnum.MINIMUM_NUMBER_OF_INSTANCES, "2");
+        containerInfo.Labels.TryAdd(ServiceLabelsEnum.REPLICAS, "2");
         containerInfo.Labels.TryAdd(ServiceLabelsEnum.POD_ID, $"PodId{podInstanceNb}");
         containerInfo.Labels.TryAdd(ServiceLabelsEnum.POD_NAME, $"PodType{podTypeNb}");
 

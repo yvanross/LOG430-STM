@@ -8,12 +8,12 @@ namespace NodeController.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ResourceController : ControllerBase
+    public class ResourcesController : ControllerBase
     {
-        private readonly ILogger<ResourceController> _logger;
+        private readonly ILogger<ResourcesController> _logger;
         private readonly PlannedResourcesUpdate _plannedResources;
 
-        public ResourceController(ILogger<ResourceController> logger, PlannedResourcesUpdate plannedResources)
+        public ResourcesController(ILogger<ResourcesController> logger, PlannedResourcesUpdate plannedResources)
         {
             _logger = logger;
             _plannedResources = plannedResources;

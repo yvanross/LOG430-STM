@@ -1,4 +1,6 @@
-﻿namespace ServiceMeshHelper.Bo.InterServiceRequests;
+﻿using System.Collections.Generic;
+
+namespace ServiceMeshHelper.Bo.InterServiceRequests;
 
 public class ServiceRoutingRequest
 {

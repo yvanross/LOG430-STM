@@ -103,8 +103,8 @@ namespace ApplicationLogic.Usecases
                 {
                     _podWriteService.AddOrUpdatePodType(new PodType()
                     {
-                        Type = GetPodTypeName(container.CuratedInfo),
-                        MinimumNumberOfInstances = GetMinimumNumberOfInstances(container.CuratedInfo.Labels),
+                        Type = podTypeName,
+                        NumberOfInstances = Math.Max(podType?.NumberOfInstances ?? 0, GetNumberOfInstances(container.CuratedInfo.Labels)),
                         ServiceTypes = podType?.ServiceTypes.Add(newServiceType) ?? ImmutableList<IServiceType>.Empty.Add(newServiceType),
                     });
                 }
@@ -169,12 +169,12 @@ namespace ApplicationLogic.Usecases
         {
             var value = GetLabelValue(ServiceLabelsEnum.ARTIFACT_CATEGORY, labels);
 
-            return string.IsNullOrEmpty(value) ? nameof(ArtifactTypeEnum.Undefined) : value;
+            return string.IsNullOrEmpty(value) ? throw new Exception("Artifact category not defined in compose") : value;
         }
 
-        private static int GetMinimumNumberOfInstances(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
+        private static int GetNumberOfInstances(ConcurrentDictionary<ServiceLabelsEnum, string> labels)
         {
-            uint.TryParse(GetLabelValue(ServiceLabelsEnum.MINIMUM_NUMBER_OF_INSTANCES, labels), out var nbInstances);
+            uint.TryParse(GetLabelValue(ServiceLabelsEnum.REPLICAS, labels), out var nbInstances);
             
             return Convert.ToInt32(nbInstances);
         }

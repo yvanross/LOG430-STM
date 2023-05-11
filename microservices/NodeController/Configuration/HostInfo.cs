@@ -35,8 +35,6 @@ public class HostInfo : IHostInfo
 
     private static readonly string ContainerId;
 
-    private static bool _secure = true;
-   
     private static bool _dirty = false;
     
     static HostInfo()
@@ -62,6 +60,13 @@ public class HostInfo : IHostInfo
         {
             throw ex;
         }
+    }
+
+    public bool IsIngressConfigValid()
+    {
+        return (string.IsNullOrWhiteSpace(GetIngressAddress()) ||
+                string.IsNullOrWhiteSpace(GetIngressPort()) ||
+                string.IsNullOrWhiteSpace(GetBridgePort())) is false;
     }
 
     public string GetTeamName()

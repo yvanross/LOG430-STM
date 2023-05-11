@@ -27,13 +27,15 @@ public class MassTransitRabbitMq : IMqConfigurator
 
     public IBusControl GetPublishEndpoint()
     {
-        if(BusControl is null) throw new ArgumentNullException(nameof(BusControl));
+        if (BusControl is null) throw new ArgumentNullException(nameof(BusControl));
 
         return BusControl;
     }
 
     public async Task Configure()
     {
+        if (_hostInfo.IsIngressConfigValid() is false) return;
+
         if (BusControl is not null && BusControl.CheckHealth().Status.Equals(BusHealthStatus.Unhealthy))
         {
             await BusControl.StopAsync();

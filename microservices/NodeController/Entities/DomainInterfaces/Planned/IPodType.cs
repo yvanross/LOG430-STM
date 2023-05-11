@@ -6,7 +6,7 @@ public interface IPodType
 {
     string? Type { get; set; }
 
-    int MinimumNumberOfInstances { get; set; }
+    int NumberOfInstances { get; set; }
 
     ImmutableList<IServiceType> ServiceTypes { get; set; }
 }

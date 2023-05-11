@@ -1,5 +1,7 @@
-﻿using ApplicationLogic.Usecases;
+﻿using ApplicationLogic.Interfaces;
+using ApplicationLogic.Usecases;
 using Entities.DomainInterfaces.ResourceManagement;
+using MassTransit;
 using Microsoft.Extensions.Logging;
 using Monitor = ApplicationLogic.Usecases.Monitor;
 
@@ -12,27 +14,30 @@ public class TaskScheduling
     private readonly Ingress _ingress;
     private readonly ServicePoolDiscovery _servicePool;
     private readonly Monitor _monitor;
+    private readonly IHostInfo _hostInfo;
 
-    public TaskScheduling(ILogger<TaskScheduling> logger, IScheduler scheduler, Ingress ingress, ServicePoolDiscovery servicePool, Monitor monitor)
+    public TaskScheduling(ILogger<TaskScheduling> logger, IScheduler scheduler, Ingress ingress, ServicePoolDiscovery servicePool, Monitor monitor, IHostInfo hostInfo)
     {
         _logger = logger;
         _scheduler = scheduler;
         _ingress = ingress;
         _servicePool = servicePool;
         _monitor = monitor;
+        _hostInfo = hostInfo;
     }
 
     public void ScheduleRecurringTasks()
     {
         _logger.LogInformation("# Schedule Recurring Tasks #");
 
-        _ = _ingress.Register();
-
-        _logger.LogInformation("# Preparation Complete, scheduling... #");
+        if (_hostInfo.IsIngressConfigValid())
+        {
+            _ = _ingress.Register();
+            _scheduler.TryAddTask(nameof(_ingress.HeartBeat), _ingress.HeartBeat);
+        }
 
         _scheduler.TryAddTask(nameof(_servicePool.DiscoverServices), _servicePool.DiscoverServices);
         _scheduler.TryAddTask(nameof(_monitor.RemoveOrReplaceDeadPodsFromModel), _monitor.RemoveOrReplaceDeadPodsFromModel);
         _scheduler.TryAddTask(nameof(_monitor.MatchInstanceDemandOnPods), _monitor.MatchInstanceDemandOnPods);
-        _scheduler.TryAddTask(nameof(_ingress.HeartBeat), _ingress.HeartBeat);
     }
 }

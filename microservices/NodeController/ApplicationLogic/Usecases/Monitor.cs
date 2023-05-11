@@ -39,11 +39,9 @@ namespace ApplicationLogic.Usecases
             {
                 var podCount = _readServiceService.GetPodInstances(podType.Type)?.Count;
 
-                if (podCount < podType.MinimumNumberOfInstances)
+                if (podCount < podType.NumberOfInstances)
                 {
                     await _resourceManagementService.IncreaseNumberOfPodInstances(podType.Type).ConfigureAwait(false);
-
-                    _logger.LogCritical("matching pod demand...");
                 }
             }
         }
@@ -60,21 +58,17 @@ namespace ApplicationLogic.Usecases
 
                 foreach (var podInstance in allPods)
                 {
-                    var minNumberOfInstances = _readServiceService.GetPodType(podInstance.Type)!.MinimumNumberOfInstances;
+                    var minNumberOfInstances = _readServiceService.GetPodType(podInstance.Type)!.NumberOfInstances;
 
                     if (IsAnyPodServiceDown(podInstance, runningContainerIds))
                     {
                         if (IsNumberOfRunningInstancesGreaterThanRequired(podInstance, minNumberOfInstances))
                         {
                             await _resourceManagementService.RemovePodInstance(podInstance).ConfigureAwait(false);
-
-                            _logger.LogCritical("i killed a pod because we had too many already");
                         }
                         else
                         {
                             await _resourceManagementService.ReplacePodInstance(podInstance).ConfigureAwait(false);
-
-                            _logger.LogCritical("i replaced a pod because we think it was dead");
                         }
                     }
 
@@ -108,7 +102,7 @@ namespace ApplicationLogic.Usecases
 
             bool IsNumberOfRunningInstancesGreaterThanRequired(IPodInstance podInstance, int minNumberOfInstances)
             {
-                var count = _readServiceService.GetServiceInstances(podInstance.Type)!.Count;
+                var count = _readServiceService.GetPodInstances(podInstance.Type)!.Count;
 
                 return count > minNumberOfInstances;
             }

@@ -9,6 +9,7 @@ using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using MqContracts;
 using Polly;
 using RabbitMQ.Client;
@@ -59,11 +60,15 @@ namespace Configuration
         {
             ConfigureMassTransit(services).Wait();
 
-            services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(DebugController).Assembly));
+            services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(CompareTripController).Assembly));
 
             services.AddEndpointsApiExplorer();
 
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TripComparator", Version = "v1" });
+                c.EnableAnnotations();
+            });
 
             services.AddSingleton<IHostInfo, HostInfo>();
 

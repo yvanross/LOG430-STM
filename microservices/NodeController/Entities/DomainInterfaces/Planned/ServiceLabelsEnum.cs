@@ -5,7 +5,7 @@ public enum ServiceLabelsEnum
     //Service type info
     ARTIFACT_NAME,
     ARTIFACT_CATEGORY,
-    MINIMUM_NUMBER_OF_INSTANCES,
+    REPLICAS,
     //Pod info
     POD_NAME,
     POD_ID,

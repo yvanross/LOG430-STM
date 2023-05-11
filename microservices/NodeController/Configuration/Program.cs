@@ -18,6 +18,8 @@ using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using System;
 using NodeController.Controllers.Mq;
+using NuGet.Packaging.Signing;
+using Moq;
 
 namespace Configuration
 {
@@ -72,7 +74,7 @@ namespace Configuration
 
             ApplicationLogic(services);
 
-            Infrastructure(services);
+            Infrastructure(services, new HostInfo());
 
             services.AddSingleton<TaskScheduling>();
 
@@ -97,33 +99,96 @@ namespace Configuration
                 services.AddScoped<PlannedResourcesUpdate>();
             }
 
-            static void Infrastructure(IServiceCollection services)
+            static void Infrastructure(IServiceCollection services, IHostInfo hostInfo)
             {
                 services.AddSingleton<IHostInfo, HostInfo>();
                 
                 services.AddSingleton<IMqConfigurator, MassTransitRabbitMq>();
 
-                services.AddScoped<ISystemStateWriteService, InfluxDbWriteService>();
-                
-                services.AddScoped<IHeartbeatService, MassTransitRabbitMqClient>();
+                if (hostInfo.IsIngressConfigValid())
+                {
+                    services.AddScoped<IDataStreamService, MassTransitRabbitMqClient>();
 
-                services.AddScoped<IDataStreamService, MassTransitRabbitMqClient>();
+                    services.AddScoped<IHeartbeatService, MassTransitRabbitMqClient>();
+
+                    services.AddScoped<IIngressClient, IngressClient>();
+
+                    services.AddScoped<ISystemStateWriteService, InfluxDbWriteService>();
+
+                }
+                else
+                {
+                    services.AddScoped(typeof(IDataStreamService), _ => GetDataStreamServiceMock());
+
+                    services.AddScoped(typeof(IHeartbeatService), _ => GetHeartbeatServiceMock());
+
+                    services.AddScoped(typeof(IIngressClient), _ => GetIngressClientMock());
+
+                    services.AddScoped(typeof(ISystemStateWriteService), _ => GetInfluxDbWriteServiceMock());
+                }
 
                 services.AddScoped<IPodReadService, PodReadService>();
 
                 services.AddScoped<IPodWriteService, PodWriteService>();
 
                 services.AddScoped<IEnvironmentClient, LocalDockerClient>();
-
-                services.AddScoped<IIngressClient, IngressClient>();
             }
+        }
+
+        private static IDataStreamService GetDataStreamServiceMock()
+        {
+            var mock = new Mock<IDataStreamService>();
+
+            var any = It.IsAny<ICoordinates>();
+
+            mock.Setup(e => e.Produce(any));
+
+            return mock.Object;
+        }
+
+        private static IHeartbeatService GetHeartbeatServiceMock()
+        {
+            var mock = new Mock<IHeartbeatService>();
+
+            var any = It.IsAny<HeartBeatDto>();
+
+            mock.Setup(e => e.Produce(any));
+
+            return mock.Object;
+        }
+
+        private static IIngressClient GetIngressClientMock()
+        {
+            var mock = new Mock<IIngressClient>();
+
+            var any = It.IsAny<string>();
+
+            mock.Setup(e => e.Subscribe(any, any, any, any, any, any));
+            mock.Setup(e => e.GetLogStoreAddressAndPort(any));
+
+            return mock.Object;
+        }
+
+        private static ISystemStateWriteService GetInfluxDbWriteServiceMock()
+        {
+            var mock = new Mock<ISystemStateWriteService>();
+
+            var any = It.IsAny<IExperimentReport>();
+
+            mock.Setup(e => e.Log(any));
+
+            return mock.Object;
         }
 
         private static void ConfigureMassTransit(IServiceCollection services)
         {
             var hostInfo = new HostInfo();
 
-            var reformattedAddress = $"rabbitmq://{hostInfo.GetIngressAddress()}:{hostInfo.GetBridgePort()}";
+            var ingressHost = hostInfo.GetIngressAddress();
+
+            var ingressPort = hostInfo.GetBridgePort();
+
+            var reformattedAddress = $"rabbitmq://{ingressHost}:{ingressPort}";
 
             var baseQueueName = $"ingress_to_{hostInfo.GetTeamName()}_{hostInfo.GetUsername()}_node_controller.command";
 
@@ -131,6 +196,8 @@ namespace Configuration
 
             services.AddMassTransit(x =>
             {
+                if (hostInfo.IsIngressConfigValid() is false) return;
+
                 x.AddConsumer<ExperimentMqController>();
                 x.AddConsumer<BusPositionUpdatedMqController>();
                 x.AddConsumer<AckErrorMqController>();

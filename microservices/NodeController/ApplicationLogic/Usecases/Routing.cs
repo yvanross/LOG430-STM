@@ -98,7 +98,7 @@ public class Routing
                         EqualsIgnoreCase(serviceType.Type, destinationType) &&
                         (EqualsIgnoreCase(serviceType.DnsAccessibilityModifier, Enum.GetName(AccessibilityModifierEnum.Public)) ||
                             (EqualsIgnoreCase(serviceType.DnsAccessibilityModifier, Enum.GetName(AccessibilityModifierEnum.Private)) &&
-                            EqualsIgnoreCase(computedDestinationNamespace, serviceType.Type))))
+                            EqualsIgnoreCase(podType.Type, serviceType.Type))))
                 select podType;
 
             bool EqualsIgnoreCase (string a, string b) => a.Equals(b, StringComparison.InvariantCultureIgnoreCase);

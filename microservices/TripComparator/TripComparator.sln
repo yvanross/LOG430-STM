@@ -15,13 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration", "Configurat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Controllers", "Controllers\Controllers.csproj", "{F1F80136-E3BB-44F7-9642-AEDC78339ADF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 0", "Layer 0", "{B09705E9-21CB-4351-8F6B-0B151F5D83EE}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 0 - Domain", "Layer 0 - Domain", "{B09705E9-21CB-4351-8F6B-0B151F5D83EE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 1", "Layer 1", "{D2EA1947-8860-419B-9920-76230BAF78E4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 1 - Application", "Layer 1 - Application", "{D2EA1947-8860-419B-9920-76230BAF78E4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 2", "Layer 2", "{C43FE91E-279B-4699-8106-6EC8C2EBEAA1}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 2 - Adapters", "Layer 2 - Adapters", "{C43FE91E-279B-4699-8106-6EC8C2EBEAA1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 3", "Layer 3", "{8FCD94A4-EEBA-4422-BBC1-A539CF893774}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 3 - Cross-Cutting Concerns", "Layer 3 - Cross-Cutting Concerns", "{8FCD94A4-EEBA-4422-BBC1-A539CF893774}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
