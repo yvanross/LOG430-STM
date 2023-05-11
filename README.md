@@ -41,6 +41,12 @@ Vous êtes nouvellement embauché par l'organisation LOG430STM pour améliorer l
 - Le chargé de cours crée les équipes de laboratoires.
 
 ## Contraintes de réalisation
+### Services obligatoires
+  - TripComparator
+  - RouteTimeProvider
+  - STM
+### Service Externes
+  - API de la STM
 ### Language¶
 Nous n’imposons aucune contrainte au niveau du langage de développement utilisé à l'exception que celui-ci doit être de type **Orienté objet**.
 
