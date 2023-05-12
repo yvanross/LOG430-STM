@@ -60,11 +60,11 @@ Utiliser dockstation pour trouver les images docker suivant et les intégrer dan
 
 
 ## Perturbation de l'infrastructure
-En sachant que la variable docker NanoCpus à 100000000 est l'équivalent de 0,1 cœur de processeur, réaliser vos analyses télémétriques en fonction de cette variable à
-- [ ] 0.0001 cœur
-- [ ] 0.001 cœur
-- [ ] 0.01 cœurs
+En sachant que la variable docker NanoCpus à 1000000000 est l'équivalent de 1 cœur de processeur, réaliser vos analyses télémétriques en fonction de cette variable à
+- [ ] 0.01 cœur
+- [ ] 0.1 cœur
 - [ ] 1 cœurs
+- [ ] 2 cœurs
 - [ ] 8 cœurs
 
 ## Proposer des solutions pour améliorer l'architecture du système
