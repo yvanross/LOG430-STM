@@ -57,8 +57,6 @@ services:
     labels:
       ARTIFACT_CATEGORY: Computation
       ARTIFACT_NAME: RouteTimeProvider
-      POD_NAME: Core
-      POD_ID: First
     depends_on:
       - nodecontroller
 
@@ -79,10 +77,7 @@ services:
       - '32773:80'
     labels:
       ARTIFACT_CATEGORY: Computation
-      REPLICAS: 1
       ARTIFACT_NAME: TripComparator
-      POD_NAME: Core
-      POD_ID: First
     depends_on:
       - nodecontroller
 
@@ -104,7 +99,5 @@ services:
     labels:
       ARTIFACT_CATEGORY: Computation
       ARTIFACT_NAME: STM
-      POD_NAME: Core
-      POD_ID: First
     depends_on:
       - nodecontroller

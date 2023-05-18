@@ -8,6 +8,7 @@ using ApplicationLogic.Interfaces;
 using Entities.BusinessObjects.Live;
 using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
+using IO.Swagger.Model;
 using IO.Swagger.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -56,6 +57,30 @@ public class LocalDockerClient : IEnvironmentClient
             var containers = JsonConvert.DeserializeObject<ContainerSummary[]>(res.Content);
 
             return containers.Select(c => c.Id).ToImmutableList();
+        });
+    }
+
+    public async Task<ImmutableList<string>?> GetVolumes()
+    {
+        var retryPolicy = Policy
+            .Handle<Exception>()
+            .WaitAndRetryAsync(2, (_) => TimeSpan.FromMilliseconds(100));
+
+        return await retryPolicy.ExecuteAsync(async () =>
+        {
+            var restRequest = new RestRequest("volumes");
+
+            restRequest.AddQueryParameter("filters", JsonConvert.SerializeObject(
+                new Dictionary<string, string>()
+                {
+                    { "dangling", "false" }
+                }));
+
+            var res = await _restClient.GetAsync(restRequest);
+
+            var volumesRes = JsonConvert.DeserializeObject<VolumeListResponse>(res.Content);
+
+            return volumesRes.Volumes.ConvertAll(v=>v.Name).ToImmutableList();
         });
     }
 
@@ -279,6 +304,22 @@ public class LocalDockerClient : IEnvironmentClient
                 
                 return Task.CompletedTask;
             });
+    }
+
+    public async Task RemoveVolume(string name)
+    {
+        var retryPolicy = Policy
+            .Handle<Exception>()
+            .WaitAndRetryAsync(2, (_) => TimeSpan.FromMilliseconds(100));
+
+        await retryPolicy.ExecuteAsync(async () =>
+        {
+            var restRequest = new RestRequest($"volumes/{name}");
+
+            restRequest.AddQueryParameter("force", true);
+
+            var res = await _restClient.DeleteAsync(restRequest);
+        });
     }
 
     [MethodImpl(MethodImplOptions.NoOptimization)]

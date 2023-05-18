@@ -39,7 +39,7 @@ public class PlannedResourcesUpdate
     //expensive action
     public void SetGlobalCpu(long nanoCpus)
     {
-        if (_hostInfo.GetIsDirty())
+        if (_hostInfo.GetIsDirty() is false)
         {
             _podReadService.GetAllPods().ForEach(pod => _environmentClient.SetResources(pod, nanoCpus));
         }
