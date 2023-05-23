@@ -11,15 +11,16 @@ x-variables:
   NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
   ASPNETCORE_URLS: 'http://+:80'
 services:
-  #ui:
-  #  build:
-  #    context: ../
-  #    dockerfile: UI/Dockerfile
-  #  image: ui:latest
-  #  environment:
-  #    INGRESS_PORT: '${INGRESS_PORT}'
-  #  ports:
-  #    - 32668:80
+  ui:
+    container_name: UI
+    build:
+      context: ../UI
+      dockerfile: Dockerfile
+    image: ui:latest
+    environment:
+      INGRESS_PORT: '${INGRESS_PORT}'
+    ports:
+      - 32668:80
   ingress:
     image: ingress
     container_name: Ingress

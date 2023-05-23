@@ -14,4 +14,6 @@ public class ChaosConfigDto : IChaosConfig
     public int MaxNumberOfPods { get; set; }
 
     public int KillRate { get; set; }
+    
+    public int HardwareFailures { get; set; }
 }

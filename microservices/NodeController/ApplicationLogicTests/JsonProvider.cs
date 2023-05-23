@@ -38,8 +38,6 @@ public class JsonProvider
                         NanoCpus = 0
                     }
                 },
-
-                AcceptableAverageLatencyInMs = 100000,
                 EndTestAt = DateTime.UtcNow.AddDays(100),
                 StartTestAt = DateTime.UtcNow.AddDays(10),
             },

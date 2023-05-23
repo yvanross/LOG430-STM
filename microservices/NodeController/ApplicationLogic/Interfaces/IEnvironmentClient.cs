@@ -13,6 +13,8 @@ public interface IEnvironmentClient
 
     public Task RemoveContainerInstance(string containerId, bool quiet = false);
 
+    Task RemoveVolume(string name);
+
     Task<(ContainerInfo CuratedInfo, IContainerConfig RawConfig)> GetContainerInfo(string containerId);
 
     Task GarbageCollection();

@@ -7,8 +7,6 @@ public class ChaosCodexDto
 {
     public Dictionary<string, ChaosConfigDto> ChaosConfigs { get; set; }
 
-    public int AcceptableAverageLatencyInMs { get; set; }
-
     public DateTime EndTestAt { get; set; }
 
     public DateTime StartTestAt { get; set; }

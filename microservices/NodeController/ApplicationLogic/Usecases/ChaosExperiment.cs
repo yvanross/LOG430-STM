@@ -20,6 +20,8 @@ public class ChaosExperiment
     private IChaosCodex _codex;
 
     private int _killCount;
+    
+    private int _hardwareFailCount;
 
     public ChaosExperiment(IEnvironmentClient environmentClient, IPodReadService readServiceService, IPodWriteService writeServiceService, IDataStreamService streamService, ILogger<ChaosExperiment> logger)
     {
@@ -52,13 +54,17 @@ public class ChaosExperiment
                 var chaosConfig = kv.Value;
                 var category = Enum.GetName(kv.Key);
 
-                var func = (double x) => (chaosConfig.KillRate / 60.0) * (x / totalDuration);
+                var func = (double time, double parameter) => (parameter / 60.0) * (time / totalDuration);
 
-                var expectedKillCountAtThisMoment = DefiniteIntegralService.TrapezoidalRule(0, currentPoint, func);
+                var expectedKillCountAtThisMoment = DefiniteIntegralService.TrapezoidalRule(0, currentPoint, func, chaosConfig.KillRate);
+                
+                var expectedHardwareFailureCountAtThisMoment = DefiniteIntegralService.TrapezoidalRule(0, currentPoint, func, chaosConfig.HardwareFailures);
 
                 var memory = (long)(chaosConfig.Memory / completionPercentage);
 
                 var nanoCpus = (long)(chaosConfig.NanoCpus / completionPercentage);
+
+                await InduceHardwareFailures(category, expectedHardwareFailureCountAtThisMoment);
 
                 await ChaosMonkey(expectedKillCountAtThisMoment, chaosConfig.MaxNumberOfPods, category);
 
@@ -90,10 +96,55 @@ public class ChaosExperiment
 
             if (podToKill is not null)
             {
-                
                 await _resourceManagementService.RemovePodInstance(podToKill);
 
                 _killCount++;
+            }
+        }
+    }
+
+    private async Task InduceHardwareFailures(string? category, double expectedHardwareFailureCountAtThisMoment)
+    {
+        for (int i = _hardwareFailCount; i < expectedHardwareFailureCountAtThisMoment; i++)
+        {
+            var serviceTypeDict = _readServiceService.GetAllServiceTypes()
+                .Where(serviceType => serviceType.ArtifactType.Equals(category))
+                .ToDictionary(p => p.Type);
+
+            var volumeToFailName = serviceTypeDict
+                .Select(s => s.Value.ContainerConfig.Config.Mounts
+                    .MinBy(_ => Random.Shared.Next())?.Name)
+                .OfType<string>()
+                .MinBy(_ => Random.Shared.Next());
+
+            if (volumeToFailName is not null)
+            {
+                var serviceTypesToKill = _readServiceService.GetAllServiceTypes()
+                    .Where(st => st.ContainerConfig.Config.Mounts
+                        .Any(mount => mount.Name.Equals(volumeToFailName, StringComparison.InvariantCultureIgnoreCase)))
+                    .ToList();
+
+                var services = _readServiceService.GetAllServices()
+                    .Where(s => serviceTypesToKill
+                        .Any(st => st.Type.Equals(s.Type, StringComparison.InvariantCultureIgnoreCase)))
+                    .ToList();
+
+                foreach (var serviceToKill in services)
+                {
+                    var pod = _readServiceService.GetPodOfService(serviceToKill);
+
+                    if (pod is not null)
+                    {
+                        await _resourceManagementService.RemovePodInstance(pod);
+                    }
+                }
+
+                await _resourceManagementService.RemoveVolume(volumeToFailName);
+
+                if (services.Any())
+                {
+                    _hardwareFailCount++;
+                }
             }
         }
     }

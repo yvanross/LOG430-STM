@@ -4,8 +4,8 @@
       Realtime Updates
     </mat-card-title>
   </mat-card-header>
-  <mat-card-content>
-    <mat-table [dataSource]="dataSource">
+  <mat-card-content style=" display: flex; flex-direction: column;">
+    <mat-table style="overflow: auto;" [dataSource]="dataSource">
       <!-- Property 1 Column -->
       <ng-container matColumnDef="User">
         <mat-header-cell *matHeaderCellDef>User</mat-header-cell>
@@ -39,7 +39,7 @@
       </ng-container>
 
       <ng-container matColumnDef="AverageLatency">
-        <mat-header-cell *matHeaderCellDef>Average Latency (ms)</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>Av. Throughput (ms)</mat-header-cell>
         <mat-cell *matCellDef="let element">{{element.StateRequest.experimentReportDto.AverageLatency}}</mat-cell>
       </ng-container>
 

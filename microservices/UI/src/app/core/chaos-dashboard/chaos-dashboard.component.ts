@@ -20,7 +20,6 @@ export class ChaosDashboardComponent implements OnInit {
           Database: this.createChaosConfigGroup(this.defaultChaosConfig.ChaosConfigs.Database),
           Connector: this.createChaosConfigGroup(this.defaultChaosConfig.ChaosConfigs.Connector)
         }),
-        AcceptableAverageLatencyInMs: [this.defaultChaosConfig.AcceptableAverageLatencyInMs],
         EndTestAt: [this.defaultChaosConfig.EndTestAt],
         StartTestAt: [this.defaultChaosConfig.StartTestAt]
       }),
@@ -40,7 +39,8 @@ export class ChaosDashboardComponent implements OnInit {
         CPUs: [config.Value.NanoCpus / 1000000000],
         Memory: [config.Value.Memory * 0.000001],
         MaxNumberOfPods: [config.Value.MaxNumberOfPods],
-        KillRate: [config.Value.KillRate]
+        KillRate: [config.Value.KillRate],
+        HardwareFailures: [config.Value.HardwareFailures]
       })
     });
   }
@@ -58,22 +58,24 @@ export class ChaosDashboardComponent implements OnInit {
             NanoCpus: chaosData.ChaosCodex.ChaosConfigs.Computation.Value.CPUs * 1000000000,
             Memory: chaosData.ChaosCodex.ChaosConfigs.Computation.Value.Memory / 0.000001,
             MaxNumberOfPods: chaosData.ChaosCodex.ChaosConfigs.Computation.Value.MaxNumberOfPods,
-            KillRate: chaosData.ChaosCodex.ChaosConfigs.Computation.Value.KillRate
+            KillRate: chaosData.ChaosCodex.ChaosConfigs.Computation.Value.KillRate,
+            HardwareFailures: chaosData.ChaosCodex.ChaosConfigs.Computation.Value.HardwareFailures
           },
           Database: {
             NanoCpus: chaosData.ChaosCodex.ChaosConfigs.Database.Value.CPUs * 1000000000,
             Memory: chaosData.ChaosCodex.ChaosConfigs.Database.Value.Memory / 0.000001,
             MaxNumberOfPods: chaosData.ChaosCodex.ChaosConfigs.Database.Value.MaxNumberOfPods,
-            KillRate: chaosData.ChaosCodex.ChaosConfigs.Database.Value.KillRate
+            KillRate: chaosData.ChaosCodex.ChaosConfigs.Database.Value.KillRate,
+            HardwareFailures: chaosData.ChaosCodex.ChaosConfigs.Database.Value.HardwareFailures
           },
           Connector: {
             NanoCpus: chaosData.ChaosCodex.ChaosConfigs.Connector.Value.CPUs * 1000000000,
             Memory: chaosData.ChaosCodex.ChaosConfigs.Connector.Value.Memory / 0.000001,
             MaxNumberOfPods: chaosData.ChaosCodex.ChaosConfigs.Connector.Value.MaxNumberOfPods,
-            KillRate: chaosData.ChaosCodex.ChaosConfigs.Connector.Value.KillRate
+            KillRate: chaosData.ChaosCodex.ChaosConfigs.Connector.Value.KillRate,
+            HardwareFailures: chaosData.ChaosCodex.ChaosConfigs.Connector.Value.HardwareFailures
           }
         },
-        AcceptableAverageLatencyInMs: chaosData.ChaosCodex.AcceptableAverageLatencyInMs,
         EndTestAt: endTestAtLocal.toISOString(),
         StartTestAt: startTestAtLocal.toISOString()
       },
@@ -95,7 +97,8 @@ export class ChaosDashboardComponent implements OnInit {
           NanoCpus: 10000000000,
           Memory: 16000000000,
           MaxNumberOfPods: 100,
-          KillRate: 0
+          KillRate: 0,
+          HardwareFailures: 0
         }
       },
       Database: {
@@ -104,7 +107,8 @@ export class ChaosDashboardComponent implements OnInit {
           NanoCpus: 10000000000,
           Memory: 16000000000,
           MaxNumberOfPods: 100,
-          KillRate: 0
+          KillRate: 0,
+          HardwareFailures: 0
         }
       },
       Connector: {
@@ -113,11 +117,11 @@ export class ChaosDashboardComponent implements OnInit {
           NanoCpus: 10000000000,
           Memory: 16000000000,
           MaxNumberOfPods: 100,
-          KillRate: 0
+          KillRate: 0,
+          HardwareFailures: 0
         }
       }
     },
-    AcceptableAverageLatencyInMs: 100000,
     EndTestAt: '2023-07-08T20:00:23.4011608Z',
     StartTestAt: '2023-04-09T20:00:23.4012561Z'
   };

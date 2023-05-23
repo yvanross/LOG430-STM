@@ -32,7 +32,11 @@
                     </mat-form-field>
                     <mat-form-field appearance="outline">
                       <mat-label>Kills/Min</mat-label>
-                      <input matInput type="number" [max]="60" formControlName="KillRate">
+                      <input matInput type="number" [max]="60" [min]="0" formControlName="KillRate">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Hardware Failure/Min</mat-label>
+                      <input matInput type="number" [max]="60" [min]="0" formControlName="HardwareFailures">
                     </mat-form-field>
                   </div>
                 </div>
@@ -40,10 +44,6 @@
             </mat-tab-group>
           </div>
           <!-- Other ChaosCodex properties -->
-          <mat-form-field appearance="outline">
-            <mat-label>Acceptable Average Latency In Ms</mat-label>
-            <input matInput type="number" formControlName="AcceptableAverageLatencyInMs">
-          </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Start Test At</mat-label>
             <input matInput type="datetime-local" formControlName="StartTestAt">

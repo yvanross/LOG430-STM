@@ -21,4 +21,6 @@ public interface IChaosConfig
     /// Rate of artifact removal per minute
     /// </summary>
     public int KillRate { get; set; }
+    
+    public int HardwareFailures { get; set; }
 }

@@ -38,7 +38,6 @@ services:
       ARTIFACT_CATEGORY: Connector
       ARTIFACT_NAME: EventStream
       REPLICAS: 1
-
   routetimeprovider:
     container_name: RouteTimeProvider
     image: routetimeprovider
@@ -59,7 +58,8 @@ services:
       ARTIFACT_NAME: RouteTimeProvider
     depends_on:
       - nodecontroller
-
+    volumes:
+      - 'routetimeprovider-data:/data'
   tripcomparator:
     container_name: TripComparator
     image: tripcomparator
@@ -80,7 +80,6 @@ services:
       ARTIFACT_NAME: TripComparator
     depends_on:
       - nodecontroller
-
   stm:
     container_name: STM
     image: stm
@@ -101,3 +100,7 @@ services:
       ARTIFACT_NAME: STM
     depends_on:
       - nodecontroller
+    volumes:
+      - 'routetimeprovider-data:/data'
+volumes:
+  routetimeprovider-data: null

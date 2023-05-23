@@ -1,7 +1,8 @@
 # Stage 1: Build the Angular app
 FROM node:14 AS build
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY package.json ./
+COPY package-lock.json ./
 RUN npm ci
 COPY . .
 RUN npm run build

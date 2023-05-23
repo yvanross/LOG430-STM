@@ -58,7 +58,6 @@ export class IngressService {
             {
               responseType: 'text'
             })
-            .pipe(retry({delay : 1000}))
         ))
       .subscribe((response : string) => this.setToken(response.toString()));
 

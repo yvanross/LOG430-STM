@@ -148,4 +148,9 @@ public class ResourceManagementService
         _readServiceService.GetAllServiceTypes()
             .ForEach(serviceTypes => serviceTypes.ContainerConfig.Config.HostConfig.Memory = memory);
     }
+
+    public Task RemoveVolume(string volumeToFailName)
+    {
+        return _environmentClient.RemoveVolume(volumeToFailName);
+    }
 }

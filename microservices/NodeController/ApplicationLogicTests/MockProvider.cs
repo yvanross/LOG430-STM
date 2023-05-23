@@ -98,7 +98,6 @@ public static class MockProvider
             chaosConfigs.TryAdd(chaosConfig.Key, chaosConfig.Value);
         }
 
-        chaosCodex.Setup(x => x.AcceptableAverageLatencyInMs).Returns(100);
         chaosCodex.Setup(x => x.EndTestAt).Returns(DateTime.UtcNow.AddSeconds(2));
         chaosCodex.Setup(x => x.StartTestAt).Returns(DateTime.UtcNow);
         chaosCodex.Setup(x => x.ChaosConfigs).Returns(chaosConfigs);
