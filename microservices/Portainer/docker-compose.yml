@@ -3,9 +3,6 @@ x-conf:
   - env:
       - 'http://+:80'
       - EventStream
-  - vol:
-      - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
-      - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
 x-variables:
   SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
   NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
@@ -37,9 +34,6 @@ services:
       AUTH_SERVICE_PORT: 32671
       SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
       BRIDGE_PORT: 32674
-    volumes:
-      - '${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro'
-      - '${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro'
     depends_on:
       - bridge
   node-state-time-serie-storage:
