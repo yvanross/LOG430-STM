@@ -11,7 +11,7 @@ import {IAuthDto} from "../Dtos/IAuthDto";
 })
 export class IngressService {
 
-  private apiUrl = "http://localhost:"+environment.INGRESS_PORT;
+  private apiUrl = "http://"+environment.HOST+":"+environment.INGRESS_PORT;
 
   private token = new BehaviorSubject("");
 

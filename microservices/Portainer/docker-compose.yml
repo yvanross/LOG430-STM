@@ -16,6 +16,7 @@ services:
     image: ui:latest
     environment:
       INGRESS_PORT: '${INGRESS_PORT}'
+      HOST: '${SERVICES_ADDRESS}'
     ports:
       - 32668:80
   ingress:

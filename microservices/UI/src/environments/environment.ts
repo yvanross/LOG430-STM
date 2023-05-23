@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  INGRESS_PORT: "32669"
+  INGRESS_PORT: "32669",
+  HOST: "localhost"
 };
 
 /*
