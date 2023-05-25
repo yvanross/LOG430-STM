@@ -160,6 +160,6 @@ public class ChaosExperiment
             .MinBy(_ => Random.Shared.Next());
 
         if (pod is not null)
-            await _resourceManagementService.SetResources(pod, nanoCpus > 100000000 ? 0 : nanoCpus, memory > 200000000 ? 0 : memory);
+            await _resourceManagementService.SetResources(pod, nanoCpus > 100000000 ? 0 : nanoCpus, memory > 2000000000 ? 0 : memory);
     }
 }
