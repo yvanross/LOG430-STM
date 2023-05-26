@@ -17,7 +17,7 @@
     .testabilite tr:nth-child(1) { background: orange; }    
 </style>
 
-# Laboratoire #3
+# Laboratoire #4
 
 Groupe: 0x
 
@@ -35,22 +35,38 @@ Equipe: 0x
 # Introduction
 >TODO: insérer votre introduction
 
-# Cas d'utilisations
-- [CU11 - Mettre le chaos dans les microservices en termes de performance.](#cu02){#da-cu02}
 
+
+# Scénario d'objectif d'affaires
+- [OA-1  - Faciliter le recrutement des nouveaux chargés de laboratoire](#oa01){#da-oa01}
+- [OA-2 - Promouvoir l'utilisation des données ouvertes](#oa02){#da-oa02}
+
+# Cas d'utilisations
 - [CU01 - Veux comparer les temps de trajet.](#cu01){#da-cu01}
+- [CU02 - Mettre le chaos dans les microservices en termes de disponibilité.](#cu02){#da-cu02}
 - [CU05 - Veux informer l'administrateur sur les changements de statut des microservices.](#cu05){#da-cu05}
 - [CU06 - Veux pouvoir récupérer le temps de trajets d'un service externe.](#cu06){#da-cu06}
 - [CU09 - Veux pouvoir récupérer le temps de trajet de STM](#cu09){#da-cu09}
 
+- [CU02 - Mettre le chaos dans les microservices en termes de disponibilité.](#cu02){#da-cu02}
+- [CU011 - Mettre le chaos dans les microservices en termes de disponibilité.](#cu11){#da-cu11}
 
 # Attributs de qualité
 
 - Vous devez vous assurer que les attributs de qualité (A) associés à chacun de vos cas d'utilisation soient documentés et réalisés. Pour chacun des attributs de qualité (A), vous devrez concevoir et réaliser une architecture qui utilisera au minimum une tactique architecturale pour chacune des sous-catégories (SC) suivantes.
 
-- Si un attribut de qualité ou une sous-catégorie (SC) n'est pas représenté dans votre architecture, vous devez ajouter de nouveau cas d'utilisation tant que tous n'auront pas été couverts.
+1. [Vues architecturales de disponibilité](#disponibilité){#da-disponibilite}
+   1. Vous devez fournir les diagrammes de séquence démontrant le fonctionnenemnt de l'architecturte actuelle.
+   1.Vous devez fournir les diagrammes de séquence démontrant le fonctionnement de l'architecture optimale en terme de disponibilité, incluant:
+     1. L'état au démarrage,
+     2. La mécanique de détection d'un problème
+     3. La mécanique de rétablissement du service, de récupération ou de reconfiguration.
 
-- [(A) Performance](#performance){#da-performance}
+1. [Vues architecturales de Performance](#performance){#da-performance}
+   1. Vous devez fournir les diagrammes de séquence démontrant le fonctionnement de l'architecture optimale en terme de performance, incluant:
+      1. L'état au démarrage,
+      2. La mécanique de détection d'un problème
+      3. La mécanique de rétablissement du service, de récupération ou de reconfiguration.
 
 # Vues architecturales 
 - [Vues architecturales de type Module](#vues-module){#da-vues-module}

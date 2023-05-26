@@ -6,15 +6,12 @@
 - (60%) Documenter l'architecture optimale en créant une architecture utilisant des tactiques de disponibilités et de performance.
 - (40%) Implémenter l'architecture optimale en terme de disponibilité et de performance.
 
-## Configuration de votre environnement
-- Le changement de configuration des différents paramètres de votre architecture doit se faire en quelques secondes lors du déploiement.
-
 ## Perturbation de l'infrastructure
-- Utiliser le chaos monkey pour perturber l'infrastructure et évaluer l'impact sur la disponiblité et la performance du système.  Utiliser la télémétrie pour documenter ces impacts.
-
+- Utiliser le chaos monkey pour perturber l'infrastructure et évaluer l'impact sur la performance du système.  Utiliser la télémétrie pour documenter ces impacts.
+  - Réalisation des tactiques de performance
   - ChaosMonkey détruit aléatoirement les conteneurs de calcul
   - ChaosMonkey s'attaque aux connecteurs (message queue, bus, etc.)
-  - Chaosmonkey attaque à la limitation du nombre d'instruction par secondes
+  - Chaosmonkey attaque à la limitation du nombre d'instruction par secondes (cpu)
   - ChaosMonkey s'attaque à la mémoire disponible pour les containers
   - ChaosMonkey s'attaque au Data store (BD, cache, etc.)
 

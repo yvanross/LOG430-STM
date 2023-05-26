@@ -11,17 +11,15 @@ L'objectif principal des 4 laboratoires du cours de LOG430 est de vous permettre
 ## Laboratoire #1 (3 semaines, 25%)
   - Intégration des mécaniques de télémétrie
 
-## Laboratoire #2 #2 (3 semaines, 25%) 
+## Laboratoire #2 #2 (4.5 semaines, 37.5%) 
   - Réalisation de tactiques de disponibilité
   - ChaosMonkey détruit aléatoirement les conteneurs de calcul
 
-## Laboratoire #3 (3 semaines, 25%)
+## Laboratoire #3 (4.5 semaines, 37.5%)
     - Réalisation des tactiques de performance
     - ChaosMonkey s'attaque aux connecteurs (message queue, bus, etc.)
     - Chaosmonkey attaque à la limitation du nombre d'instruction par secondes
     - ChaosMonkey s'attaque à la mémoire disponible pour les containers
-  
-## Laboratoire #4 (3 semaines, 25%)
     - ChaosMonkey s'attaque au Data store (BD, cache, etc.)
       
 
@@ -83,15 +81,14 @@ Les rapports devront être remis dans Moodle.
 | Semaine   |Tag                 | Rapport |
 | --------: |:-------------------|------|
 |         3 | git tag laboratoire-1 | Remise dans Moodle|
-|         6 | git tag laboratoire-2 | Remise dans Moodle |
-|         9 | git tag laboratoire-3 | Remise dans Moodle |
+|       7.5 | git tag laboratoire-2 | Remise dans Moodle |
 |        12 | git tag laboratoire-4 | Remise dans Moodle |
 
 * Il y aura des directives supplémentaires pour la remise de la documentation de chaque itération.
 ### Laboratoire #1
 Assurez-vous que votre rapport est situé dans le répertoire laboratoire1, qu'il est au format PDF et se nomme [laboratoire1-rapport.pdf](laboratoire1/laboratoire1.pdf)
 
-### Laboratoire #2,3 et 4
+### Laboratoire #2,3 
 Vous devez utiliser le document suivant pour la documentation de votre architecture: [DocumentationArchitecture.md](doc/documentationArchitecture.md)
 
 Utiliser la commande suivante pour générer le PDF de la documentation avec l'outil [Pandoc](https://pandoc.org)

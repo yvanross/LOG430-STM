@@ -71,7 +71,6 @@ En sachant que la variable docker NanoCpus à 1000000000 est l'équivalent de 1 
 En fonctions de vos analyses et de la description sommaire des itérations à venir documentées dans le document de spécifications-itérations, proposer des solutions pour améliorer l'architecture du système en termes de
 - [] disponibilité
 - [] performance   
-- [] interopérabilité
 
 # Réaliser une évaluation par les pairs
 - [ ] réaliser une évaluation par les pairs de votre travail et spécifier les améliorations à apporter
