@@ -82,7 +82,8 @@ public class Routing
             if (string.IsNullOrWhiteSpace(destinationNamespace) is false &&
                 sourcePod.Type.Equals(destinationNamespace, StringComparison.InvariantCultureIgnoreCase) is false) return Enumerable.Empty<IServiceInstance>();
 
-            return sourcePod.ServiceInstances.Where(si => si.Type.Equals(destinationType, StringComparison.InvariantCultureIgnoreCase));
+            return sourcePod.ServiceInstances.Where(si 
+                => EqualsIgnoreCase(si.Type, destinationType) && EqualsIgnoreCase(si.Id, sourceServiceId) is false);
         }
 
         IEnumerable<IPodType> GetDestinationPodType(string destinationNamespace, string destinationType)
@@ -101,8 +102,9 @@ public class Routing
                             EqualsIgnoreCase(podType.Type, serviceType.Type))))
                 select podType;
 
-            bool EqualsIgnoreCase (string a, string b) => a.Equals(b, StringComparison.InvariantCultureIgnoreCase);
         }
+
+        bool EqualsIgnoreCase(string a, string b) => a.Equals(b, StringComparison.InvariantCultureIgnoreCase);
     }
 
     public List<IServiceInstance> LoadBalancing(List<IServiceInstance> services, LoadBalancingMode mode)

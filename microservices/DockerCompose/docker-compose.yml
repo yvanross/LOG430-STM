@@ -39,7 +39,7 @@ services:
       ARTIFACT_NAME: EventStream
       REPLICAS: 1
   routetimeprovider:
-    container_name: RouteTimeProvider
+    container_name: Core.RouteTimeProvider
     image: routetimeprovider
     restart: always
     build:
@@ -56,11 +56,12 @@ services:
     labels:
       ARTIFACT_CATEGORY: Computation
       ARTIFACT_NAME: RouteTimeProvider
-      REPLICAS: 1
+      POD_NAME: Core
+      POD_ID: Init 
     depends_on:
       - nodecontroller
   tripcomparator:
-    container_name: TripComparator
+    container_name: Core.TripComparator
     image: tripcomparator
     restart: always
     build:
@@ -77,11 +78,14 @@ services:
     labels:
       ARTIFACT_CATEGORY: Computation
       ARTIFACT_NAME: TripComparator
+      POD_NAME: Core
+      POD_ID: Init   
       REPLICAS: 1
+      DNS: Public
     depends_on:
       - nodecontroller
   stm:
-    container_name: STM
+    container_name: Core.STM
     image: stm
     restart: always
     build:
@@ -98,6 +102,55 @@ services:
     labels:
       ARTIFACT_CATEGORY: Computation
       ARTIFACT_NAME: STM
-      REPLICAS: 1
+      POD_NAME: Core
+      POD_ID: Init
+    depends_on:
+      - nodecontroller
+
+  tripcomparator2:
+    container_name: AUX.TripComparator
+    image: tripcomparator
+    restart: always
+    build:
+      context: ../
+      dockerfile: TripComparator/Controllers/Dockerfile
+    environment:
+      SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
+      NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
+      ASPNETCORE_URLS: 'http://+:80'
+      ID: TripComparator2
+      MQ_SERVICE_NAME: EventStream
+    ports:
+      - '32775:80'
+    labels:
+      ARTIFACT_CATEGORY: Computation
+      ARTIFACT_NAME: TripComparator
+      POD_NAME: AUX
+      POD_ID: Init2   
+      REPLICAS: 2
+      DNS: Public
+    depends_on:
+      - nodecontroller
+
+  routetimeprovider2:
+    container_name: AUX.RouteTimeProvider
+    image: routetimeprovider
+    restart: always
+    build:
+      context: ../
+      dockerfile: RouteTimeProvider/RouteTimeProvider/Dockerfile
+    environment:
+      SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
+      NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
+      ASPNETCORE_URLS: 'http://+:80'
+      ID: RouteTimeProvider2
+      API_KEY: '${TOMTOM}'
+    ports:
+      - '32777:80'
+    labels:
+      ARTIFACT_CATEGORY: Computation
+      ARTIFACT_NAME: RouteTimeProvider
+      POD_NAME: AUX
+      POD_ID: Init2 
     depends_on:
       - nodecontroller

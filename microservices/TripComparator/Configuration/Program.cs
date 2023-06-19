@@ -122,7 +122,8 @@ namespace Configuration
                         endpoint.ConfigureConsumer<TripComparatorMqController>(context);
                     });
 
-                    cfg.Publish<BusPositionUpdated>(p => p.ExchangeType = ExchangeType.Topic);
+                    cfg.Publish<BusPositionUpdated>(p =>
+                        p.ExchangeType = ExchangeType.Topic);
                 });
             });
         }
