@@ -15,16 +15,10 @@ public class ServiceInstance : IServiceInstance
 
     public required string PodId { get; set; }
 
-    public DateTime LastHeartbeat { get; set; } = DateTime.UtcNow;
-
-    public bool IsHttp { get; init; } = true;
-
     public IServiceState? ServiceStatus { get; set; }
 
-    public string HttpRoute => $"http://{Address}" + (string.IsNullOrEmpty(ContainerInfo?.HostPort) ? string.Empty : $":{ContainerInfo.HostPort}");
+    public string HttpRoute => $"http://{Address}:{ContainerInfo?.PortsInfo.RoutingPortNumber}";
 
-    public string HttpsRoute => $"https://{Address}" + (string.IsNullOrEmpty(ContainerInfo?.HostPort) ? string.Empty : $":{ContainerInfo.HostPort}");
-    
     public bool Equals(IServiceInstance? other)
     {
         return Id.Equals(other?.Id);

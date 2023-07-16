@@ -1,4 +1,4 @@
-﻿namespace ApplicationLogic.Extensions;
+﻿namespace Entities.Extensions;
 
 public static class Try
 {

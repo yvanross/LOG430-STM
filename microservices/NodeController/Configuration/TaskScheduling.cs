@@ -1,7 +1,6 @@
 ﻿using ApplicationLogic.Interfaces;
 using ApplicationLogic.Usecases;
 using Entities.DomainInterfaces.ResourceManagement;
-using MassTransit;
 using Microsoft.Extensions.Logging;
 using Monitor = ApplicationLogic.Usecases.Monitor;
 
@@ -36,8 +35,9 @@ public class TaskScheduling
             _scheduler.TryAddTask(nameof(_ingress.HeartBeat), _ingress.HeartBeat);
         }
 
-        _scheduler.TryAddTask(nameof(_servicePool.DiscoverServices), _servicePool.DiscoverServices);
-        _scheduler.TryAddTask(nameof(_monitor.RemoveOrReplaceDeadPodsFromModel), _monitor.RemoveOrReplaceDeadPodsFromModel);
-        _scheduler.TryAddTask(nameof(_monitor.MatchInstanceDemandOnPods), _monitor.MatchInstanceDemandOnPods);
+        _scheduler.TryAddBlockingTask(nameof(_servicePool.DiscoverServices), _servicePool.DiscoverServices);
+
+        _scheduler.TryAddBlockingTask(nameof(_monitor.RemoveOrReplaceDeadPodsFromModel), _monitor.RemoveOrReplaceDeadPodsFromModel);
+        _scheduler.TryAddBlockingTask(nameof(_monitor.MatchInstanceDemandOnPods), _monitor.MatchInstanceDemandOnPods);
     }
 }

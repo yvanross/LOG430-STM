@@ -12,6 +12,9 @@ using ApplicationLogic.Use_Cases;
 using Configuration.Properties;
 using Configuration.Policies;
 using Controllers.Controllers;
+using ServiceMeshHelper;
+using ServiceMeshHelper.Controllers;
+using STMTests.Use_Cases;
 
 namespace Configuration
 {
@@ -44,7 +47,7 @@ namespace Configuration
 
             app.MapControllers();
 
-            var itinerary = app.Services.GetRequiredService<Itinerary>();
+            var itinerary = app.Services.GetRequiredService<IItinerary>();
 
             itinerary.PrefetchAndApplyTripUpdates().Wait();
 
@@ -54,7 +57,7 @@ namespace Configuration
         }
 
         private static void ConfigureServices(IServiceCollection services)
-        {   
+        {
             //todo FinderController is used to tell which assembly contains the swagger controllers
             services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(FinderController).Assembly));
 
@@ -82,9 +85,9 @@ namespace Configuration
 
                 services.AddScoped<ItineraryPlannerService>();
 
-                services.AddScoped<Itinerary>();
+                services.AddScoped<IItinerary, ItineraryStub>();
 
-                services.AddScoped<TrackBus>();
+                services.AddScoped<ITrackBus, TrackBusStub>();
             }
 
             static void Infrastructure(IServiceCollection services)

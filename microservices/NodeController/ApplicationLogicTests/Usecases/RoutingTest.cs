@@ -13,7 +13,7 @@ namespace ApplicationLogicTests.Usecases
         [TestInitialize]
         public void Init()
         {
-            _routing = new Routing(MockProvider.GetReadModelMock().Object);
+            _routing = new Routing(MockProvider.GetReadModelMock().Object, MockProvider.GetWriteModelMock().Object, MockProvider.GetHostInfoMock().Object);
         }
 
         [TestMethod()]

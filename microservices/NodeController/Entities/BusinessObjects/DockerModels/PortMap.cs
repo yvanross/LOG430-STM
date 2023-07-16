@@ -9,7 +9,6 @@
  */
 
 using System.Text;
-using System.Collections;
 using System.Runtime.Serialization;
 
 namespace IO.Swagger.Models

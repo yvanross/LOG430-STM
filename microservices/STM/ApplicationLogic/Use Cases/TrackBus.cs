@@ -4,7 +4,7 @@ using Entities.Transit.Interfaces;
 
 namespace ApplicationLogic.Use_Cases;
 
-public class TrackBus
+public class TrackBus : ITrackBus
 {
     private ABusTrackingService _trackingService;
 

@@ -1,9 +1,8 @@
-﻿using ApplicationLogic.Extensions;
-using ApplicationLogic.Interfaces;
-using ApplicationLogic.Interfaces.Dao;
-using ApplicationLogic.Services;
-using Entities.BusinessObjects.Live;
+﻿using ApplicationLogic.Services;
+using Entities.BusinessObjects.States;
+using Entities.Dao;
 using Entities.DomainInterfaces.Live;
+using Entities.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace ApplicationLogic.Usecases
@@ -16,32 +15,51 @@ namespace ApplicationLogic.Usecases
 
         private readonly ResourceManagementService _resourceManagementService;
 
-        private readonly IEnvironmentClient _client;
-
-        public Monitor(IEnvironmentClient client, IPodReadService readServiceService, IPodWriteService writeServiceService, ILogger<Monitor> logger)
+        public Monitor(IPodReadService readServiceService, ResourceManagementService resourceManagementService, ILogger<Monitor> logger)
         {
             _readServiceService = readServiceService;
             _logger = logger;
-            _client = client;
-            _resourceManagementService = new ResourceManagementService(client, readServiceService, writeServiceService);
-        }
-
-        public async Task GarbageCollection()
-        {
-            await _client.GarbageCollection();
+            _resourceManagementService = resourceManagementService;
         }
 
         public async Task MatchInstanceDemandOnPods()
         {
-            var podTypes = _readServiceService.GetAllPodTypes();
+            await CreateServicesForIncompleteNewPods();
 
-            foreach (var podType in podTypes)
+            await IncreasePodNumberToMatchDemand();
+
+            async Task CreateServicesForIncompleteNewPods()
             {
-                var podCount = _readServiceService.GetPodInstances(podType.Type)?.Count;
+                var podsInLaunchedState =
+                    _readServiceService.GetAllPods().Where(pod => pod.ServiceStatus is LaunchedState).ToList();
 
-                if (podCount < podType.NumberOfInstances)
+                foreach (var podInstance in podsInLaunchedState)
                 {
-                    await _resourceManagementService.IncreaseNumberOfPodInstances(podType.Type).ConfigureAwait(false);
+                    var podType = _readServiceService.GetPodType(podInstance.Type)!;
+
+                    var serviceTypesNotInCollection = podType.ServiceTypes
+                        .WhereNotTrueInAnyOf(podInstance.ServiceInstances,
+                            (serviceType, serviceInstance) => serviceType.Type.EqualsIgnoreCase(serviceInstance.Type));
+
+                    foreach (var serviceType in serviceTypesNotInCollection)
+                    {
+                        await _resourceManagementService.CreateNewSidecarInstanceOnPod(serviceType.Type, podType.Type, podInstance.Id).ConfigureAwait(false);
+                    }
+                }
+            }
+
+            async Task IncreasePodNumberToMatchDemand()
+            {
+                var podTypes = _readServiceService.GetAllPodTypes();
+
+                foreach (var podType in podTypes)
+                {
+                    var podCount = _readServiceService.GetPodInstances(podType.Type)?.Count;
+
+                    if (podCount < podType.NumberOfInstances)
+                    {
+                        await _resourceManagementService.IncreaseNumberOfPodInstances(podType.Type).ConfigureAwait(false);
+                    }
                 }
             }
         }
@@ -50,7 +68,7 @@ namespace ApplicationLogic.Usecases
         {
             await Try.WithConsequenceAsync(async () =>
             {
-                var runningContainerIds = (await _client.GetRunningServices())?.ToHashSet();
+                var runningContainerIds = (await _resourceManagementService.GetRunningServices())?.ToHashSet();
 
                 if (runningContainerIds is null) return Task.CompletedTask;
 
@@ -60,7 +78,7 @@ namespace ApplicationLogic.Usecases
                 {
                     var minNumberOfInstances = _readServiceService.GetPodType(podInstance.Type)!.NumberOfInstances;
 
-                    if (IsAnyPodServiceDown(podInstance, runningContainerIds))
+                    if (IsAnyPodServiceDownOnInstance(podInstance, runningContainerIds))
                     {
                         if (IsNumberOfRunningInstancesGreaterThanRequired(podInstance, minNumberOfInstances))
                         {
@@ -72,7 +90,7 @@ namespace ApplicationLogic.Usecases
                         }
                     }
 
-                    if (PodServicesAllNecessaryInstances(podInstance) is false)
+                    if (DidPodLoseAnyServiceInstance(podInstance))
                     {
                         await _resourceManagementService.RemovePodInstance(podInstance).ConfigureAwait(false);
                         
@@ -83,16 +101,18 @@ namespace ApplicationLogic.Usecases
                 return Task.CompletedTask;
             }, retryCount: 2).ConfigureAwait(false);
 
-            bool PodServicesAllNecessaryInstances(IPodInstance podInstance)
+            bool DidPodLoseAnyServiceInstance(IPodInstance podInstance)
             {
+                if(podInstance.ServiceStatus is LaunchedState) return false;
+
                 var podType = _readServiceService.GetPodType(podInstance.Type)!;
 
                 return podType.ServiceTypes
                     .All(serviceType => podInstance.ServiceInstances.
-                        Any(serviceInstance => serviceInstance.Type.Equals(serviceType.Type)));
+                        Any(serviceInstance => serviceInstance.Type.Equals(serviceType.Type))) is false;
             }
 
-            bool IsAnyPodServiceDown(IPodInstance podInstance, HashSet<string> runningContainerIds)
+            bool IsAnyPodServiceDownOnInstance(IPodInstance podInstance, HashSet<string> runningContainerIds)
             {
                 var anyServiceDown = podInstance.ServiceInstances.Any(serviceInstance =>
                     runningContainerIds.Contains(serviceInstance.ContainerInfo?.Id ?? string.Empty) is false);

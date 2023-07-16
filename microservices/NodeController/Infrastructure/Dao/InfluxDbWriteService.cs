@@ -1,6 +1,7 @@
 ﻿using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.OutGoing;
+using Entities.Dao;
 using Entities.DomainInterfaces.ResourceManagement;
 using InfluxDB.Client;
 using InfluxDB.Client.Api.Domain;

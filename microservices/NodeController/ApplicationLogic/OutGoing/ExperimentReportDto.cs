@@ -1,4 +1,4 @@
-﻿using ApplicationLogic.Interfaces.Dao;
+﻿using Entities.Dao;
 using Entities.DomainInterfaces.Planned;
 using Entities.DomainInterfaces.ResourceManagement;
 

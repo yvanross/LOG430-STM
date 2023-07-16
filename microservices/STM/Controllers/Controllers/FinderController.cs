@@ -15,9 +15,9 @@ namespace Controllers.Controllers
     public class FinderController : ControllerBase
     {
         private readonly ILogger<FinderController> _logger;
-        private readonly Itinerary _itinerary;
+        private readonly IItinerary _itinerary;
 
-        public FinderController(ILogger<FinderController> logger, Itinerary itinerary)
+        public FinderController(ILogger<FinderController> logger, IItinerary itinerary)
         {
             _logger = logger;
             _itinerary = itinerary;

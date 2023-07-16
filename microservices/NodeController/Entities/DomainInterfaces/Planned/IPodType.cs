@@ -4,9 +4,29 @@ namespace Entities.DomainInterfaces.Planned;
 
 public interface IPodType
 {
-    string? Type { get; set; }
+    string Type { get; set; }
 
-    int NumberOfInstances { get; set; }
+    int NumberOfInstances { get; }
 
-    ImmutableList<IServiceType> ServiceTypes { get; set; }
+    ImmutableList<string> ReplicasHostnames { get; }
+
+    ImmutableList<IServiceType> ServiceTypes { get; }
+
+    IServiceType? PodLeader { get; }
+
+    void IncreaseNumberOfPod();
+
+    void DecreaseNumberOfPod();
+
+    void SetNumberOfPod(int numberOfInstances);
+
+    void AddHostname(string hostname);
+
+    void AddRangeHostnames(IEnumerable<string> hostnames);
+
+    void AddServiceTypes(string serviceType);
+
+    void AddRangeServiceTypes(IEnumerable<string> serviceTypes);
+
+    void SetPodLeader(string podLeader);
 }

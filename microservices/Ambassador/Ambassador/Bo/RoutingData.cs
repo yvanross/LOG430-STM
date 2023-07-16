@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace ServiceMeshHelper.Bo;
+﻿namespace ServiceMeshHelper.Bo;
 
 public class RoutingData
 {
     public required string Address { get; set; }
 
-    public List<NameValue> IngressAddedHeaders { get; set; } = new ();
+    public required string host { get; set; }
 
-    public List<NameValue> IngressAddedQueryParams { get; set; } = new ();
+    public required string port { get; set; }
 }

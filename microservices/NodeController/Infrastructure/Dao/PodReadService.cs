@@ -1,38 +1,34 @@
 ﻿using System.Collections.Immutable;
-using ApplicationLogic.Interfaces;
-using ApplicationLogic.Interfaces.Dao;
-using Entities.BusinessObjects.Planned;
+using Entities.Dao;
 using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
+using Entities.Extensions;
 using Infrastructure.Cache;
 
 namespace Infrastructure.Dao;
 
 public class PodReadService : IPodReadService
 {
-    private readonly IHostInfo _hostInfo;
-
-    public PodReadService(IHostInfo hostInfo)
-    {
-        _hostInfo = hostInfo;
-    }
+    //---------------------------------------------------------------- 
+    // PODS
+    //----------------------------------------------------------------
 
     public IPodInstance? GetPodOfService(IServiceInstance serviceInstance)
     {
         return RouteCache.GetPodInstances()
-            .SingleOrDefault(pod => pod.ServiceInstances.Any(s => s.Equals(serviceInstance)));
+            .SingleOrDefault(pod => pod.ServiceInstances.Any(s => s.Id.EqualsIgnoreCase(serviceInstance.Id)));
     }
 
     public IPodInstance? GetPodById(string id)
     {
-        return RouteCache.GetPodInstances().SingleOrDefault(pod => pod.Id.Equals(id));
+        return RouteCache.GetPodInstance(id);
     }
 
     public ImmutableList<IPodInstance> GetPodInstances(string? podType)
     {
-        if (podType is null) return ImmutableList<IPodInstance>.Empty;
-
-        return RouteCache.GetPodInstances().Where(pod => pod.Type.Equals(podType)).ToImmutableList();
+        return podType is null ? 
+            ImmutableList<IPodInstance>.Empty : 
+            RouteCache.GetPodInstances().Where(pod => pod.Type.EqualsIgnoreCase(podType)).ToImmutableList();
     }
 
     public ImmutableList<IPodInstance> GetAllPods()
@@ -47,15 +43,17 @@ public class PodReadService : IPodReadService
 
     public IPodType? GetPodType(string? podType)
     {
-        if(podType is null) return null;
-
-        return RouteCache.GetPodTypes().Select(kv => kv.Value).SingleOrDefault(pt => pt.Type.Equals(podType));
+        return podType is null ? null : RouteCache.GetPodType(podType);
     }
+
+    //----------------------------------------------------------------
+    // Services
+    //----------------------------------------------------------------
 
     public IServiceInstance? GetServiceById(string id)
     {
         return RouteCache.GetPodInstances()
-            .SelectMany(pod => pod.ServiceInstances).SingleOrDefault(service => service.Id.Equals(id));
+            .SelectMany(pod => pod.ServiceInstances).SingleOrDefault(service => service.Id.EqualsIgnoreCase(id));
     }
 
     public ImmutableList<IServiceInstance> GetServiceInstances(string? serviceType)
@@ -63,7 +61,7 @@ public class PodReadService : IPodReadService
         if (serviceType is null) return ImmutableList<IServiceInstance>.Empty;
 
         return RouteCache.GetPodInstances()
-            .SelectMany(pod => pod.ServiceInstances).Where(service => service.Type.Equals(serviceType)).ToImmutableList();
+            .SelectMany(pod => pod.ServiceInstances).Where(service => service.Type.EqualsIgnoreCase(serviceType)).ToImmutableList();
     }
 
     public ImmutableList<IServiceInstance> GetAllServices()
@@ -74,20 +72,30 @@ public class PodReadService : IPodReadService
 
     public ImmutableList<IServiceType> GetAllServiceTypes()
     {
-        return RouteCache.GetPodTypes()
-            .SelectMany(pod => pod.Value.ServiceTypes).DistinctBy(serviceType => serviceType.Type).ToImmutableList();
+        return RouteCache.GetServiceTypes().Select(st=>st.Value).ToImmutableList();
     }
 
     public IServiceType? GetServiceType(string? serviceType)
     {
-        if (serviceType is null) return null;
-
-        return RouteCache.GetPodTypes()
-            .SelectMany(pod => pod.Value.ServiceTypes).FirstOrDefault(st => st.Type.Equals(serviceType));
+        return serviceType is null ? null : RouteCache.GetServiceType(serviceType);
     }
 
-    public string GetAddress()
+    //----------------------------------------------------------------
+    // Tunnels
+    //----------------------------------------------------------------
+
+    public ImmutableList<int> GetTakenSocketPorts()
     {
-        return _hostInfo.GetAddress();
+        return RouteCache.GetAllPorts();
+    }
+
+    public int? TryGetSocketPortForType(IServiceType type)
+    {
+        return RouteCache.GetPortForType(type);
+    }
+
+    public IServiceType? TryGetServiceTypeFromPort(int port)
+    {
+        return RouteCache.TryGetServiceTypeFromPort(port);
     }
 }

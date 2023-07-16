@@ -1,5 +1,5 @@
 ﻿using ApplicationLogic.Interfaces;
-using ApplicationLogic.Interfaces.Dao;
+using Entities.Dao;
 
 namespace ApplicationLogic.Usecases;
 
@@ -20,20 +20,20 @@ public class PlannedResourcesUpdate
     public void IncreaseNumberOfPod(string? podTypeName)
     {
         if (_podReadService.GetPodType(podTypeName) is { } podType)
-            podType.NumberOfInstances++;
+            podType.IncreaseNumberOfPod();
     }
 
     //todo not thread safe
     public void DecreaseNumberOfPod(string? podTypeName)
     {
         if (_podReadService.GetPodType(podTypeName) is { } podType)
-            podType.NumberOfInstances--;
+            podType.DecreaseNumberOfPod();
     }
 
     public void SetNumberOfPod(string? podTypeName, int numberOfInstances)
     {
         if (_podReadService.GetPodType(podTypeName) is { } podType)
-            podType.NumberOfInstances = numberOfInstances;
+            podType.SetNumberOfPod(numberOfInstances);
     }
 
     //expensive action

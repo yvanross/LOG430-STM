@@ -13,9 +13,7 @@ using Microsoft.OpenApi.Models;
 using MqContracts;
 using Polly;
 using RabbitMQ.Client;
-using ServiceMeshHelper;
 using ServiceMeshHelper.Controllers;
-using TripComparator.External;
 using HostInfo = TripComparator.External.HostInfo;
 
 namespace Configuration
@@ -24,7 +22,7 @@ namespace Configuration
     {
         public static void Main(string[] args)
         {
-            //Todo tactique disponibilité retry
+            //Todo tactique disponibilitÃ© retry
             Policy.Handle<Exception>().RetryForever().Execute(() =>
             {
                 var builder = WebApplication.CreateBuilder(args);
@@ -87,12 +85,9 @@ namespace Configuration
 
         private static async Task ConfigureMassTransit(IServiceCollection services)
         {
-            //Leaving some time for the node controller to map the pool
-            await Task.Delay(5000);
+            await Task.Delay(5_000);
 
-            var mq = (await RestController.GetAddress(HostInfo.MqServiceName, LoadBalancingMode.RoundRobin)).FirstOrDefault();
-
-            var reformattedAddress = $"rabbitmq{mq!.Address[4..]}";
+            var host = await TcpController.GetTcpSocketForSericeType(HostInfo.MqServiceName);
 
             const string baseQueueName = "time_comparison.node_controller-to-any.query";
 
@@ -104,7 +99,7 @@ namespace Configuration
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host(reformattedAddress);
+                    cfg.Host(host);
 
                     cfg.Message<BusPositionUpdated>(topologyConfigurator => topologyConfigurator.SetEntityName("bus_position_updated"));
                     cfg.Message<CoordinateMessage>(topologyConfigurator => topologyConfigurator.SetEntityName("coordinate_message"));
@@ -120,8 +115,10 @@ namespace Configuration
                         });
 
                         endpoint.ConfigureConsumer<TripComparatorMqController>(context);
+                        
+                        endpoint.SetQuorumQueue();
                     });
-
+                    
                     cfg.Publish<BusPositionUpdated>(p =>
                         p.ExchangeType = ExchangeType.Topic);
                 });

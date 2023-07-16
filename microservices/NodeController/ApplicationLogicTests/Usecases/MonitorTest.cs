@@ -1,10 +1,4 @@
-﻿using System.Collections.Immutable;
-using ApplicationLogic.Interfaces;
-using ApplicationLogic.Interfaces.Dao;
-using Entities.DomainInterfaces.Live;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using Monitor = ApplicationLogic.Usecases.Monitor;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ApplicationLogicTests.Usecases
 {

@@ -1,6 +1,6 @@
 ﻿using ApplicationLogic.Interfaces;
 using ApplicationLogic.Usecases;
-using Entities.DomainInterfaces.ResourceManagement;
+using Entities.Dao;
 using Infrastructure.Interfaces;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,15 +14,17 @@ public class MassTransitRabbitMq : IMqConfigurator
 {
     public IBusControl? BusControl;
 
-    private readonly Routing _routing;
+    private readonly IRouting _routing;
     private readonly IHostInfo _hostInfo;
     private readonly IServiceProvider _serviceProvider;
+    private readonly IPodReadService _podReadService;
 
-    public MassTransitRabbitMq(Routing routing, IHostInfo hostInfo, IServiceProvider serviceProvider)
+    public MassTransitRabbitMq(IRouting routing, IHostInfo hostInfo, IServiceProvider serviceProvider, IPodReadService podReadService)
     {
         _routing = routing;
         _hostInfo = hostInfo;
         _serviceProvider = serviceProvider;
+        _podReadService = podReadService;
     }
 
     public IBusControl GetPublishEndpoint()
@@ -45,46 +47,45 @@ public class MassTransitRabbitMq : IMqConfigurator
 
         if (BusControl is not null) return;
 
-        var mq = _routing.RouteByDestinationType("$*$", _hostInfo.GetMQServiceName(), LoadBalancingMode.RoundRobin).FirstOrDefault();
+        var reformattedAddress = $"rabbitmq://{_hostInfo.GetAddress()}:{_routing.NegotiateSocket(_podReadService.GetServiceType(_hostInfo.GetMQServiceName())!)}";
 
-        if (mq is not null)
+        const string baseQueueName = "time_comparison.any-to-node_controller.response";
+
+        var uniqueQueueName = $"{baseQueueName}.{Guid.NewGuid()}";
+
+        var busControl = Bus.Factory.CreateUsingRabbitMq(cfg =>
         {
-            var reformattedAddress = $"rabbitmq{mq.Address[4..]}";
+            cfg.Host(reformattedAddress);
 
-            const string baseQueueName = "time_comparison.any-to-node_controller.response";
+            cfg.Message<CoordinateMessage>(topologyConfigurator => topologyConfigurator.SetEntityName("coordinate_message"));
 
-            var uniqueQueueName = $"{baseQueueName}.{Guid.NewGuid()}";
-            
-            var busControl = Bus.Factory.CreateUsingRabbitMq(cfg =>
+            cfg.Message<BusPositionUpdated>(topologyConfigurator => topologyConfigurator.SetEntityName("bus_position_updated"));
+
+            cfg.ReceiveEndpoint(uniqueQueueName, endpoint =>
             {
-                cfg.Host(reformattedAddress);
+                endpoint.ConfigureConsumeTopology = false;
 
-                cfg.Message<CoordinateMessage>(topologyConfigurator => topologyConfigurator.SetEntityName("coordinate_message"));
-                
-                cfg.Message<BusPositionUpdated>(topologyConfigurator => topologyConfigurator.SetEntityName("bus_position_updated"));
+                endpoint.SetQuorumQueue();
 
-                cfg.ReceiveEndpoint(uniqueQueueName, endpoint =>
+                endpoint.PrefetchCount = 1;
+
+                endpoint.Consumer(typeof(BusPositionUpdatedMqController), (_) => new BusPositionUpdatedMqController(_serviceProvider.GetRequiredService<ExperimentMonitoring>()));
+
+                endpoint.Bind<BusPositionUpdated>(binding =>
                 {
-                    endpoint.ConfigureConsumeTopology = false;
-
-                    endpoint.Consumer(typeof(BusPositionUpdatedMqController), (_) => new BusPositionUpdatedMqController(_serviceProvider.GetRequiredService<ExperimentMonitoring>()));
-
-                    endpoint.Bind<BusPositionUpdated>(binding =>
-                    {
-                        binding.ExchangeType = ExchangeType.Topic;
-                        binding.RoutingKey = "trip_comparison.response";
-                    });
-                });
-
-                cfg.Publish<CoordinateMessage>(topologyConfigurator =>
-                {
-                    topologyConfigurator.ExchangeType = ExchangeType.Topic;
+                    binding.ExchangeType = ExchangeType.Topic;
+                    binding.RoutingKey = "trip_comparison.response";
                 });
             });
 
-            BusControl = busControl;
+            cfg.Publish<CoordinateMessage>(topologyConfigurator =>
+            {
+                topologyConfigurator.ExchangeType = ExchangeType.Topic;
+            });
+        });
 
-            await busControl.StartAsync();
-        }
+        BusControl = busControl;
+
+        await busControl.StartAsync();
     }
 }

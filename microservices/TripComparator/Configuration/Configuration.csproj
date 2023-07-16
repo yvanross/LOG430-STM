@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -9,10 +9,10 @@
 
   <ItemGroup>
     <PackageReference Include="Polly" Version="7.2.3" />
-    <PackageReference Include="ServiceMeshHelper" Version="1.0.66" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Ambassador\Ambassador\ServiceMeshHelper.csproj" />
     <ProjectReference Include="..\Controllers\Controllers.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>

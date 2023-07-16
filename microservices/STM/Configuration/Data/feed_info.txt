@@ -1,2 +1,2 @@
 feed_publisher_name,feed_publisher_url,feed_lang,feed_start_date,feed_end_date
-"Société de transport de Montréal",http://www.stm.info,fr,20230109,20230618
+"Société de transport de Montréal",http://www.stm.info,fr,20230327,20230827

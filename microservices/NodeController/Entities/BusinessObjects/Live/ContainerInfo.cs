@@ -13,7 +13,7 @@ public class ContainerInfo
 
     public required string Status { get; set; }
 
-    public required string HostPort { get; set; }
+    public required PortsInfo PortsInfo { get; set; }
 
     public required long NanoCpus { get; set; }
     

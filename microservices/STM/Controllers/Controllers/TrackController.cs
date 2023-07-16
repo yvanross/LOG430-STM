@@ -15,11 +15,11 @@ namespace Controllers.Controllers
     public class TrackController : ControllerBase
     {
         private readonly ILogger<TrackController> _logger;
-        private readonly TrackBus _trackBus;
+        private readonly ITrackBus _trackBus;
 
-        private static readonly ConcurrentDictionary<string, TrackBus> BusesBeingTracked = new ();
+        private static readonly ConcurrentDictionary<string, ITrackBus> BusesBeingTracked = new ();
 
-        public TrackController(ILogger<TrackController> logger, TrackBus trackBus)
+        public TrackController(ILogger<TrackController> logger, ITrackBus trackBus)
         {
             _logger = logger;
             _trackBus = trackBus;

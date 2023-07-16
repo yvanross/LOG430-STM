@@ -1,6 +1,4 @@
-﻿using ApplicationLogic.Usecases;
-using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ApplicationLogicTests.Usecases
 {

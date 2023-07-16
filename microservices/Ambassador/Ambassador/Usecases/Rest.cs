@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Channels;
-using System.Threading.Tasks;
 using RestSharp;
 using ServiceMeshHelper.Bo;
 using ServiceMeshHelper.Bo.InterServiceRequests;
@@ -11,9 +7,9 @@ using ServiceMeshHelper.Services;
 
 namespace ServiceMeshHelper.Usecases
 {
-    internal class RestUC
+    internal class Rest
     {
-        private IngressRoutingService _ingressRoutingService = new ();
+        private NodeControllerRoutingClient nodeController = new ();
 
         internal async Task<ChannelReader<RestResponse>> Get(GetRoutingRequest routingRequest)
         {
@@ -59,8 +55,10 @@ namespace ServiceMeshHelper.Usecases
             return channel.Reader;
         }
 
-        internal async Task<IEnumerable<RoutingData>> GetServiceRoutingData(string targetService, LoadBalancingMode mode)
-            =>await _ingressRoutingService.GetServiceRoutingData(targetService, mode);
+        internal Task<IEnumerable<RoutingData>> GetServiceRoutingData(string targetService, LoadBalancingMode mode)
+        {
+            return nodeController.RouteByServiceType(targetService, mode);
+        }
 
         private async Task<List<(RestClient client, RestRequest request)>> GetDestinationRoutingData(ServiceRoutingRequest routingRequest, Method method)
         {
@@ -86,11 +84,6 @@ namespace ServiceMeshHelper.Usecases
                     var client = new RestClient(routingInfo.Address);
 
                     var request = new RestRequest(routingRequest.Endpoint, method);
-
-                    routingInfo.IngressAddedHeaders.ForEach(header => request.AddHeader(header.Name, header.Value));
-
-                    routingInfo.IngressAddedQueryParams.ForEach(queryParams =>
-                        request.AddQueryParameter(queryParams.Name, queryParams.Value));
 
                     routingRequest.Params.ForEach(param => request.AddQueryParameter(param.Name, param.Value));
 

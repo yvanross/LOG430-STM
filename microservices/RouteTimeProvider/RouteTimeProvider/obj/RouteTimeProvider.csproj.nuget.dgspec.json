@@ -184,13 +184,17 @@
               "target": "Package",
               "version": "[1.17.2, )"
             },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
             "Polly": {
               "target": "Package",
               "version": "[7.2.3, )"
             },
             "ServiceMeshHelper": {
               "target": "Package",
-              "version": "[1.0.66, )"
+              "version": "[1.0.68, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

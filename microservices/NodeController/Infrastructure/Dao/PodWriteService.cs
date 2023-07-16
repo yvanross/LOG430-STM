@@ -1,4 +1,4 @@
-﻿using ApplicationLogic.Interfaces.Dao;
+﻿using Entities.Dao;
 using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
 using Infrastructure.Cache;
@@ -17,8 +17,18 @@ public class PodWriteService : IPodWriteService
         RouteCache.RemovePodInstance(podInstance);
     }
 
+    public void AddOrUpdateServiceType(IServiceType serviceType)
+    {
+        RouteCache.AddOrUpdateServiceType(serviceType);
+    }
+
     public void AddOrUpdatePodType(IPodType podType)
     {
         RouteCache.AddOrUpdatePodType(podType);
+    }
+
+    public void AddTunnel(int port, IServiceType type)
+    {
+        RouteCache.AddTunnel(port, type);
     }
 }

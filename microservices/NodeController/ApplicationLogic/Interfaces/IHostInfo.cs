@@ -37,4 +37,6 @@ public interface IHostInfo
     public void SetIsDirty(bool dirty);
 
     string GetContainerId();
+
+    IEnumerable<int> GetTunnelPortRange();
 }

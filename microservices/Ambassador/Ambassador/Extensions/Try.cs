@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace ServiceMeshHelper.Extensions;
+﻿namespace ServiceMeshHelper.Extensions;
 
 internal class Try
 {

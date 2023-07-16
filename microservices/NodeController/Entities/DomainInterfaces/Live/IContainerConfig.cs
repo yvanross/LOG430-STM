@@ -1,4 +1,5 @@
-﻿using IO.Swagger.Models;
+﻿using Entities.BusinessObjects.Live;
+using IO.Swagger.Models;
 
 namespace Entities.DomainInterfaces.Live;
 
@@ -6,6 +7,6 @@ public interface IContainerConfig
 {
     public ContainerInspectResponse Config { get; set; }
 
-    public string ContainerPort { get; set; }
+    public PortsInfo PortsInfo { get; set; }
 
 }

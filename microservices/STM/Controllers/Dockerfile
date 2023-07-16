@@ -7,6 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
+COPY ["Nuget/ServiceMeshHelper.*.nupkg", "Configuration/"]
 COPY ["STM/Entities.Common/Entities.Common.csproj", "Entities.Common/"]
 COPY ["STM/Entities.Gtfs/Entities.Gtfs.csproj", "Entities.Gtfs/"]
 COPY ["STM/Entities.Transit/Entities.Transit.csproj", "Entities.Transit/"]

@@ -1,7 +1,7 @@
 ﻿using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
 
-namespace ApplicationLogic.Interfaces.Dao;
+namespace Entities.Dao;
 
 public interface IPodWriteService
 {
@@ -9,5 +9,9 @@ public interface IPodWriteService
 
     void TryRemovePod(IPodInstance podInstance);
 
+    void AddOrUpdateServiceType(IServiceType serviceType);
+
     void AddOrUpdatePodType(IPodType podType);
+
+    void AddTunnel(int port, IServiceType type);
 }

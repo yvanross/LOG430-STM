@@ -10,7 +10,6 @@
 
 using System.Text;
 using System.Runtime.Serialization;
-using Newtonsoft.Json;
 
 namespace IO.Swagger.Models
 { 

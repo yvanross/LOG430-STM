@@ -7,5 +7,5 @@ public class ContainerRaw : IContainerConfig
 {
     public ContainerInspectResponse Config { get; set; }
 
-    public required string ContainerPort { get; set; }
+    public required PortsInfo PortsInfo { get; set; }
 }

@@ -1,6 +1,4 @@
-﻿using Entities.DomainInterfaces;
-
-namespace ApplicationLogic.Interfaces.Policies;
+﻿namespace ApplicationLogic.Interfaces.Policies;
 
 public interface IPolicy<in TClass> where TClass : class
 {

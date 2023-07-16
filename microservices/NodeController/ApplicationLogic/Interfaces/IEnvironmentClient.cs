@@ -8,8 +8,8 @@ public interface IEnvironmentClient
 {
     public Task<ImmutableList<string>?> GetRunningServices(string[]? statuses = default);
 
-    public Task<string?> IncreaseByOneNumberOfInstances(IContainerConfig containerConfig,
-        string newContainerName, string serviceId, string podId);
+    public Task<string?> IncreaseByOneNumberOfInstances(IContainerConfig containerConfig, string newContainerName,
+        IServiceInstance serviceInstance, string podType);
 
     public Task RemoveContainerInstance(string containerId, bool quiet = false);
 

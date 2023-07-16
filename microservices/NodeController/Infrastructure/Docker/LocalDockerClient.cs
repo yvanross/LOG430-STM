@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Immutable;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Xml.Linq;
 using ApplicationLogic.Interfaces;
 using Entities.BusinessObjects.Live;
 using Entities.DomainInterfaces.Live;
@@ -13,10 +9,10 @@ using IO.Swagger.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Polly;
-using Polly.Retry;
 using RestSharp;
 using ContainerInspectResponse = IO.Swagger.Models.ContainerInspectResponse;
-using Try = ApplicationLogic.Extensions.Try;
+using Port = Entities.BusinessObjects.Live.Port;
+using Try = Entities.Extensions.Try;
 
 namespace Infrastructure.Docker;
 
@@ -25,7 +21,6 @@ public class LocalDockerClient : IEnvironmentClient
     private readonly RestClient _restClient;
     private readonly ILogger _logger;
     private readonly IHostInfo _hostInfo;
-    private const int Timeout = 1000000000;
 
     public LocalDockerClient(ILogger<LocalDockerClient> logger, IHostInfo hostInfo)
     {
@@ -108,7 +103,7 @@ public class LocalDockerClient : IEnvironmentClient
 
             var labelDict = new ConcurrentDictionary<ServiceLabelsEnum, string>(labels);
 
-            var ports = GetPortForDefaultProtocols(container);
+            var ports = GetPortsInfo(container);
 
             return (
                 CuratedInfo: new ContainerInfo()
@@ -117,7 +112,7 @@ public class LocalDockerClient : IEnvironmentClient
                     Name = container.Name[1..] ?? string.Empty,
                     ImageName = container.Image,
                     Status = container.State.ToString(),
-                    HostPort = ports.hostPort ?? string.Empty,
+                    PortsInfo = ports,
                     Labels = labelDict,
                     NanoCpus = container.HostConfig.NanoCpus ?? -1L,
                     Memory = container.HostConfig.Memory
@@ -125,43 +120,42 @@ public class LocalDockerClient : IEnvironmentClient
                 RawConfig: new ContainerRaw()
                 {
                     Config = container,
-                    ContainerPort = ports.containerPort ?? string.Empty,
+                    PortsInfo = ports,
                 });
         });
 
-        (string? hostPort, string? containerPort) GetPortForDefaultProtocols(ContainerInspectResponse container)
+        PortsInfo GetPortsInfo(ContainerInspectResponse container)
         {
-            var containerPorts = new List<string>() { "80/tcp" };
-
-            _hostInfo.GetCustomContainerPorts()
-                .Split(',', StringSplitOptions.TrimEntries)
-                .Where(s=>string.IsNullOrWhiteSpace(s) is false)
-                .ToList()
-                .ForEach(containerPort => containerPorts.Add($"{containerPort}/tcp"));
-
-            IList<PortBinding>? portBinding = null;
-
-            string? containerPort = null;
-
-            foreach (var portNumber in containerPorts)
+            var routingContainerPorts = new List<string>(
+                _hostInfo.GetCustomContainerPorts()
+                .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                .Where(s => string.IsNullOrWhiteSpace(s) is false))
             {
-                container.HostConfig.PortBindings.TryGetValue(portNumber, out var ports);
+                "80"
+            };
 
-                if (ports is not null)
-                {
-                    containerPort = portNumber;
-                    portBinding = ports;
-                    break;
-                }
+            var ports = container.HostConfig.PortBindings.ToList().ConvertAll(GetPort);
+            
+            var routingPortNumber = ports.FirstOrDefault(p => routingContainerPorts.Contains(p?.containerPort!))?.hostPort ?? 0;
+
+            return new PortsInfo()
+            {
+                RoutingPortNumber = routingPortNumber,
+                Ports = ports.ConvertAll(p => new Port(p.Value.hostPort, int.Parse(p.Value.containerPort), p.Value.TransportProtocol))
+            };
+
+            (int hostPort, string containerPort, string TransportProtocol)? GetPort(KeyValuePair<string, IList<PortBinding>> input)
+            {
+                var hostPort = input.Value.FirstOrDefault(port => string.IsNullOrWhiteSpace(port.HostPort) is false)?.HostPort ?? "0";
+
+                var split = input.Key.Split('/');
+
+                return (int.Parse(hostPort), split[0], split[1]);
             }
-
-            var hostPort = portBinding?.FirstOrDefault(p => string.IsNullOrEmpty(p.HostPort) is false)?.HostPort;
-
-            return (hostPort, containerPort);
         }
     }
 
-    public async Task<string?> IncreaseByOneNumberOfInstances(IContainerConfig containerConfig, string newContainerName, string serviceId, string podId)
+    public async Task<string?> IncreaseByOneNumberOfInstances(IContainerConfig containerConfig, string newContainerName, IServiceInstance serviceInstance, string podType)
     {
         string? creationId = null;
 
@@ -171,14 +165,14 @@ public class LocalDockerClient : IEnvironmentClient
 
             env.RemoveAll(e => e.ToString().StartsWith("ID="));
 
-            env.Add($"ID={serviceId}");
+            env.Add($"ID={serviceInstance.Id}");
 
-            if (containerConfig.Config.Config.Labels.ContainsKey("POD_ID"))
-                containerConfig.Config.Config.Labels["POD_ID"] = podId;
-            else
-                containerConfig.Config.Config.Labels.Add("POD_ID", podId);
+            containerConfig.Config.Config.Labels["POD_ID"] = serviceInstance.PodId;
 
-            var exposedPorts = GetPortBindings(containerConfig.ContainerPort);
+            containerConfig.Config.Config.Labels.TryAdd("ARTIFACT_NAME", serviceInstance.Type);
+            containerConfig.Config.Config.Labels.TryAdd("POD_NAME", podType);
+
+            var exposedPorts = GetPortBindings(new List<string>(containerConfig.PortsInfo.Ports.ConvertAll(p=>p.ToString())));
 
             containerConfig.Config.HostConfig.RestartPolicy = null;
             containerConfig.Config.HostConfig.AutoRemove = true;
@@ -193,6 +187,7 @@ public class LocalDockerClient : IEnvironmentClient
 
             var payload = new
             {
+                Hostname = newContainerName,
                 HostConfig = containerConfig.Config.HostConfig,
                 Env = env,
                 Labels = containerConfig.Config.Config.Labels,
@@ -245,7 +240,7 @@ public class LocalDockerClient : IEnvironmentClient
             .Handle<Exception>()
             .WaitAndRetryAsync(2, (_) => TimeSpan.FromMilliseconds(100));
 
-                await retryPolicy.ExecuteAsync(async () =>
+        await retryPolicy.ExecuteAsync(async () =>
         {
             try
             {
@@ -279,7 +274,7 @@ public class LocalDockerClient : IEnvironmentClient
     {
         await Try.WithConsequenceAsync(async () =>
         {
-            var poolContainers = await GetRunningServices();
+            var poolContainers = await GetRunningServices(new [] { "running", "paused", "exited", "dead", "created", "restarting" });
 
             if (poolContainers.Any(c => c.Equals(containerId)))
             {
@@ -322,19 +317,21 @@ public class LocalDockerClient : IEnvironmentClient
         });
     }
 
-    [MethodImpl(MethodImplOptions.NoOptimization)]
-    private IDictionary<string, IList<PortBinding>> GetPortBindings(string containerPort)
+    private IDictionary<string, IList<PortBinding>> GetPortBindings(List<string> containerPort)
     {
-        return new Dictionary<string, IList<PortBinding>>
+        var dict = new Dictionary<string, IList<PortBinding>>();
+
+        foreach (var port in containerPort)
         {
-            { containerPort, new List<PortBinding>
+            dict.Add(port, new List<PortBinding>
                 {
                     new()
                     {
                         HostPort = Random.Shared.Next(40000, 50000).ToString()
                     }
-                }
-            }
-        };
+                });
+        }
+
+        return dict;
     }
 }

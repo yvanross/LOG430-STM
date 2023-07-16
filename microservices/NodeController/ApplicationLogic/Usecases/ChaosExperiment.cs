@@ -1,7 +1,7 @@
 ﻿using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Services;
-using Entities.DomainInterfaces.Planned;
+using Entities.Dao;
 using Entities.DomainInterfaces.ResourceManagement;
 using Microsoft.Extensions.Logging;
 
@@ -23,12 +23,12 @@ public class ChaosExperiment
     
     private int _hardwareFailCount;
 
-    public ChaosExperiment(IEnvironmentClient environmentClient, IPodReadService readServiceService, IPodWriteService writeServiceService, IDataStreamService streamService, ILogger<ChaosExperiment> logger)
+    public ChaosExperiment(IEnvironmentClient environmentClient, IPodReadService readServiceService, IPodWriteService writeServiceService, IDataStreamService streamService, IHostInfo hostInfo, ILogger<ChaosExperiment> logger)
     {
         _readServiceService = readServiceService;
         _streamService = streamService;
         _logger = logger;
-        _resourceManagementService = new ResourceManagementService(environmentClient, readServiceService, writeServiceService);
+        _resourceManagementService = new ResourceManagementService(environmentClient, readServiceService, writeServiceService, hostInfo);
     }
 
     public async Task SendTimeComparisonRequestToPool(ICoordinates coordinates)

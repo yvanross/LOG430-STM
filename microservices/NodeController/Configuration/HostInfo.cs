@@ -1,13 +1,12 @@
 ﻿using ApplicationLogic.Interfaces;
 using ApplicationLogic.Usecases;
-using System.ComponentModel;
 using System.Text.RegularExpressions;
 
 namespace Configuration;
 
 public class HostInfo : IHostInfo
 {
-    private const string Version = "2.0.2";
+    private const string Version = "3.0.0";
 
     private const bool CheatsAllowed = true;
 
@@ -34,6 +33,8 @@ public class HostInfo : IHostInfo
     private static readonly string BridgePort = Environment.GetEnvironmentVariable("BRIDGE_PORT")!;
 
     private static readonly string ContainerId;
+
+    private static readonly IEnumerable<int> TunnelPortRange = Enumerable.Range(4300, 10);
 
     private static bool _dirty = false;
     
@@ -152,5 +153,10 @@ public class HostInfo : IHostInfo
     public string GetContainerId()
     {
         return ContainerId;
+    }
+
+    public IEnumerable<int> GetTunnelPortRange()
+    {
+        return TunnelPortRange;
     }
 }

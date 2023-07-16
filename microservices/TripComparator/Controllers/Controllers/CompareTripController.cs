@@ -1,12 +1,7 @@
 using ApplicationLogic.Interfaces.Policies;
 using ApplicationLogic.Usecases;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using ServiceMeshHelper;
-using ServiceMeshHelper.Bo.InterServiceRequests;
-using ServiceMeshHelper.Controllers;
 using Swashbuckle.AspNetCore.Annotations;
-using TripComparator.DTO;
 
 namespace Controllers.Controllers
 {

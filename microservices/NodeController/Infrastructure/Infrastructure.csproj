@@ -10,6 +10,7 @@
     <PackageReference Include="InfluxDB.Client" Version="4.11.0" />
     <PackageReference Include="MassTransit" Version="8.0.15" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Connections.Abstractions" Version="7.0.8" />
     <PackageReference Include="Polly" Version="7.2.3" />
     <PackageReference Include="RestSharp" Version="108.0.3" />
   </ItemGroup>
@@ -21,6 +22,7 @@
 
   <ItemGroup>
     <Folder Include="Interfaces\" />
+    <Folder Include="L4ConnectionListener\L4LinkBuffers\" />
   </ItemGroup>
 
 </Project>

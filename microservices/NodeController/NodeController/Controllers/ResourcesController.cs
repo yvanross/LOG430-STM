@@ -1,11 +1,9 @@
-﻿using ApplicationLogic.Interfaces.Dao;
-using ApplicationLogic.Usecases;
-using Entities.DomainInterfaces.Live;
-using Entities.DomainInterfaces.Planned;
+﻿using ApplicationLogic.Usecases;
 using Microsoft.AspNetCore.Mvc;
 
 namespace NodeController.Controllers
 {
+    [ApiVersion("2.0")]
     [ApiController]
     [Route("[controller]")]
     public class ResourcesController : ControllerBase

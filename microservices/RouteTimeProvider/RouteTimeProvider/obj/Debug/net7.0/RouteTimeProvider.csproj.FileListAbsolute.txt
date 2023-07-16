@@ -119,7 +119,5 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\Route
 C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Entities.dll
 C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Entities.pdb
 C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Polly.dll
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Microsoft.DotNet.PlatformAbstractions.dll
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Polly.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\ServiceMeshHelper.dll

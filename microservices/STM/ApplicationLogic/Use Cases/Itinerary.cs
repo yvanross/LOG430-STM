@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ApplicationLogic.Use_Cases
 {
-    public class Itinerary
+    public class Itinerary : IItinerary
     {
         private readonly IStmClient _client;
         private readonly ITransitDataCache _stmData;
@@ -17,7 +17,7 @@ namespace ApplicationLogic.Use_Cases
         public Itinerary(
             IStmClient client,
             ITransitDataCache igtfsAggregateRoot,
-            ILogger<Itinerary> logger,
+            ILogger<IItinerary> logger,
             ItineraryPlannerService itineraryPlannerService,
             GtfsProcessorService gtfsProcessorService)
         {

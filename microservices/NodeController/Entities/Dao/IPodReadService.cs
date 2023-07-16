@@ -2,7 +2,7 @@
 using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
 
-namespace ApplicationLogic.Interfaces.Dao;
+namespace Entities.Dao;
 
 public interface IPodReadService
 {
@@ -32,5 +32,9 @@ public interface IPodReadService
 
     //----------------------------------------------------------------
 
-    string GetAddress();
+    ImmutableList<int> GetTakenSocketPorts();
+
+    int? TryGetSocketPortForType(IServiceType type);
+
+    IServiceType? TryGetServiceTypeFromPort(int port);
 }

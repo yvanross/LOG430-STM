@@ -1,4 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Threading.Tasks;
+using ApplicationLogic.Helpers;
+using Entities.Transit.Concretions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace STMTests.Use_Cases
 {
@@ -143,5 +146,12 @@ namespace STMTests.Use_Cases
             Assert.IsNull(valueTuple?.First().bus);
         }
         */
+        
+        [TestMethod()]
+        public async Task CompressTripFile()
+        {
+            await FileCompressor.CompressTripFile(@"C:\Users\david\Downloads\GTFS_Update\stop_times",
+                @"C:\Users\david\Downloads\GTFS_Update\");
+        }
     }
 }

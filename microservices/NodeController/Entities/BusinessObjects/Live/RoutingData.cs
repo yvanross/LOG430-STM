@@ -3,8 +3,8 @@
 public class RoutingData
 {
     public required string Address { get; set; }
-
-    public List<NameValue> AddedHeaders { get; set; } = new ();
-
-    public List<NameValue> AddedQueryParams { get; set; } = new ();
+    
+    public required string Host { get; set; }
+   
+    public required string Port { get; set; }
 }

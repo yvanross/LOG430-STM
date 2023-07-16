@@ -2,7 +2,6 @@
 using ApplicationLogic.Usecases;
 using MassTransit;
 using MqContracts;
-using Polly;
 
 namespace Controllers.Controllers;
 

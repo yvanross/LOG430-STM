@@ -44,7 +44,7 @@ public class ExperimentMqController : IConsumer<ExperimentDto>
 
         _scheduler.TryAddTask(nameof(_experimentMonitoring.LogExperimentResults), _experimentMonitoring.LogExperimentResults);
 
-        _scheduler.TryAddTask(nameof(_chaosExperiment.InduceChaos), _chaosExperiment.InduceChaos);
+        _scheduler.TryAddBlockingTask(nameof(_chaosExperiment.InduceChaos), _chaosExperiment.InduceChaos);
 
         _logger.LogInformation("Scheduling completed, good luck");
     }

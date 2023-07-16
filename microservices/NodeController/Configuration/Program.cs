@@ -16,18 +16,36 @@ using MqContracts;
 using RabbitMQ.Client;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using System;
+using Entities.Dao;
+using Infrastructure.L4ConnectionListener;
+using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using NodeController.Controllers.Mq;
-using NuGet.Packaging.Signing;
 using Moq;
 
 namespace Configuration
 {
     public class Program
     {
+        private static readonly HostInfo HostInfo = new ();
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.WebHost.UseKestrel(options =>
+            {
+                foreach (var port in HostInfo.GetTunnelPortRange())
+                {
+                    options.ListenAnyIP(port, listenOptions =>
+                    {
+                        listenOptions.UseConnectionHandler<L4LoadBalancer>();
+                    });
+                }
+
+                options.ListenAnyIP(80);
+            });
 
             ConfigureServices(builder.Services);
 
@@ -36,8 +54,6 @@ namespace Configuration
             app.UseSwagger();
 
             app.UseSwaggerUI();
-
-            app.UseHttpsRedirection();
 
             app.UseCors(
                 options =>
@@ -68,13 +84,20 @@ namespace Configuration
                 options.SerializerSettings.Converters.Add(new ChaosConfigDictionaryConverter());
             }).PartManager.ApplicationParts.Add(new AssemblyPart(typeof(RoutingController).Assembly));
 
+            services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(2, 0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions = true;
+            });
+
             services.AddEndpointsApiExplorer();
 
             services.AddSwaggerGen();
 
             ApplicationLogic(services);
 
-            Infrastructure(services, new HostInfo());
+            Infrastructure(services);
 
             services.AddSingleton<TaskScheduling>();
 
@@ -92,26 +115,28 @@ namespace Configuration
 
                 services.AddScoped<Monitor>();
 
-                services.AddScoped<Routing>();
+                services.AddScoped<IRouting, Routing>();
 
                 services.AddScoped<ResourceManagementService>();
 
                 services.AddScoped<PlannedResourcesUpdate>();
             }
 
-            static void Infrastructure(IServiceCollection services, IHostInfo hostInfo)
+            static void Infrastructure(IServiceCollection services)
             {
                 services.AddSingleton<IHostInfo, HostInfo>();
                 
                 services.AddSingleton<IMqConfigurator, MassTransitRabbitMq>();
 
-                if (hostInfo.IsIngressConfigValid())
+                if (HostInfo.IsIngressConfigValid())
                 {
                     services.AddScoped<IDataStreamService, MassTransitRabbitMqClient>();
 
                     services.AddScoped<IHeartbeatService, MassTransitRabbitMqClient>();
 
                     services.AddScoped<IIngressClient, IngressClient>();
+
+                    services.AddScoped<L4Logger>();
 
                     services.AddScoped<ISystemStateWriteService, InfluxDbWriteService>();
 

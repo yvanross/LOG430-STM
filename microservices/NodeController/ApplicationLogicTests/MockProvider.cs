@@ -8,7 +8,7 @@ using Entities.DomainInterfaces.ResourceManagement;
 using Moq;
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
-using IO.Swagger.Models;
+using Entities.Dao;
 using Microsoft.Extensions.Logging;
 
 namespace ApplicationLogicTests;
@@ -151,8 +151,6 @@ public static class MockProvider
 
         var readModel = new Mock<IPodReadService>();
 
-        readModel.Setup(x => x.GetAddress()).Returns("host.docker.internal");
-
         readModel.Setup(x => x.GetAllPodTypes())
             .Returns(ImmutableList<IPodType>.Empty.Add(podType1).Add(podType2));
 
@@ -252,7 +250,6 @@ public static class MockProvider
         serviceInstance.Setup(x => x.ContainerInfo).Returns(containerInfo);
         serviceInstance.Setup(x => x.HttpRoute).Returns($"{serviceInstanceNb}");
         serviceInstance.Setup(x => x.Id).Returns($"{podInstanceNb}10462F39-5E35-43E8-999E-F723CA48306B{serviceInstanceNb}");
-        serviceInstance.Setup(x => x.LastHeartbeat).Returns(DateTime.Now);
         serviceInstance.Setup(x => x.PodId).Returns($"PodId{podInstanceNb}");
         serviceInstance.Setup(x => x.ServiceStatus).Returns(new ReadyState());
         serviceInstance.Setup(x => x.Type).Returns(GetServiceTypeMock(serviceTypeNb).Object.Type);
@@ -288,10 +285,6 @@ public static class MockProvider
         environmentClient.Setup(x => x.GetRunningServices(null))
             .Returns(Task.FromResult(readModel.Object.GetAllServices().ConvertAll(s=>s.ContainerInfo.Id)));
 
-        environmentClient.Setup(x => x.IncreaseByOneNumberOfInstances(
-                It.IsAny<IContainerConfig>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-            .Returns(Task.FromResult(serviceInstance2.Id)).Verifiable();
-
         environmentClient.Setup(x => x.RemoveContainerInstance(It.IsAny<string>(), It.IsAny<bool>())).Returns(Task.CompletedTask);
 
         environmentClient.Setup(x => x.SetResources(It.IsAny<IPodInstance>(), It.IsAny<long>()))
@@ -311,7 +304,7 @@ public static class MockProvider
             Memory = 100000L,
             NanoCpus = 100000L,
             Name = $"ContainerTest{serviceInstanceNb}",
-            HostPort = "0000",
+            PortsInfo = new PortsInfo(),
             Status = "Testing",
             Labels = new ConcurrentDictionary<ServiceLabelsEnum, string>(),
         };

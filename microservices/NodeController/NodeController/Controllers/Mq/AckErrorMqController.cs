@@ -1,6 +1,4 @@
-﻿using ApplicationLogic.Interfaces;
-using ApplicationLogic.Usecases;
-using Entities.DomainInterfaces.ResourceManagement;
+﻿using ApplicationLogic.Usecases;
 using MassTransit;
 using MqContracts;
 

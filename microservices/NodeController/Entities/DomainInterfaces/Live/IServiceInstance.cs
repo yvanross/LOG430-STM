@@ -13,8 +13,6 @@ public interface IServiceInstance : IEquatable<IServiceInstance>
 
     string Type { get; init; }
 
-    DateTime LastHeartbeat { get; set; }
-
     IServiceState ServiceStatus { get; set; }
 
     string HttpRoute { get; }
