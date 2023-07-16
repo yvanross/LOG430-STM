@@ -34,8 +34,6 @@ public sealed class LinkHub : IDisposable
     private readonly SemaphoreSlim _semaphoreSlim = new (4);
     private readonly CancellationTokenSource _cancellationTokenSource = new (); 
 
-    private readonly TimeSpan _gracePeriod = TimeSpan.FromMilliseconds(100);
-
     public LinkHub(ConnectionContext sourceConnection, IServiceType serviceType, IRouting routing, IPodReadService podReadService, ILogger logger)
     {
         _serviceType = serviceType;
@@ -72,24 +70,18 @@ public sealed class LinkHub : IDisposable
 
                 var finishedTask = await Task.WhenAny(blueRead, blueWrite, greenRead, greenWrite);
 
-                //if (finishedTask == blueWrite && blueWrite.Result.Equals(LinkResult.Retry))
-                //{
-                //    _logger.LogWarning("Blue write link failed. Resending data to destination and closing");
+                if (finishedTask == greenRead && greenRead.Result.Equals(LinkResult.Retry))
+                {
+                    UpdateDestination();
 
-                //    await _blueWriteLink.ResendPossiblyLostDataToDestination();
-                //}
-                //if (finishedTask == greenRead && greenRead.Result.Equals(LinkResult.Retry))
-                //{
-                //    UpdateDestination();
+                    continue;
+                }
+                if (finishedTask == greenWrite && greenWrite.Result.Equals(LinkResult.Retry))
+                {
+                    UpdateDestination();
 
-                //    continue;
-                //}
-                //if (finishedTask == greenWrite && greenWrite.Result.Equals(LinkResult.Retry))
-                //{
-                //    UpdateDestination();
-
-                //    continue;
-                //}
+                    continue;
+                }
 
                 _logger.LogInformation("Link hub closing");
 

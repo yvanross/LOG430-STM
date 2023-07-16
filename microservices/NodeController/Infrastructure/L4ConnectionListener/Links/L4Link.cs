@@ -88,17 +88,17 @@ public abstract class L4Link : IDisposable
 
     private protected abstract Task<LinkResult> TryCopyDataAsync(byte[] bufferArray);
 
-    public async Task ResendPossiblyLostDataToDestination()
-    {
-        while (FailoverBufferQueue.Count > 0 && FailoverBufferQueue.TryPeek(out var dataChunk))
-        {
-            Logger.LogInformation($"Compensating last messages on {WhoAmI}");
+    //public async Task ResendPossiblyLostDataToDestination()
+    //{
+    //    while (FailoverBufferQueue.Count > 0 && FailoverBufferQueue.TryPeek(out var dataChunk))
+    //    {
+    //        Logger.LogInformation($"Compensating last messages on {WhoAmI}");
 
-            await Destination.WriteAsync(dataChunk, CancellationToken.None);
+    //        await Destination.WriteAsync(dataChunk, CancellationToken.None);
 
-            FailoverBufferQueue.TryDequeue(out _);
-        }
-    }
+    //        FailoverBufferQueue.TryDequeue(out _);
+    //    }
+    //}
 
     public void Dispose()
     {

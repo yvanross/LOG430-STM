@@ -68,6 +68,6 @@ public class GreenWrite : L4Link
             Logger.LogInformation($"{nameof(GreenWrite)} Exiting");
         }
 
-        return LinkResult.Abort;
+        return LinkResult.Retry;
     }
 }

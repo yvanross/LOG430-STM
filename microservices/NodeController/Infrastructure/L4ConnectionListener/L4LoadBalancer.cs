@@ -31,7 +31,7 @@ public class L4LoadBalancer : ConnectionHandler
 
             _logger.SetConnectionId(connection.ConnectionId);
 
-            var linkHub = new LinkHub(connection, serviceType, _routing, _podReadService, _logger);
+            using var linkHub = new LinkHub(connection, serviceType, _routing, _podReadService, _logger);
 
             await linkHub.BeginAsync();
         }

@@ -1,4 +1,5 @@
-﻿using Infrastructure.L4ConnectionListener.L4LinkBuffers;
+﻿using Infrastructure.L4ConnectionListener.Exceptions;
+using Infrastructure.L4ConnectionListener.L4LinkBuffers;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.L4ConnectionListener.Links;
@@ -34,9 +35,9 @@ public class BlueWrite : L4Link
                 FailoverBufferQueue.TryDequeue(out _);
             }
         }
-        catch (Exception e)
+        catch
         {
-            return LinkResult.Retry;
+            throw new BlueLinkException("Write Closed");
         }
         finally
         {

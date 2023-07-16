@@ -40,14 +40,14 @@ public class GreenRead : L4Link
             e is SocketException &&
             SocketErrorsToRetry.Any(error => error.Equals((e as SocketException)!.SocketErrorCode)))
         {
-            return LinkResult.Abort;
+            return LinkResult.Retry;
         }
         finally
         {
             Logger.LogInformation($"{nameof(GreenRead)} Exiting");
         }
 
-        return LinkResult.Abort;
+        return LinkResult.Retry;
     }
 
     public async Task UpdateSource(ITunnel source)
