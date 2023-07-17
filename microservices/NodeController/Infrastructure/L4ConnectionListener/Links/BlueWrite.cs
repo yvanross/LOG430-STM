@@ -6,15 +6,11 @@ namespace Infrastructure.L4ConnectionListener.Links;
 
 public class BlueWrite : L4Link
 {
-    public BlueWrite(ITunnel source, ITunnel destination, ILogger logger, SingleTokenAdder tokenAdder) : base(source, destination, logger, tokenAdder)
-    {
-        WhoAmI = nameof(BlueWrite);
-    }
+    public BlueWrite(ITunnel source, ITunnel destination, SingleTokenAdder tokenAdder) : base(source, destination, tokenAdder) {}
 
-     private protected override async Task<LinkResult> TryCopyDataAsync(byte[] bufferArray)
+    private protected override async Task<LinkResult> TryCopyDataAsync(byte[] bufferArray)
     {
         int bytesRead;
-
         try
         {
             while ((bytesRead = await Source.ReadAsync(bufferArray, CancellationTokenSource.Token)) > 0)
@@ -25,8 +21,6 @@ public class BlueWrite : L4Link
 
                 // Add the data chunk to the queue.
                 FailoverBufferQueue.Enqueue(dataChunk);
-
-                CancellationTokenSource.Token.ThrowIfCancellationRequested();
 
                 // Write the data chunk to the destination stream.
                 await Destination.WriteAsync(dataChunk, CancellationTokenSource.Token);

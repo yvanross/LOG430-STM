@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "T6sSBUP+sQn3PWovDqxZIqfaGZW9zD7lKO8mxbTUZ/RYMY4+cebu4gQwrKAP5enTWZ0Ym4Ka3jGL7CSMuHSfHg==",
+  "dgSpecHash": "g8DQW396LhgK7GJgPrkT0fys8E2/3e+LLUT9n15V+VYB4F2T993XqLlA3jGpxzZaGcXHl6GWfjhZC0ucWsH91A==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\ServiceMeshHelper.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\polly\\7.2.3\\polly.7.2.3.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\restsharp\\108.0.3\\restsharp.108.0.3.nupkg.sha512"
   ],
   "logs": []

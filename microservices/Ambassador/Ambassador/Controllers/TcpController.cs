@@ -1,4 +1,5 @@
-﻿using ServiceMeshHelper.Usecases;
+﻿using Polly;
+using ServiceMeshHelper.Usecases;
 
 namespace ServiceMeshHelper.Controllers;
 
@@ -12,7 +13,7 @@ public class TcpController
     /// </summary>
     /// <param name="targetService">Name of the service type to connect to, ex: EventStream</param>
     /// <returns></returns>
-    public static async Task<string> GetTcpSocketForSericeType(string targetService)
+    public static async Task<string> GetTcpSocketForRabbitMq(string targetService)
     {
         return await GetTcpSocket("rabbitmq", targetService);
     }
@@ -25,7 +26,10 @@ public class TcpController
     /// <returns></returns>
     public static async Task<string> GetTcpSocket(string protocol, string targetService)
     {
-        var port = await tcp.Preflight(targetService);
+        var backOffRetry = Policy.Handle<Exception>()
+            .WaitAndRetryForeverAsync(attempt => TimeSpan.FromSeconds(Math.Max(attempt/2, 5)));
+
+        var port = await backOffRetry.ExecuteAsync(() => tcp.Preflight(targetService));
 
         return $"{protocol}://{Environment.GetEnvironmentVariable("SERVICES_ADDRESS")}:{port}";
     }

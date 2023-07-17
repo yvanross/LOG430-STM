@@ -25,11 +25,7 @@ public abstract class L4Link : IDisposable
 
     private protected ITunnel _destination;
 
-    private readonly ILogger _logger;
-
     private readonly SingleTokenAdder _tokenAdder;
-
-    private protected string WhoAmI;
 
     private protected readonly ConcurrentQueue<byte[]> FailoverBufferQueue = new();
 
@@ -54,29 +50,23 @@ public abstract class L4Link : IDisposable
         SocketError.MessageSize
     };
 
-    protected L4Link(ITunnel source, ITunnel destination, ILogger logger, SingleTokenAdder tokenAdder)
+    protected L4Link(ITunnel source, ITunnel destination, SingleTokenAdder tokenAdder)
     {
         Source = source;
         Destination = destination;
-        _logger = logger;
         _tokenAdder = tokenAdder;
     }
 
-    public virtual async Task SafeAbortGossips()
+    protected async Task SafeAbortGossips()
     {
         if (CancellationTokenSource.IsCancellationRequested is false)
         {
             CancellationTokenSource.Cancel();
 
-            await _tokenAdder.Take(CancellationToken.None);
+            await _tokenAdder.Take(new CancellationTokenSource(500).Token);
 
             _tokenAdder.Release();
-
-            Interlocked.Exchange(ref CancellationTokenSource, new CancellationTokenSource());
         }
-
-        if (Interlocked.Exchange(ref GossipingTask, null) is {} task)
-            await task;
     }
 
     public async Task<Task<LinkResult>> BeginGossiping(CancellationToken cancellation)
@@ -93,19 +83,6 @@ public abstract class L4Link : IDisposable
         return GossipingTask;
     }
 
-
-    public async Task ResendPossiblyLostDataToDestination()
-    {
-        while (FailoverBufferQueue.Count > 0 && FailoverBufferQueue.TryPeek(out var dataChunk))
-        {
-            _logger.LogInformation($"Compensating last messages on {WhoAmI}");
-
-            //await Destination.WriteAsync(dataChunk, CancellationToken.None);
-
-            FailoverBufferQueue.TryDequeue(out _);
-        }
-    }
-
     private async Task<LinkResult> TaskRelease(byte[] bufferArray)
     {
         var result = await TryCopyDataAsync(bufferArray);
@@ -120,14 +97,17 @@ public abstract class L4Link : IDisposable
 
     public void Dispose()
     {
-        Source.Dispose();
-        Destination.Dispose();
+        SafeAbortGossips().Wait();
 
-        if (CancellationTokenSource.IsCancellationRequested is false)
-            CancellationTokenSource.Cancel();
+        Source.Dispose();
+
+        Destination.Dispose();
 
         CancellationTokenSource.Dispose();
 
-        Interlocked.Exchange(ref GossipingTask, null);
+        if(GossipingTask is not null)
+            Interlocked.Exchange(ref GossipingTask, null);
+
+        GossipingTask?.Dispose();
     }
 }

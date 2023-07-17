@@ -17,19 +17,6 @@ public class ChannelTunnel : ITunnel
         _memoryStream.Dispose();
     }
 
-    public void ClearReadStream()
-    {
-        try
-        {
-            Interlocked.Exchange(ref _memoryStream, new MemoryStream());
-            _channel.Reader.ReadAllAsync();
-        }
-        catch
-        {
-            // don't care
-        }
-    }
-
     public async ValueTask<int> ReadAsync(byte[] buffer, CancellationToken cancellationToken)
     {
         if (_memoryStream.Length == _memoryStream.Position) // If we have read everything from the MemoryStream
@@ -66,8 +53,6 @@ public class ChannelTunnel : ITunnel
 
     public async ValueTask WriteAsync(byte[] buffer, CancellationToken cancellationToken)
     {
-        await Task.Delay(10, cancellationToken);
-
         await _channel.Writer.WriteAsync(buffer, cancellationToken);
     }
 }

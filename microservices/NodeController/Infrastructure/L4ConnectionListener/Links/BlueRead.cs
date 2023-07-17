@@ -6,15 +6,11 @@ namespace Infrastructure.L4ConnectionListener.Links;
 
 public class BlueRead : L4Link
 {
-    public BlueRead(ITunnel source, ITunnel destination, ILogger logger, SingleTokenAdder tokenAdder) : base(source, destination, logger, tokenAdder)
-    {
-        WhoAmI = nameof(BlueRead);
-    }
+    public BlueRead(ITunnel source, ITunnel destination, SingleTokenAdder tokenAdder) : base(source, destination, tokenAdder) {}
 
     private protected override async Task<LinkResult> TryCopyDataAsync(byte[] bufferArray)
     {
         int bytesRead;
-
         try
         {
             while ((bytesRead = await Source.ReadAsync(bufferArray, CancellationTokenSource.Token)) > 0)
@@ -23,13 +19,15 @@ public class BlueRead : L4Link
 
                 Buffer.BlockCopy(bufferArray, 0, dataChunk, 0, bytesRead);
 
+                // Add the data chunk to the queue.
+                FailoverBufferQueue.Enqueue(dataChunk);
+
                 // Write the data chunk to the destination stream.
                 await Destination.WriteAsync(dataChunk, CancellationTokenSource.Token);
+
+                // Remove the data chunk from the queue, as it has been successfully written to the destination.
+                FailoverBufferQueue.TryDequeue(out _);
             }
-        }
-        catch (Exception e) when (e is OperationCanceledException)
-        {
-            return LinkResult.Retry;
         }
         catch
         {

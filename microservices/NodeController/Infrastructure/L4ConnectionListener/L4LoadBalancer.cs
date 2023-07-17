@@ -54,6 +54,8 @@ public class L4LoadBalancer : ConnectionHandler
         }
         finally
         {
+            connection.Abort();
+
             await connection.DisposeAsync();
 
             _logger.LogInformation($"Connection disposed: {connection.ConnectionId}");

@@ -63,6 +63,8 @@ public class MassTransitRabbitMq : IMqConfigurator
 
             cfg.ReceiveEndpoint(uniqueQueueName, endpoint =>
             {
+                endpoint.UseTimeout((x) => x.Timeout = TimeSpan.FromMilliseconds(100));
+
                 endpoint.ConfigureConsumeTopology = false;
                 
                 endpoint.SetQuorumQueue();

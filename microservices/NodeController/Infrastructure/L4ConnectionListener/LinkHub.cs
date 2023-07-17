@@ -45,75 +45,18 @@ public sealed class LinkHub : IDisposable
 
         var destinationStream = GetTcpClient().GetStream();
 
-        _blueWriteLink = new BlueWrite(new StreamTunnel(sourceConnection.Transport.Input.AsStream()), _blueStream, logger, new SingleTokenAdder(_semaphoreSlim, logger));
-        _blueReadLink = new BlueRead(_greenStream,  new StreamTunnel(sourceConnection.Transport.Output.AsStream()), logger, new SingleTokenAdder(_semaphoreSlim, logger));
+        _blueWriteLink = new BlueWrite(new StreamTunnel(sourceConnection.Transport.Input.AsStream()), _blueStream, new SingleTokenAdder(_semaphoreSlim, logger));
+        _blueReadLink = new BlueRead(_greenStream,  new StreamTunnel(sourceConnection.Transport.Output.AsStream()), new SingleTokenAdder(_semaphoreSlim, logger));
 
-        _greenWriteLink = new GreenWrite(_blueStream, new StreamTunnel(destinationStream), logger, new SingleTokenAdder(_semaphoreSlim, logger));
-        _greenReadLink = new GreenRead(new StreamTunnel(destinationStream), _greenStream, logger, new SingleTokenAdder(_semaphoreSlim, logger));
+        _greenWriteLink = new GreenWrite(_blueStream, new StreamTunnel(destinationStream), new SingleTokenAdder(_semaphoreSlim, logger));
+        _greenReadLink = new GreenRead(new StreamTunnel(destinationStream), _greenStream, new SingleTokenAdder(_semaphoreSlim, logger));
     }
 
     public async Task BeginAsync()
     {
         try
         {
-            var secondWind = false;
-            var failedAt = DateTime.UtcNow;
-
-            // Number of seconds to wait before giving up on reconnecting
-            const int grace = 5;
-
-            while (true)
-            {
-                _logger.LogInformation("Starting link hub");
-
-                var blueRead = await _blueReadLink.BeginGossiping(_cancellationTokenSource.Token);
-                var blueWrite = await _blueWriteLink.BeginGossiping(_cancellationTokenSource.Token);
-
-                var greenWrite = await _greenWriteLink.BeginGossiping(_cancellationTokenSource.Token);
-                var greenRead = await _greenReadLink.BeginGossiping(_cancellationTokenSource.Token);
-
-                _logger.LogInformation("Connection established...");
-
-                var finishedTask = await Task.WhenAny(blueRead, blueWrite, greenRead, greenWrite);
-
-                if (finishedTask == greenRead && greenRead.Result.Equals(LinkResult.Retry))
-                {
-                    ((ChannelTunnel)_blueReadLink.Source).ClearReadStream();
-
-                    if (secondWind && DateTime.UtcNow.Subtract(failedAt).TotalSeconds < grace)
-                    {
-                        _logger.LogInformation($"Failed to reconnect");
-
-                        break;
-                    }
-
-                    await _blueReadLink.SafeAbortGossips();
-
-                    ((ChannelTunnel)_blueReadLink.Source).ClearReadStream();
-
-                    _logger.LogInformation($"Attempting to reconnect to new destination...");
-
-                    secondWind = !secondWind;
-
-                    failedAt = DateTime.UtcNow;
-
-                    UpdateDestination();
-
-                    await _greenWriteLink.ResendPossiblyLostDataToDestination();
-
-                    continue;
-                }
-                if (finishedTask == greenWrite && greenWrite.Result.Equals(LinkResult.Retry))
-                {
-                    UpdateDestination();
-
-                    continue;
-                }
-
-                _logger.LogInformation("Link hub closing");
-
-                break;
-            }
+            while ((await ScheduleLinks()).Equals(LinkResult.Retry)) { }
         }
         catch (BlueLinkException e)
         {
@@ -121,37 +64,59 @@ public sealed class LinkHub : IDisposable
         }
     }
 
-    private void UpdateDestination()
+    private async Task<LinkResult> ScheduleLinks()
     {
-        var destinationClient = GetTcpClient();
+        _logger.LogInformation("Starting link hub");
 
-        _logger.LogInformation($"Updating Green Link host...");
+        var tasks = new[]
+        {
+            (nameof(BlueRead), await _blueReadLink.BeginGossiping(_cancellationTokenSource.Token)),
+            (nameof(BlueWrite), await _blueWriteLink.BeginGossiping(_cancellationTokenSource.Token)),
 
-        Task.WaitAll(
-            _greenReadLink.UpdateSource(new StreamTunnel(destinationClient.GetStream())),
-            _greenWriteLink.UpdateDestination(new StreamTunnel(destinationClient.GetStream())));
+            (nameof(GreenWrite), await _greenWriteLink.BeginGossiping(_cancellationTokenSource.Token)),
+            (nameof(GreenRead), await _greenReadLink.BeginGossiping(_cancellationTokenSource.Token)),
+        };
 
-        _logger.LogInformation($"Update Completed, ready");
+        _logger.LogInformation("Chatting...");
+
+        var finishedTask = await Task.WhenAny(tasks.Select(kv=>kv.Item2));
+
+        _logger.LogInformation($"Conversation over, {tasks.Single(t => t.Item2.Id.Equals(finishedTask.Id)).Item1} completed.");
+
+        return await finishedTask;
     }
 
     public void Dispose()
     {
-        _logger.LogInformation("Disposing link hub");
+        try
+        {
+            _logger.LogInformation("Disposing link hub");
 
-        if (!_cancellationTokenSource.IsCancellationRequested)
-            _cancellationTokenSource.Cancel();
+            if (!_cancellationTokenSource.IsCancellationRequested)
+                _cancellationTokenSource.Cancel();
 
-        _cancellationTokenSource.Dispose();
-        _blueWriteLink.Dispose();
-        _blueReadLink.Dispose();
-        _greenWriteLink.Dispose();
-        _greenReadLink.Dispose();
-        _blueStream.Dispose();
-        _greenStream.Dispose();
+            _cancellationTokenSource.Dispose();
 
-        for (int i = 0; i < NumberOfLinks; i++) _semaphoreSlim.WaitAsync();
+            Task.WaitAll(new[]
+            {
+                new Task(() => _blueWriteLink.Dispose()),
+                new Task(() => _greenWriteLink.Dispose()),
+                new Task(() => _greenReadLink.Dispose()),
+                new Task(() => _blueReadLink.Dispose()),
+                new Task(() => _blueStream.Dispose()),
+                new Task(() => _greenStream.Dispose()),
+                _semaphoreSlim.WaitAsync(),
+                _semaphoreSlim.WaitAsync(),
+                _semaphoreSlim.WaitAsync(),
+                _semaphoreSlim.WaitAsync()
+            }, TimeSpan.FromSeconds(1));
 
-        _semaphoreSlim.Dispose();
+            _semaphoreSlim.Dispose();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error disposing link hub");
+        }
     }
 
     private TcpClient GetTcpClient()
@@ -184,12 +149,13 @@ public sealed class LinkHub : IDisposable
             {
                 var destinationClient = new TcpClient(destination.Host, port);
 
-                _logger.LogInformation($"Connected on {port}");
-
                 //destinationClient.SendTimeout = 1000;
                 //destinationClient.ReceiveTimeout = 1000;
 
-                destinationClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                //destinationClient.Client.SendTimeout = 1000;
+                //destinationClient.Client.ReceiveTimeout = 1000;
+
+                _logger.LogInformation($"Connected on {port}");
 
                 return destinationClient;
             }

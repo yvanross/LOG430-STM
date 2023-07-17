@@ -219,6 +219,11 @@ namespace Configuration
 
             var uniqueQueueName = $"{baseQueueName}.{Guid.NewGuid()}";
 
+            services.Configure<MassTransitHostOptions>(options =>
+            {
+                options.StartTimeout = TimeSpan.FromSeconds(1);
+            });
+
             services.AddMassTransit(x =>
             {
                 if (hostInfo.IsIngressConfigValid() is false) return;
@@ -226,7 +231,9 @@ namespace Configuration
                 x.AddConsumer<ExperimentMqController>();
                 x.AddConsumer<BusPositionUpdatedMqController>();
                 x.AddConsumer<AckErrorMqController>();
-                
+
+                x.AddHealthChecks();
+
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(reformattedAddress);

@@ -6,6 +6,7 @@ using Controllers.Controllers;
 using Entities.DomainInterfaces;
 using Infrastructure.Clients;
 using MassTransit;
+using MassTransit.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
@@ -85,13 +86,16 @@ namespace Configuration
 
         private static async Task ConfigureMassTransit(IServiceCollection services)
         {
-            await Task.Delay(5_000);
-
-            var host = await TcpController.GetTcpSocketForSericeType(HostInfo.MqServiceName);
+            var host = await TcpController.GetTcpSocketForRabbitMq(HostInfo.MqServiceName);
 
             const string baseQueueName = "time_comparison.node_controller-to-any.query";
 
             var uniqueQueueName = $"{baseQueueName}.{Guid.NewGuid()}";
+
+            services.Configure<MassTransitHostOptions>(options =>
+            {
+                options.StartTimeout = TimeSpan.FromSeconds(1);
+            });
 
             services.AddMassTransit(x =>
             {
@@ -99,15 +103,26 @@ namespace Configuration
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host(host);
-
+                    //cfg.UseTimeout(_=>TimeSpan.FromSeconds(1));
+                    
+                    cfg.Host(host, hostConfig =>
+                    {
+                        //hostConfig.Heartbeat(1);
+                        //hostConfig.OnRefreshConnectionFactory = async factory =>
+                        //{
+                        //    factory.NetworkRecoveryInterval = TimeSpan.FromSeconds(1);
+                        //    factory.RequestedHeartbeat = TimeSpan.FromSeconds(1);
+                        //    factory.HandshakeContinuationTimeout = TimeSpan.FromSeconds(1);
+                        //};
+                    });
+                    
                     cfg.Message<BusPositionUpdated>(topologyConfigurator => topologyConfigurator.SetEntityName("bus_position_updated"));
                     cfg.Message<CoordinateMessage>(topologyConfigurator => topologyConfigurator.SetEntityName("coordinate_message"));
 
                     cfg.ReceiveEndpoint(uniqueQueueName, endpoint =>
                     {
                         endpoint.ConfigureConsumeTopology = false;
-
+                        
                         endpoint.Bind<CoordinateMessage>(binding =>
                         {
                             binding.ExchangeType = ExchangeType.Topic;
@@ -117,9 +132,11 @@ namespace Configuration
                         endpoint.ConfigureConsumer<TripComparatorMqController>(context);
                         
                         endpoint.SetQuorumQueue();
+
+                        //endpoint.UseMessageRetry(r => r.Interval(1000, TimeSpan.FromSeconds(1)));
                     });
                     
-                    cfg.Publish<BusPositionUpdated>(p =>
+                    cfg.Publish<BusPositionUpdated>(p => 
                         p.ExchangeType = ExchangeType.Topic);
                 });
             });

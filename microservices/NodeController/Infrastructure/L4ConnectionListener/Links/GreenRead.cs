@@ -7,9 +7,8 @@ namespace Infrastructure.L4ConnectionListener.Links;
 
 public class GreenRead : L4Link
 {
-    public GreenRead(ITunnel source, ITunnel destination, ILogger logger, SingleTokenAdder tokenAdder) : base(source, destination, logger, tokenAdder)
+    public GreenRead(ITunnel source, ITunnel destination, SingleTokenAdder tokenAdder) : base(source, destination, tokenAdder)
     {
-        WhoAmI = nameof(GreenRead);
     }
 
     private protected override async Task<LinkResult> TryCopyDataAsync(byte[] bufferArray)
@@ -40,25 +39,9 @@ public class GreenRead : L4Link
             e is SocketException &&
             SocketErrorsToRetry.Any(error => error.Equals((e as SocketException)!.SocketErrorCode)))
         {
-            return LinkResult.Retry;
+            return LinkResult.Abort;
         }
 
-        return LinkResult.Retry;
-    }
-
-    public async Task UpdateSource(ITunnel source)
-    {
-        await SafeAbortGossips();
-
-        if (GossipingTask != null) await GossipingTask;
-
-        Interlocked.Exchange(ref _source, source);
-    }
-
-    public override async Task SafeAbortGossips()
-    {
-        await base.SafeAbortGossips();
-
-        Source.Dispose();
+        return LinkResult.Abort;
     }
 }
