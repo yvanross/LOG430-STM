@@ -1,4 +1,5 @@
-﻿using ApplicationLogic.Usecases;
+﻿using ApplicationLogic.Services;
+using ApplicationLogic.Usecases;
 using MassTransit;
 using MqContracts;
 

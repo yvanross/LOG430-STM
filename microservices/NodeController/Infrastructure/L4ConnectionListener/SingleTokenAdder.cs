@@ -19,18 +19,22 @@ public class SingleTokenAdder
     {
         if (_mutex.CurrentCount < 1)
         {
-            _logger.LogInformation("releasing semaphore");
-
             _semaphoreSlim.Release();
         }
     }
 
     public Task Take(CancellationToken cancellation)
     {
-        _mutex.WaitAsync(cancellation);
+        try
+        {
+            _mutex.WaitAsync(TimeSpan.FromMilliseconds(500), cancellation);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to acquire mutex");
+            throw;
+        }
             
-        _logger.LogInformation($"taking semaphore, {_semaphoreSlim.CurrentCount} left");
-
         return _semaphoreSlim.WaitAsync(cancellation);
     }
 }

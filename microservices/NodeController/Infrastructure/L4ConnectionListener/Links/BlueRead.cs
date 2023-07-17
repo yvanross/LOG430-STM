@@ -27,13 +27,13 @@ public class BlueRead : L4Link
                 await Destination.WriteAsync(dataChunk, CancellationTokenSource.Token);
             }
         }
+        catch (Exception e) when (e is OperationCanceledException)
+        {
+            return LinkResult.Retry;
+        }
         catch
         {
-            return LinkResult.Abort;
-        }
-        finally
-        {
-            Logger.LogInformation($"{nameof(BlueRead)} Exiting");
+            throw new BlueLinkException("Read Closed");
         }
 
         return LinkResult.Abort;

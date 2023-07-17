@@ -17,7 +17,7 @@ public class BlueWrite : L4Link
 
         try
         {
-            while ((bytesRead = await Source.ReadAsync(bufferArray, CancellationToken.None)) > 0)
+            while ((bytesRead = await Source.ReadAsync(bufferArray, CancellationTokenSource.Token)) > 0)
             {
                 var dataChunk = new byte[bytesRead];
 
@@ -38,10 +38,6 @@ public class BlueWrite : L4Link
         catch
         {
             throw new BlueLinkException("Write Closed");
-        }
-        finally
-        {
-            Logger.LogInformation($"{nameof(BlueWrite)} Exiting");
         }
 
         return LinkResult.Abort;

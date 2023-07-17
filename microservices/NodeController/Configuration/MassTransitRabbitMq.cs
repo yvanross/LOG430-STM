@@ -64,7 +64,7 @@ public class MassTransitRabbitMq : IMqConfigurator
             cfg.ReceiveEndpoint(uniqueQueueName, endpoint =>
             {
                 endpoint.ConfigureConsumeTopology = false;
-
+                
                 endpoint.SetQuorumQueue();
 
                 endpoint.PrefetchCount = 1;

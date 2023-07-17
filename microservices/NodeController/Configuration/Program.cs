@@ -226,7 +226,7 @@ namespace Configuration
                 x.AddConsumer<ExperimentMqController>();
                 x.AddConsumer<BusPositionUpdatedMqController>();
                 x.AddConsumer<AckErrorMqController>();
-
+                
                 x.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(reformattedAddress);

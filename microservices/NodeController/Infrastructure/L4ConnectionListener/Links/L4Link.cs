@@ -9,11 +9,28 @@ namespace Infrastructure.L4ConnectionListener.Links;
 
 public abstract class L4Link : IDisposable
 {
-    private protected ITunnel Source;
-    private protected ITunnel Destination;
-    private protected readonly ILogger Logger;
-    private protected readonly SingleTokenAdder TokenAdder;
+    public ITunnel Source
+    {
+        get => _source;
+        private protected set => _source = value;
+    }
+
+    public ITunnel Destination
+    {
+        get => _destination;
+        private protected set => _destination = value;
+    }
+
+    private protected ITunnel _source;
+
+    private protected ITunnel _destination;
+
+    private readonly ILogger _logger;
+
+    private readonly SingleTokenAdder _tokenAdder;
+
     private protected string WhoAmI;
+
     private protected readonly ConcurrentQueue<byte[]> FailoverBufferQueue = new();
 
     private protected CancellationTokenSource CancellationTokenSource = new();
@@ -37,29 +54,28 @@ public abstract class L4Link : IDisposable
         SocketError.MessageSize
     };
 
-
     protected L4Link(ITunnel source, ITunnel destination, ILogger logger, SingleTokenAdder tokenAdder)
     {
         Source = source;
         Destination = destination;
-        Logger = logger;
-        TokenAdder = tokenAdder;
+        _logger = logger;
+        _tokenAdder = tokenAdder;
     }
 
-    private protected virtual async Task SafeAbortConnection()
+    public virtual async Task SafeAbortGossips()
     {
-        Logger.LogInformation($"aborting gossips on {WhoAmI}");
-
         if (CancellationTokenSource.IsCancellationRequested is false)
         {
             CancellationTokenSource.Cancel();
 
-            await TokenAdder.Take(CancellationToken.None);
+            await _tokenAdder.Take(CancellationToken.None);
 
-            TokenAdder.Release();
+            _tokenAdder.Release();
+
+            Interlocked.Exchange(ref CancellationTokenSource, new CancellationTokenSource());
         }
 
-        if(Interlocked.Exchange(ref GossipingTask, null) is {} task)
+        if (Interlocked.Exchange(ref GossipingTask, null) is {} task)
             await task;
     }
 
@@ -67,9 +83,9 @@ public abstract class L4Link : IDisposable
     {
         if (GossipingTask is null)
         {
-            await TokenAdder.Take(cancellation);
+            await _tokenAdder.Take(cancellation);
 
-            byte[] bufferArray = new byte[8];
+            byte[] bufferArray = new byte[8_192];
 
             return GossipingTask ??= TaskRelease(bufferArray);
         }
@@ -77,33 +93,33 @@ public abstract class L4Link : IDisposable
         return GossipingTask;
     }
 
+
+    public async Task ResendPossiblyLostDataToDestination()
+    {
+        while (FailoverBufferQueue.Count > 0 && FailoverBufferQueue.TryPeek(out var dataChunk))
+        {
+            _logger.LogInformation($"Compensating last messages on {WhoAmI}");
+
+            //await Destination.WriteAsync(dataChunk, CancellationToken.None);
+
+            FailoverBufferQueue.TryDequeue(out _);
+        }
+    }
+
     private async Task<LinkResult> TaskRelease(byte[] bufferArray)
     {
         var result = await TryCopyDataAsync(bufferArray);
 
-        TokenAdder.Release();
+        _tokenAdder.Release();
 
         return result;
     }
 
     private protected abstract Task<LinkResult> TryCopyDataAsync(byte[] bufferArray);
 
-    //public async Task ResendPossiblyLostDataToDestination()
-    //{
-    //    while (FailoverBufferQueue.Count > 0 && FailoverBufferQueue.TryPeek(out var dataChunk))
-    //    {
-    //        Logger.LogInformation($"Compensating last messages on {WhoAmI}");
-
-    //        await Destination.WriteAsync(dataChunk, CancellationToken.None);
-
-    //        FailoverBufferQueue.TryDequeue(out _);
-    //    }
-    //}
 
     public void Dispose()
     {
-        Logger.LogInformation($"Disposing link {WhoAmI}");
-
         Source.Dispose();
         Destination.Dispose();
 

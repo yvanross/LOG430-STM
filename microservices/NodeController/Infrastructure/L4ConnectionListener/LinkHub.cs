@@ -31,8 +31,10 @@ public sealed class LinkHub : IDisposable
     private readonly ChannelTunnel _blueStream = new();
     private readonly ChannelTunnel _greenStream = new();
 
-    private readonly SemaphoreSlim _semaphoreSlim = new (4);
-    private readonly CancellationTokenSource _cancellationTokenSource = new (); 
+    private readonly SemaphoreSlim _semaphoreSlim = new (NumberOfLinks);
+    private readonly CancellationTokenSource _cancellationTokenSource = new ();
+
+    private const int NumberOfLinks = 4;
 
     public LinkHub(ConnectionContext sourceConnection, IServiceType serviceType, IRouting routing, IPodReadService podReadService, ILogger logger)
     {
@@ -54,7 +56,11 @@ public sealed class LinkHub : IDisposable
     {
         try
         {
-            var WriteFinishFirst = false;
+            var secondWind = false;
+            var failedAt = DateTime.UtcNow;
+
+            // Number of seconds to wait before giving up on reconnecting
+            const int grace = 5;
 
             while (true)
             {
@@ -72,7 +78,28 @@ public sealed class LinkHub : IDisposable
 
                 if (finishedTask == greenRead && greenRead.Result.Equals(LinkResult.Retry))
                 {
+                    ((ChannelTunnel)_blueReadLink.Source).ClearReadStream();
+
+                    if (secondWind && DateTime.UtcNow.Subtract(failedAt).TotalSeconds < grace)
+                    {
+                        _logger.LogInformation($"Failed to reconnect");
+
+                        break;
+                    }
+
+                    await _blueReadLink.SafeAbortGossips();
+
+                    ((ChannelTunnel)_blueReadLink.Source).ClearReadStream();
+
+                    _logger.LogInformation($"Attempting to reconnect to new destination...");
+
+                    secondWind = !secondWind;
+
+                    failedAt = DateTime.UtcNow;
+
                     UpdateDestination();
+
+                    await _greenWriteLink.ResendPossiblyLostDataToDestination();
 
                     continue;
                 }
@@ -121,6 +148,10 @@ public sealed class LinkHub : IDisposable
         _greenReadLink.Dispose();
         _blueStream.Dispose();
         _greenStream.Dispose();
+
+        for (int i = 0; i < NumberOfLinks; i++) _semaphoreSlim.WaitAsync();
+
+        _semaphoreSlim.Dispose();
     }
 
     private TcpClient GetTcpClient()
@@ -155,8 +186,10 @@ public sealed class LinkHub : IDisposable
 
                 _logger.LogInformation($"Connected on {port}");
 
-                destinationClient.SendTimeout = 1000;
-                destinationClient.ReceiveTimeout = 1000;
+                //destinationClient.SendTimeout = 1000;
+                //destinationClient.ReceiveTimeout = 1000;
+
+                destinationClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
 
                 return destinationClient;
             }

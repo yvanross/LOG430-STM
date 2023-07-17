@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Dao;
 using Entities.BusinessObjects.Live;
@@ -9,6 +10,8 @@ namespace ApplicationLogic.Usecases;
 
 public class ExperimentMonitoring
 {
+    private static MessageProcessor _messageProcessor = new ();
+
     private readonly ISystemStateWriteService _systemStateWriteService;
 
     private readonly IPodReadService _readService;
@@ -21,10 +24,6 @@ public class ExperimentMonitoring
     
     private static string _message = "";
 
-    private static Stopwatch? _stopwatch;
-
-    private readonly object _lock = new ();
-
     public ExperimentMonitoring(ISystemStateWriteService systemStateWriteService, IPodReadService readService)
     {
         _systemStateWriteService = systemStateWriteService;
@@ -33,6 +32,10 @@ public class ExperimentMonitoring
 
     public void AnalyzeAndStoreRealtimeTestData(IBusPositionUpdated busPositionUpdated)
     {
+        _messageProcessor.StartProcessing();
+
+        _messageProcessor.MessageProcessed();
+
         if (GetSagaDuration() > busPositionUpdated.Seconds)
             IncrementTestErrorCount();
 
@@ -41,12 +44,6 @@ public class ExperimentMonitoring
         IncrementProcessedMessageCount();
 
         SetMessage(busPositionUpdated.Message);
-
-        if(_stopwatch is null)
-            lock (_lock)
-            {
-                _stopwatch = Stopwatch.StartNew();
-            }
     }
 
     public async Task LogExperimentResults()
@@ -57,17 +54,17 @@ public class ExperimentMonitoring
             RunningInstances = _readService.GetAllServices().ToList(),
             ExperimentResult = new ExperimentResult()
             {
-                AverageLatency = GetAverageLatency(),
+                AverageLatency = _messageProcessor.GetProcessingTimesCumulativeOfAverageDeviations(),
                 ErrorCount = GetTestErrorCount(),
                 Message = GetMessage()
             }
         });
     }
 
-    private double GetAverageLatency()
-    {
-        return Convert.ToDouble(_stopwatch?.Elapsed.TotalMilliseconds ?? 1) / Convert.ToDouble(GetProcessedMessageCount());
-    }
+    //private double GetAverageLatency()
+    //{
+    //    return Convert.ToDouble(_stopwatch?.Elapsed.TotalMilliseconds ?? 1) / Convert.ToDouble(GetProcessedMessageCount());
+    //}
 
 
     private void IncrementTestErrorCount()
@@ -117,4 +114,63 @@ public class ExperimentMonitoring
     }
 
     private string GetMessage() => _message;
+
+    private class MessageProcessor : IDisposable
+    {
+        private readonly Stopwatch _stopwatch = new();
+        private readonly ConcurrentBag<double> _processingTimes = new();
+        private readonly ConcurrentBag<double> _processingTimesAverageDeviations = new();
+        private readonly PeriodicTimer _timer = new(period: TimeSpan.FromSeconds(5));
+        private readonly CancellationTokenSource _cancellationTokenSource = new();
+
+        public void StartProcessing()
+        {
+            if (_stopwatch.IsRunning) return;
+
+            _stopwatch.Start();
+            _ = ResetProcessingTimesPeriodically();
+        }
+
+        public void MessageProcessed()
+        {
+            _processingTimes.Add((_stopwatch.Elapsed.TotalMilliseconds > 0 ? _stopwatch.Elapsed.TotalMilliseconds : 1) /
+                                 (_processingTimes.Count > 0 ? _processingTimes.Count : double.MaxValue));
+        }
+
+        public double GetProcessingTimesCumulativeOfAverageDeviations()
+        {
+            return _processingTimesAverageDeviations.Average();
+        }
+
+        private async Task ResetProcessingTimesPeriodically()
+        {
+            while (await _timer.WaitForNextTickAsync(_cancellationTokenSource.Token))
+            {
+                CalculateProcessingTimeStandardDeviation();
+                _stopwatch.Reset();
+                _stopwatch.Start();
+                _processingTimes.Clear();
+            }
+        }
+
+        private void CalculateProcessingTimeStandardDeviation()
+        {
+            var average = CalculateAverageProcessingTime();
+
+            _processingTimesAverageDeviations.Add(average);
+        }
+
+        private double CalculateAverageProcessingTime()
+        {
+            return _processingTimes.Count < 1 ? 
+                0 :
+                _processingTimes.Average();
+        }
+
+        public void Dispose()
+        {
+            _timer.Dispose();
+            _cancellationTokenSource.Cancel();
+        }
+    }
 }

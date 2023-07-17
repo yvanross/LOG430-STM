@@ -9,12 +9,25 @@ public class ChannelTunnel : ITunnel
         SingleWriter = true,
     });
 
-    private MemoryStream _memoryStream = new MemoryStream();
+    private MemoryStream _memoryStream = new ();
 
     public void Dispose()
     {
         _channel.Writer.TryComplete();
         _memoryStream.Dispose();
+    }
+
+    public void ClearReadStream()
+    {
+        try
+        {
+            Interlocked.Exchange(ref _memoryStream, new MemoryStream());
+            _channel.Reader.ReadAllAsync();
+        }
+        catch
+        {
+            // don't care
+        }
     }
 
     public async ValueTask<int> ReadAsync(byte[] buffer, CancellationToken cancellationToken)
@@ -51,8 +64,10 @@ public class ChannelTunnel : ITunnel
         return true;
     }
 
-    public ValueTask WriteAsync(byte[] buffer, CancellationToken cancellationToken)
+    public async ValueTask WriteAsync(byte[] buffer, CancellationToken cancellationToken)
     {
-        return _channel.Writer.WriteAsync(buffer, cancellationToken);
+        await Task.Delay(10, cancellationToken);
+
+        await _channel.Writer.WriteAsync(buffer, cancellationToken);
     }
 }

@@ -13,23 +13,36 @@ public class L4LoadBalancer : ConnectionHandler
     private readonly IPodReadService _podReadService;
     private readonly L4Logger _logger;
 
+    private static bool _firstBoot = true;
+    private static DateTime _logLock = DateTime.MinValue;
+
     public L4LoadBalancer(IRouting routing, IPodReadService podReadService, L4Logger logger)
     {
         _routing = routing;
         _podReadService = podReadService;
         _logger = logger;
+
+        if (_firstBoot)
+        {
+            _firstBoot = false;
+            _logLock = DateTime.UtcNow + TimeSpan.FromSeconds(20);
+        }
+
+        _logger.Lock(_logLock);
     }
 
     public override async Task OnConnectedAsync(ConnectionContext connection)
     {
         try
         {
+            _logger.SetConnectionId(connection.ConnectionId);
+
+            _logger.LogInformation($"New connection received: {connection.ConnectionId}");
+
             var incomingPort = ((IPEndPoint)connection.LocalEndPoint!)!.Port;
 
             if (_podReadService.TryGetServiceTypeFromPort(incomingPort) is not { } serviceType)
                 throw new Exception("Port number not resolved to target service type. Call NegotiateSocket from Routing/ first to create or get the right socket");
-
-            _logger.SetConnectionId(connection.ConnectionId);
 
             using var linkHub = new LinkHub(connection, serviceType, _routing, _podReadService, _logger);
 
@@ -42,6 +55,8 @@ public class L4LoadBalancer : ConnectionHandler
         finally
         {
             await connection.DisposeAsync();
+
+            _logger.LogInformation($"Connection disposed: {connection.ConnectionId}");
         }
     }
 }

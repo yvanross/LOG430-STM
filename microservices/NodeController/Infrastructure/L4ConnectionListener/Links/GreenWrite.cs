@@ -16,18 +16,18 @@ public class GreenWrite : L4Link
 
     public async Task UpdateDestination(ITunnel destination)
     {
-        await SafeAbortConnection();
+        await SafeAbortGossips();
 
         if (GossipingTask != null) await GossipingTask;
 
-        Interlocked.Exchange(ref Destination, destination);
+        Interlocked.Exchange(ref _destination, destination);
 
         Interlocked.Exchange(ref CancellationTokenSource, new CancellationTokenSource());
     }
 
-    private protected override async Task SafeAbortConnection()
+    public override async Task SafeAbortGossips()
     {
-        await base.SafeAbortConnection();
+        await base.SafeAbortGossips();
 
         Destination.Dispose();
     }
@@ -38,20 +38,25 @@ public class GreenWrite : L4Link
 
         try
         {
+            bool firstPass = true;
+
             while ((bytesRead = await Source.ReadAsync(bufferArray, CancellationTokenSource.Token)) > 0)
             {
                 var dataChunk = new byte[bytesRead];
                 Buffer.BlockCopy(bufferArray, 0, dataChunk, 0, bytesRead);
 
-
                 // Add the data chunk to the queue.
-                FailoverBufferQueue.Enqueue(dataChunk);
+                //FailoverBufferQueue.Enqueue(dataChunk);
 
                 // Write the data chunk to the destination stream.
                 await Destination.WriteAsync(dataChunk, CancellationTokenSource.Token);
 
                 // Remove the data chunk from the queue, as it has been successfully written to the destination.
-                FailoverBufferQueue.TryDequeue(out _);
+                if (firstPass) FailoverBufferQueue.Enqueue(dataChunk);
+
+                //if (firstPass is false) FailoverBufferQueue.TryDequeue(out _);
+
+                firstPass = false;
             }
         }
         catch (Exception e) when (
@@ -62,10 +67,6 @@ public class GreenWrite : L4Link
             SocketErrorsToRetry.Any(error => error.Equals((e as SocketException)!.SocketErrorCode)))
         {
             return LinkResult.Abort;
-        }
-        finally
-        {
-            Logger.LogInformation($"{nameof(GreenWrite)} Exiting");
         }
 
         return LinkResult.Retry;

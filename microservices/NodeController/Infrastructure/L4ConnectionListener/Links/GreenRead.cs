@@ -42,28 +42,22 @@ public class GreenRead : L4Link
         {
             return LinkResult.Retry;
         }
-        finally
-        {
-            Logger.LogInformation($"{nameof(GreenRead)} Exiting");
-        }
 
         return LinkResult.Retry;
     }
 
     public async Task UpdateSource(ITunnel source)
     {
-        await SafeAbortConnection();
+        await SafeAbortGossips();
 
         if (GossipingTask != null) await GossipingTask;
 
-        Interlocked.Exchange(ref Source, source);
-
-        Interlocked.Exchange(ref CancellationTokenSource, new CancellationTokenSource());
+        Interlocked.Exchange(ref _source, source);
     }
 
-    private protected override async Task SafeAbortConnection()
+    public override async Task SafeAbortGossips()
     {
-        await base.SafeAbortConnection();
+        await base.SafeAbortGossips();
 
         Source.Dispose();
     }
