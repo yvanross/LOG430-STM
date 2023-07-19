@@ -9,10 +9,10 @@
 
   <ItemGroup>
     <PackageReference Include="Polly" Version="7.2.3" />
+    <PackageReference Include="ServiceMeshHelper" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Ambassador\Ambassador\ServiceMeshHelper.csproj" />
     <ProjectReference Include="..\Controllers\Controllers.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>

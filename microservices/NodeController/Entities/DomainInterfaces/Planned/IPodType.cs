@@ -6,6 +6,8 @@ public interface IPodType
 {
     string Type { get; set; }
 
+    bool ShareVolumes { get; set; }
+
     int NumberOfInstances { get; }
 
     ImmutableList<string> ReplicasHostnames { get; }

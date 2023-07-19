@@ -4,7 +4,7 @@ public class RoutingData
 {
     public required string Address { get; set; }
 
-    public required string host { get; set; }
+    public required string Host { get; set; }
 
-    public required string port { get; set; }
+    public required string Port { get; set; }
 }

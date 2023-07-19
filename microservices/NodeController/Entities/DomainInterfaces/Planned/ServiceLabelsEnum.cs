@@ -10,5 +10,6 @@ public enum ServiceLabelsEnum
     POD_NAME,
     POD_ID,
     DNS,
-    POD_LINKS
+    POD_LINKS,
+    SHARE_VOLUMES
 }

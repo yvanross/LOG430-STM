@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MqContracts;
 using NodeController.Controllers.Mq;
 using RabbitMQ.Client;
+using System.Threading;
 
 namespace Configuration;
 
@@ -55,7 +56,11 @@ public class MassTransitRabbitMq : IMqConfigurator
 
         var busControl = Bus.Factory.CreateUsingRabbitMq(cfg =>
         {
-            cfg.Host(reformattedAddress);
+            cfg.Host(reformattedAddress, c =>
+            {
+                c.RequestedConnectionTimeout(50);
+                c.Heartbeat(TimeSpan.FromMilliseconds(50));
+            });
 
             cfg.Message<CoordinateMessage>(topologyConfigurator => topologyConfigurator.SetEntityName("coordinate_message"));
 
@@ -63,7 +68,7 @@ public class MassTransitRabbitMq : IMqConfigurator
 
             cfg.ReceiveEndpoint(uniqueQueueName, endpoint =>
             {
-                endpoint.UseTimeout((x) => x.Timeout = TimeSpan.FromMilliseconds(100));
+                endpoint.UseMessageRetry(x => x.Immediate(int.MaxValue));
 
                 endpoint.ConfigureConsumeTopology = false;
                 

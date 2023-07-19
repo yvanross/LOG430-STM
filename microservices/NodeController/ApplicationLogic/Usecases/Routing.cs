@@ -32,7 +32,9 @@ public class Routing : IRouting
 
     public IEnumerable<RoutingData> RouteByDestinationType(string sourceServiceId, string destinationServiceType, LoadBalancingMode mode)
     {
-        var serviceType = _podReadService.GetServiceType(destinationServiceType);
+        var (destinationType, _) = GetDestinationNamespaceAndType(destinationServiceType);
+
+        var serviceType = _podReadService.GetServiceType(destinationType);
 
         if (serviceType is null) throw new ArgumentNullException(nameof(serviceType));
 
@@ -45,9 +47,14 @@ public class Routing : IRouting
     {
         services = services.Where(t => t.ServiceStatus is ReadyState).ToList();
 
-        if (services.Any() is false) return services;
+        if (services.Any() is false || mode == LoadBalancingMode.Broadcast) return services;
 
-        _unresponsive.Where(u => u.Value.checkedIn < DateTime.UtcNow.AddSeconds(-5)).ToList().ForEach(u => _unresponsive.TryRemove(u.Key, out _));
+        var matureServices = services.Where(t => t.ServiceStatus is ReadyState {IsMature: true}).ToList();
+
+        if (matureServices.Any())
+            services = matureServices;
+
+        UpdateUnresponsiveServiceList();
 
         if(services.Where(si => _unresponsive.ContainsKey(si.Id) is false).ToList() is {} responsiveServices && responsiveServices.Any())
             services = responsiveServices;
@@ -55,9 +62,17 @@ public class Routing : IRouting
         return mode switch
         {
             LoadBalancingMode.RoundRobin => new() { services[Random.Shared.Next(0, services.Count - 1)] },
-            LoadBalancingMode.Broadcast => services,
             _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
         };
+    }
+
+    private void UpdateUnresponsiveServiceList()
+    {
+        const int unresponsiveThreashold = 10;
+
+        _unresponsive.Where(u => u.Value.checkedIn < DateTime.UtcNow.AddSeconds(-unresponsiveThreashold))
+            .ToList()
+            .ForEach(u => _unresponsive.TryRemove(u.Key, out _));
     }
 
     public int NegotiateSocket(IServiceType type)

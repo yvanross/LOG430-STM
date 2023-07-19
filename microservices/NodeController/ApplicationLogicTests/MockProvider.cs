@@ -285,7 +285,7 @@ public static class MockProvider
         environmentClient.Setup(x => x.GetRunningServices(null))
             .Returns(Task.FromResult(readModel.Object.GetAllServices().ConvertAll(s=>s.ContainerInfo.Id)));
 
-        environmentClient.Setup(x => x.RemoveContainerInstance(It.IsAny<string>(), It.IsAny<bool>())).Returns(Task.CompletedTask);
+        //environmentClient.Setup(x => x.RemoveContainerInstance(It.IsAny<string>(), It.IsAny<bool>())).Returns(Task.CompletedTask);
 
         environmentClient.Setup(x => x.SetResources(It.IsAny<IPodInstance>(), It.IsAny<long>()))
             .Returns(Task.CompletedTask);

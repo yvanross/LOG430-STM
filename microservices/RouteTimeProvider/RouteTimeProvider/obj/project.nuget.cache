@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "a1g890Lv4Aqm22KagutL5n2vNwswMhh/t3rre7tz0HOSHmLfTfGOsTiJ74vUEZfGTfm0BbS44Th+OouMc4UgcQ==",
+  "dgSpecHash": "0qg+ixcHBePZO+XIHitstw29431LjNkUZxdBZUkzhtimUGaBpsKSNMrNciX8NY59vsj1xug9iaantuD4yBVHRw==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\RouteTimeProvider\\RouteTimeProvider.csproj",
   "expectedPackageFiles": [
@@ -12,7 +12,7 @@
     "C:\\Users\\david\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\polly\\7.2.3\\polly.7.2.3.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\restsharp\\108.0.3\\restsharp.108.0.3.nupkg.sha512",
-    "C:\\Users\\david\\.nuget\\packages\\servicemeshhelper\\1.0.68\\servicemeshhelper.1.0.68.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\servicemeshhelper\\1.1.1\\servicemeshhelper.1.1.1.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",

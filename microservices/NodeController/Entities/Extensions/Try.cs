@@ -16,8 +16,6 @@ public static class Try
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-
                 if (retry < retryCount)
                 {
                     retry++;

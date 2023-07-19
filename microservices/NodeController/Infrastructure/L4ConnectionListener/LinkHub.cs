@@ -149,12 +149,6 @@ public sealed class LinkHub : IDisposable
             {
                 var destinationClient = new TcpClient(destination.Host, port);
 
-                //destinationClient.SendTimeout = 1000;
-                //destinationClient.ReceiveTimeout = 1000;
-
-                //destinationClient.Client.SendTimeout = 1000;
-                //destinationClient.Client.ReceiveTimeout = 1000;
-
                 _logger.LogInformation($"Connected on {port}");
 
                 return destinationClient;

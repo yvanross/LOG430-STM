@@ -23,8 +23,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 2 - Adapters", "Layer
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layer 3 - Cross-Cutting Concerns", "Layer 3 - Cross-Cutting Concerns", "{8FCD94A4-EEBA-4422-BBC1-A539CF893774}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceMeshHelper", "..\Ambassador\Ambassador\ServiceMeshHelper.csproj", "{139F8D5A-0600-4F0D-80F1-6A2EED6DC6F7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,10 +53,6 @@ Global
 		{F1F80136-E3BB-44F7-9642-AEDC78339ADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1F80136-E3BB-44F7-9642-AEDC78339ADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1F80136-E3BB-44F7-9642-AEDC78339ADF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{139F8D5A-0600-4F0D-80F1-6A2EED6DC6F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{139F8D5A-0600-4F0D-80F1-6A2EED6DC6F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{139F8D5A-0600-4F0D-80F1-6A2EED6DC6F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{139F8D5A-0600-4F0D-80F1-6A2EED6DC6F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

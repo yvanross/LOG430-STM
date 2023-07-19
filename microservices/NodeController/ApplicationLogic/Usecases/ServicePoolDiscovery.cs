@@ -69,7 +69,7 @@ namespace ApplicationLogic.Usecases
                 {
                     //ignore because we don't control the assigned Ids, they are set in the docker compose
                     _logger.LogCritical("Invalid Service configuration found in container pool");
-                    _logger.LogTrace(e.ToString());
+                    _logger.LogCritical(e.Message);
 
                     ImmutableInterlocked.Update(ref BannedIds, (set) => set.Add(container.CuratedInfo.Id));
                 }
@@ -136,9 +136,12 @@ namespace ApplicationLogic.Usecases
             {
                 var podTypeName = GetPodTypeName(container.CuratedInfo, container.RawConfig);
 
+                var shareVolumes = GetShareVolumesWithReplicas(container.CuratedInfo);
+
                 var newPodType = new PodType(_podReadService)
                 {
                     Type = podTypeName,
+                    ShareVolumes = shareVolumes
                 };
 
                 newPodType.SetPodLeader(serviceType.Type);
@@ -165,6 +168,8 @@ namespace ApplicationLogic.Usecases
                 if (container.CuratedInfo.PortsInfo.RoutingPortNumber.Equals(default))
                     throw new Exception("Port not found, adding to banned id");
 
+                var volumes = container.RawConfig.Config.Mounts.Select(v => v.Name).ToList();
+
                 var newService = new ServiceInstance
                 {
                     Id = container.RawConfig.Config.Config.Env.First(e => e.ToString().StartsWith("ID="))[3..],
@@ -172,7 +177,8 @@ namespace ApplicationLogic.Usecases
                     Address = _hostInfo.GetAddress(),
                     Type = GetArtifactName(container.CuratedInfo, container.RawConfig),
                     PodId = GetPodId(container.CuratedInfo) ?? newPodId,
-                    ServiceStatus = new ReadyState()
+                    ServiceStatus = new ReadyState(),
+                    VolumeIds = volumes,
                 };
 
                 return newService;
@@ -257,7 +263,7 @@ namespace ApplicationLogic.Usecases
                    ?? Enumerable.Empty<string>();
         }
 
-    private static string GetPodName(ContainerInfo infos, IContainerConfig rawConfig)
+        private static string GetPodName(ContainerInfo infos, IContainerConfig rawConfig)
         {
             var value = GetLabelValue(ServiceLabelsEnum.POD_NAME, infos.Labels);
 
@@ -290,6 +296,13 @@ namespace ApplicationLogic.Usecases
                 .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)?
                 .ToArray() 
                    ?? Enumerable.Empty<string>();
+        }
+
+        private static bool GetShareVolumesWithReplicas(ContainerInfo infos)
+        {
+            bool.TryParse(GetLabelValue(ServiceLabelsEnum.SHARE_VOLUMES, infos.Labels), out var shareVolumes);
+
+            return shareVolumes;
         }
     }
 }

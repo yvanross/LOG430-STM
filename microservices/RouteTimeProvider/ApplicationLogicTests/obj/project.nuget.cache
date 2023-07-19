@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "BHiS29K1KrrTggvufRzBoabZ+6rOhKgjzrQhmOZANZgu1SFhiY96RWMcO6CuEecYwPfKNnsGtwI0f2ERwxGlCQ==",
+  "dgSpecHash": "RITPFrbwNcS+LAZcE6dnbfcjLgrFxsFXr9MKHqWbc5N3WKhN2wMt+ZEZN+f1iooUtI5iut1h7E3uzRJECkh0BA==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\RouteTimeProvider\\ApplicationLogicTests\\ApplicationLogicTests.csproj",
   "expectedPackageFiles": [
@@ -23,7 +23,7 @@
     "C:\\Users\\david\\.nuget\\packages\\polly\\7.2.3\\polly.7.2.3.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\restsharp\\108.0.3\\restsharp.108.0.3.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\runtime.native.system\\4.3.0\\runtime.native.system.4.3.0.nupkg.sha512",
-    "C:\\Users\\david\\.nuget\\packages\\servicemeshhelper\\1.0.68\\servicemeshhelper.1.0.68.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\servicemeshhelper\\1.1.1\\servicemeshhelper.1.1.1.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
     "C:\\Users\\david\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",

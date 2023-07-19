@@ -26,6 +26,8 @@ public class PodType : IPodType
 
     public required string Type { get; set; }
 
+    public required bool ShareVolumes { get; set; }
+
     public int NumberOfInstances => _replicasHostnames.Count;
 
     public ImmutableList<string> ReplicasHostnames => _replicasHostnames;

@@ -156,7 +156,7 @@ namespace Configuration
 
                 services.AddScoped<IPodWriteService, PodWriteService>();
 
-                services.AddScoped<IEnvironmentClient, LocalDockerClient>();
+                services.AddScoped<IEnvironmentClient, DockerdClient>();
             }
         }
 
@@ -219,11 +219,6 @@ namespace Configuration
 
             var uniqueQueueName = $"{baseQueueName}.{Guid.NewGuid()}";
 
-            services.Configure<MassTransitHostOptions>(options =>
-            {
-                options.StartTimeout = TimeSpan.FromSeconds(1);
-            });
-
             services.AddMassTransit(x =>
             {
                 if (hostInfo.IsIngressConfigValid() is false) return;
@@ -232,11 +227,12 @@ namespace Configuration
                 x.AddConsumer<BusPositionUpdatedMqController>();
                 x.AddConsumer<AckErrorMqController>();
 
-                x.AddHealthChecks();
-
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host(reformattedAddress);
+                    cfg.Host(reformattedAddress, c =>
+                    {
+                        c.RequestedConnectionTimeout(1000);
+                    });
 
                     cfg.Message<ExperimentDto>(m => m.SetEntityName("begin_experiment"));
                     

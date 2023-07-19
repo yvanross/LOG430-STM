@@ -25,7 +25,7 @@ public class L4LoadBalancer : ConnectionHandler
         if (_firstBoot)
         {
             _firstBoot = false;
-            _logLock = DateTime.UtcNow + TimeSpan.FromSeconds(20);
+            _logLock = DateTime.UtcNow + TimeSpan.FromSeconds(15);
         }
 
         _logger.Lock(_logLock);

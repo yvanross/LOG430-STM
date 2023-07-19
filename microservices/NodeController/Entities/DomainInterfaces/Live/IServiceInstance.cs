@@ -13,6 +13,8 @@ public interface IServiceInstance : IEquatable<IServiceInstance>
 
     string Type { get; init; }
 
+    List<string> VolumeIds { get; set; }
+
     IServiceState ServiceStatus { get; set; }
 
     string HttpRoute { get; }

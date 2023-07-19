@@ -41,7 +41,7 @@ services:
       ID: EventStream
       RABBITMQ_ERLANG_COOKIE_FILE: /var/lib/rabbitmq/.erlang.cookie
     labels:
-      ARTIFACT_CATEGORY: Connector
+      Artifact_Category: Connector
       Replicas: EventStream, EventStream2, EventStream3, EventStream4, EventStream5
 
   routetimeprovider:
