@@ -1,4 +1,5 @@
 ﻿using ApplicationLogic.Usecases;
+using Entities.Dao;
 using Microsoft.AspNetCore.Mvc;
 
 namespace NodeController.Controllers

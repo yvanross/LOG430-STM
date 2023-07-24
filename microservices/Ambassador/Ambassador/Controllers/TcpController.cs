@@ -1,4 +1,5 @@
 ﻿using Polly;
+using ServiceMeshHelper.Services;
 using ServiceMeshHelper.Usecases;
 
 namespace ServiceMeshHelper.Controllers;
@@ -27,10 +28,11 @@ public class TcpController
     public static async Task<string> GetTcpSocket(string protocol, string targetService)
     {
         var backOffRetry = Policy.Handle<Exception>()
-            .WaitAndRetryForeverAsync(attempt => TimeSpan.FromSeconds(Math.Max(attempt/2, 5)));
+            .WaitAndRetryForeverAsync(attempt => TimeSpan.FromSeconds(Math.Max(attempt/2, 5)), 
+                (exception, span) => Console.WriteLine(exception));
 
         var port = await backOffRetry.ExecuteAsync(() => tcp.Preflight(targetService));
 
-        return $"{protocol}://{Environment.GetEnvironmentVariable("SERVICES_ADDRESS")}:{port}";
+        return $"{protocol}://{ServiceMeshConfiguration.ServicesAddress}:{port}";
     }
 }

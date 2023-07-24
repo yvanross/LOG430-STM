@@ -3,13 +3,13 @@ using System.Threading.Channels;
 using RestSharp;
 using ServiceMeshHelper.Bo;
 using ServiceMeshHelper.Bo.InterServiceRequests;
-using ServiceMeshHelper.Services;
+using ServiceMeshHelper.Clients;
 
 namespace ServiceMeshHelper.Usecases
 {
     internal class Rest
     {
-        private NodeControllerRoutingClient nodeController = new ();
+        private readonly NodeControllerRoutingClient _nodeController = new ();
 
         internal async Task<ChannelReader<RestResponse>> Get(GetRoutingRequest routingRequest)
         {
@@ -57,7 +57,7 @@ namespace ServiceMeshHelper.Usecases
 
         internal Task<IEnumerable<RoutingData>> GetServiceRoutingData(string targetService, LoadBalancingMode mode)
         {
-            return nodeController.RouteByServiceType(targetService, mode);
+            return _nodeController.RouteByServiceType(targetService, mode);
         }
 
         private async Task<List<(RestClient client, RestRequest request)>> GetDestinationRoutingData(ServiceRoutingRequest routingRequest, Method method)

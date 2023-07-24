@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ServiceMeshHelper" Version="1.0.68" />
+    <PackageReference Include="ServiceMeshHelper" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>

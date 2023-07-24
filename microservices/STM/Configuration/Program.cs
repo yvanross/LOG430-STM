@@ -14,6 +14,7 @@ using Configuration.Policies;
 using Controllers.Controllers;
 using ServiceMeshHelper;
 using ServiceMeshHelper.Controllers;
+using ServiceMeshHelper.Services;
 using STMTests.Use_Cases;
 
 namespace Configuration
@@ -61,6 +62,8 @@ namespace Configuration
             //todo FinderController is used to tell which assembly contains the swagger controllers
             services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(FinderController).Assembly));
 
+            Trysmt().Wait();
+            
             services.AddEndpointsApiExplorer();
 
             services.AddSwaggerGen();
@@ -98,6 +101,13 @@ namespace Configuration
 
                 services.AddSingleton<ITransitDataCache, TransitDataCache>();
             }
+        }
+
+        private static async Task Trysmt()
+        {
+            var host = await TcpController.GetTcpSocketForRabbitMq("EventStream");
+
+            Console.WriteLine(host);
         }
     }
 }

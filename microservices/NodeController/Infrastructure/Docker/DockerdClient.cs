@@ -178,8 +178,6 @@ public class DockerdClient : IEnvironmentClient
             containerConfig.Config.HostConfig.AutoRemove = true;
             containerConfig.Config.HostConfig.PortBindings = new PortMap();
 
-
-
             foreach (var ports in exposedPorts)
             {
                 containerConfig.Config.HostConfig.PortBindings.Add(ports.Key, ports.Value);
@@ -195,7 +193,8 @@ public class DockerdClient : IEnvironmentClient
                 Labels = containerConfig.Config.Config.Labels,
                 Image = containerConfig.Config.Image,
                 ExposedPorts = new Dictionary<string, object>() { { $"{exposedPorts.Keys.First()}", new() } },
-                Volumes = podType.ShareVolumes ? containerConfig.Config.Config.Volumes : null
+                Volumes = podType.ShareVolumes ? containerConfig.Config.Config.Volumes : null,
+                Cmd = containerConfig.Config.Config.Cmd
             };
 
             var serializedPayload = JsonConvert.SerializeObject(payload);

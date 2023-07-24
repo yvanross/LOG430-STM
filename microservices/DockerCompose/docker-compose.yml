@@ -63,7 +63,7 @@ services:
     depends_on:
       - nodecontroller
       - tripcomparator
-      
+
   tripcomparator:
     container_name: TripComparator
     image: tripcomparator

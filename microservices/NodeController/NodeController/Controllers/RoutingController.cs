@@ -40,18 +40,9 @@ namespace NodeController.Controllers
         [ActionName(nameof(NegotiateSocket))]
         public ActionResult<int> NegotiateSocket([FromRoute] string serviceType)
         {
-            try
-            {
-                var type = _podReadService.GetServiceType(serviceType);
+            var type = _podReadService.GetServiceType(serviceType);
 
-                return type is null ? BadRequest(new Exception("Service type not found")) : Ok(_routing.NegotiateSocket(type));
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-            
+            return type is null ? BadRequest(new Exception("Service type not found")) : Ok(_routing.NegotiateSocket(type));
         }
     }
 }

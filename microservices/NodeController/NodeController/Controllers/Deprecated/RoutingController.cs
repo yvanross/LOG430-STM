@@ -4,18 +4,18 @@ using Entities.DomainInterfaces.ResourceManagement;
 using Entities.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace NodeController.Controllers
+namespace NodeController.Controllers.Deprecated
 {
     [ApiVersion("1.0", Deprecated = true)]
     [ApiController]
     [Route("[controller]")]
-    public class RoutingControllerV1 : ControllerBase
+    public class RoutingController : ControllerBase
     {
         private readonly IRouting _routing;
 
-        private readonly ILogger<RoutingController> _logger;
+        private readonly ILogger<Controllers.RoutingController> _logger;
 
-        public RoutingControllerV1(ILogger<RoutingController> logger, IRouting routing)
+        public RoutingController(ILogger<Controllers.RoutingController> logger, IRouting routing)
         {
             _logger = logger;
             _routing = routing;

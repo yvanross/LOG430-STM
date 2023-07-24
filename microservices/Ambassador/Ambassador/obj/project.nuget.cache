@@ -1,12 +1,17 @@
 {
   "version": 2,
-  "dgSpecHash": "YjmVnY3oR0Tf/ni8HzMcoiAndQRIrml0S4vT+UfEjNH5ggj5ksGt2zBFy8YHiJ8LzbBaVE+P3LqDT2zH4baRSQ==",
+  "dgSpecHash": "o4fZER3aqsm6kLsSDxyBnvQknwmXCgJ8CPtbdgH/jFuZmUdQNHcxN0RTK1XO2E+SjgjJcqJlL6af8U/BmouYag==",
   "success": true,
   "projectFilePath": "C:\\Users\\david\\Documents\\GitHub\\LOG430-STM\\microservices\\Ambassador\\Ambassador\\ServiceMeshHelper.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
-    "C:\\Users\\david\\.nuget\\packages\\polly\\7.2.3\\polly.7.2.3.nupkg.sha512",
-    "C:\\Users\\david\\.nuget\\packages\\restsharp\\108.0.3\\restsharp.108.0.3.nupkg.sha512"
+    "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.1\\microsoft.extensions.logging.abstractions.7.0.1.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.options\\7.0.1\\microsoft.extensions.options.7.0.1.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\microsoft.extensions.primitives\\7.0.0\\microsoft.extensions.primitives.7.0.0.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\polly\\7.2.4\\polly.7.2.4.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\restsharp\\110.2.0\\restsharp.110.2.0.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\system.text.encodings.web\\7.0.0\\system.text.encodings.web.7.0.0.nupkg.sha512",
+    "C:\\Users\\david\\.nuget\\packages\\system.text.json\\7.0.2\\system.text.json.7.0.2.nupkg.sha512"
   ],
   "logs": []
 }

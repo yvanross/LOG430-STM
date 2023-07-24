@@ -382,7 +382,6 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\net7.0\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\net7.0\Newtonsoft.Json.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\net7.0\NuGet.Frameworks.dll
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\net7.0\RestSharp.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\STMTests\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll

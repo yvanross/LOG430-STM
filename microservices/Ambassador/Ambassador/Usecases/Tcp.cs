@@ -1,4 +1,4 @@
-﻿using ServiceMeshHelper.Services;
+﻿using ServiceMeshHelper.Clients;
 
 namespace ServiceMeshHelper.Usecases
 {
@@ -8,7 +8,7 @@ namespace ServiceMeshHelper.Usecases
 
         internal Task<int> Preflight(string target)
         {
-            return _nodeController.NegotiateSocket(target);
+            return _nodeController.NegotiateSocketForServiceType(target);
         }
     }
 }
