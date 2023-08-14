@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -12,9 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Entities.Common\Entities.Common.csproj" />
-    <ProjectReference Include="..\Entities.Gtfs\Entities.Gtfs.csproj" />
-    <ProjectReference Include="..\Entities.Transit\Entities.Transit.csproj" />
+    <ProjectReference Include="..\Application.Dtos\Application.Dtos.csproj" />
+    <ProjectReference Include="..\Application.ReadServices\Application.QueryServices.csproj" />
+    <ProjectReference Include="..\Entities.Common\Domain.Aggregates.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
   </ItemGroup>
 
 </Project>

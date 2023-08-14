@@ -1,10 +1,10 @@
-﻿using Entities.Common.Interfaces;
-using Entities.Transit.Interfaces;
+﻿using Domain.ValueObjects;
 
-namespace ApplicationLogic.Use_Cases;
+namespace ApplicationLogic.Interfaces;
 
 public interface IItinerary
 {
-    Task<(IBus bus, double eta)[]?> GetFastestBus(IPosition from, IPosition to);
+    Task<(IBus bus, double eta)[]?> GetFastestBus(Position from, Position to);
+
     Task PrefetchAndApplyTripUpdates();
 }

@@ -8,13 +8,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Infrastructure.Cache;
 using ApplicationLogic.Services.Itinerary;
-using ApplicationLogic.Use_Cases;
-using Configuration.Properties;
 using Configuration.Policies;
 using Controllers.Controllers;
-using ServiceMeshHelper;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.Resources;
 using ServiceMeshHelper.Controllers;
-using ServiceMeshHelper.Services;
 using STMTests.Use_Cases;
 
 namespace Configuration
@@ -53,7 +50,7 @@ namespace Configuration
             itinerary.PrefetchAndApplyTripUpdates().Wait();
 
             GC.Collect();
-
+            
             app.Run();
         }
 

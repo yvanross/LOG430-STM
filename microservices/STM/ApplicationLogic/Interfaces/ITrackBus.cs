@@ -1,9 +1,10 @@
-﻿using Entities.Transit.Interfaces;
+﻿using ApplicationLogic.BusinessObjects;
 
-namespace ApplicationLogic.Use_Cases;
+namespace ApplicationLogic.Interfaces;
 
 public interface ITrackBus
 {
     void SetBus(IBus bus);
-    IBusTracking? GetUpdate();
+
+    BusTracking GetUpdate();
 }

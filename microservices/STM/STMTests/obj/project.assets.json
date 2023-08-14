@@ -161,11 +161,11 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore/7.0.3": {
+      "Microsoft.EntityFrameworkCore/7.0.10": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Abstractions": "7.0.3",
-          "Microsoft.EntityFrameworkCore.Analyzers": "7.0.3",
+          "Microsoft.EntityFrameworkCore.Abstractions": "7.0.10",
+          "Microsoft.EntityFrameworkCore.Analyzers": "7.0.10",
           "Microsoft.Extensions.Caching.Memory": "7.0.0",
           "Microsoft.Extensions.DependencyInjection": "7.0.0",
           "Microsoft.Extensions.Logging": "7.0.0"
@@ -184,7 +184,7 @@
           "buildTransitive/net6.0/Microsoft.EntityFrameworkCore.props": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Abstractions/7.0.3": {
+      "Microsoft.EntityFrameworkCore.Abstractions/7.0.10": {
         "type": "package",
         "compile": {
           "lib/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll": {
@@ -197,7 +197,7 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore.Analyzers/7.0.3": {
+      "Microsoft.EntityFrameworkCore.Analyzers/7.0.10": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/_._": {}
@@ -1524,13 +1524,84 @@
           }
         }
       },
+      "Application.Common/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Domain.Common": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Application.Common.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Application.Common.dll": {}
+        }
+      },
+      "Application.Dtos/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Domain.ValueObjects": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Application.Dtos.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Application.Dtos.dll": {}
+        }
+      },
+      "Application.Mapping/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Application.Dtos": "1.0.0",
+          "Domain.Aggregates": "1.0.0",
+          "Domain.Factories": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Application.Mapping.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Application.Mapping.dll": {}
+        }
+      },
+      "Application.QueryServices/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Application.Common": "1.0.0",
+          "Application.Dtos": "1.0.0",
+          "Application.Mapping": "1.0.0",
+          "Application.ViewModels": "1.0.0",
+          "Domain.Aggregates": "1.0.0",
+          "Domain.Entities": "1.0.0",
+          "Domain.Services": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "7.0.10"
+        },
+        "compile": {
+          "bin/placeholder/Application.QueryServices.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Application.QueryServices.dll": {}
+        }
+      },
+      "Application.ViewModels/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "compile": {
+          "bin/placeholder/Application.ViewModels.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Application.ViewModels.dll": {}
+        }
+      },
       "ApplicationLogic/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "Entities.Common": "1.0.0",
-          "Entities.Gtfs": "1.0.0",
-          "Entities.Transit": "1.0.0",
+          "Application.Dtos": "1.0.0",
+          "Application.QueryServices": "1.0.0",
+          "Domain.Aggregates": "1.0.0",
           "Google.Protobuf": "3.23.0",
           "Microsoft.Extensions.Logging": "7.0.0"
         },
@@ -1543,7 +1614,7 @@
       },
       "Controllers/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
           "ApplicationLogic": "1.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.3",
@@ -1560,40 +1631,82 @@
           "Microsoft.AspNetCore.App"
         ]
       },
-      "Entities.Common/1.0.0": {
+      "Domain.Aggregates/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Domain.Entities": "1.0.0",
+          "Domain.ValueObjects": "1.0.0"
+        },
         "compile": {
-          "bin/placeholder/Entities.Common.dll": {}
+          "bin/placeholder/Domain.Aggregates.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Entities.Common.dll": {}
+          "bin/placeholder/Domain.Aggregates.dll": {}
         }
       },
-      "Entities.Gtfs/1.0.0": {
+      "Domain.Common/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
-        "dependencies": {
-          "Entities.Common": "1.0.0"
-        },
+        "framework": ".NETCoreApp,Version=v7.0",
         "compile": {
-          "bin/placeholder/Entities.Gtfs.dll": {}
+          "bin/placeholder/Domain.Common.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Entities.Gtfs.dll": {}
+          "bin/placeholder/Domain.Common.dll": {}
         }
       },
-      "Entities.Transit/1.0.0": {
+      "Domain.Entities/1.0.0": {
         "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
+        "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "Entities.Common": "1.0.0"
+          "Domain.Common": "1.0.0",
+          "Domain.ValueObjects": "1.0.0"
         },
         "compile": {
-          "bin/placeholder/Entities.Transit.dll": {}
+          "bin/placeholder/Domain.Entities.dll": {}
         },
         "runtime": {
-          "bin/placeholder/Entities.Transit.dll": {}
+          "bin/placeholder/Domain.Entities.dll": {}
+        }
+      },
+      "Domain.Factories/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Domain.Aggregates": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Domain.Factories.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Domain.Factories.dll": {}
+        }
+      },
+      "Domain.Services/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Domain.Aggregates": "1.0.0",
+          "Domain.Factories": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Domain.Services.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Domain.Services.dll": {}
+        }
+      },
+      "Domain.ValueObjects/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Domain.Common": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Domain.ValueObjects.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Domain.ValueObjects.dll": {}
         }
       }
     }
@@ -1948,10 +2061,10 @@
         "runtimes/win-x86/native/Microsoft.Data.SqlClient.SNI.dll"
       ]
     },
-    "Microsoft.EntityFrameworkCore/7.0.3": {
-      "sha512": "6XUI2YGoaLMoP9KGaqWmmd4B2n5bpQbXrVRpH20Et3YjQ0Rn3Ia6HM/ANcSq9rBfjfUySgo9SwUZgQ4m4PF3LQ==",
+    "Microsoft.EntityFrameworkCore/7.0.10": {
+      "sha512": "24NbXJqJ/x8u88/agqeb1pLdAF9+9StDLA36+P/3g5xsJPOaB2GxXn7epR8dWpZTgHsNZ7cvBMxBgfFmF+xZlg==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore/7.0.3",
+      "path": "microsoft.entityframeworkcore/7.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1959,35 +2072,35 @@
         "buildTransitive/net6.0/Microsoft.EntityFrameworkCore.props",
         "lib/net6.0/Microsoft.EntityFrameworkCore.dll",
         "lib/net6.0/Microsoft.EntityFrameworkCore.xml",
-        "microsoft.entityframeworkcore.7.0.3.nupkg.sha512",
+        "microsoft.entityframeworkcore.7.0.10.nupkg.sha512",
         "microsoft.entityframeworkcore.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Abstractions/7.0.3": {
-      "sha512": "0NaFBZykUlQHknddRuKY4v+MFZX/AW+v2V85dgj7abIlt+kL3GWa7QNH5S1084VLf1u+dq1SnhZsOvykc3Y0sA==",
+    "Microsoft.EntityFrameworkCore.Abstractions/7.0.10": {
+      "sha512": "Z/lDWmGLiT9uNQrp6UXTKZxofSmAKQCiKOz98FDscTbfAGgBXE3DTTqRsPMc8HFIVVSNANSiFRz3JyLg07HN9Q==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.abstractions/7.0.3",
+      "path": "microsoft.entityframeworkcore.abstractions/7.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
         "lib/net6.0/Microsoft.EntityFrameworkCore.Abstractions.xml",
-        "microsoft.entityframeworkcore.abstractions.7.0.3.nupkg.sha512",
+        "microsoft.entityframeworkcore.abstractions.7.0.10.nupkg.sha512",
         "microsoft.entityframeworkcore.abstractions.nuspec"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Analyzers/7.0.3": {
-      "sha512": "CLyRWFLwaOUZNPEia/aBMzFxZqm/ITKt3B+yUFtrg4Ys5VF3n2gvneuItC9IhpeOcjfdSgu/yUKf8y/IsNHs5A==",
+    "Microsoft.EntityFrameworkCore.Analyzers/7.0.10": {
+      "sha512": "+8NVNpyJTzW6nNh/7RGfldf+mbeboVcn+X1tD8kMBCEJswuy3RqM/qecEEfOfTcWLliZExPMaHwOwtHO6RMpdA==",
       "type": "package",
-      "path": "microsoft.entityframeworkcore.analyzers/7.0.3",
+      "path": "microsoft.entityframeworkcore.analyzers/7.0.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "analyzers/dotnet/cs/Microsoft.EntityFrameworkCore.Analyzers.dll",
         "lib/netstandard2.0/_._",
-        "microsoft.entityframeworkcore.analyzers.7.0.3.nupkg.sha512",
+        "microsoft.entityframeworkcore.analyzers.7.0.10.nupkg.sha512",
         "microsoft.entityframeworkcore.analyzers.nuspec"
       ]
     },
@@ -4842,6 +4955,31 @@
         "version.txt"
       ]
     },
+    "Application.Common/1.0.0": {
+      "type": "project",
+      "path": "../Application.Common/Application.Common.csproj",
+      "msbuildProject": "../Application.Common/Application.Common.csproj"
+    },
+    "Application.Dtos/1.0.0": {
+      "type": "project",
+      "path": "../Application.Dtos/Application.Dtos.csproj",
+      "msbuildProject": "../Application.Dtos/Application.Dtos.csproj"
+    },
+    "Application.Mapping/1.0.0": {
+      "type": "project",
+      "path": "../Application.Mapping/Application.Mapping.csproj",
+      "msbuildProject": "../Application.Mapping/Application.Mapping.csproj"
+    },
+    "Application.QueryServices/1.0.0": {
+      "type": "project",
+      "path": "../Application.ReadServices/Application.QueryServices.csproj",
+      "msbuildProject": "../Application.ReadServices/Application.QueryServices.csproj"
+    },
+    "Application.ViewModels/1.0.0": {
+      "type": "project",
+      "path": "../Application.ViewModels/Application.ViewModels.csproj",
+      "msbuildProject": "../Application.ViewModels/Application.ViewModels.csproj"
+    },
     "ApplicationLogic/1.0.0": {
       "type": "project",
       "path": "../ApplicationLogic/ApplicationLogic.csproj",
@@ -4852,20 +4990,35 @@
       "path": "../Controllers/Controllers.csproj",
       "msbuildProject": "../Controllers/Controllers.csproj"
     },
-    "Entities.Common/1.0.0": {
+    "Domain.Aggregates/1.0.0": {
       "type": "project",
-      "path": "../Entities.Common/Entities.Common.csproj",
-      "msbuildProject": "../Entities.Common/Entities.Common.csproj"
+      "path": "../Entities.Common/Domain.Aggregates.csproj",
+      "msbuildProject": "../Entities.Common/Domain.Aggregates.csproj"
     },
-    "Entities.Gtfs/1.0.0": {
+    "Domain.Common/1.0.0": {
       "type": "project",
-      "path": "../Entities.Gtfs/Entities.Gtfs.csproj",
-      "msbuildProject": "../Entities.Gtfs/Entities.Gtfs.csproj"
+      "path": "../Domain.Common/Domain.Common.csproj",
+      "msbuildProject": "../Domain.Common/Domain.Common.csproj"
     },
-    "Entities.Transit/1.0.0": {
+    "Domain.Entities/1.0.0": {
       "type": "project",
-      "path": "../Entities.Transit/Entities.Transit.csproj",
-      "msbuildProject": "../Entities.Transit/Entities.Transit.csproj"
+      "path": "../Domain.Entities/Domain.Entities.csproj",
+      "msbuildProject": "../Domain.Entities/Domain.Entities.csproj"
+    },
+    "Domain.Factories/1.0.0": {
+      "type": "project",
+      "path": "../Domain.Factories/Domain.Factories.csproj",
+      "msbuildProject": "../Domain.Factories/Domain.Factories.csproj"
+    },
+    "Domain.Services/1.0.0": {
+      "type": "project",
+      "path": "../Domain.Services/Domain.Services.csproj",
+      "msbuildProject": "../Domain.Services/Domain.Services.csproj"
+    },
+    "Domain.ValueObjects/1.0.0": {
+      "type": "project",
+      "path": "../Domain.ValueObjects/Domain.ValueObjects.csproj",
+      "msbuildProject": "../Domain.ValueObjects/Domain.ValueObjects.csproj"
     }
   },
   "projectFileDependencyGroups": {

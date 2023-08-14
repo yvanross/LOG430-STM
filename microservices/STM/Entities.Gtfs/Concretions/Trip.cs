@@ -1,11 +1,8 @@
-﻿using Entities.Common.Interfaces;
-using Entities.Gtfs.Interfaces;
+﻿namespace Entities.Gtfs.Concretions;
 
-namespace Entities.Gtfs.Concretions;
-
-public class Trip : ITrip
+public class Trip
 {
-    public string Id { get; init; }
+    public required string Id { get; init; }
    
-    public List<IStopSchedule> StopSchedules { get; set; } = new ();
+    public List<StopSchedule> StopSchedules { get; set; } = new ();
 }

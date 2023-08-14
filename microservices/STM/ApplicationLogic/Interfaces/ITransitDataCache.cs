@@ -1,17 +1,16 @@
 ﻿using System.Collections.Concurrent;
-using Entities.Common.Interfaces;
-using Entities.Gtfs.Interfaces;
+using Domain.Aggregates;
 using STM.ExternalServiceProvider.Proto;
 
 namespace ApplicationLogic.Interfaces;
 
 public interface ITransitDataCache
 {
-    ConcurrentDictionary<string, ITrip>? GetTrips();
+    ConcurrentDictionary<string, Trip>? GetTrips();
     
-    ConcurrentDictionary<string, IStop>? GetStops();
+    ConcurrentDictionary<string, Stop>? GetStops();
 
-    void AddStop(IStop stop);
+    void AddStop(Stop stop);
 
     public Task PrefetchData();
 

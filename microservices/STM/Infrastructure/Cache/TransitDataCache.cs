@@ -2,11 +2,7 @@
 using ApplicationLogic.Enums;
 using ApplicationLogic.Helpers;
 using ApplicationLogic.Interfaces;
-using Entities.Common.Concretions;
-using Entities.Common.Interfaces;
-using Entities.Gtfs.Concretions;
-using Entities.Gtfs.Interfaces;
-using Entities.Transit.Concretions;
+using Domain.Entities;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Logging;
 using STM.ExternalServiceProvider.Proto;
@@ -80,9 +76,9 @@ public class TransitDataCache : ITransitDataCache
                     if (_stops!.ContainsKey(stopTimeU.StopId) is false)
                         AddStop(new Stop() { Id = stopTimeU.StopId, Position = new PositionLL() });
 
-                    var schedule = (IStopSchedule) new TransitStopSchedule()
+                    var schedule = (IStopSchedule) new IndexedStopSchedule()
                     {
-                        Stop = _stops[stopTimeU.StopId],
+                        StopId = _stops[stopTimeU.StopId],
                         DepartureTime =
                             (DateTime.UnixEpoch.AddSeconds(stopTimeU.Departure?.Time ?? stopTimeU.Arrival?.Time ?? 0L)).AddHours(TimezoneHelper.UtcDiff)
                     };
@@ -177,7 +173,7 @@ public class TransitDataCache : ITransitDataCache
                 departureTime = dateTime;
             }
 
-            trip.StopSchedules.Add(new StopSchedule()
+            trip.StopSchedules.Add(new ScheduledStop()
             {
                 Stop = stop,
                 DepartureTime = departureTime

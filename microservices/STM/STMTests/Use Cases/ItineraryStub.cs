@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ApplicationLogic.Use_Cases;
-using Entities.Common.Concretions;
-using Entities.Common.Interfaces;
-using Entities.Transit.Concretions;
-using Entities.Transit.Interfaces;
+using ApplicationLogic.Interfaces;
 
 namespace STMTests.Use_Cases;
 
@@ -26,13 +22,13 @@ public class ItineraryStub : IItinerary
                 Id = "im a unique bus",
                 Name = "im still a unique bus",
                 Position = pos,
-                TransitTrip = new TransitTrip()
+                TransitTripId = new Ride()
                 {
                     Id = "im a unique trip",
-                    RelevantDestination = new TransitStopSchedule()
+                    RelevantDestination = new IndexedStopSchedule()
                     {
                         Index = 0,
-                        Stop = new Stop()
+                        StopId = new Stop()
                         {
                             Id = "im a unique stop",
                             Position = pos,
@@ -40,10 +36,10 @@ public class ItineraryStub : IItinerary
                         },
                         DepartureTime = DateTime.Today
                     },
-                    RelevantOrigin = new TransitStopSchedule()
+                    RelevantOrigin = new IndexedStopSchedule()
                     {
                         Index = 0,
-                        Stop = new Stop()
+                        StopId = new Stop()
                         {
                             Id = "no you're not",
                             Position = pos,
@@ -51,7 +47,7 @@ public class ItineraryStub : IItinerary
                         },
                         DepartureTime = DateTime.Today
                     },
-                    StopSchedules = new List<TransitStopSchedule>(),
+                    StopSchedules = new List<IndexedStopSchedule>(),
                     FromStaticGtfs = false,
                     RelevantDestinationStopId = "the right one",
                     RelevantOriginStopId = "the unique one"

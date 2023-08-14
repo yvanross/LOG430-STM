@@ -2,6 +2,7 @@ using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Policies;
 using ApplicationLogic.Usecases;
 using Configuration.Policies;
+using Configuration.Stubs;
 using Controllers.Controllers;
 using Entities.DomainInterfaces;
 using Infrastructure.Clients;
@@ -75,8 +76,7 @@ namespace Configuration
 
             services.AddScoped<IDataStreamWriteModel, MassTransitRabbitMqClient>();
 
-            services.AddScoped<IBusInfoProvider, StmClient>();
-
+            services.AddScoped<IBusInfoProvider, StmClientStub>();
         }
 
         private static void ConfigureMassTransit(IServiceCollection services)

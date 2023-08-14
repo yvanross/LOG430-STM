@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
 using ApplicationLogic.Interfaces;
-using Entities.Transit.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ApplicationLogic.Services.BusTracking;

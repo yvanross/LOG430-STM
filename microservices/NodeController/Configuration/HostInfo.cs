@@ -6,7 +6,7 @@ namespace Configuration;
 
 public class HostInfo : IHostInfo
 {
-    private const string Version = "3.1.0";
+    private const string Version = "3.1.1";
 
     private const bool CheatsAllowed = true;
 

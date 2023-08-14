@@ -1,9 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using ApplicationLogic.DTO;
-using ApplicationLogic.Use_Cases;
-using Entities.Common.Concretions;
-using Entities.Transit.Concretions;
-using Entities.Transit.Interfaces;
+using ApplicationLogic.Interfaces;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,14 +45,14 @@ namespace Controllers.Controllers
                 Id = busDto.BusId,
                 Name = busDto.Name,
                 StopIndexAtComputationTime = busDto.StopIndexAtTimeOfProcessing,
-                TransitTrip = new TransitTrip()
+                TransitTripId = new Ride()
                 {
                     Id = busDto.TripId,
-                    RelevantOrigin = new TransitStopSchedule()
+                    RelevantOrigin = new IndexedStopSchedule()
                     {
                         Index = relevantOrigin.Index,
                         DepartureTime = Convert.ToDateTime(relevantOrigin.DepartureTime),
-                        Stop = new Stop()
+                        StopId = new Stop()
                         {
                             Message = relevantOrigin.Stop.Message,
                             Id = relevantOrigin.Stop.Id,
@@ -66,11 +63,11 @@ namespace Controllers.Controllers
                             }
                         }
                     },
-                    RelevantDestination = new TransitStopSchedule()
+                    RelevantDestination = new IndexedStopSchedule()
                     {
                         Index = relevantDestination.Index,
                         DepartureTime = Convert.ToDateTime(relevantDestination.DepartureTime),
-                        Stop = new Stop()
+                        StopId = new Stop()
                         {
                             Message = relevantDestination.Stop.Message,
                             Id = relevantDestination.Stop.Id,

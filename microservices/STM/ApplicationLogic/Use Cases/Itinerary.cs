@@ -1,7 +1,12 @@
-﻿using ApplicationLogic.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Common.Extensions;
+using Application.ReadServices;
+using Application.ViewModels;
+using ApplicationLogic.Interfaces;
 using ApplicationLogic.Services.Itinerary;
-using Entities.Common.Interfaces;
-using Entities.Transit.Interfaces;
+using Domain.Aggregates;
+using Domain.Services;
+using Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
 
 namespace ApplicationLogic.Use_Cases
@@ -13,22 +18,31 @@ namespace ApplicationLogic.Use_Cases
         private readonly ILogger _logger;
         private readonly ItineraryPlannerService _itineraryPlannerService;
         private readonly GtfsProcessorService _gtfsProcessorService;
+        private readonly ApplicationStopService _stopServices;
+        private readonly ApplicationTripServices _tripServices;
+        private readonly ApplicationBusServices _busServices;
 
         public Itinerary(
             IStmClient client,
             ITransitDataCache igtfsAggregateRoot,
             ILogger<IItinerary> logger,
             ItineraryPlannerService itineraryPlannerService,
-            GtfsProcessorService gtfsProcessorService)
+            GtfsProcessorService gtfsProcessorService,
+            ApplicationStopService stopServices,
+            ApplicationTripServices tripServices,
+            ApplicationBusServices busServices)
         {
             _client = client;
             _stmData = igtfsAggregateRoot;
             _logger = logger;
             _itineraryPlannerService = itineraryPlannerService;
             _gtfsProcessorService = gtfsProcessorService;
+            _stopServices = stopServices;
+            _tripServices = tripServices;
+            _busServices = busServices;
         }
 
-        public async Task<(IBus bus, double eta)[]?> GetFastestBus(IPosition from, IPosition to)
+        public async Task<(Ride bus, double eta)[]?> GetFastestBus(Position from, Position to)
         {
             await PrefetchAndApplyTripUpdates();
 
@@ -64,29 +78,25 @@ namespace ApplicationLogic.Use_Cases
             _logger.LogInformation("# Trip Updates Applied to cache");
         }
 
-        private Dictionary<string, ITransitTrip> RelevantTripsAndRelevantStops(IPosition from, IPosition to)
+        private RideViewModel RelevantBuses(Position from, Position to)
         {
-            var stops = _stmData.GetStops()!.Values.ToArray();
+            var sourceStops = _stopServices.GetClosestStops(from);
 
-            var stopsOrigin = _itineraryPlannerService.GetClosestStops(from, stops);
-            var stopsTarget = _itineraryPlannerService.GetClosestStops(to, stops);
+            var destinationStops = _stopServices.GetClosestStops(to);
 
-            var relevantTrips = _itineraryPlannerService.TripsContainingSourceAndDestination(stopsOrigin, stopsTarget);
+            var trips = _tripServices.TimeRelevantTripsContainingSourceAndDestination(sourceStops, destinationStops);
 
-            return relevantTrips;
+            var relevantBuses = _busServices.GetTimeRelevantRideViewModels(
+                trips.ToDictionary(trip => trip.Id), 
+                sourceStops.ToDictionary(stop => stop.Id), 
+                destinationStops.ToDictionary(stop => stop.Id));
+            
+            return relevantBuses.First();
         }
 
-        private (IBus bus, double eta)[] RelevantBuses(Dictionary<string, ITransitTrip>? relevantTrips)
+        private class TripStopDto
         {
-            var feedPositions = _client.RequestFeedPositions();
 
-            var relevantBuses = _gtfsProcessorService.GetVehicleOnRelevantTrips(relevantTrips, feedPositions);
-            
-            relevantBuses = _gtfsProcessorService.GetRelevantOriginAndDestinationForRelevantBuses(relevantBuses);
-
-            var timeRelevantBuses = _gtfsProcessorService.GetTimeRelevantBuses(relevantBuses).ToArray();
-            
-            return timeRelevantBuses;
         }
     }
 }

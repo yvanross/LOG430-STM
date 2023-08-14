@@ -1,5 +1,4 @@
 ﻿using ApplicationLogic.Interfaces;
-using Entities.Transit.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ApplicationLogic.Services.BusTracking;
@@ -16,20 +15,20 @@ public class BeforeFirstStopTrackingService : ABusTrackingService
     {
         _firstStopIndexRecorded ??= CurrentStopIndex;
 
-        if (CurrentStopIndex >= Bus.TransitTrip.RelevantOrigin!.Value.Index)
+        if (CurrentStopIndex >= Bus.TransitTripId.RelevantOrigin!.Value.Index)
         {
             var busTrackingService = new BusTrackingService(Bus, StmClient, Logger, DateTime.UtcNow, _startingTime);
 
-            return (new Entities.Transit.Concretions.BusTracking()
+            return (new BusinessObjects.BusTracking()
             {
                 Message = $"Bus {Bus.Name} is at the first stop, begin timer",
                 Duration = DeltaTime(_startingTime).TotalMilliseconds,
             }, busTrackingService);
         }
 
-        var prediction = Predictions(Convert.ToDouble(CurrentStopIndex), Convert.ToDouble(_firstStopIndexRecorded), Bus.TransitTrip.RelevantOrigin!.Value.Index);
+        var prediction = Predictions(Convert.ToDouble(CurrentStopIndex), Convert.ToDouble(_firstStopIndexRecorded), Bus.TransitTripId.RelevantOrigin!.Value.Index);
 
-        return (new Entities.Transit.Concretions.BusTracking()
+        return (new BusinessObjects.BusTracking()
         {
             Message = $"Bus {Bus.Name}:\nNot yet at first stop.\n{Convert.ToInt32(prediction * 100)}% in {Convert.ToInt32(DeltaTime(_startingTime).TotalSeconds)} seconds",
             Duration = DeltaTime(_startingTime).TotalMilliseconds,

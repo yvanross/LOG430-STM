@@ -80,28 +80,29 @@ services:
       - '32773:80'
     labels:
       ARTIFACT_CATEGORY: Computation
+      Pod_links: RouteTimeProvider
       Replicas: 1
-      Pod_Links: RouteTimeProvider, stm
     depends_on:
       - nodecontroller
-  stm:
-    container_name: STM
-    image: stm
-    restart: always
-    build:
-      context: ../
-      dockerfile: STM/Controllers/Dockerfile
-    environment:
-      SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
-      NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
-      ID: STM
-      API_KEY: '${STM}'
-    ports:
-      - '32774:80'
-    labels:
-      ARTIFACT_CATEGORY: Computation
-    depends_on:
-      - nodecontroller
-      - tripcomparator
+    
+#  stm:
+#    container_name: STM
+#    image: stm
+#    restart: always
+#    build:
+#      context: ../
+#      dockerfile: STM/Controllers/Dockerfile
+#    environment:
+#      SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
+#      NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
+#      ID: STM
+#      API_KEY: '${STM}'
+#    ports:
+#      - '32774:80'#
+#    labels:
+#      ARTIFACT_CATEGORY: Computation
+#    depends_on:
+#      - nodecontroller
+#      - tripcomparator
 
   

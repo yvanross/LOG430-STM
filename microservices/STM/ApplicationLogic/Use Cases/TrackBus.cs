@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
+using ApplicationLogic.Interfaces;
 using ApplicationLogic.Services.BusTracking;
-using Entities.Transit.Interfaces;
 
 namespace ApplicationLogic.Use_Cases;
 

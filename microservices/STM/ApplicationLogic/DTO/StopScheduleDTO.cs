@@ -1,10 +1,3 @@
 ﻿namespace ApplicationLogic.DTO;
 
-public class StopScheduleDto
-{
-    public StopDto? Stop { get; set; } = new ();
-
-    public string? DepartureTime { get; set; }
-
-    public int Index { get; set; }
-}
+public record StopScheduleDto(StopDto Stop, string DepartureTime, int Index);

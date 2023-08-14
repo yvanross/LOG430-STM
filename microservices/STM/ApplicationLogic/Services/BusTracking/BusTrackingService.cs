@@ -1,5 +1,4 @@
 ﻿using ApplicationLogic.Interfaces;
-using Entities.Transit.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ApplicationLogic.Services.BusTracking;
@@ -18,19 +17,19 @@ public class BusTrackingService : ABusTrackingService
 
     private protected override (IBusTracking, ABusTrackingService?) Track()
     {
-        if (CurrentStopIndex >= Bus.TransitTrip.RelevantDestination!.Value.Index)
+        if (CurrentStopIndex >= Bus.TransitTripId.RelevantDestination!.Value.Index)
         {
-            return (new Entities.Transit.Concretions.BusTracking()
+            return (new BusinessObjects.BusTracking()
             {
-                Message = $"Real Time Tracking is done, bus {Bus.Name} has reached the destination in {DeltaTime(_crossedFirstStopTime).TotalSeconds}",
+                Message = $"Real Time Track is done, bus {Bus.Name} has reached the destination in {DeltaTime(_crossedFirstStopTime).TotalSeconds}",
                 Duration = DeltaTime(_startingTime).TotalMilliseconds,
                 TrackingCompleted = true
             }, default);
         }
 
-        var prediction = Predictions(Convert.ToDouble(CurrentStopIndex), Bus.TransitTrip.RelevantOrigin!.Value.Index, Bus.TransitTrip.RelevantDestination!.Value.Index);
+        var prediction = Predictions(Convert.ToDouble(CurrentStopIndex), Bus.TransitTripId.RelevantOrigin!.Value.Index, Bus.TransitTripId.RelevantDestination!.Value.Index);
 
-        return (new Entities.Transit.Concretions.BusTracking()
+        return (new BusinessObjects.BusTracking()
         {
             Message = $"Bus {Bus.Name}:\n{Convert.ToInt32(prediction * 100)}% in {Convert.ToInt32(DeltaTime(_crossedFirstStopTime).TotalSeconds)} seconds",
             Duration = DeltaTime(_startingTime).TotalMilliseconds

@@ -1,6 +1,5 @@
-﻿using ApplicationLogic.Use_Cases;
-using Entities.Transit.Concretions;
-using Entities.Transit.Interfaces;
+﻿using ApplicationLogic.BusinessObjects;
+using ApplicationLogic.Interfaces;
 
 namespace STMTests.Use_Cases;
 

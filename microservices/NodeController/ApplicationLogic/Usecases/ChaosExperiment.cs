@@ -79,7 +79,9 @@ public class ChaosExperiment
 
     private async Task ChaosMonkey(double expectedKillCountAtThisMoment, double maxNumberOfPods, string category)
     {
-        var overPodLimit = Math.Max(_podReadService.GetAllPods().Count - maxNumberOfPods - expectedKillCountAtThisMoment, 0);
+        var getPodCountOfType = _podReadService.GetAllPods().Count(pod => _podReadService.GetPodType(pod.Type)?.ServiceTypes.Any(st => st.ArtifactType.EqualsIgnoreCase(category)) ?? false);
+
+        var overPodLimit = Math.Max(getPodCountOfType - maxNumberOfPods - expectedKillCountAtThisMoment, 0);
 
         expectedKillCountAtThisMoment = Math.Floor(expectedKillCountAtThisMoment) + overPodLimit;
 

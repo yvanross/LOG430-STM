@@ -54,12 +54,6 @@ namespace Ingress.Controllers
                 return Unauthorized();
             }
 
-            //var jwtToken = new JwtSecurityToken(jwt);
-
-            //var name = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-
-            //var accounts = includeAllVisibleAccounts ? await _subscription.GetVisibleAccounts(jwt) : new[] { name };
-
             var accounts = await _subscription.GetVisibleAccounts(jwt);
 
             var requestBody = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();

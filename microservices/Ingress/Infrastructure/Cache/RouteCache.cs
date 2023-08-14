@@ -7,7 +7,6 @@ namespace Infrastructure.Cache;
 
 internal static class RouteCache
 {
-    //The portainer Address is the key
     private static readonly ConcurrentDictionary<string, INode> NodeByName = new ();
     
     private static readonly IScheduler Scheduler = new Scheduler();

@@ -1,9 +1,7 @@
 using System.Globalization;
 using ApplicationLogic.DTO;
-using ApplicationLogic.Use_Cases;
-using Entities.Common.Concretions;
-using Entities.Transit.Concretions;
-using Entities.Transit.Interfaces;
+using ApplicationLogic.Interfaces;
+using Domain.Aggregates;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -58,13 +56,13 @@ namespace Controllers.Controllers
             {
                 foreach (var tuple in valueTuples)
                 {
-                    var relevantOrigin = tuple.bus!.TransitTrip.RelevantOrigin!.Value;
-                    var relevantDestination = tuple.bus.TransitTrip.RelevantDestination!.Value;
+                    var relevantOrigin = tuple.bus!.TransitTripId.RelevantOrigin!.Value;
+                    var relevantDestination = tuple.bus.TransitTripId.RelevantDestination!.Value;
 
                     var busDTO = new BusDto()
                     {
                         BusId = tuple.bus.Id,
-                        TripId = tuple.bus.TransitTrip.Id,
+                        TripId = tuple.bus.TransitTripId.Id,
                         Name = tuple.bus.Name,
                         ETA = tuple.eta.ToString(),
                         StopIndexAtTimeOfProcessing = tuple.bus.StopIndexAtComputationTime,
@@ -74,11 +72,11 @@ namespace Controllers.Controllers
                             DepartureTime = relevantOrigin.DepartureTime.ToString(CultureInfo.InvariantCulture),
                             Stop = new StopDto()
                             {
-                                Message = ((Stop)relevantOrigin.Stop).Message, Id = relevantOrigin.Stop.Id,
+                                Message = ((Stop)relevantOrigin.StopId).Message, Id = relevantOrigin.StopId.Id,
                                 Position = new PositionDto()
                                 {
-                                    Latitude = relevantOrigin.Stop.Position.Latitude.ToString(CultureInfo.InvariantCulture),
-                                    Longitude = relevantOrigin.Stop.Position.Longitude.ToString(CultureInfo.InvariantCulture),
+                                    Latitude = relevantOrigin.StopId.Position.Latitude.ToString(CultureInfo.InvariantCulture),
+                                    Longitude = relevantOrigin.StopId.Position.Longitude.ToString(CultureInfo.InvariantCulture),
                                 }
                             }
                         },
@@ -88,11 +86,11 @@ namespace Controllers.Controllers
                             DepartureTime = relevantDestination.DepartureTime.ToString(CultureInfo.InvariantCulture),
                             Stop = new StopDto()
                             {
-                                Message = ((Stop)relevantDestination.Stop).Message, Id = relevantDestination.Stop.Id,
+                                Message = ((Stop)relevantDestination.StopId).Message, Id = relevantDestination.StopId.Id,
                                 Position = new PositionDto()
                                 {
-                                    Latitude = relevantDestination.Stop.Position.Latitude.ToString(CultureInfo.InvariantCulture),
-                                    Longitude = relevantDestination.Stop.Position.Longitude.ToString(CultureInfo.InvariantCulture),
+                                    Latitude = relevantDestination.StopId.Position.Latitude.ToString(CultureInfo.InvariantCulture),
+                                    Longitude = relevantDestination.StopId.Position.Longitude.ToString(CultureInfo.InvariantCulture),
                                 }
                             }
                         },

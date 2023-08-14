@@ -60,7 +60,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 break;
                 case "Connector": connector++;
                 break;
-                case "Data": data++;
+                case "Database": data++;
                 break;
               }
             }

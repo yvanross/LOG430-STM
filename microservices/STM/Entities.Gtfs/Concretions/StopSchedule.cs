@@ -1,10 +1,3 @@
-﻿using Entities.Common.Interfaces;
+﻿namespace Entities.Gtfs.Concretions;
 
-namespace Entities.Gtfs.Concretions;
-
-public struct StopSchedule : IStopSchedule
-{
-    public IStop Stop { get; set; }
-
-    public DateTime DepartureTime { get; set; }
-}
+public record struct StopSchedule(string StopId, DateTime DepartureTime);

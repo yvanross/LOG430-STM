@@ -31,7 +31,7 @@ namespace NodeController.Controllers
             return Ok(Try.WithConsequenceAsync(() =>
             {
                 var routingDatas = _routing.RouteByDestinationType(caller, serviceType, mode).ToList();
-
+                
                 return Task.FromResult(routingDatas);
             }, retryCount: 2).Result);
         }

@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using ApplicationLogic.Helpers;
-using Entities.Transit.Concretions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace STMTests.Use_Cases
@@ -36,8 +35,8 @@ namespace STMTests.Use_Cases
 
             Assert.IsNotNull(valueTuple?.First().bus);
             
-            Assert.IsNotNull(valueTuple?.First().bus.TransitTrip.RelevantOrigin?.Index > 0);
-            Assert.IsNotNull(valueTuple?.First().bus.TransitTrip.RelevantDestination?.Index > 0);
+            Assert.IsNotNull(valueTuple?.First().bus.Ride.RelevantOrigin?.Index > 0);
+            Assert.IsNotNull(valueTuple?.First().bus.Ride.RelevantDestination?.Index > 0);
         }
 
         [TestMethod()]

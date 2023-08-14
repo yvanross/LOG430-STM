@@ -36,7 +36,9 @@ public class Routing : IRouting
 
         var serviceType = _podReadService.GetServiceType(destinationType);
 
-        if (serviceType is null) throw new ArgumentNullException(nameof(serviceType));
+        if (serviceType is null) 
+            throw new ArgumentNullException(nameof(serviceType), 
+                $"No services were found to be eligible to receive the request according to the defined parameters: from {sourceServiceId} to {destinationServiceType}. Check that the target service is accessible according to routing rules.");
 
         return serviceType.ArtifactType.EqualsIgnoreCase(Enum.GetName(ArtifactTypeEnum.Computation)!) ? 
             L7RouteByDestinationType(sourceServiceId, destinationServiceType, mode) : 
