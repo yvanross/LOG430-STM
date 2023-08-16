@@ -1,5 +1,4 @@
 ﻿using Domain.Common.Seedwork.Abstract;
-using Domain.Common.Seedwork.Interfaces;
 
 namespace Domain.Entities;
 
@@ -25,5 +24,14 @@ public class ScheduledStop : Entity<ScheduledStop>
     public override ScheduledStop Clone()
     {
         return new ScheduledStop(StopId, DepartureTime);
+    }
+
+    internal bool UpdateDepartureTime(DateTime departureTime)
+    {
+        if(DepartureTime.Equals(departureTime)) return false;
+
+        DepartureTime = departureTime;
+
+        return true;
     }
 }

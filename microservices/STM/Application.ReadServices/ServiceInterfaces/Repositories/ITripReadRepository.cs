@@ -1,7 +1,7 @@
-﻿using Application.ReadServices.Seedwork;
+﻿using Application.QueryServices.Seedwork;
 using Domain.Aggregates;
 
-namespace Application.ReadServices.ServiceInterfaces.Repositories;
+namespace Application.QueryServices.ServiceInterfaces.Repositories;
 
 public interface ITripReadRepository : IReadRepository<Trip>
 {

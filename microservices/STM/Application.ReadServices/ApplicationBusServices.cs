@@ -1,10 +1,10 @@
-﻿using Application.ReadServices.ServiceInterfaces.Repositories;
+﻿using Application.Common.Exceptions;
+using Application.Common.Extensions;
+using Application.QueryServices.ServiceInterfaces.Repositories;
 using Application.ViewModels;
 using Domain.Aggregates;
-using Application.Common.Extensions;
-using Application.Common.Exceptions;
 
-namespace Application.ReadServices;
+namespace Application.QueryServices;
 
 public class ApplicationBusServices
 {

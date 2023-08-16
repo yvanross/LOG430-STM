@@ -2,9 +2,9 @@
 using System.Resources;
 using System.Text;
 using ApplicationLogic.Enums;
-using Infrastructure.Gtfs;
+using Infrastructure2.Gtfs;
 
-namespace Infrastructure.Cache;
+namespace Infrastructure2.Cache;
 
 public class GtfsFileFileCache
 {

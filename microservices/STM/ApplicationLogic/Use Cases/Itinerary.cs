@@ -1,11 +1,8 @@
-﻿using Application.Common.Exceptions;
-using Application.Common.Extensions;
-using Application.ReadServices;
+﻿using Application.QueryServices;
 using Application.ViewModels;
 using ApplicationLogic.Interfaces;
 using ApplicationLogic.Services.Itinerary;
-using Domain.Aggregates;
-using Domain.Services;
+using Domain.Aggregates.Ride;
 using Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
 

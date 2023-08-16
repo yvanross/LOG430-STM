@@ -1648,6 +1648,9 @@
       "Domain.Common/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Domain.Events": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/Domain.Common.dll": {}
         },
@@ -1667,6 +1670,16 @@
         },
         "runtime": {
           "bin/placeholder/Domain.Entities.dll": {}
+        }
+      },
+      "Domain.Events/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "compile": {
+          "bin/placeholder/Domain.Events.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Domain.Events.dll": {}
         }
       },
       "Domain.Factories/1.0.0": {
@@ -5004,6 +5017,11 @@
       "type": "project",
       "path": "../Domain.Entities/Domain.Entities.csproj",
       "msbuildProject": "../Domain.Entities/Domain.Entities.csproj"
+    },
+    "Domain.Events/1.0.0": {
+      "type": "project",
+      "path": "../Domain.Events/Domain.Events.csproj",
+      "msbuildProject": "../Domain.Events/Domain.Events.csproj"
     },
     "Domain.Factories/1.0.0": {
       "type": "project",

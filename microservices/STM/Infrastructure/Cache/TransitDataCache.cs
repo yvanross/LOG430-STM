@@ -7,7 +7,7 @@ using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Logging;
 using STM.ExternalServiceProvider.Proto;
 
-namespace Infrastructure.Cache;
+namespace Infrastructure2.Cache;
 
 public class TransitDataCache : ITransitDataCache
 {

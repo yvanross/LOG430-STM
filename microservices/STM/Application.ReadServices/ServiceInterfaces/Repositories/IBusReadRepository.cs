@@ -1,7 +1,7 @@
-﻿using Application.ReadServices.Seedwork;
-using Domain.Entities;
+﻿using Application.QueryServices.Seedwork;
+using Domain.Aggregates;
 
-namespace Application.ReadServices.ServiceInterfaces.Repositories;
+namespace Application.QueryServices.ServiceInterfaces.Repositories;
 
 public interface IBusReadRepository : IReadRepository<Bus>
 {

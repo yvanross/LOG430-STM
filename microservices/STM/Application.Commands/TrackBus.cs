@@ -1,4 +1,4 @@
-﻿using Application.Common.AntiCorruption;
+﻿using Application.Commands.AntiCorruption;
 
 namespace Application.Commands;
 

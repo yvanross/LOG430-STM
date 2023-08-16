@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
-using Polly.Retry;
 using Polly;
+using Polly.Retry;
 
-namespace Infrastructure;
+namespace Infrastructure2;
 
 public static class Policies
 {

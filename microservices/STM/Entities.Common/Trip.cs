@@ -2,8 +2,8 @@
 using Domain.Common.Exceptions;
 using Domain.Common.Interfaces;
 using Domain.Common.Seedwork.Abstract;
-using Domain.Common.Seedwork.Interfaces;
 using Domain.Entities;
+using Domain.Events.AggregateEvents.Trip;
 
 namespace Domain.Aggregates;
 
@@ -11,31 +11,29 @@ public class Trip : Aggregate<Trip>
 {
     public string Id { get; private set; }
 
-    internal ImmutableList<ScheduledStop> StopSchedules { get; }
+    internal ImmutableList<ScheduledStop> ScheduledStops { get; }
 
-    public Trip(IEnumerable<ScheduledStop> stopSchedules, string id)
+    public Trip(string id, IEnumerable<ScheduledStop> stopSchedules)
     {
-        StopSchedules = stopSchedules.ToImmutableList();
+        ScheduledStops = stopSchedules.ToImmutableList();
         Id = id;
     }
 
-    public bool Equals(Trip? other)
+    internal static Trip CreateTrip(string tripId, IEnumerable<(string stopId, DateTime schedule)> stopSchedules)
     {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Id == other.Id && StopSchedules.SequenceEqual(other.StopSchedules);
+        return new Trip(tripId, stopSchedules.Select(x => new ScheduledStop(x.stopId, x.schedule)));
     }
 
     public override Trip Clone()
     {
-        return new Trip(StopSchedules.Select(x => x.Clone()).ToList(), Id);
+        return new Trip(Id, ScheduledStops.Select(x => x.Clone()).ToList());
     }
 
     public bool IsTimeRelevant(IDatetimeProvider datetimeProvider)
     {
-        if (StopSchedules.Any() is false) throw new TripHasNoScheduledStopException();
+        if (ScheduledStops.Any() is false) throw new TripHasNoScheduledStopException();
 
-        var lastStopTime = DeltaHours(StopSchedules[^1].DepartureTime);
+        var lastStopTime = DeltaHours(ScheduledStops[^1].DepartureTime);
 
         return lastStopTime > 0;
 
@@ -49,30 +47,49 @@ public class Trip : Aggregate<Trip>
 
     public bool ContainsStop(string stopId)
     {
-        return StopSchedules.Any(stopSchedule => stopSchedule.StopId.Equals(stopId));
+        return ScheduledStops.Any(stopSchedule => stopSchedule.StopId.Equals(stopId));
     }
 
-    public int NumberOfStops() => StopSchedules.Count;
+    public int NumberOfStops() => ScheduledStops.Count;
 
-    public ScheduledStop GetStopByIndex(int index) => StopSchedules[index].Clone();
+    public ScheduledStop GetStopByIndex(int index) => ScheduledStops[index].Clone();
+
+    public int GetIndexOfStop(string stopId)
+    {
+        var index = ScheduledStops.FindIndex(stop => stop.StopId.Equals(stopId));
+
+        if(index == -1) throw new ScheduledStopNotFoundException();
+
+        return index;
+    }
 
     public DateTime GetStopDepartureTime(string id)
     {
-        return StopSchedules.FirstOrDefault(stopSchedule => stopSchedule.Id.Equals(id))?.DepartureTime ??
+        return ScheduledStops.FirstOrDefault(stopSchedule => stopSchedule.Id.Equals(id))?.DepartureTime ??
                throw new ScheduledStopNotFoundException();
     }
 
     public ScheduledStop FirstMatchingStop(Dictionary<string, Stop> stops)
     {
-        var scheduledStop = StopSchedules.FirstOrDefault(stopSchedule => stops.ContainsKey(stopSchedule.StopId));
+        var scheduledStop = ScheduledStops.FirstOrDefault(stopSchedule => stops.ContainsKey(stopSchedule.StopId));
 
         return scheduledStop ?? throw new ScheduledStopNotFoundException();
     }
 
     public ScheduledStop LastMatchingStop(Dictionary<string, Stop> stops)
     {
-        var scheduledStop = StopSchedules.LastOrDefault(stopSchedule => stops.ContainsKey(stopSchedule.StopId));
+        var scheduledStop = ScheduledStops.LastOrDefault(stopSchedule => stops.ContainsKey(stopSchedule.StopId));
 
         return scheduledStop ?? throw new ScheduledStopNotFoundException();
+    }
+
+    public void UpdateScheduledStops(string stopId, DateTime departureTime)
+    {
+        var stop = ScheduledStops.FirstOrDefault(scheduledStop => scheduledStop.StopId.Equals(stopId)) ?? throw new ScheduledStopNotFoundException();
+
+        var updated = stop.UpdateDepartureTime(departureTime);
+
+        if(updated)
+            RaiseDomainEvent(new TripScheduledStopsUpdated(Id));
     }
 }

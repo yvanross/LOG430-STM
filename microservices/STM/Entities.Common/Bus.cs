@@ -1,10 +1,6 @@
-﻿using Domain.Common.Seedwork.Interfaces;
-using Domain.ValueObjects;
-using System.Runtime.CompilerServices;
-using Domain.Common.Seedwork.Abstract;
+﻿using Domain.Common.Seedwork.Abstract;
 
-[assembly: InternalsVisibleTo("Domain.Entities")]
-namespace Domain.Entities;
+namespace Domain.Aggregates;
 
 public class Bus : Aggregate<Bus>
 {

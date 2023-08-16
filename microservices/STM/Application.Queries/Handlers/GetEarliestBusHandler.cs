@@ -1,5 +1,5 @@
-﻿using Application.Common.AntiCorruption;
-using Application.ReadServices;
+﻿using Application.Queries.AntiCorruption;
+using Application.QueryServices;
 using Application.ViewModels;
 
 namespace Application.Queries.Handlers;
@@ -20,11 +20,11 @@ public class GetEarliestBusHandler : IQueryHandler<GetEarliestBus, RideViewModel
         _busServices = busServices;
     }
 
-    public Task<RideViewModel> Handle(GetEarliestBus query)
+    public Task<RideViewModel> Handle(GetEarliestBus query, CancellationToken cancellation)
     {
-        var sourceStops = _stopServices.GetClosestStops(query.from);
+        var sourceStops = _stopServices.GetClosestStops(query.From);
 
-        var destinationStops = _stopServices.GetClosestStops(query.to);
+        var destinationStops = _stopServices.GetClosestStops(query.To);
 
         var trips = _tripServices.TimeRelevantTripsContainingSourceAndDestination(sourceStops, destinationStops);
 

@@ -1,6 +1,6 @@
-﻿namespace Application.Common.AntiCorruption;
+﻿namespace Application.Commands.AntiCorruption;
 
 public interface ICommand
 {
-    
+
 }

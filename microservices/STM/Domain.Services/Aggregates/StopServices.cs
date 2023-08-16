@@ -2,9 +2,9 @@
 using Domain.Common.Exceptions;
 using Domain.ValueObjects;
 
-namespace Domain.Services;
+namespace Domain.Services.Aggregates;
 
-public class StopServices : IStopDomainServices
+public class StopServices
 {
     public IEnumerable<Stop> GetNearbyStops(Position referencePosition, IEnumerable<Stop> stops, int radiusForBusStopSelection)
     {

@@ -3,4 +3,6 @@
 public interface IDatetimeProvider
 {
     DateTime GetCurrentTime();
+
+    int GetUtcDifference();
 }

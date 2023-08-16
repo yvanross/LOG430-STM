@@ -1,8 +1,8 @@
-﻿namespace Application.ReadServices.Seedwork;
+﻿namespace Application.QueryServices.Seedwork;
 
 public interface IReadRepository<T>
 {
-    IEnumerable<T> GetAll();
+    Task<IEnumerable<T>> GetAllAsync();
 
-    T Get(string id);
+    Task<T> GetAsync(string id);
 }

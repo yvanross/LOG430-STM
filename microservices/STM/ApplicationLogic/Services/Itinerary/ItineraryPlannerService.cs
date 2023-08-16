@@ -1,7 +1,5 @@
 ﻿using ApplicationLogic.Interfaces;
-using Domain.Aggregates;
 using Domain.Common.Interfaces;
-using Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
 
 namespace ApplicationLogic.Services.Itinerary;

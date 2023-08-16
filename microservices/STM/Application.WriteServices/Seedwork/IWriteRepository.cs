@@ -1,8 +1,10 @@
-﻿namespace Application.WriteServices.Seedwork;
+﻿namespace Application.CommandServices.Seedwork;
 
 public interface IWriteRepository<T>
 {
-    T Get(string id);
+    Task<IEnumerable<T>> GetAllAsync();
 
-    void Save(T aggregate);
+    Task<T> GetAsync(string id);
+
+    Task AddAsync(T aggregate);
 }

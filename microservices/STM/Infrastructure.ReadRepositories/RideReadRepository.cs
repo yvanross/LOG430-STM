@@ -1,6 +1,12 @@
-﻿namespace Infrastructure.ReadRepositories;
+﻿using Domain.Aggregates.Ride;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
-public class RideReadRepository
+namespace Infrastructure.ReadRepositories;
+
+public class RideReadRepository : ReadRepository<Ride>
 {
-    
+    public RideReadRepository(DbContextOptions options, ILogger logger) : base(options, logger)
+    {
+    }
 }

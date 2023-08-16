@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Gtfs;
+﻿namespace Infrastructure2.Gtfs;
 
 public class GtfsInfo
 {

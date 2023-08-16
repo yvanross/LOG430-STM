@@ -1,6 +1,6 @@
-﻿namespace Application.Common.AntiCorruption;
+﻿namespace Application.Queries.AntiCorruption;
 
-public interface IQueryHandler<in TQuery, TResult> where TQuery : IQuery<TResult>
+public interface IQueryHandler<in TQuery, TQueryResult> where TQuery : IQuery<TQueryResult>
 {
-    Task<TResult> Handle(TQuery query);
+    Task<TQueryResult> Handle(TQuery query, CancellationToken cancellation);
 }

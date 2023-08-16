@@ -1,6 +1,9 @@
-﻿namespace Application.CommandServices.ServiceInterfaces.Repositories;
+﻿using Application.CommandServices.Seedwork;
+using Domain.Aggregates.Ride;
 
-public interface IRideWriteRepository
+namespace Application.CommandServices.ServiceInterfaces.Repositories;
+
+public interface IRideWriteRepository : IWriteRepository<Ride>
 {
     
 }

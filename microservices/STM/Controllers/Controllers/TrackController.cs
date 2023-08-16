@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
-using ApplicationLogic.DTO;
 using ApplicationLogic.Interfaces;
+using ApplicationLogic.Use_Cases;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,59 +33,11 @@ namespace Controllers.Controllers
         /// <returns>Number of real time seconds the bus took to travel from origin to target destinations</returns>
         [HttpPost]
         [ActionName(nameof(BeginTracking))]
-        public IActionResult BeginTracking(BusDto busDto)
+        public IActionResult BeginTracking(TrackBus)
         {
             _logger.LogInformation("TrackBus endpoint reached");
 
-            var relevantOrigin = busDto.OriginStopSchedule;
-            var relevantDestination = busDto.TargetStopSchedule;
 
-            var bus = new Bus()
-            {
-                Id = busDto.BusId,
-                Name = busDto.Name,
-                StopIndexAtComputationTime = busDto.StopIndexAtTimeOfProcessing,
-                TransitTripId = new Ride()
-                {
-                    Id = busDto.TripId,
-                    RelevantOrigin = new IndexedStopSchedule()
-                    {
-                        Index = relevantOrigin.Index,
-                        DepartureTime = Convert.ToDateTime(relevantOrigin.DepartureTime),
-                        StopId = new Stop()
-                        {
-                            Message = relevantOrigin.Stop.Message,
-                            Id = relevantOrigin.Stop.Id,
-                            Position = new PositionLL()
-                            {
-                                Latitude = Convert.ToDouble(relevantOrigin.Stop.Position.Latitude),
-                                Longitude = Convert.ToDouble(relevantOrigin.Stop.Position.Longitude)
-                            }
-                        }
-                    },
-                    RelevantDestination = new IndexedStopSchedule()
-                    {
-                        Index = relevantDestination.Index,
-                        DepartureTime = Convert.ToDateTime(relevantDestination.DepartureTime),
-                        StopId = new Stop()
-                        {
-                            Message = relevantDestination.Stop.Message,
-                            Id = relevantDestination.Stop.Id,
-                            Position = new PositionLL()
-                            {
-                                Latitude = Convert.ToDouble(relevantDestination.Stop.Position.Latitude),
-                                Longitude = Convert.ToDouble(relevantDestination.Stop.Position.Longitude)
-                            }
-                        }
-                    },
-                },
-            };
-
-            BusesBeingTracked.TryAdd(bus.Id, _trackBus);
-
-            _trackBus.SetBus(bus);
-
-            return Accepted();
         }
 
         [HttpGet]

@@ -1,8 +1,7 @@
-﻿using Application.ReadServices;
+﻿using Application.QueryServices;
 using Domain.Aggregates;
+using Domain.Aggregates.Ride;
 using Domain.Common.Interfaces;
-using Domain.Entities;
-using STM.ExternalServiceProvider.Proto;
 
 namespace ApplicationLogic.Services.Itinerary;
 

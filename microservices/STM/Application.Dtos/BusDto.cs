@@ -1,6 +1,6 @@
 ﻿using Domain.ValueObjects;
 
-namespace ApplicationLogic.DTO;
+namespace Application.Dtos;
 
 public record BusDto(
     string Name, 

@@ -1,3 +1,7 @@
+using Application.Commands.AntiCorruption;
+using Application.Queries.AntiCorruption;
+using Aspect.Configuration.Dispatchers;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Aspect.Configuration
 {
@@ -24,11 +28,36 @@ namespace Aspect.Configuration
             }
 
             app.UseAuthorization();
-
-
             app.MapControllers();
-
             app.Run();
         }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.TryAddSingleton<ICommandDispatcher, CommandDispatcher>();
+            services.TryAddSingleton<IQueryDispatcher, QueryDispatcher>();
+
+            services.Scan(selector =>
+            {
+                selector.FromCallingAssembly()
+                    .AddClasses(filter =>
+                    {
+                        filter.AssignableTo(typeof(IQueryHandler<,>));
+                    })
+                    .AsImplementedInterfaces()
+                    .WithSingletonLifetime();
+            });
+            services.Scan(selector =>
+            {
+                selector.FromCallingAssembly()
+                    .AddClasses(filter =>
+                    {
+                        filter.AssignableTo(typeof(ICommandHandler<>));
+                    })
+                    .AsImplementedInterfaces()
+                    .WithSingletonLifetime();
+            });
+        }
+
     }
 }

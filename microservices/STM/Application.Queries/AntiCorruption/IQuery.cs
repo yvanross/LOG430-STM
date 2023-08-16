@@ -1,4 +1,4 @@
-﻿namespace Application.Common.AntiCorruption;
+﻿namespace Application.Queries.AntiCorruption;
 
 public interface IQuery<TResult>
 {

@@ -1,35 +1,62 @@
-﻿using Application.CommandServices;
-using Application.Common.AntiCorruption;
-using Domain.Services;
-using System.ComponentModel.Design;
+﻿using Application.Commands.AntiCorruption;
+using Application.CommandServices.ServiceInterfaces.Repositories;
+using Microsoft.Extensions.Logging;
+using Domain.Common.Exceptions;
+using Domain.Services.Aggregates;
 
 namespace Application.Commands.Handlers;
 
 public class TrackBusHandler : ICommandHandler<TrackBus>
 {
-    private readonly ApplicationBusServices _busServices;
-    private readonly ApplicationTripServices _tripServices;
-    private readonly ApplicationRideServices _rideServices;
+    private readonly ITripWriteRepository _tripRepository;
+    private readonly IRideWriteRepository _rideRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly RideServices _domainRideServices;
+    private readonly ILogger<TrackBusHandler> _logger;
 
     public TrackBusHandler(
-        ApplicationBusServices busServices, 
-        ApplicationTripServices tripServices,
-        ApplicationRideServices rideServices,
-        RideServices domainRideServices)
+        ITripWriteRepository tripRepository,
+        IRideWriteRepository rideRepository,
+        IUnitOfWork unitOfWork,
+        RideServices domainRideServices,
+        ILogger<TrackBusHandler> logger)
     {
-        _busServices = busServices;
-        _tripServices = tripServices;
-        _rideServices = rideServices;
+        _tripRepository = tripRepository;
+        _rideRepository = rideRepository;
+        _unitOfWork = unitOfWork;
         _domainRideServices = domainRideServices;
+        _logger = logger;
     }
 
-    public Task Handle(TrackBus command)
+    public async Task Handle(TrackBus command, CancellationToken cancellation)
     {
-        var trip = _tripServices.Get(command.TripId);
+        try
+        {
+            var trip = await _tripRepository.GetAsync(command.TripId);
 
-        var ride = _domainRideServices.CreateRide(command.BusId, trip, command.ScheduledDepartureId, command.ScheduledDestinationId);
+            var ride = _domainRideServices.CreateRide(command.BusId, trip, command.ScheduledDepartureId, command.ScheduledDestinationId);
 
-        _rideServices.Save(ride);
+            await _rideRepository.AddAsync(ride);
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+        catch (KeyNotFoundException e)
+        {
+            _logger.LogError($"Trip with ID {command.TripId} was not found. Exception: {e.Message}");
+
+            throw;
+        }
+        catch (AggregateInvalidStateException e)
+        {
+            _logger.LogError($"An invalid state occurred while processing the trip with ID {command.TripId}. Exception: {e.Message}");
+
+            throw;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"An unexpected error occurred while processing the trip with ID {command.TripId}. Exception: {e.Message}");
+
+            throw;
+        }
     }
 }

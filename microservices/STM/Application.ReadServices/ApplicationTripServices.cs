@@ -1,9 +1,9 @@
 ﻿using System.Collections.Immutable;
-using Application.ReadServices.ServiceInterfaces.Repositories;
+using Application.QueryServices.ServiceInterfaces.Repositories;
 using Domain.Aggregates;
 using Domain.Common.Interfaces;
 
-namespace Application.ReadServices;
+namespace Application.QueryServices;
 
 public class ApplicationTripServices
 {

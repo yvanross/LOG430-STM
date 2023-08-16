@@ -1,6 +1,6 @@
 ﻿using STM.ExternalServiceProvider.Proto;
 
-namespace Application.ReadServices.ServiceInterfaces;
+namespace Application.CommandServices.ServiceInterfaces;
 
 public interface IStmClient
 {

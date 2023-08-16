@@ -1,37 +1,21 @@
-﻿using Application.ReadServices.ServiceInterfaces.Repositories;
+﻿using Application.QueryServices.ServiceInterfaces.Repositories;
 using Domain.Aggregates;
-using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.ReadRepositories;
 
-public class BusReadRepository : DbContext, IBusReadRepository
+public class BusReadRepository : ReadRepository<Bus>, IBusReadRepository
 {
-    private readonly ILogger<BusReadRepository> _logger;
-
-    public DbSet<Bus> Buses { get; set; } = null!;
-
-    public BusReadRepository(DbContextOptions<BusReadRepository> options, ILogger<BusReadRepository> logger) : base(options)
+    public BusReadRepository(DbContextOptions options, ILogger logger) : base(options, logger)
     {
-        _logger = logger;
-    }
-
-    public IEnumerable<Bus> GetAll()
-    {
-        throw new NotImplementedException();
-    }
-
-    public Bus Get(string id)
-    {
-        throw new NotImplementedException();
     }
 
     public IEnumerable<Bus> GetAllIdsMatchingTripsIds(IEnumerable<string> tripIds)
     {
         var materializedTrips = tripIds.ToList();
 
-        var buses = Buses.Where(bus => materializedTrips.Contains(bus.TripId));
+        var buses = Aggregates.Where(bus => materializedTrips.Contains(bus.TripId));
 
         return buses.ToList();
     }

@@ -1,7 +1,8 @@
 ﻿using Domain.Aggregates;
 using Domain.Common.Interfaces;
+using Domain.Factories;
 
-namespace Domain.Services;
+namespace Domain.Services.Aggregates;
 
 public class TripServices
 {
@@ -13,7 +14,7 @@ public class TripServices
     }
 
     public Dictionary<string, Trip> TimeRelevantTripsContainingSourceAndDestination(
-        IEnumerable<Trip> trips, 
+        IEnumerable<Trip> trips,
         Dictionary<string, Stop> possibleSources,
         Dictionary<string, Stop> possibleDestinations)
     {
@@ -25,5 +26,10 @@ public class TripServices
             .ToDictionary(trip => trip.Id);
 
         return relevantTrips;
+    }
+
+    public Trip CreateTrip(string tripId, IEnumerable<(string stopId, DateTime schedule)> stopSchedules)
+    {
+        return TripFactory.Create(tripId, stopSchedules);
     }
 }

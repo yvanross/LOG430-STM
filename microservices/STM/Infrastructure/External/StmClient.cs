@@ -5,7 +5,7 @@ using Google.Protobuf;
 using RestSharp;
 using STM.ExternalServiceProvider.Proto;
 
-namespace Infrastructure.External;
+namespace Infrastructure2.External;
 
 public class StmClient : IStmClient
 {

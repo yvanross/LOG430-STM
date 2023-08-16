@@ -1,7 +1,7 @@
-﻿using Application.WriteServices.Seedwork;
+﻿using Application.CommandServices.Seedwork;
 using Domain.Aggregates;
 
-namespace Application.WriteServices.ServiceInterfaces.Repositories;
+namespace Application.CommandServices.ServiceInterfaces.Repositories;
 
 public interface IStropWriteRepository : IWriteRepository<Stop>
 {

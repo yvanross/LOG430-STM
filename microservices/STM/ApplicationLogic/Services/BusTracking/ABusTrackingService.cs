@@ -46,6 +46,4 @@ public abstract class ABusTrackingService
 
     private protected TimeSpan DeltaTime(DateTime? crossedOriginTime)
         => (DateTime.UtcNow - (crossedOriginTime ?? DateTime.UtcNow));
-
-    private protected abstract (IBusTracking, ABusTrackingService?) Track();
 }

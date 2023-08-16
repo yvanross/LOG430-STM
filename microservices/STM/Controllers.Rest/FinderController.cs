@@ -1,25 +1,23 @@
-using System.Globalization;
-using ApplicationLogic.DTO;
-using ApplicationLogic.Interfaces;
-using Domain.Aggregates;
-using Microsoft.AspNetCore.Cors;
+using Application.Queries;
+using Application.Queries.AntiCorruption;
+using Application.ViewModels;
+using Domain.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Controllers.Controllers
+namespace Controllers.Rest
 {
-    [EnableCors("AllowOrigin")]
     [ApiController]
     [Route("[controller]/[action]")]
     public class FinderController : ControllerBase
     {
         private readonly ILogger<FinderController> _logger;
-        private readonly IItinerary _itinerary;
+        private readonly IQueryDispatcher _queryDispatcher;
 
-        public FinderController(ILogger<FinderController> logger, IItinerary itinerary)
+        public FinderController(ILogger<FinderController> logger, IQueryDispatcher queryDispatcher)
         {
             _logger = logger;
-            _itinerary = itinerary;
+            _queryDispatcher = queryDispatcher;
         }
 
         /// <remarks>
@@ -28,78 +26,22 @@ namespace Controllers.Controllers
         /// <param name="fromLatitudeLongitude">Latitude, longitude of the first stop</param>
         /// <param name="toLatitudeLongitude">Latitude, longitude of the last stop</param>
         /// <returns>
-        /// Json containing the ID of the bus, its trip ID, its name, the ETA, the first and last stops of the trip 
+        /// <see cref="RideViewModel"/> object containing information concerning the optimal bus to take
         /// </returns>
         [HttpGet] 
         [ActionName(nameof(OptimalBuses))]
-        public async Task<ActionResult<IEnumerable<BusDto>>> OptimalBuses(string fromLatitudeLongitude, string toLatitudeLongitude)
+        public async Task<ActionResult<RideViewModel>> OptimalBuses(string fromLatitudeLongitude, string toLatitudeLongitude)
         {
             _logger.LogInformation($"OptimalBus endpoint called with coordinated: from: {fromLatitudeLongitude}; to: {toLatitudeLongitude}");
 
             var (fromLatitude, fromLongitude, toLatitude, toLongitude) = ParseParams();
 
-            var busTuples = await GetBuses();
+            var from = new Position(fromLatitude, fromLongitude);
+            var to = new Position(toLatitude, toLongitude);
 
-            if (busTuples is null) return UnprocessableEntity("No real time data on buses were found for the selected coordinates");
+            var ride = await _queryDispatcher.Dispatch<GetEarliestBus, RideViewModel>(new GetEarliestBus(from, to), CancellationToken.None);
 
-            return FormatToDto(busTuples).ToList();
-
-            async Task<(IBus bus, double eta)[]?> GetBuses()
-            {
-                var busesAndEtas = await _itinerary.GetFastestBus(
-                    new PositionLL() { Latitude = fromLatitude, Longitude = fromLongitude },
-                    new PositionLL() { Latitude = toLatitude, Longitude = toLongitude });
-
-                return busesAndEtas;
-            }
-
-            IEnumerable<BusDto> FormatToDto((IBus bus, double eta)[] valueTuples)
-            {
-                foreach (var tuple in valueTuples)
-                {
-                    var relevantOrigin = tuple.bus!.TransitTripId.RelevantOrigin!.Value;
-                    var relevantDestination = tuple.bus.TransitTripId.RelevantDestination!.Value;
-
-                    var busDTO = new BusDto()
-                    {
-                        BusId = tuple.bus.Id,
-                        TripId = tuple.bus.TransitTripId.Id,
-                        Name = tuple.bus.Name,
-                        ETA = tuple.eta.ToString(),
-                        StopIndexAtTimeOfProcessing = tuple.bus.StopIndexAtComputationTime,
-                        OriginStopSchedule = new StopScheduleDto()
-                        {
-                            Index = relevantOrigin.Index,
-                            DepartureTime = relevantOrigin.DepartureTime.ToString(CultureInfo.InvariantCulture),
-                            Stop = new StopDto()
-                            {
-                                Message = ((Stop)relevantOrigin.StopId).Message, Id = relevantOrigin.StopId.Id,
-                                Position = new PositionDto()
-                                {
-                                    Latitude = relevantOrigin.StopId.Position.Latitude.ToString(CultureInfo.InvariantCulture),
-                                    Longitude = relevantOrigin.StopId.Position.Longitude.ToString(CultureInfo.InvariantCulture),
-                                }
-                            }
-                        },
-                        TargetStopSchedule = new StopScheduleDto()
-                        {
-                            Index = relevantDestination.Index,
-                            DepartureTime = relevantDestination.DepartureTime.ToString(CultureInfo.InvariantCulture),
-                            Stop = new StopDto()
-                            {
-                                Message = ((Stop)relevantDestination.StopId).Message, Id = relevantDestination.StopId.Id,
-                                Position = new PositionDto()
-                                {
-                                    Latitude = relevantDestination.StopId.Position.Latitude.ToString(CultureInfo.InvariantCulture),
-                                    Longitude = relevantDestination.StopId.Position.Longitude.ToString(CultureInfo.InvariantCulture),
-                                }
-                            }
-                        },
-                    };
-
-                    yield return busDTO;
-                }
-            }
+            return Ok(ride);
 
             (double fromLatitude, double fromLongitude, double toLatitude, double toLongitude) ParseParams()
             {
