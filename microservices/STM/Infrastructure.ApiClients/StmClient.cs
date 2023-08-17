@@ -1,9 +1,9 @@
-﻿using System.Collections.Concurrent;
-using Application.CommandServices.ServiceInterfaces;
+﻿using Application.CommandServices.ServiceInterfaces;
 using Application.Common.Interfaces.Policies;
 using Microsoft.Extensions.Logging;
 using RestSharp;
 using STM.ExternalServiceProvider.Proto;
+using System.Collections.Concurrent;
 using CodedInputStream = Google.Protobuf.CodedInputStream;
 
 namespace Infrastructure.ApiClients;

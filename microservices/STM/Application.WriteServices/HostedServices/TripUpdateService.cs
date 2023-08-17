@@ -20,7 +20,7 @@ public class TripUpdateService : BackgroundService
     private readonly TimeServices _timeServices;
 
     public TripUpdateService(
-        IStmClient stmClient, 
+        IStmClient stmClient,
         ITripWriteRepository tripRepository,
         IUnitOfWork unitOfWork,
         ILogger<TripUpdateService> logger,

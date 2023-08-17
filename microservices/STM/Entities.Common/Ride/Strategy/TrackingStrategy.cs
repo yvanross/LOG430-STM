@@ -16,7 +16,7 @@ internal abstract class TrackingStrategy
     }
 
     protected internal abstract string GetMessage(
-        int currentStopIndex, 
+        int currentStopIndex,
         int firstStopIndex,
         int targetStopIndex,
         ScheduledStop targetStop);

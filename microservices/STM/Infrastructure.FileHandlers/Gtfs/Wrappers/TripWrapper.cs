@@ -1,7 +1,7 @@
-﻿using System.Collections.Immutable;
-using Application.Mapping.Interfaces.Wrappers;
+﻿using Application.Mapping.Interfaces.Wrappers;
 using Domain.Common.Interfaces;
 using Google.Protobuf.WellKnownTypes;
+using System.Collections.Immutable;
 
 namespace Infrastructure.FileHandlers.Gtfs.Wrappers;
 
@@ -22,9 +22,9 @@ public sealed class TripWrapper : ITripWrapper, IDisposable
         _gtfsFileFileCache = gtfsFileFileCache;
         _mediator = mediator;
         _datetimeProvider = datetimeProvider;
-        
+
         TripId = GetTripId();
-        ScheduledStops = new (() => GetStopWrappers().ToImmutableList());
+        ScheduledStops = new(() => GetStopWrappers().ToImmutableList());
     }
 
     private string GetTripId()
@@ -42,7 +42,7 @@ public sealed class TripWrapper : ITripWrapper, IDisposable
 
         foreach (var stopTime in stopTimes)
         {
-            if(_mediator.Stops.TryGetValue(stopTime.GetValue("stop_id"), out var stopWrapper) is false)
+            if (_mediator.Stops.TryGetValue(stopTime.GetValue("stop_id"), out var stopWrapper) is false)
                 throw new NullReferenceException("Stop was null, this is a critical failure, make sure the data is accessible");
 
             var HMS = stopTime.GetValue("arrival_time");

@@ -5,5 +5,5 @@ namespace Application.CommandServices.ServiceInterfaces.Repositories;
 
 public interface IStopWriteRepository : IWriteRepository<Stop>
 {
-    
+
 }

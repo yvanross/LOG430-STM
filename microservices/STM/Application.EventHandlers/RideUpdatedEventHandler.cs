@@ -18,8 +18,8 @@ public class RideUpdatedEventHandler : IDomainEventHandler<BusTrackingUpdated>
         //decoupling the domain event from the infrastructure
         await _publisher.Publish(
             new Contracts.BusTrackingUpdated(
-                domainEvent.Message, 
-                domainEvent.TrackingCompleted, 
+                domainEvent.Message,
+                domainEvent.TrackingCompleted,
                 domainEvent.Duration));
     }
 }

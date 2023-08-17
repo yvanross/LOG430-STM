@@ -1,11 +1,11 @@
 using Application.Commands.Seedwork;
 using Application.Queries.Seedwork;
 using Aspect.Configuration.Dispatchers;
+using Aspect.Configuration.Properties;
 using Controllers.Rest;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Resources;
-using Aspect.Configuration.Properties;
 
 namespace Aspect.Configuration
 {
@@ -17,7 +17,7 @@ namespace Aspect.Configuration
 
             // Add services to the container.
 
-           
+
 
             var app = builder.Build();
 

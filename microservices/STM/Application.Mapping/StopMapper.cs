@@ -1,5 +1,5 @@
-﻿using Application.Mapping.Interfaces.Wrappers;
-using Application.Mapping.Interfaces;
+﻿using Application.Mapping.Interfaces;
+using Application.Mapping.Interfaces.Wrappers;
 using Domain.Aggregates;
 using Domain.Factories;
 using Domain.ValueObjects;

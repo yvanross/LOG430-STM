@@ -17,5 +17,5 @@ namespace Contracts
             Duration = duration;
         }
     }
-   
+
 }

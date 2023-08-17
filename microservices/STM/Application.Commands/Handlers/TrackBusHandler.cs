@@ -1,8 +1,8 @@
 ﻿using Application.Commands.Seedwork;
 using Application.CommandServices.ServiceInterfaces.Repositories;
-using Microsoft.Extensions.Logging;
 using Domain.Common.Exceptions;
 using Domain.Services.Aggregates;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Commands.Handlers;
 
@@ -45,7 +45,7 @@ public class TrackBusHandler : ICommandHandler<TrackBus>
 
             await _unitOfWork.SaveChangesAsync();
         }
-        catch (KeyNotFoundException e)
+        catch (KeyNotFoundException)
         {
             throw;
         }

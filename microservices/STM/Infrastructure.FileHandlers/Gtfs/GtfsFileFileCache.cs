@@ -8,8 +8,8 @@ public class GtfsFileFileCache : IDisposable
 {
     private readonly ResourceManager _resourceManager;
 
-    private static readonly Dictionary<DataCategoryEnum, GtfsInfo[]> _GtfsInfos = new ();
-    
+    private static readonly Dictionary<DataCategoryEnum, GtfsInfo[]> _GtfsInfos = new();
+
     private bool _disposed;
 
     public GtfsFileFileCache(ResourceManager resourceManager)
@@ -19,13 +19,13 @@ public class GtfsFileFileCache : IDisposable
         FetchStopTimes();
 
         FetchStringData(DataCategoryEnum.TRIPS);
-       
+
         FetchStringData(DataCategoryEnum.STOPS);
     }
 
     public GtfsInfo[] GetInfo(DataCategoryEnum dataCategory)
     {
-        if(_GtfsInfos.TryGetValue(dataCategory, out var infos) is false)
+        if (_GtfsInfos.TryGetValue(dataCategory, out var infos) is false)
             throw new ArgumentException($"No data found for {dataCategory}");
 
         return infos;
@@ -49,7 +49,7 @@ public class GtfsFileFileCache : IDisposable
     {
         string decompressed;
 
-        var encodedBytes = (byte[]) ressoruce;
+        var encodedBytes = (byte[])ressoruce;
 
         using (var inGoingStream = new MemoryStream(encodedBytes))
         using (var outGoingStream = new MemoryStream())
@@ -109,6 +109,6 @@ public class GtfsFileFileCache : IDisposable
 
             _disposed = true;
         }
-       
+
     }
 }

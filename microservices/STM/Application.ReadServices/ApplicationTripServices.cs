@@ -1,7 +1,7 @@
-﻿using System.Collections.Immutable;
-using Application.QueryServices.ServiceInterfaces.Repositories;
+﻿using Application.QueryServices.ServiceInterfaces.Repositories;
 using Domain.Aggregates;
 using Domain.Common.Interfaces;
+using System.Collections.Immutable;
 
 namespace Application.QueryServices;
 
@@ -26,7 +26,7 @@ public class ApplicationTripServices
 
         IEnumerable<string> UniqueKeys(IEnumerable<Stop> sources, IEnumerable<Stop> destinations)
         {
-            var uniqueKeys = new HashSet<string>(sources.Select(s=>s.Id));
+            var uniqueKeys = new HashSet<string>(sources.Select(s => s.Id));
             uniqueKeys.UnionWith(destinations.Select(s => s.Id));
             return uniqueKeys;
         }

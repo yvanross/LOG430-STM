@@ -28,7 +28,7 @@ namespace Controllers.Rest
         /// <returns>
         /// <see cref="RideViewModel"/> object containing information concerning the optimal bus to take
         /// </returns>
-        [HttpGet] 
+        [HttpGet]
         [ActionName(nameof(OptimalBuses))]
         public async Task<ActionResult<RideViewModel>> OptimalBuses(string fromLatitudeLongitude, string toLatitudeLongitude)
         {

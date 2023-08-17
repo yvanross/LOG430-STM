@@ -54,7 +54,7 @@ public class RideTrackingService : BackgroundService
             {
                 _logger.LogError(e, "Error while updating rides");
             }
-            
+
             await Task.Delay(TimeSpan.FromMilliseconds(50), stoppingToken);
         }
     }

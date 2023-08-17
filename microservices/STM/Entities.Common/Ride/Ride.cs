@@ -36,7 +36,7 @@ public sealed class Ride : Aggregate<Ride>
         Departure = departure;
         Destination = destination;
 
-        _trackingStrategy = ReachedDepartureStop ? 
+        _trackingStrategy = ReachedDepartureStop ?
             new AfterDepartureTracking(datetimeProvider, TripBegunTime, DepartureReachedTime) :
             new BeforeDepartureTracking(datetimeProvider, TripBegunTime);
     }
@@ -57,7 +57,7 @@ public sealed class Ride : Aggregate<Ride>
     {
         UpdatePreviousStop();
 
-        if(_trackingStrategy is BeforeDepartureTracking && ReachedDepartureStop)
+        if (_trackingStrategy is BeforeDepartureTracking && ReachedDepartureStop)
             _trackingStrategy = new AfterDepartureTracking(_datetimeProvider, TripBegunTime, DepartureReachedTime);
 
         var targetStop = ReachedDepartureStop ? Destination : Departure;

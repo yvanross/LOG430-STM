@@ -1,9 +1,9 @@
-﻿using System.Collections.Immutable;
-using Application.CommandServices.ServiceInterfaces;
+﻿using Application.CommandServices.ServiceInterfaces;
 using Application.Mapping.Interfaces.Wrappers;
 using Domain.Common.Interfaces;
 using Infrastructure.FileHandlers.Gtfs.Wrappers;
 using Microsoft.Extensions.Logging;
+using System.Collections.Immutable;
 
 namespace Infrastructure.FileHandlers.Gtfs;
 
@@ -11,7 +11,7 @@ public class TransitDataReader : ITransitDataReader
 {
     public ImmutableList<IStopWrapper> Stops { get; private set; }
 
-    public Lazy<ImmutableList<ITripWrapper>> Trips { get; private set;  }
+    public Lazy<ImmutableList<ITripWrapper>> Trips { get; private set; }
 
     private readonly ILogger<TransitDataReader> _logger;
     private readonly GtfsFileFileCache _gtfsFileFileCache;
@@ -21,9 +21,9 @@ public class TransitDataReader : ITransitDataReader
     private bool _disposed;
 
     public TransitDataReader(
-        ILogger<TransitDataReader> logger, 
-        GtfsFileFileCache gtfsFileFileCache, 
-        WrapperMediator wrapperMediator, 
+        ILogger<TransitDataReader> logger,
+        GtfsFileFileCache gtfsFileFileCache,
+        WrapperMediator wrapperMediator,
         IDatetimeProvider datetimeProvider)
     {
         _logger = logger;
@@ -53,7 +53,7 @@ public class TransitDataReader : ITransitDataReader
     {
         var tripsInfo = _gtfsFileFileCache.GetInfo(DataCategoryEnum.TRIPS).ToList();
 
-        return tripsInfo.Select(info =>(ITripWrapper) new TripWrapper(info, _gtfsFileFileCache, _wrapperMediator, _datetimeProvider)).ToImmutableList();
+        return tripsInfo.Select(info => (ITripWrapper)new TripWrapper(info, _gtfsFileFileCache, _wrapperMediator, _datetimeProvider)).ToImmutableList();
     }
 
     public void Dispose()

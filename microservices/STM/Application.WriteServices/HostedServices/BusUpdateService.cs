@@ -15,7 +15,7 @@ public class BusUpdateService : BackgroundService
     private readonly BusServices _busServices;
 
     public BusUpdateService(
-        IStmClient stmClient, 
+        IStmClient stmClient,
         IBusWriteRepository busRepository,
         IUnitOfWork unitOfWork,
         ILogger<BusUpdateService> logger,
@@ -40,7 +40,7 @@ public class BusUpdateService : BackgroundService
                 {
                     var bus = _busServices.CreateBus(
                         feedPosition.Vehicle.Id,
-                        feedPosition.Trip.RouteId, 
+                        feedPosition.Trip.RouteId,
                         feedPosition.Trip.TripId,
                         Convert.ToInt32(feedPosition.CurrentStopSequence));
 

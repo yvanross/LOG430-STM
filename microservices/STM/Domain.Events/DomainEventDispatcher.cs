@@ -1,6 +1,6 @@
-﻿using System.Collections.Concurrent;
+﻿using Domain.Events.Interfaces;
+using System.Collections.Concurrent;
 using System.Reflection;
-using Domain.Events.Interfaces;
 
 namespace Domain.Events;
 
@@ -26,7 +26,7 @@ public sealed class DomainEventDispatcher : IDomainEventDispatcher
     private async Task InvokeHandler(IDomainEvent domainEvent, MethodBase handleMethod)
     {
         var handler = _serviceProvider.GetService(
-            (handleMethod ?? 
+            (handleMethod ??
              throw new InvalidOperationException($"No handler method found for the domain event type {domainEvent.GetType().Name}."))
             .DeclaringType ??
             throw new InvalidOperationException($"Declaring type for the handle method not found for the domain event type {domainEvent.GetType().Name}."));
@@ -45,7 +45,7 @@ public sealed class DomainEventDispatcher : IDomainEventDispatcher
 
         if (handlerMethods.Count != 1)
             throw new InvalidOperationException($"Expected exactly one HandleAsync method on {handlerType.Name}, but found {handlerMethods.Count}.");
-            
+
         handleMethod = handlerMethods.Single();
 
         _handlerMethods[eventType] = handleMethod;

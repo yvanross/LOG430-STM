@@ -1,5 +1,5 @@
-﻿using System.Collections.Concurrent;
-using Application.Mapping.Interfaces.Wrappers;
+﻿using Application.Mapping.Interfaces.Wrappers;
+using System.Collections.Concurrent;
 
 namespace Infrastructure.FileHandlers.Gtfs.Wrappers;
 

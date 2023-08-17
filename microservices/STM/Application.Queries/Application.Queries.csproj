@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="12.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Application.Common\Application.Common.csproj" />
     <ProjectReference Include="..\Application.ReadServices\Application.QueryServices.csproj" />
     <ProjectReference Include="..\Application.ViewModels\Application.ViewModels.csproj" />
   </ItemGroup>

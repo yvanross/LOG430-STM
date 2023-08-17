@@ -9,15 +9,15 @@ internal class AfterDepartureTracking : TrackingStrategy
 
     public AfterDepartureTracking(
         IDatetimeProvider datetimeProvider,
-        DateTime trackingStartedTime, 
+        DateTime trackingStartedTime,
         DateTime crossedFirstStopTime) : base(datetimeProvider, trackingStartedTime)
     {
         _crossedFirstStopTime = crossedFirstStopTime;
     }
 
     protected internal override string GetMessage(
-        int currentStopIndex, 
-        int firstStopIndex, 
+        int currentStopIndex,
+        int firstStopIndex,
         int targetStopIndex,
         ScheduledStop targetStop)
     {

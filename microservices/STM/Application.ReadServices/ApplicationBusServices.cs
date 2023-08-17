@@ -19,7 +19,7 @@ public class ApplicationBusServices
     {
         var buses = _busRead.GetAllIdsMatchingTripsIds(trips.Keys);
 
-        var rideViewModels =(
+        var rideViewModels = (
             from bus in buses
             let tripId = bus.TripId
             let ride = new RideViewModel(

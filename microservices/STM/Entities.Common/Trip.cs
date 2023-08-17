@@ -1,9 +1,9 @@
-﻿using System.Collections.Immutable;
-using Domain.Common.Exceptions;
+﻿using Domain.Common.Exceptions;
 using Domain.Common.Interfaces;
 using Domain.Common.Seedwork.Abstract;
 using Domain.Entities;
 using Domain.Events.AggregateEvents.Trip;
+using System.Collections.Immutable;
 
 namespace Domain.Aggregates;
 
@@ -58,7 +58,7 @@ public class Trip : Aggregate<Trip>
     {
         var index = ScheduledStops.FindIndex(stop => stop.StopId.Equals(stopId));
 
-        if(index == -1) throw new ScheduledStopNotFoundException();
+        if (index == -1) throw new ScheduledStopNotFoundException();
 
         return index;
     }
@@ -89,7 +89,7 @@ public class Trip : Aggregate<Trip>
 
         var updated = stop.UpdateDepartureTime(departureTime);
 
-        if(updated)
+        if (updated)
             RaiseDomainEvent(new TripScheduledStopsUpdated(Id));
     }
 }

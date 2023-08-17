@@ -1,5 +1,5 @@
-﻿using System.Collections.Immutable;
-using Application.Mapping.Interfaces.Wrappers;
+﻿using Application.Mapping.Interfaces.Wrappers;
+using System.Collections.Immutable;
 
 namespace Application.CommandServices.ServiceInterfaces;
 

@@ -8,8 +8,8 @@ internal class BeforeDepartureTracking : TrackingStrategy
     public BeforeDepartureTracking(IDatetimeProvider datetimeProvider, DateTime trackingStartedTime) : base(datetimeProvider, trackingStartedTime) { }
 
     protected internal override string GetMessage(
-        int currentStopIndex, 
-        int firstStopIndex, 
+        int currentStopIndex,
+        int firstStopIndex,
         int targetStopIndex,
         ScheduledStop targetStop)
     {

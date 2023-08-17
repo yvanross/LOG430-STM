@@ -5,7 +5,7 @@ namespace Domain.Entities;
 public class ScheduledStop : Entity<ScheduledStop>
 {
     public string StopId { get; private set; }
-    
+
     public DateTime DepartureTime { get; private set; }
 
     public ScheduledStop(string stopId, DateTime departureTime)
@@ -28,7 +28,7 @@ public class ScheduledStop : Entity<ScheduledStop>
 
     internal bool UpdateDepartureTime(DateTime departureTime)
     {
-        if(DepartureTime.Equals(departureTime)) return false;
+        if (DepartureTime.Equals(departureTime)) return false;
 
         DepartureTime = departureTime;
 

@@ -1,8 +1,8 @@
-﻿using System.Collections.Immutable;
-using Application.QueryServices.Seedwork;
+﻿using Application.QueryServices.Seedwork;
 using Domain.Aggregates;
 using Domain.Services.Aggregates;
 using Domain.ValueObjects;
+using System.Collections.Immutable;
 
 namespace Application.QueryServices;
 

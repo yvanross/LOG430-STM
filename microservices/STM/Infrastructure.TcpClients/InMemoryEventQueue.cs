@@ -1,5 +1,5 @@
-﻿using System.Collections.Concurrent;
-using Application.EventHandlers.AntiCorruption;
+﻿using Application.EventHandlers.AntiCorruption;
+using System.Collections.Concurrent;
 
 namespace Infrastructure.TcpClients;
 
@@ -26,7 +26,7 @@ public class InMemoryEventQueue : IPublisher, IConsumer
         {
             if (queue.TryDequeue(out var message))
             {
-                return Task.FromResult((TEvent?) message);
+                return Task.FromResult((TEvent?)message);
             }
         }
 
