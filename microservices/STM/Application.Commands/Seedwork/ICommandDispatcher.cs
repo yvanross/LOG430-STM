@@ -1,4 +1,4 @@
-﻿namespace Application.Commands.AntiCorruption;
+﻿namespace Application.Commands.Seedwork;
 
 public interface ICommandDispatcher
 {

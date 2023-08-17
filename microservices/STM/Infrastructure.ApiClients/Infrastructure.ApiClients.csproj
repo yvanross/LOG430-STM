@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.23.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.24.0" />
     <PackageReference Include="RestSharp" Version="110.2.0" />
   </ItemGroup>
 

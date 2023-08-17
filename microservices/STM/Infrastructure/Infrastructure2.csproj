@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ApplicationLogic\ApplicationLogic.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Gtfs\" />
     <Folder Include="Repositories\" />
   </ItemGroup>

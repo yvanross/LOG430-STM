@@ -1,5 +1,5 @@
 using Application.Queries;
-using Application.Queries.AntiCorruption;
+using Application.Queries.Seedwork;
 using Application.ViewModels;
 using Domain.ValueObjects;
 using Microsoft.AspNetCore.Mvc;

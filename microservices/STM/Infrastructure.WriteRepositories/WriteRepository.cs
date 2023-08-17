@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.WriteRepositories;
 
-public abstract class WriteRepository<TAggregate> : DbContext, IWriteRepository<TAggregate> where TAggregate : Aggregate<TAggregate>
+public abstract class WriteRepository<TAggregate> : DbContext, IWriteRepository<TAggregate> where TAggregate : Aggregate<TAggregate>, IEquatable<Entity<TAggregate>>
 {
     private readonly ILogger _logger;
 
@@ -23,7 +23,7 @@ public abstract class WriteRepository<TAggregate> : DbContext, IWriteRepository<
 
     public async Task<TAggregate> GetAsync(string id)
     {
-        return await Aggregates.FindAsync(id) ?? throw new KeyNotFoundException();
+        return await Aggregates.FindAsync(id) ?? throw new KeyNotFoundException($"Aggregate of type {typeof(TAggregate)} could not be found using id: {id}");
     }
 
     public async Task AddAsync(TAggregate aggregate)
@@ -35,6 +35,23 @@ public abstract class WriteRepository<TAggregate> : DbContext, IWriteRepository<
             Aggregates.Add(aggregate);
         }
         else
+        {
+            Aggregates.Update(aggregate);
+        }
+    }
+
+    public async Task AddAllAsync(IEnumerable<TAggregate> aggregates)
+    {
+        var unsavedAggregates = await Aggregates.Except(aggregates).ToListAsync();
+
+        var savedAggregates = aggregates.Except(unsavedAggregates).ToList();
+
+        foreach (var aggregate in unsavedAggregates)
+        {
+            Aggregates.Add(aggregate);
+        }
+
+        foreach (var aggregate in savedAggregates)
         {
             Aggregates.Update(aggregate);
         }

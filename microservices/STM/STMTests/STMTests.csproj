@@ -17,8 +17,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Controllers\Controllers.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -18,9 +18,4 @@ public class RideServices
     {
         return RideFactory.Create(busId, trip, departureId, destinationId, _datetimeProvider);
     }
-
-    public IEnumerable<Ride> GetRidesFromPositions(IEnumerable<(Bus busDto, Trip Trip)> busAndTrips)
-    {
-
-    }
 }

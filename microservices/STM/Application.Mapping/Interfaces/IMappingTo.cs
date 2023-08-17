@@ -1,6 +1,6 @@
 ﻿namespace Application.Mapping.Interfaces;
 
-public interface IMappingTo<in TDto, out TAggregate>
+public interface IMappingTo<in TDto, out TAggregate> where TDto : class where TAggregate : class
 {
-    TAggregate MapTo(TDto dto);
+    TAggregate MapFrom(TDto dto);
 }

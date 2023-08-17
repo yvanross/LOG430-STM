@@ -19,15 +19,15 @@ public class ApplicationBusServices
     {
         var buses = _busRead.GetAllIdsMatchingTripsIds(trips.Keys);
 
-        var rideViewModels = buses
-            .Select(bus => 
-                new RideViewModel(
+        var rideViewModels =(
+            from bus in buses
+            let tripId = bus.TripId
+            let ride = new RideViewModel(
                 trips[bus.TripId].FirstMatchingStop(sources).Id,
                 trips[bus.TripId].LastMatchingStop(destination).Id,
-                bus.Id,
-                trips[bus.TripId].Id))
-            .OrderBy(ride => trips[ride.TripId].GetStopDepartureTime(ride.ScheduledDepartureId))
-            .ToList();
+                bus.Id)
+            orderby trips[tripId].GetStopDepartureTime(ride.ScheduledDepartureId)
+            select ride).ToList();
 
         if (rideViewModels.IsEmpty()) throw new NoBusesFoundException();
 

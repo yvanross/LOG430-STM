@@ -1,5 +1,7 @@
 ﻿using Application.Commands;
-using Application.Commands.AntiCorruption;
+using Application.Commands.Seedwork;
+using Application.EventHandlers.AntiCorruption;
+using Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -11,11 +13,13 @@ namespace Controllers.Rest
     {
         private readonly ILogger<TrackController> _logger;
         private readonly ICommandDispatcher _commandDispatcher;
+        private readonly IConsumer _consumer;
 
-        public TrackController(ILogger<TrackController> logger, ICommandDispatcher commandDispatcher)
+        public TrackController(ILogger<TrackController> logger, ICommandDispatcher commandDispatcher, IConsumer consumer)
         {
             _logger = logger;
             _commandDispatcher = commandDispatcher;
+            _consumer = consumer;
         }
 
         /// <summary>
@@ -36,26 +40,16 @@ namespace Controllers.Rest
 
         [HttpGet]
         [ActionName(nameof(GetTrackingUpdate))]
-        public ActionResult<IBusTracking> GetTrackingUpdate([FromQuery] string busId)
+        public async Task<ActionResult<BusTrackingUpdated>> GetTrackingUpdate()
         {
-            if (BusesBeingTracked.TryGetValue(busId, out var value))
+            var update = await _consumer.Consume<BusTrackingUpdated>();
+
+            if (update is null)
             {
-                var update = value.GetUpdate();
-
-                if(update is null)
-                    return NoContent();
-
-                if (update.TrackingCompleted)
-                {
-                    BusesBeingTracked.Remove(busId, out _);
-
-                    return NoContent();
-                }
-
-                return Ok(update);
+                return NoContent();
             }
 
-            return NoContent();
+            return Ok(update);
         }
     }
 }

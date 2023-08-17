@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Controllers\Controllers.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure2.csproj" />
     <ProjectReference Include="..\STMTests\STMTests.csproj" />
   </ItemGroup>

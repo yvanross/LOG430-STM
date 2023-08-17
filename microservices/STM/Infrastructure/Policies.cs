@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Polly;
+﻿using Polly;
 using Polly.Retry;
 
 namespace Infrastructure2;

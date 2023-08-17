@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application.Commands\Application.Commands.csproj" />
+    <ProjectReference Include="..\Application.EventHandlers\Application.EventHandlers.csproj" />
     <ProjectReference Include="..\Application.Queries\Application.Queries.csproj" />
   </ItemGroup>
 

@@ -3,7 +3,7 @@ using Domain.Aggregates;
 
 namespace Application.CommandServices.ServiceInterfaces.Repositories;
 
-public interface IStropWriteRepository : IWriteRepository<Stop>
+public interface IStopWriteRepository : IWriteRepository<Stop>
 {
     
 }

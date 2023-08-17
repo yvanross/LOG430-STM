@@ -1,4 +1,4 @@
-﻿using Application.Queries.AntiCorruption;
+﻿using Application.Queries.Seedwork;
 
 namespace Aspect.Configuration.Dispatchers;
 

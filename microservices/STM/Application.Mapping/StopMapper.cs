@@ -1,24 +1,15 @@
-﻿using Application.Mapping.Interfaces;
-using Domain.Common.Interfaces;
-using Domain.Entities;
-using STM.ExternalServiceProvider.Proto;
+﻿using Application.Mapping.Interfaces.Wrappers;
+using Application.Mapping.Interfaces;
+using Domain.Aggregates;
+using Domain.Factories;
+using Domain.ValueObjects;
 
 namespace Application.Mapping;
 
-public class StopMapper : IMappingTo<TripUpdate, ScheduledStop>
+public class StopMapper : IMappingTo<IStopWrapper, Stop>
 {
-    private readonly IDatetimeProvider _datetimeProvider;
-
-    public StopMapper(IDatetimeProvider datetimeProvider )
+    public Stop MapFrom(IStopWrapper dto)
     {
-        _datetimeProvider = datetimeProvider;
-    }
-
-    public ScheduledStop MapTo(TripUpdate dto)
-    {
-        dto.
-        
-        var scheduledStops =  materializedStopTimeUpdates.ConvertAll(stopTimeUpdate => new ScheduledStop(stopTimeUpdate.StopId, (DateTime.UnixEpoch.AddSeconds(stopTimeUpdate.Departure?.Time ?? stopTimeUpdate.Arrival?.Time ?? 0L)).AddHours(_datetimeProvider.GetUtcDifference())));
-        return 
+        return StopFactory.Create(dto.Id, new Position(dto.Latitude, dto.Longitude));
     }
 }

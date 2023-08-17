@@ -1,4 +1,4 @@
-﻿using Application.Queries.AntiCorruption;
+﻿using Application.Queries.Seedwork;
 using Application.ViewModels;
 using Domain.ValueObjects;
 

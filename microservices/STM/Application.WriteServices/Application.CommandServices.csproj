@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application.Dtos\Application.Dtos.csproj" />
+    <ProjectReference Include="..\Application.Mapping\Application.Mapping.csproj" />
     <ProjectReference Include="..\Domain.Services\Domain.Services.csproj" />
     <ProjectReference Include="..\Entities.Common\Domain.Aggregates.csproj" />
   </ItemGroup>

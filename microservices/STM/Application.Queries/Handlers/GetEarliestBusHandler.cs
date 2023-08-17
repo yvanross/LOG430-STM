@@ -1,4 +1,4 @@
-﻿using Application.Queries.AntiCorruption;
+﻿using Application.Queries.Seedwork;
 using Application.QueryServices;
 using Application.ViewModels;
 
@@ -20,11 +20,11 @@ public class GetEarliestBusHandler : IQueryHandler<GetEarliestBus, RideViewModel
         _busServices = busServices;
     }
 
-    public Task<RideViewModel> Handle(GetEarliestBus query, CancellationToken cancellation)
+    public async Task<RideViewModel> Handle(GetEarliestBus query, CancellationToken cancellation)
     {
-        var sourceStops = _stopServices.GetClosestStops(query.From);
+        var sourceStops = await _stopServices.GetClosestStops(query.From);
 
-        var destinationStops = _stopServices.GetClosestStops(query.To);
+        var destinationStops = await _stopServices.GetClosestStops(query.To);
 
         var trips = _tripServices.TimeRelevantTripsContainingSourceAndDestination(sourceStops, destinationStops);
 
@@ -33,6 +33,6 @@ public class GetEarliestBusHandler : IQueryHandler<GetEarliestBus, RideViewModel
             sourceStops.ToDictionary(stop => stop.Id),
             destinationStops.ToDictionary(stop => stop.Id));
 
-        return Task.FromResult(relevantBuses.First());
+        return relevantBuses.First();
     }
 }

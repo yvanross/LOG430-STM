@@ -17,11 +17,11 @@ public class ApplicationStopService
         _stopServices = stopServices;
     }
 
-    public ImmutableHashSet<Stop> GetClosestStops(Position position)
+    public async Task<ImmutableHashSet<Stop>> GetClosestStops(Position position)
     {
         const int radiusForBusStopSelectionInMeters = 50;
 
-        var stops = _readStops.GetAllAsync();
+        var stops = await _readStops.GetAllAsync();
 
         var closestStop = _stopServices.FindClosestStop(position, stops);
 

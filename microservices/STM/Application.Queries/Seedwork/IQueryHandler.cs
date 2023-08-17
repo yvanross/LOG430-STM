@@ -1,4 +1,4 @@
-﻿namespace Application.Queries.AntiCorruption;
+﻿namespace Application.Queries.Seedwork;
 
 public interface IQueryHandler<in TQuery, TQueryResult> where TQuery : IQuery<TQueryResult>
 {

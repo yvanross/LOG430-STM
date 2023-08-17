@@ -7,4 +7,6 @@ public interface IWriteRepository<T>
     Task<T> GetAsync(string id);
 
     Task AddAsync(T aggregate);
+
+    Task AddAllAsync(IEnumerable<T> aggregates);
 }

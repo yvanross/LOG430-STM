@@ -1,7 +1,11 @@
-using Application.Commands.AntiCorruption;
-using Application.Queries.AntiCorruption;
+using Application.Commands.Seedwork;
+using Application.Queries.Seedwork;
 using Aspect.Configuration.Dispatchers;
+using Controllers.Rest;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Resources;
+using Aspect.Configuration.Properties;
 
 namespace Aspect.Configuration
 {
@@ -13,10 +17,7 @@ namespace Aspect.Configuration
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+           
 
             var app = builder.Build();
 
@@ -27,6 +28,15 @@ namespace Aspect.Configuration
                 app.UseSwaggerUI();
             }
 
+            app.UseCors(
+                options =>
+                {
+                    options.AllowAnyOrigin();
+                    options.AllowAnyHeader();
+                    options.AllowAnyMethod();
+                }
+            );
+
             app.UseAuthorization();
             app.MapControllers();
             app.Run();
@@ -34,6 +44,18 @@ namespace Aspect.Configuration
 
         public void ConfigureServices(IServiceCollection services)
         {
+            //todo FinderController is used to tell which assembly contains the swagger controllers
+            services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(FinderController).Assembly));
+
+            services.AddControllers();
+
+            services.AddEndpointsApiExplorer();
+
+            services.AddSwaggerGen();
+
+            services.AddSingleton(_ => new ResourceManager(typeof(Resources)));
+
+
             services.TryAddSingleton<ICommandDispatcher, CommandDispatcher>();
             services.TryAddSingleton<IQueryDispatcher, QueryDispatcher>();
 
