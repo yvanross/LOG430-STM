@@ -11,7 +11,7 @@ public abstract class WriteRepository<TAggregate> : DbContext, IWriteRepository<
 
     protected DbSet<TAggregate> Aggregates { get; init; }
 
-    protected WriteRepository(DbContextOptions options, ILogger logger) : base(options)
+    protected WriteRepository(DbContextOptions<WriteRepository<TAggregate>> options, ILogger logger) : base(options)
     {
         _logger = logger;
     }

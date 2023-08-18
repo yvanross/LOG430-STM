@@ -6,8 +6,8 @@ namespace Infrastructure.WriteRepositories;
 
 public class UnitOfWork : IUnitOfWork
 {
-    private readonly DbContext _context;
     private readonly IDomainEventDispatcher _eventDispatcher;
+    private readonly DbContext _context;
 
     public UnitOfWork(DbContext context, IDomainEventDispatcher eventDispatcher)
     {

@@ -1,20 +1,21 @@
 ﻿using System.IO.Compression;
 using System.Resources;
 using System.Text;
+using Aspect.Configuration;
 
 namespace Infrastructure.FileHandlers.Gtfs;
 
 public class GtfsFileFileCache : IDisposable
 {
-    private readonly ResourceManager _resourceManager;
+    private readonly IDataReader _dataReader;
 
     private static readonly Dictionary<DataCategoryEnum, GtfsInfo[]> _GtfsInfos = new();
 
     private bool _disposed;
 
-    public GtfsFileFileCache(ResourceManager resourceManager)
+    public GtfsFileFileCache(IDataReader dataReader)
     {
-        _resourceManager = resourceManager;
+        _dataReader = dataReader;
 
         FetchStopTimes();
 
@@ -33,34 +34,32 @@ public class GtfsFileFileCache : IDisposable
 
     private void FetchStringData(DataCategoryEnum dataCategory)
     {
-        var data = _resourceManager.GetString(dataCategory.ToString().ToLower());
+        var data = _dataReader.GetString(dataCategory.ToString().ToLower());
 
         ParseGtfs(dataCategory, data);
     }
 
     private void FetchStopTimes()
     {
-        var stopTimes = _resourceManager.GetObject(DataCategoryEnum.STOP_TIMES.ToString().ToLower());
+        var stopTimes = _dataReader.GetObject(DataCategoryEnum.STOP_TIMES.ToString().ToLower());
 
         ParseGtfs(DataCategoryEnum.STOP_TIMES, DecompressStopTimes(stopTimes));
     }
 
-    private string DecompressStopTimes(object? ressoruce)
+    private string DecompressStopTimes(object resource)
     {
         string decompressed;
 
-        var encodedBytes = (byte[])ressoruce;
+        var encodedBytes = (byte[])resource;
 
-        using (var inGoingStream = new MemoryStream(encodedBytes))
-        using (var outGoingStream = new MemoryStream())
+        using var inGoingStream = new MemoryStream(encodedBytes);
+        using var outGoingStream = new MemoryStream();
+        using (var gZipStream = new GZipStream(inGoingStream, CompressionMode.Decompress))
         {
-            using (var gZipStream = new GZipStream(inGoingStream, CompressionMode.Decompress))
-            {
-                CopyTo(gZipStream, outGoingStream);
-            }
-
-            decompressed = Encoding.UTF8.GetString(outGoingStream.ToArray()).Replace(";", "\n");
+            CopyTo(gZipStream, outGoingStream);
         }
+
+        decompressed = Encoding.UTF8.GetString(outGoingStream.ToArray()).Replace(";", "\n");
 
         return decompressed;
     }
@@ -104,7 +103,6 @@ public class GtfsFileFileCache : IDisposable
     {
         if (_disposed is false)
         {
-            _resourceManager.ReleaseAllResources();
             _GtfsInfos.Clear();
 
             _disposed = true;

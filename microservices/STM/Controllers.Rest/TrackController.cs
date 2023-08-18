@@ -22,11 +22,6 @@ namespace Controllers.Rest
             _consumer = consumer;
         }
 
-        /// <summary>
-        ///   This endpoint is used to begin tracking a bus.
-        /// </summary>
-        /// <param name="trackBus"></param>
-        /// <returns></returns>
         [HttpPost]
         [ActionName(nameof(BeginTracking))]
         public IActionResult BeginTracking([FromBody] TrackBus trackBus)
