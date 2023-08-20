@@ -32,12 +32,12 @@ public class GetEarliestBusHandler : IQueryHandler<GetEarliestBus, RideViewModel
 
             var destinationStops = await _stopServices.GetClosestStops(query.To);
 
-            var trips = _tripServices.TimeRelevantTripsContainingSourceAndDestination(sourceStops, destinationStops);
+            var trips = await _tripServices.TimeRelevantTripsContainingSourceAndDestination(sourceStops, destinationStops);
 
             var relevantBuses = _busServices.GetTimeRelevantRideViewModels(
                 trips.ToDictionary(trip => trip.Id),
-                sourceStops.ToDictionary(stop => stop.Id),
-                destinationStops.ToDictionary(stop => stop.Id));
+                sourceStops.Select(stop => stop.Id).ToHashSet(),
+                destinationStops.Select(stop => stop.Id).ToHashSet());
 
             return relevantBuses.First();
         }

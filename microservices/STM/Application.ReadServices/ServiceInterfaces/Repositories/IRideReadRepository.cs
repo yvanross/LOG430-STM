@@ -1,5 +1,4 @@
-﻿using Application.QueryServices.Seedwork;
-using Domain.Aggregates.Ride;
+﻿using Domain.Aggregates.Ride;
 
 namespace Application.QueryServices.ServiceInterfaces.Repositories;
 

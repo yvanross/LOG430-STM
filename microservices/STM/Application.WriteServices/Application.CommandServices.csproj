@@ -14,7 +14,6 @@
     <ProjectReference Include="..\Application.Dtos\Application.Dtos.csproj" />
     <ProjectReference Include="..\Application.EventHandlers\Application.EventHandlers.csproj" />
     <ProjectReference Include="..\Application.Mapping\Application.Mapping.csproj" />
-    <ProjectReference Include="..\Domain.Aggregates\Domain.Aggregates.csproj" />
     <ProjectReference Include="..\Domain.Services\Domain.Services.csproj" />
   </ItemGroup>
 

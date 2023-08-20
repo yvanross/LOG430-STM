@@ -13,12 +13,12 @@ public abstract class ReadRepository<TAggregate> : IReadRepository<TAggregate> w
         Aggregates = context.Set<TAggregate>();
     }
 
-    public async Task<IEnumerable<TAggregate>> GetAllAsync()
+    public virtual async Task<IEnumerable<TAggregate>> GetAllAsync()
     {
         return await Aggregates.ToListAsync();
     }
 
-    public async Task<TAggregate> GetAsync(string id)
+    public virtual async Task<TAggregate> GetAsync(string id)
     {
         return await Aggregates.FindAsync(id) ?? throw new KeyNotFoundException();
     }

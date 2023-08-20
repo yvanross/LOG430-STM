@@ -1,6 +1,8 @@
 ﻿using Domain.Aggregates.Ride;
-using Domain.Aggregates;
-using Domain.Entities;
+using Domain.Aggregates.Bus;
+using Domain.Aggregates.Stop;
+using Domain.Aggregates.Trip;
+using Infrastructure.ReadRepositories.ProjectionModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.ReadRepositories;
@@ -13,29 +15,20 @@ public class AppReadDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<ScheduledStop>(
-            b =>
-            {
-                b.HasKey(e => e.Id);
-                b.Property(e => e.DepartureTime);
-                b.Property(e => e.StopId);
-            });
-
         modelBuilder.Entity<Stop>(
             b =>
             {
                 b.HasKey(e => e.Id);
-                b.Property(e => e.Position);
-                //b.HasOne(e => e.Position);
+                b.OwnsOne(e => e.Position);
             });
 
         modelBuilder.Entity<Ride>(
             b =>
             {
                 b.HasKey(e => e.Id);
-                b.Property(e => e.Destination);
-                b.Property(e => e.Departure);
-                b.Property(e => e.PreviousStop);
+                b.Property(e => e.DestinationId);
+                b.Property(e => e.DepartureId);
+                b.Property(e => e.PreviousStopId);
                 b.Property(e => e.TripBegunTime);
                 b.Property(e => e.BusId);
                 b.Property(e => e.DepartureReachedTime);
@@ -46,8 +39,14 @@ public class AppReadDbContext : DbContext
             b =>
             {
                 b.HasKey(e => e.Id);
-                b.Property(e => e.ScheduledStops);
-                //b.HasMany(e => e.ScheduledStops);
+                b.OwnsMany(e => e.ScheduledStops);
+            });
+
+        modelBuilder.Entity<ScheduledStopProjection>(
+            b =>
+            {
+                b.HasKey(e => new {e.TripId, e.StopId});
+                b.Property(e => e.DepartureTime);
             });
 
         modelBuilder.Entity<Bus>(

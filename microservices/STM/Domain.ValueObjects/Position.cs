@@ -1,7 +1,5 @@
 ﻿using Domain.Common.Seedwork.Interfaces;
-using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("Domain.Aggregates")]
 namespace Domain.ValueObjects;
 
 public record Position(double Latitude, double Longitude) : IValueObject<Position>

@@ -1,5 +1,5 @@
 ﻿using Application.QueryServices.ServiceInterfaces.Repositories;
-using Domain.Aggregates;
+using Domain.Aggregates.Bus;
 
 namespace Infrastructure.ReadRepositories;
 

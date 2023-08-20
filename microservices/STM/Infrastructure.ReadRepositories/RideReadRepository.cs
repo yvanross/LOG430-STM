@@ -11,7 +11,7 @@ public class RideReadRepository : ReadRepository<Ride>, IRideReadRepository
 
     public Ride GetRideMatchingParameters(string ScheduledDepartureId, string ScheduledDestinationId, string BusId)
     {
-        var ride = Aggregates.FirstOrDefault(ride => ride.DepartureId.Id == ScheduledDepartureId && ride.DestinationId.Id == ScheduledDestinationId && ride.BusId == BusId);
+        var ride = Aggregates.FirstOrDefault(ride => ride.DepartureId.SequenceEqual(ScheduledDepartureId) && ride.DestinationId.SequenceEqual(ScheduledDestinationId) && ride.BusId.SequenceEqual(BusId));
 
         if (ride == null)
             throw new KeyNotFoundException();

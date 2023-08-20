@@ -1,9 +1,8 @@
-﻿using Application.QueryServices.Seedwork;
-using Domain.Aggregates;
+﻿using Domain.Aggregates.Trip;
 
 namespace Application.QueryServices.ServiceInterfaces.Repositories;
 
 public interface ITripReadRepository : IReadRepository<Trip>
 {
-    IEnumerable<Trip> GetTripsContainingStopsId(IEnumerable<string> stopIds);
+    Task<IEnumerable<Trip>> GetTripsContainingStopsId(IEnumerable<string> stopIds);
 }

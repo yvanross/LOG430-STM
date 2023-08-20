@@ -1,4 +1,4 @@
-﻿using Domain.Aggregates;
+﻿using Domain.Aggregates.Trip;
 
 namespace Domain.Factories;
 

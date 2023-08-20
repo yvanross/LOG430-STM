@@ -4,7 +4,8 @@ using Application.EventHandlers.AntiCorruption;
 using Application.Mapping.Interfaces;
 using Application.Mapping.Interfaces.Wrappers;
 using Contracts;
-using Domain.Aggregates;
+using Domain.Aggregates.Stop;
+using Domain.Aggregates.Trip;
 using Microsoft.Extensions.Logging;
 
 namespace Application.CommandServices.HostedServices.Processors;

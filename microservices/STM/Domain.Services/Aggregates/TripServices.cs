@@ -1,4 +1,5 @@
-﻿using Domain.Aggregates;
+﻿using Domain.Aggregates.Stop;
+using Domain.Aggregates.Trip;
 using Domain.Common.Interfaces;
 using Domain.Factories;
 

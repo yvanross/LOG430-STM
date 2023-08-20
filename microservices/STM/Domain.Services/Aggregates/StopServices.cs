@@ -1,4 +1,4 @@
-﻿using Domain.Aggregates;
+﻿using Domain.Aggregates.Stop;
 using Domain.Common.Exceptions;
 using Domain.ValueObjects;
 

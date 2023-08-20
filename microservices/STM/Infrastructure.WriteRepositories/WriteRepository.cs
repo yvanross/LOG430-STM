@@ -9,25 +9,31 @@ public abstract class WriteRepository<TAggregate> : IWriteRepository<TAggregate>
 {
     private readonly ILogger _logger;
 
-    private protected DbSet<TAggregate> Aggregates { get; init; }
+    protected DbSet<TAggregate> Aggregates { get; set; }
 
     protected WriteRepository(AppWriteDbContext writeDbContext, ILogger logger)
     {
         _logger = logger;
+
         Aggregates = writeDbContext.Set<TAggregate>();
     }
 
-    public async Task<IEnumerable<TAggregate>> GetAllAsync()
+    public virtual async Task<IEnumerable<TAggregate>> GetAllAsync()
     {
         return await Aggregates.ToListAsync();
     }
 
-    public async Task<TAggregate> GetAsync(string id)
+    public virtual async Task<TAggregate> GetAsync(string id)
     {
         return await Aggregates.FindAsync(id) ?? throw new KeyNotFoundException($"Aggregate of type {typeof(TAggregate)} could not be found using id: {id}");
     }
 
-    public async Task AddAsync(TAggregate aggregate)
+    public async Task<bool> Exists(string id)
+    {
+        return await Aggregates.AnyAsync(x => x.Id == id);
+    }
+
+    public virtual async Task AddAsync(TAggregate aggregate)
     {
         var persistedAggregate = await Aggregates.FindAsync(aggregate.Id);
 
@@ -37,12 +43,17 @@ public abstract class WriteRepository<TAggregate> : IWriteRepository<TAggregate>
         }
         else
         {
-            Aggregates.Remove(persistedAggregate);
-            Aggregates.Add(aggregate);
+            var entry = Aggregates.Entry(persistedAggregate);
+
+            entry.State = EntityState.Detached;
+
+            Aggregates.Entry(aggregate).State = EntityState.Modified;
+
+            Aggregates.Update(aggregate);
         }
     }
 
-    public async Task AddAllAsync(IEnumerable<TAggregate> aggregates)
+    public virtual async Task AddAllAsync(IEnumerable<TAggregate> aggregates)
     {
         await Aggregates.AddRangeAsync(aggregates);
     }

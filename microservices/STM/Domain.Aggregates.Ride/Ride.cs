@@ -1,7 +1,6 @@
 ﻿using Domain.Aggregates.Ride.Strategy;
 using Domain.Common.Interfaces;
 using Domain.Common.Seedwork.Abstract;
-using Domain.Entities;
 using Domain.Events.AggregateEvents.Ride;
 
 namespace Domain.Aggregates.Ride;
@@ -37,7 +36,7 @@ public sealed class Ride : Aggregate<Ride>
         return new Ride(Id, BusId, DepartureId, DestinationId);
     }
 
-    public void UpdateRide(ScheduledStop previousStop, int currentStopIndex, int firstStopIndex, int targetStopIndex, IDatetimeProvider datetimeProvider)
+    public void UpdateRide(string previousStopId, int currentStopIndex, int firstStopIndex, int targetStopIndex, IDatetimeProvider datetimeProvider)
     {
         UpdatePreviousStop();
 
@@ -50,7 +49,7 @@ public sealed class Ride : Aggregate<Ride>
 
         var targetStop = ReachedDepartureStop ? DestinationId : DepartureId;
 
-        var message = _trackingStrategy.GetMessage(currentStopIndex, firstStopIndex, targetStopIndex, targetStop);
+        var message = _trackingStrategy.GetMessage(currentStopIndex, firstStopIndex, targetStopIndex);
 
         var trackingCompleted = currentStopIndex >= targetStopIndex;
 
@@ -60,9 +59,9 @@ public sealed class Ride : Aggregate<Ride>
 
         void UpdatePreviousStop()
         {
-            if (PreviousStopId?.Equals(previousStop.StopId) is false)
+            if (PreviousStopId?.Equals(previousStopId) is false)
             {
-                PreviousStopId = previousStop;
+                PreviousStopId = previousStopId;
 
                 if (PreviousStopId.Equals(DepartureId))
                 {

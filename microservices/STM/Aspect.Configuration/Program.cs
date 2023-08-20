@@ -30,6 +30,7 @@ using Application.CommandServices.HostedServices.Workers;
 using Application.CommandServices.Seedwork;
 using Application.QueryServices;
 using Application.QueryServices.Seedwork;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Aspect.Configuration
 {
@@ -49,9 +50,11 @@ namespace Aspect.Configuration
 
             var builder = WebApplication.CreateBuilder(args);
 
+            var databaseRoot = new InMemoryDatabaseRoot();
+
             RepositoryDbContextOptionConfiguration = (options, builderConfiguration) =>
             {
-                options.UseInMemoryDatabase("InMemory");
+                options.UseInMemoryDatabase("InMemory", databaseRoot);
                 options.EnableSensitiveDataLogging();
             };
 

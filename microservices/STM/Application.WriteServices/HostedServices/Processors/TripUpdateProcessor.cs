@@ -2,7 +2,8 @@
 using Application.CommandServices.ServiceInterfaces.Repositories;
 using Application.EventHandlers.AntiCorruption;
 using Contracts;
-using Domain.Aggregates;
+using Domain.Aggregates.Trip;
+using Domain.Common.Exceptions;
 using Domain.Services.Aggregates;
 using Domain.Services.Utility;
 using Microsoft.Extensions.Logging;
@@ -65,15 +66,15 @@ public class TripUpdateProcessor : IScopedProcessor
 
             Trip trip;
 
-            try
+            if (await _tripRepository.Exists(tripUpdate.Trip.TripId))
             {
                 trip = await _tripRepository.GetAsync(tripUpdate.Trip.TripId);
 
                 UpdateScheduledStops(trip, stopTimeUpdates);
             }
-            catch (KeyNotFoundException e)
+            else
             {
-                _logger.LogInformation(e, "Trip not found, creating new trip");
+                _logger.LogInformation("Trip not found, creating new trip");
 
                 trip = CreateTrip(tripUpdate, stopTimeUpdates);
 
@@ -84,14 +85,24 @@ public class TripUpdateProcessor : IScopedProcessor
 
     private void UpdateScheduledStops(Trip trip, List<StopTimeUpdate> stopTimeUpdates)
     {
-        foreach (var stopTimeUpdate in stopTimeUpdates)
+        try
         {
-            var datetime = GetUpdatedStopScheduledTime(stopTimeUpdate);
+            foreach (var stopTimeUpdate in stopTimeUpdates)
+            {
+                var datetime = GetUpdatedStopScheduledTime(stopTimeUpdate);
 
-            trip.UpdateScheduledStops(stopTimeUpdate.StopId, datetime);
+                trip.UpdateScheduledStop(stopTimeUpdate.StopId, datetime);
+            }
+           
         }
-    }
+        catch (ScheduledStopNotFoundException e)
+        {
+            _logger.LogInformation(e, "Scheduled stop not found, creating new scheduled stops");
 
+            trip.UpdateScheduledStops(stopTimeUpdates.Select(update => (update.StopId, GetUpdatedStopScheduledTime(update))));
+        }
+       
+    }
 
     private Trip CreateTrip(TripUpdate tripUpdate, List<StopTimeUpdate> stopTimeUpdates)
     {

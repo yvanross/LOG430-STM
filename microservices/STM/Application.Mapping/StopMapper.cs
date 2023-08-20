@@ -1,8 +1,7 @@
 ﻿using Application.Mapping.Interfaces;
 using Application.Mapping.Interfaces.Wrappers;
-using Domain.Aggregates;
+using Domain.Aggregates.Stop;
 using Domain.Factories;
-using Domain.ValueObjects;
 
 namespace Application.Mapping;
 
@@ -10,6 +9,6 @@ public class StopMapper : IMappingTo<IStopWrapper, Stop>
 {
     public Stop MapFrom(IStopWrapper dto)
     {
-        return StopFactory.Create(dto.Id, new Position(dto.Latitude, dto.Longitude));
+        return StopFactory.Create(dto.Id, dto.Latitude, dto.Longitude);
     }
 }

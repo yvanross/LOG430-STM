@@ -1,5 +1,4 @@
-﻿using Application.QueryServices.Seedwork;
-using Domain.Aggregates;
+﻿using Domain.Aggregates.Stop;
 
 namespace Application.QueryServices.ServiceInterfaces.Repositories;
 

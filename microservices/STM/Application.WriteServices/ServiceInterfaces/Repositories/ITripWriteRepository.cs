@@ -1,5 +1,4 @@
-﻿using Application.CommandServices.Seedwork;
-using Domain.Aggregates;
+﻿using Domain.Aggregates.Trip;
 
 namespace Application.CommandServices.ServiceInterfaces.Repositories;
 

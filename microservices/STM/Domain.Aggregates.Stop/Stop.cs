@@ -1,17 +1,23 @@
-﻿namespace Domain.Aggregates.Stop;
+﻿using Domain.Common.Seedwork.Abstract;
+using Domain.ValueObjects;
+
+namespace Domain.Aggregates.Stop;
 
 public class Stop : Aggregate<Stop>
 {
-    public Position Position { get; private set; }
+    public Position Position { get; internal set; }
 
-    public Stop(string id, Position position)
+    // Add a private parameterless constructor
+    private Stop() { }
+
+    public Stop(string id, double latitude, double longitude)
     {
         Id = id;
-        Position = position;
+        Position = new Position(latitude, longitude);
     }
 
     public override Stop Clone()
     {
-        return new Stop(Id, Position);
+        return new Stop(Id, Position.Latitude, Position.Longitude);
     }
 }

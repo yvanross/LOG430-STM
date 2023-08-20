@@ -9,7 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Application.ReadServices\Application.QueryServices.csproj" />
     <ProjectReference Include="..\Application.ViewModels\Application.ViewModels.csproj" />
-    <ProjectReference Include="..\Domain.Aggregates\Domain.Aggregates.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 using Application.Common.Extensions;
 using Application.QueryServices.ServiceInterfaces.Repositories;
 using Application.ViewModels;
-using Domain.Aggregates;
+using Domain.Aggregates.Trip;
 using Microsoft.Extensions.Logging;
 
 namespace Application.QueryServices;
@@ -18,7 +18,7 @@ public class ApplicationBusServices
         _logger = logger;
     }
 
-    public IEnumerable<RideViewModel> GetTimeRelevantRideViewModels(Dictionary<string, Trip> trips, Dictionary<string, Stop> sources, Dictionary<string, Stop> destination)
+    public IEnumerable<RideViewModel> GetTimeRelevantRideViewModels(Dictionary<string, Trip> trips, HashSet<string> sources, HashSet<string> destination)
     {
         try
         {

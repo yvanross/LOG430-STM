@@ -1,6 +1,5 @@
 ﻿using System.IO.Compression;
 using System.Text;
-using Aspect.Configuration;
 
 namespace Infrastructure.FileHandlers.Gtfs;
 

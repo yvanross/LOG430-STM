@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application.WriteServices\Application.CommandServices.csproj" />
-    <ProjectReference Include="..\Domain.Aggregates\Domain.Aggregates.csproj" />
   </ItemGroup>
 
 </Project>

@@ -49,7 +49,7 @@ public class TransitDataReader : ITransitDataReader
             }
             catch (Exception e)
             {
-                _logger.LogError($"An error occurred while creating stop. Exception: {e.Message}");
+                _logger.LogError($"An error occurred while creating a stop, this is non fatal and trivial in small quantities. Exception: {e.Message}");
             }
           
         }
@@ -69,7 +69,7 @@ public class TransitDataReader : ITransitDataReader
             }
             catch (Exception e)
             {
-                _logger.LogError($"An error occurred while creating trip. Exception: {e.Message}");
+                _logger.LogError($"An error occurred while creating a trip, this is non fatal and trivial in small quantities. Exception: {e.Message}");
             }
         }
     }

@@ -1,5 +1,5 @@
 ﻿using Application.CommandServices.ServiceInterfaces.Repositories;
-using Domain.Aggregates;
+using Domain.Aggregates.Stop;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.WriteRepositories;

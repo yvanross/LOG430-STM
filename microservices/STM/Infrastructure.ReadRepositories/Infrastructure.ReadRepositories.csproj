@@ -8,11 +8,15 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Application.ReadServices\Application.QueryServices.csproj" />
-    <ProjectReference Include="..\Domain.Aggregates\Domain.Aggregates.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Consistency\" />
   </ItemGroup>
 
 </Project>

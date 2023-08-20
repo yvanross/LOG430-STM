@@ -1,4 +1,4 @@
-﻿using Domain.Aggregates;
+﻿using Domain.Aggregates.Bus;
 
 namespace Domain.Services.Aggregates;
 

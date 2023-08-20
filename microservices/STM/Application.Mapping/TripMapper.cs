@@ -1,6 +1,6 @@
 ﻿using Application.Mapping.Interfaces;
 using Application.Mapping.Interfaces.Wrappers;
-using Domain.Aggregates;
+using Domain.Aggregates.Trip;
 using Domain.Factories;
 
 namespace Application.Mapping;

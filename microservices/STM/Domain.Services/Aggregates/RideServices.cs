@@ -1,6 +1,5 @@
-﻿using Domain.Aggregates;
-using Domain.Aggregates.Ride;
-using Domain.Common.Interfaces;
+﻿using Domain.Aggregates.Ride;
+using Domain.Aggregates.Trip;
 using Domain.Factories;
 
 namespace Domain.Services.Aggregates;

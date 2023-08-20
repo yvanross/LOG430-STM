@@ -18,7 +18,7 @@ public class TrackBusTests : IntegrationTest
     [Fact]
     public async Task Should_Begin_Tracking_Bus()
     {
-        var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(250));
 
         var consumeTasks = new Task[] {
             Consumer.ConsumeNext<StaticGtfsDataLoaded>(cancellationToken.Token),

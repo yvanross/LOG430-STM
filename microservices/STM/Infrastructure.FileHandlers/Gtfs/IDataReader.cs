@@ -1,4 +1,4 @@
-﻿namespace Aspect.Configuration;
+﻿namespace Infrastructure.FileHandlers.Gtfs;
 
 public interface IDataReader
 {

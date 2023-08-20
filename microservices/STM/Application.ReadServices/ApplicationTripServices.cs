@@ -1,7 +1,8 @@
 ﻿using Application.QueryServices.ServiceInterfaces.Repositories;
-using Domain.Aggregates;
 using Domain.Common.Interfaces;
 using System.Collections.Immutable;
+using Domain.Aggregates.Stop;
+using Domain.Aggregates.Trip;
 using Microsoft.Extensions.Logging;
 
 namespace Application.QueryServices;
@@ -19,11 +20,11 @@ public class ApplicationTripServices
         _logger = logger;
     }
 
-    public ImmutableHashSet<Trip> TimeRelevantTripsContainingSourceAndDestination(IEnumerable<Stop> possibleSources, IEnumerable<Stop> possibleDestinations)
+    public async Task<ImmutableHashSet<Trip>> TimeRelevantTripsContainingSourceAndDestination(IEnumerable<Stop> possibleSources, IEnumerable<Stop> possibleDestinations)
     {
         try
         {
-            var trips = _readTrips.GetTripsContainingStopsId(UniqueKeys(possibleSources, possibleDestinations));
+            var trips = await _readTrips.GetTripsContainingStopsId(UniqueKeys(possibleSources, possibleDestinations));
 
             var relevantTrips = trips.Where(trip => trip.IsTimeRelevant(_datetimeProvider)).ToImmutableHashSet();
 

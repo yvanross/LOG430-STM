@@ -1,8 +1,8 @@
-﻿using Domain.Aggregates;
-using Domain.Services.Aggregates;
+﻿using Domain.Services.Aggregates;
 using Domain.ValueObjects;
 using System.Collections.Immutable;
 using Application.QueryServices.ServiceInterfaces.Repositories;
+using Domain.Aggregates.Stop;
 using Microsoft.Extensions.Logging;
 
 namespace Application.QueryServices;

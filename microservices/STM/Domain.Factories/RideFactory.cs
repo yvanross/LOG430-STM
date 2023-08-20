@@ -1,7 +1,6 @@
-﻿using Domain.Aggregates;
-using Domain.Aggregates.Ride;
+﻿using Domain.Aggregates.Ride;
+using Domain.Aggregates.Trip;
 using Domain.Common.Exceptions;
-using Domain.Entities;
 
 namespace Domain.Factories;
 
@@ -13,24 +12,24 @@ internal static class RideFactory
 
         var sourceAndDestination = GetOriginAndDestinationFromTrip(trip, departureId, destinationId);
 
-        return new Ride(rideId, busId, sourceAndDestination.Origin, sourceAndDestination.Destination);
+        return new Ride(rideId, busId, sourceAndDestination.OriginId, sourceAndDestination.DestinationId);
     }
 
-    private static (ScheduledStop Origin, ScheduledStop Destination) GetOriginAndDestinationFromTrip(Trip trip, string departureId, string destinationId)
+    private static (string OriginId, string DestinationId) GetOriginAndDestinationFromTrip(Trip trip, string departureId, string destinationId)
     {
-        ScheduledStop? origin = null, destination = null;
+        string? origin = null, destination = null;
 
         for (var index = 0; index < trip.NumberOfStops(); index++)
         {
-            var stopSchedule = trip.GetStopByIndex(index);
+            var stopId = trip.GetStopIdByIndex(index);
 
-            if (origin is null && stopSchedule.StopId.Equals(departureId))
+            if (origin is null && stopId.Equals(departureId))
             {
-                origin = stopSchedule;
+                origin = trip.GetScheduleIdByStopId(stopId);
             }
-            else if (origin is not null && destination is null && stopSchedule.StopId.Equals(destinationId))
+            else if (origin is not null && destination is null && stopId.Equals(destinationId))
             {
-                destination = stopSchedule;
+                destination = trip.GetScheduleIdByStopId(stopId);
             }
         }
 

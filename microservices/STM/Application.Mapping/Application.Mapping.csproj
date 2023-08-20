@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain.Aggregates\Domain.Aggregates.csproj" />
+    <ProjectReference Include="..\Domain.Aggregates.Stop\Domain.Aggregates.Stop.csproj" />
     <ProjectReference Include="..\Domain.Factories\Domain.Factories.csproj" />
   </ItemGroup>
 

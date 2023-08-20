@@ -1,6 +1,6 @@
 ﻿using Domain.Common.Seedwork.Abstract;
 
-namespace Domain.Entities;
+namespace Domain.Aggregates.Trip;
 
 public class ScheduledStop : Entity<ScheduledStop>
 {
@@ -8,22 +8,16 @@ public class ScheduledStop : Entity<ScheduledStop>
 
     public DateTime DepartureTime { get; internal set; }
 
-    public ScheduledStop(string stopId, DateTime departureTime)
+    public ScheduledStop(string id, string stopId, DateTime departureTime)
     {
+        Id = id;
         StopId = stopId;
         DepartureTime = departureTime;
     }
 
-    public bool Equals(ScheduledStop? other)
-    {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return StopId == other.StopId && DepartureTime.Equals(other.DepartureTime);
-    }
-
     public override ScheduledStop Clone()
     {
-        return new ScheduledStop(StopId, DepartureTime);
+        return new ScheduledStop(Id, StopId, DepartureTime);
     }
 
     internal bool UpdateDepartureTime(DateTime departureTime)

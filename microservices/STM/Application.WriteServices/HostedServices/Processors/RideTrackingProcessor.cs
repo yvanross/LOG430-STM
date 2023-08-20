@@ -42,12 +42,12 @@ public class RideTrackingProcessor : IScopedProcessor
 
                 var trip = _tripRepository.GetAsync(bus.TripId).Result;
 
-                var previousStop = trip.GetStopByIndex(bus.CurrentStopIndex);
+                var previousStopId = trip.GetStopIdByIndex(bus.CurrentStopIndex);
 
                 ride.UpdateRide(
-                    previousStop, bus.CurrentStopIndex,
-                    trip.GetIndexOfStop(ride.Departure.StopId),
-                    trip.GetIndexOfStop(ride.Destination.StopId),
+                    previousStopId, bus.CurrentStopIndex,
+                    trip.GetIndexOfStop(ride.DepartureId),
+                    trip.GetIndexOfStop(ride.DestinationId),
                     _datetimeProvider);
             }
 
