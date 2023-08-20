@@ -35,9 +35,9 @@ namespace Controllers.Rest
 
         [HttpGet]
         [ActionName(nameof(GetTrackingUpdate))]
-        public async Task<ActionResult<BusTrackingUpdated>> GetTrackingUpdate()
+        public async Task<ActionResult<RideTrackingUpdated>> GetTrackingUpdate()
         {
-            var update = await _consumer.Consume<BusTrackingUpdated>();
+            var update = await _consumer.ConsumeNext<RideTrackingUpdated>();
 
             if (update is null)
             {

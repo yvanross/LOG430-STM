@@ -19,7 +19,7 @@ public class MassTransitPublisher : IPublisher
     {
         await _retryPolicy.ExecuteAsync(async () => await _publishEndpoint.Publish(message, x =>
             {
-                x.SetRoutingKey("Stm.BusTrackingUpdated");
+                x.SetRoutingKey("Stm.RideTrackingUpdated");
             },
             new CancellationTokenSource(TimeSpan.FromMilliseconds(50)).Token));
     }

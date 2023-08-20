@@ -12,7 +12,6 @@
     <ProjectReference Include="..\Domain.Aggregates\Domain.Aggregates.csproj" />
     <ProjectReference Include="..\Domain.Entities\Domain.Entities.csproj" />
     <ProjectReference Include="..\Domain.Services\Domain.Services.csproj" />
-    <ProjectReference Include="..\Entities.Common\Domain.Aggregates.csproj" />
   </ItemGroup>
 
   <ItemGroup>

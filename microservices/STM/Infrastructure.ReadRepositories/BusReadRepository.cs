@@ -1,13 +1,11 @@
 ﻿using Application.QueryServices.ServiceInterfaces.Repositories;
 using Domain.Aggregates;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.ReadRepositories;
 
 public class BusReadRepository : ReadRepository<Bus>, IBusReadRepository
 {
-    public BusReadRepository(DbContextOptions options, ILogger logger) : base(options, logger)
+    public BusReadRepository(AppReadDbContext context) : base(context)
     {
     }
 

@@ -1,15 +1,14 @@
 ﻿using Application.CommandServices.ServiceInterfaces.Repositories;
 using Domain.Events.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.WriteRepositories;
 
 public class UnitOfWork : IUnitOfWork
 {
     private readonly IDomainEventDispatcher _eventDispatcher;
-    private readonly DbContext _context;
+    private readonly AppWriteDbContext _context;
 
-    public UnitOfWork(DbContext context, IDomainEventDispatcher eventDispatcher)
+    public UnitOfWork(AppWriteDbContext context, IDomainEventDispatcher eventDispatcher)
     {
         _context = context;
         _eventDispatcher = eventDispatcher;
@@ -17,21 +16,30 @@ public class UnitOfWork : IUnitOfWork
 
     public async Task SaveChangesAsync()
     {
-        await using var transaction = await _context.Database.BeginTransactionAsync();
+        if (_context.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+        {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
 
-        try
+            try
+            {
+                await _context.SaveChangesAsync();
+
+                // Optimal design would use an outbox. See https://microservices.io/patterns/data/transactional-outbox.html
+                await DispatchDomainEventsAsync();
+
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+        else
         {
             await _context.SaveChangesAsync();
-
-            //Optimal design would use an outbox. See https://microservices.io/patterns/data/transactional-outbox.html
+            
             await DispatchDomainEventsAsync();
-
-            await transaction.CommitAsync();
-        }
-        catch
-        {
-            await transaction.RollbackAsync();
-            throw;
         }
     }
 

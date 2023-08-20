@@ -1,35 +1,48 @@
 ﻿using Application.EventHandlers.AntiCorruption;
 using System.Collections.Concurrent;
+using System.Threading.Channels;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.TcpClients;
 
-//This is bad
+//This is bad in production
 public class InMemoryEventQueue : IPublisher, IConsumer
 {
-    private readonly ConcurrentDictionary<Type, ConcurrentQueue<object>> _queue = new();
+    private readonly ILogger<InMemoryEventQueue> _logger;
+    private static readonly ConcurrentDictionary<Type, Channel<object>> Channels = new();
+
+    public InMemoryEventQueue(ILogger<InMemoryEventQueue> logger)
+    {
+        _logger = logger;
+    }
 
     public Task Publish<TEvent>(TEvent message) where TEvent : class
-    {
-        _queue.AddOrUpdate(typeof(TEvent), _ => new ConcurrentQueue<object>(), (_, queue) =>
-        {
-            queue.Enqueue(message);
+    { 
+        var channel = Channels.GetOrAdd(typeof(TEvent), Channel.CreateUnbounded<object>());
 
-            return queue;
-        });
+        channel.Writer.TryWrite(message);
 
         return Task.CompletedTask;
     }
 
-    public Task<TEvent?> Consume<TEvent>() where TEvent : class
+    public async Task<TEvent> ConsumeNext<TEvent>(CancellationToken cancellationToken = default) where TEvent : class
     {
-        if (_queue.TryGetValue(typeof(TEvent), out var queue))
+        Channel<object> channel;
+
+        while (true)
         {
-            if (queue.TryDequeue(out var message))
-            {
-                return Task.FromResult((TEvent?)message);
-            }
+            if (Channels.TryGetValue(typeof(TEvent), out channel)) break;
+            
+            await Task.Delay(100, cancellationToken);
+
+            cancellationToken.ThrowIfCancellationRequested();
         }
 
-        return Task.FromResult<TEvent?>(null);
+        await foreach (var message in channel.Reader.ReadAllAsync(cancellationToken))
+        {
+            return (TEvent)message;
+        }
+
+        throw new ChannelClosedException($"Channel of type {typeof(TEvent)} has been closed");
     }
 }

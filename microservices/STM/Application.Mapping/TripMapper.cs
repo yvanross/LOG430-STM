@@ -9,6 +9,6 @@ public class TripMapper : IMappingTo<ITripWrapper, Trip>
 {
     public Trip MapFrom(ITripWrapper dto)
     {
-        return TripFactory.Create(dto.TripId, dto.ScheduledStops.Value.Select(scheduledStop => (scheduledStop.StopId, scheduledStop.DepartureTime)));
+        return TripFactory.Create(dto.TripId, dto.ScheduledStops.Select(scheduledStop => (scheduledStop.StopId, scheduledStop.DepartureTime)));
     }
 }

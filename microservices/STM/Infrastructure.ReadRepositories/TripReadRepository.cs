@@ -1,13 +1,11 @@
 ﻿using Application.QueryServices.ServiceInterfaces.Repositories;
 using Domain.Aggregates;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.ReadRepositories;
 
 public class TripReadRepository : ReadRepository<Trip>, ITripReadRepository
 {
-    public TripReadRepository(DbContextOptions options, ILogger logger) : base(options, logger)
+    public TripReadRepository(AppReadDbContext context) : base(context)
     {
     }
 

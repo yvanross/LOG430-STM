@@ -1,5 +1,4 @@
 ﻿using System.IO.Compression;
-using System.Resources;
 using System.Text;
 using Aspect.Configuration;
 
@@ -103,6 +102,14 @@ public class GtfsFileFileCache : IDisposable
     {
         if (_disposed is false)
         {
+            foreach (var item in _GtfsInfos.Values)
+            {
+                foreach (var gtfsInfo in item)
+                {
+                    gtfsInfo.Dispose();
+                }
+            }
+
             _GtfsInfos.Clear();
 
             _disposed = true;

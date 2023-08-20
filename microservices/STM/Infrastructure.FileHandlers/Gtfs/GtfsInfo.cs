@@ -1,6 +1,6 @@
 ﻿namespace Infrastructure.FileHandlers.Gtfs;
 
-public class GtfsInfo
+public class GtfsInfo : IDisposable
 {
     public readonly Dictionary<string, string> Info = new();
 
@@ -12,5 +12,10 @@ public class GtfsInfo
             throw new ArgumentException($"Tag {tag} not found in GTFS info");
 
         return value;
+    }
+
+    public void Dispose()
+    {
+        Info.Clear();
     }
 }

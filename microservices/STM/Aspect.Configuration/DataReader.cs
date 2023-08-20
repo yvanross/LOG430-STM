@@ -1,16 +1,21 @@
-﻿using Application.Common.Extensions;
+﻿using System.Resources;
 
 namespace Aspect.Configuration;
 
 public class DataReader : IDataReader
 {
-    public string DataFilePath { get; set; } = string.Empty;
+    private readonly ResourceManager _manager;
+
+    public DataReader(ResourceManager manager)
+    {
+        _manager = manager;
+    }
 
     public string GetString(string key)
     {
-        var data = File.ReadAllText($"{DataFilePath}/{key}.txt");
+        var data = _manager.GetString(key);
 
-        if (data.IsEmpty())
+        if (string.IsNullOrWhiteSpace(data))
         {
             throw new Exception($"Data not found for key {key}");
         }
@@ -20,9 +25,9 @@ public class DataReader : IDataReader
 
     public object GetObject(string key)
     {
-        var data = File.ReadAllBytes($"{DataFilePath}/{key}.txt");
-       
-        if (data.IsEmpty())
+        var data = _manager.GetObject(key);
+
+        if (data is null)
         {
             throw new Exception($"Data not found for key {key}");
         }

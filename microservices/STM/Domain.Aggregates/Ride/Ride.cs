@@ -8,59 +8,47 @@ namespace Domain.Aggregates.Ride;
 
 public sealed class Ride : Aggregate<Ride>
 {
-    public string Id { get; }
+    public string BusId { get; set; }
 
-    public string BusId { get; }
+    public string DepartureId { get; internal set; }
 
-    public ScheduledStop Departure { get; }
+    public string DestinationId { get; internal set; }
 
-    public ScheduledStop Destination { get; }
+    public string? PreviousStopId { get; internal set; }
 
-    public ScheduledStop? PreviousStop { get; private set; }
+    public bool ReachedDepartureStop { get; internal set; }
 
-    public bool ReachedDepartureStop { get; private set; }
+    public DateTime TripBegunTime { get; internal set; }
 
-    public DateTime TripBegunTime { get; }
+    public DateTime DepartureReachedTime { get; internal set; }
 
-    public DateTime DepartureReachedTime { get; }
+    private TrackingStrategy? _trackingStrategy;
 
-    private TrackingStrategy _trackingStrategy;
-
-    private readonly IDatetimeProvider _datetimeProvider;
-
-    public Ride(string id, string busId, ScheduledStop departure, ScheduledStop destination, IDatetimeProvider datetimeProvider)
+    public Ride(string id, string busId, string departureId, string destinationId)
     {
-        _datetimeProvider = datetimeProvider;
         Id = id;
         BusId = busId;
-        Departure = departure;
-        Destination = destination;
-
-        _trackingStrategy = ReachedDepartureStop ?
-            new AfterDepartureTracking(datetimeProvider, TripBegunTime, DepartureReachedTime) :
-            new BeforeDepartureTracking(datetimeProvider, TripBegunTime);
+        DepartureId = departureId;
+        DestinationId = destinationId;
     }
 
     public override Ride Clone()
     {
-        return new Ride(Id, BusId, Departure.Clone(), Destination.Clone(), _datetimeProvider);
+        return new Ride(Id, BusId, DepartureId, DestinationId);
     }
 
-    public bool IsTimeRelevant()
-    {
-        return Departure.DepartureTime > _datetimeProvider.GetCurrentTime() &&
-               Destination.DepartureTime > _datetimeProvider.GetCurrentTime() &&
-               Departure.DepartureTime < Destination.DepartureTime;
-    }
-
-    public void UpdateRide(ScheduledStop previousStop, int currentStopIndex, int firstStopIndex, int targetStopIndex)
+    public void UpdateRide(ScheduledStop previousStop, int currentStopIndex, int firstStopIndex, int targetStopIndex, IDatetimeProvider datetimeProvider)
     {
         UpdatePreviousStop();
 
-        if (_trackingStrategy is BeforeDepartureTracking && ReachedDepartureStop)
-            _trackingStrategy = new AfterDepartureTracking(_datetimeProvider, TripBegunTime, DepartureReachedTime);
+        if (_trackingStrategy is null)
+            _trackingStrategy = new AfterDepartureTracking(datetimeProvider, TripBegunTime, DepartureReachedTime);
+        
 
-        var targetStop = ReachedDepartureStop ? Destination : Departure;
+        if (_trackingStrategy is BeforeDepartureTracking && ReachedDepartureStop)
+            _trackingStrategy = new AfterDepartureTracking(datetimeProvider, TripBegunTime, DepartureReachedTime);
+
+        var targetStop = ReachedDepartureStop ? DestinationId : DepartureId;
 
         var message = _trackingStrategy.GetMessage(currentStopIndex, firstStopIndex, targetStopIndex, targetStop);
 
@@ -72,11 +60,11 @@ public sealed class Ride : Aggregate<Ride>
 
         void UpdatePreviousStop()
         {
-            if (PreviousStop?.Equals(previousStop) is false)
+            if (PreviousStopId?.Equals(previousStop.StopId) is false)
             {
-                PreviousStop = previousStop;
+                PreviousStopId = previousStop;
 
-                if (PreviousStop.Equals(Departure))
+                if (PreviousStopId.Equals(DepartureId))
                 {
                     ReachedDepartureStop = true;
                 }

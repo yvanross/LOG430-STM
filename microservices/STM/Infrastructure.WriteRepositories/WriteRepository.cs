@@ -5,15 +5,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.WriteRepositories;
 
-public abstract class WriteRepository<TAggregate> : DbContext, IWriteRepository<TAggregate> where TAggregate : Aggregate<TAggregate>, IEquatable<Entity<TAggregate>>
+public abstract class WriteRepository<TAggregate> : IWriteRepository<TAggregate> where TAggregate : Aggregate<TAggregate>, IEquatable<Entity<TAggregate>>
 {
     private readonly ILogger _logger;
 
-    protected DbSet<TAggregate> Aggregates { get; init; }
+    private protected DbSet<TAggregate> Aggregates { get; init; }
 
-    protected WriteRepository(DbContextOptions<WriteRepository<TAggregate>> options, ILogger logger) : base(options)
+    protected WriteRepository(AppWriteDbContext writeDbContext, ILogger logger)
     {
         _logger = logger;
+        Aggregates = writeDbContext.Set<TAggregate>();
     }
 
     public async Task<IEnumerable<TAggregate>> GetAllAsync()
@@ -36,24 +37,13 @@ public abstract class WriteRepository<TAggregate> : DbContext, IWriteRepository<
         }
         else
         {
-            Aggregates.Update(aggregate);
+            Aggregates.Remove(persistedAggregate);
+            Aggregates.Add(aggregate);
         }
     }
 
     public async Task AddAllAsync(IEnumerable<TAggregate> aggregates)
     {
-        var unsavedAggregates = await Aggregates.Except(aggregates).ToListAsync();
-
-        var savedAggregates = aggregates.Except(unsavedAggregates).ToList();
-
-        foreach (var aggregate in unsavedAggregates)
-        {
-            Aggregates.Add(aggregate);
-        }
-
-        foreach (var aggregate in savedAggregates)
-        {
-            Aggregates.Update(aggregate);
-        }
+        await Aggregates.AddRangeAsync(aggregates);
     }
 }

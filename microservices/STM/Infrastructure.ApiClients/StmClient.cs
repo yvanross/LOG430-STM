@@ -21,14 +21,14 @@ public class StmClient : IStmClient
     private static ConcurrentDictionary<string, (VehiclePosition VehiclePosition, DateTime DateTime)> _feedPositions = new();
 
     //is a disposable reference
-    private Timer _timer;
+    private static Timer? _timer;
 
     public StmClient(IBackOffRetryPolicy<StmClient> backOffRetryPolicy, ILogger<StmClient> logger)
     {
         _backOffRetryPolicy = backOffRetryPolicy;
         _logger = logger;
 
-        _timer = new Timer(_ => Task.Run(ProduceFeedPositionsAsync).ContinueWith(t =>
+        _timer ??= new Timer(_ => Task.Run(ProduceFeedPositionsAsync).ContinueWith(t =>
         {
             if (t.IsFaulted)
             {
@@ -66,20 +66,17 @@ public class StmClient : IStmClient
 
     private async Task<IEnumerable<VehiclePosition>> UpdateFeedPositions()
     {
-        return await _backOffRetryPolicy.ExecuteAsync(async () =>
-        {
-            var requestPosition = new RestRequest("vehiclePositions/");
+        var requestPosition = new RestRequest("vehiclePositions/");
 
-            requestPosition.AddHeader("apikey", ApiKey);
+        requestPosition.AddHeader("apikey", ApiKey);
 
-            var responsePosition = await _stmClient.ExecuteAsync(requestPosition);
+        var responsePosition = await _stmClient.ExecuteAsync(requestPosition);
 
-            var feed = new FeedMessage();
+        var feed = new FeedMessage();
 
-            feed.MergeFrom(new CodedInputStream(responsePosition.RawBytes));
+        feed.MergeFrom(new CodedInputStream(responsePosition.RawBytes));
 
-            return feed.Entity.ToList().ConvertAll(x => x.Vehicle);
-        });
+        return feed.Entity.ToList().ConvertAll(x => x.Vehicle);
     }
 
     public IEnumerable<VehiclePosition> RequestFeedPositions()

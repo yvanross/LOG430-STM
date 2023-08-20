@@ -9,19 +9,17 @@ namespace Domain.Aggregates;
 
 public class Trip : Aggregate<Trip>
 {
-    public string Id { get; private set; }
+    internal List<ScheduledStop> ScheduledStops { get; set;  }
 
-    internal ImmutableList<ScheduledStop> ScheduledStops { get; }
-
-    public Trip(string id, IEnumerable<ScheduledStop> stopSchedules)
+    public Trip(string id, List<ScheduledStop> scheduledStops)
     {
-        ScheduledStops = stopSchedules.ToImmutableList();
+        this.ScheduledStops = scheduledStops;
         Id = id;
     }
 
     internal static Trip CreateTrip(string tripId, IEnumerable<(string stopId, DateTime schedule)> stopSchedules)
     {
-        return new Trip(tripId, stopSchedules.Select(x => new ScheduledStop(x.stopId, x.schedule)));
+        return new Trip(tripId, stopSchedules.Select(x => new ScheduledStop(x.stopId, x.schedule)).ToList());
     }
 
     public override Trip Clone()

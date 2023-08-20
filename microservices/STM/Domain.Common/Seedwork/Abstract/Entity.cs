@@ -4,7 +4,7 @@ namespace Domain.Common.Seedwork.Abstract;
 
 public abstract class Entity<T> : IEquatable<Entity<T>>, ICloneableEntity<T> where T : class
 {
-    public string Id { get; init; }
+    public string Id { get; set; }
 
     public override bool Equals(object? obj)
     {

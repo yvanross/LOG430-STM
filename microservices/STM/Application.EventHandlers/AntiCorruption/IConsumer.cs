@@ -2,5 +2,5 @@
 
 public interface IConsumer
 {
-    Task<TEvent?> Consume<TEvent>() where TEvent : class;
+    Task<TMessage> ConsumeNext<TMessage>(CancellationToken token = default) where TMessage : class;
 }

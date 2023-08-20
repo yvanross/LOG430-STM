@@ -1,20 +1,19 @@
 ﻿using Domain.Aggregates;
 using Domain.Aggregates.Ride;
 using Domain.Common.Exceptions;
-using Domain.Common.Interfaces;
 using Domain.Entities;
 
 namespace Domain.Factories;
 
 internal static class RideFactory
 {
-    internal static Ride Create(string busId, Trip trip, string departureId, string destinationId, IDatetimeProvider datetimeProvider)
+    internal static Ride Create(string busId, Trip trip, string departureId, string destinationId)
     {
         var rideId = Guid.NewGuid().ToString();
 
         var sourceAndDestination = GetOriginAndDestinationFromTrip(trip, departureId, destinationId);
 
-        return new Ride(rideId, busId, sourceAndDestination.Origin, sourceAndDestination.Destination, datetimeProvider);
+        return new Ride(rideId, busId, sourceAndDestination.Origin, sourceAndDestination.Destination);
     }
 
     private static (ScheduledStop Origin, ScheduledStop Destination) GetOriginAndDestinationFromTrip(Trip trip, string departureId, string destinationId)

@@ -2,15 +2,9 @@
 
 namespace Infrastructure.FileHandlers.Gtfs.Wrappers;
 
-public sealed class StopScheduleWrapper : IStopScheduleWrapper
+public struct StopScheduleWrapper : IStopScheduleWrapper
 {
-    public string StopId { get; }
+    public string StopId { get; set; }
 
-    public DateTime DepartureTime { get; }
-
-    public StopScheduleWrapper(DateTime departureTime, string stopId)
-    {
-        DepartureTime = departureTime;
-        StopId = stopId;
-    }
+    public DateTime DepartureTime { get; set; }
 }

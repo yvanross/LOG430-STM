@@ -1,19 +1,16 @@
 ﻿using Application.QueryServices.Seedwork;
 using Domain.Common.Seedwork.Abstract;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.ReadRepositories;
 
-public abstract class ReadRepository<TAggregate> : DbContext, IReadRepository<TAggregate> where TAggregate : Aggregate<TAggregate>
+public abstract class ReadRepository<TAggregate> : IReadRepository<TAggregate> where TAggregate : Aggregate<TAggregate>
 {
-    private readonly ILogger _logger;
-
     protected DbSet<TAggregate> Aggregates { get; init; }
 
-    protected ReadRepository(DbContextOptions options, ILogger logger) : base(options)
+    protected ReadRepository(AppReadDbContext context)
     {
-        _logger = logger;
+        Aggregates = context.Set<TAggregate>();
     }
 
     public async Task<IEnumerable<TAggregate>> GetAllAsync()

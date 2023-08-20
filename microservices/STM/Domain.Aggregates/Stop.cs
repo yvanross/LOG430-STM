@@ -5,8 +5,6 @@ namespace Domain.Aggregates;
 
 public class Stop : Aggregate<Stop>
 {
-    public string Id { get; private set; }
-
     public Position Position { get; private set; }
 
     public Stop(string id, Position position)

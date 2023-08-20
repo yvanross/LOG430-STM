@@ -3,15 +3,13 @@ using Application.Mapping.Interfaces.Wrappers;
 using Domain.Common.Interfaces;
 using Infrastructure.FileHandlers.Gtfs.Wrappers;
 using Microsoft.Extensions.Logging;
-using System.Collections.Immutable;
 
 namespace Infrastructure.FileHandlers.Gtfs;
 
 public class TransitDataReader : ITransitDataReader
 {
-    public ImmutableList<IStopWrapper> Stops { get; private set; }
-
-    public Lazy<ImmutableList<ITripWrapper>> Trips { get; private set; }
+    public Stack<IStopWrapper> Stops { get; } = new();
+    public Stack<ITripWrapper> Trips { get; } = new();
 
     private readonly ILogger<TransitDataReader> _logger;
     private readonly GtfsFileFileCache _gtfsFileFileCache;
@@ -31,45 +29,70 @@ public class TransitDataReader : ITransitDataReader
         _wrapperMediator = wrapperMediator;
         _datetimeProvider = datetimeProvider;
 
-        Stops = FetchStopData();
-        Trips = new(FetchTripData);
+        FetchStopData();
+        FetchTripData();
     }
 
-    private ImmutableList<IStopWrapper> FetchStopData()
+    private void FetchStopData()
     {
         var stopsInfo = _gtfsFileFileCache.GetInfo(DataCategoryEnum.STOPS);
 
         foreach (var info in stopsInfo)
         {
-            var stop = new StopWrapper(info);
+            try
+            {
+                var stop = new StopWrapper(info);
 
-            _wrapperMediator.AddStop(stop);
+                _wrapperMediator.AddStop(stop);
+
+                Stops.Push(stop);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"An error occurred while creating stop. Exception: {e.Message}");
+            }
+          
         }
-
-        return _wrapperMediator.Stops.Values.ToImmutableList();
     }
 
-    private ImmutableList<ITripWrapper> FetchTripData()
+    private void FetchTripData()
     {
         var tripsInfo = _gtfsFileFileCache.GetInfo(DataCategoryEnum.TRIPS).ToList();
 
-        return tripsInfo.Select(info => (ITripWrapper)new TripWrapper(info, _gtfsFileFileCache, _wrapperMediator, _datetimeProvider)).ToImmutableList();
+        foreach (var info in tripsInfo)
+        {
+            try
+            {
+                var tripWrapper = new TripWrapper(info, _gtfsFileFileCache, _wrapperMediator, _datetimeProvider);
+
+                Trips.Push(tripWrapper);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"An error occurred while creating trip. Exception: {e.Message}");
+            }
+        }
     }
 
     public void Dispose()
     {
         if (_disposed is false)
         {
-            if (Trips.IsValueCreated)
-                Trips = new(() => ImmutableList<ITripWrapper>.Empty);
+            Trips.Clear();
 
-            Stops = ImmutableList<IStopWrapper>.Empty;
+            Stops.Clear();
 
             _wrapperMediator.Dispose();
 
             _gtfsFileFileCache.Dispose();
 
             _disposed = true;
+
+            GC.Collect();
+
+            GC.SuppressFinalize(_wrapperMediator);
+            GC.SuppressFinalize(_gtfsFileFileCache);
+            GC.SuppressFinalize(this);
         }
     }
 }

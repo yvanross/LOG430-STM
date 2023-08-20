@@ -4,23 +4,15 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Domain.Aggregates")]
 namespace Domain.ValueObjects;
 
-public record struct Position(double Latitude, double Longitude) : IValueObject<Position>
+public record Position(double Latitude, double Longitude) : IValueObject<Position>
 {
     public double DistanceInMeters(Position other)
     {
         const int earthRadius = 6371;
 
-        var aPrime = new Position()
-        {
-            Latitude = ToRad(Latitude),
-            Longitude = ToRad(Longitude)
-        };
+        var aPrime = new Position(ToRad(Latitude), ToRad(Longitude));
 
-        var bPrime = new Position()
-        {
-            Latitude = ToRad(other.Latitude),
-            Longitude = ToRad(other.Longitude)
-        };
+        var bPrime = new Position(ToRad(other.Latitude), ToRad(other.Longitude));
 
         var lat = Math.Sin((bPrime.Latitude - aPrime.Latitude) / 2);
         var lon = Math.Sin((bPrime.Longitude - aPrime.Longitude) / 2);

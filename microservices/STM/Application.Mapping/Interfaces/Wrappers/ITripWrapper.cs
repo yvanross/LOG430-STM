@@ -1,10 +1,8 @@
-﻿using System.Collections.Immutable;
+﻿namespace Application.Mapping.Interfaces.Wrappers;
 
-namespace Application.Mapping.Interfaces.Wrappers;
-
-public interface ITripWrapper
+public interface ITripWrapper : IDisposable
 {
     string TripId { get; }
 
-    Lazy<ImmutableList<IStopScheduleWrapper>> ScheduledStops { get; }
+    List<IStopScheduleWrapper> ScheduledStops { get; }
 }

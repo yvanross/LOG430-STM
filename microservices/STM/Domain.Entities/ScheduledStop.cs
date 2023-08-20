@@ -4,9 +4,9 @@ namespace Domain.Entities;
 
 public class ScheduledStop : Entity<ScheduledStop>
 {
-    public string StopId { get; private set; }
+    public string StopId { get; internal set; }
 
-    public DateTime DepartureTime { get; private set; }
+    public DateTime DepartureTime { get; internal set; }
 
     public ScheduledStop(string stopId, DateTime departureTime)
     {
