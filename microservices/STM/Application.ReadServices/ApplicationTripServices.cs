@@ -1,19 +1,21 @@
-﻿using Application.QueryServices.ServiceInterfaces.Repositories;
-using Domain.Common.Interfaces;
+﻿using Domain.Common.Interfaces;
 using System.Collections.Immutable;
+using Application.QueryServices.ProjectionModels;
+using Application.QueryServices.ServiceInterfaces;
 using Domain.Aggregates.Stop;
 using Domain.Aggregates.Trip;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.QueryServices;
 
 public class ApplicationTripServices
 {
-    private readonly ITripReadRepository _readTrips;
+    private readonly IQueryRepository _readTrips;
     private readonly IDatetimeProvider _datetimeProvider;
     private readonly ILogger<ApplicationTripServices> _logger;
 
-    public ApplicationTripServices(ITripReadRepository readTrips, IDatetimeProvider datetimeProvider, ILogger<ApplicationTripServices> logger)
+    public ApplicationTripServices(IQueryRepository readTrips, IDatetimeProvider datetimeProvider, ILogger<ApplicationTripServices> logger)
     {
         _readTrips = readTrips;
         _datetimeProvider = datetimeProvider;
@@ -24,7 +26,19 @@ public class ApplicationTripServices
     {
         try
         {
-            var trips = await _readTrips.GetTripsContainingStopsId(UniqueKeys(possibleSources, possibleDestinations));
+            var materializedIds = UniqueKeys(possibleSources, possibleDestinations).ToList();
+
+            var tripIds = await _readTrips
+                .GetData<ScheduledStopProjection>()
+                .Where(projection => materializedIds.Contains(projection.StopId))
+                .Select(projection => projection.TripId)
+                .Distinct()
+                .ToListAsync();
+
+            var trips = await _readTrips
+                .GetData<Trip>()
+                .Where(trip => tripIds.Contains(trip.Id))
+                .ToListAsync();
 
             var relevantTrips = trips.Where(trip => trip.IsTimeRelevant(_datetimeProvider)).ToImmutableHashSet();
 

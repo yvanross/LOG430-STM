@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using Domain.Common.Exceptions;
+﻿using Domain.Common.Exceptions;
 using Domain.Common.Interfaces;
 using Domain.Common.Seedwork.Abstract;
 using Domain.Events.AggregateEvents.Trip;

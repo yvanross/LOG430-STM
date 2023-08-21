@@ -1,7 +1,7 @@
 ﻿using Domain.Services.Aggregates;
 using Domain.ValueObjects;
 using System.Collections.Immutable;
-using Application.QueryServices.ServiceInterfaces.Repositories;
+using Application.QueryServices.ServiceInterfaces;
 using Domain.Aggregates.Stop;
 using Microsoft.Extensions.Logging;
 
@@ -9,11 +9,11 @@ namespace Application.QueryServices;
 
 public class ApplicationStopService
 {
-    private readonly IStopReadRepository _readStops;
+    private readonly IQueryRepository _readStops;
     private readonly StopServices _stopServices;
     private readonly ILogger<ApplicationStopService> _logger;
 
-    public ApplicationStopService(IStopReadRepository readStops, StopServices stopServices, ILogger<ApplicationStopService> logger)
+    public ApplicationStopService(IQueryRepository readStops, StopServices stopServices, ILogger<ApplicationStopService> logger)
     {
         _readStops = readStops;
         _stopServices = stopServices;
@@ -26,7 +26,7 @@ public class ApplicationStopService
         {
             const int radiusForBusStopSelectionInMeters = 50;
 
-            var stops = await _readStops.GetAllAsync();
+            var stops = _readStops.GetData<Stop>().ToList();
 
             var closestStop = _stopServices.FindClosestStop(position, stops);
 

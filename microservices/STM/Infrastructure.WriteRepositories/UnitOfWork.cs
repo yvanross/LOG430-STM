@@ -52,9 +52,18 @@ public class UnitOfWork : IUnitOfWork
 
         foreach (var entity in entitiesWithEvents)
         {
-            var events = entity.DomainEvents.ToArray();
+            var events = entity.DomainEvents.ToList();
 
-            foreach (var domainEvent in events)
+            var eventsByTypes = events
+                .GroupBy(item => item.GetType())
+                .Select(group => new { Type = group.Key, Items = group.ToList() });
+
+            var mergedEvents = eventsByTypes
+                .SelectMany(eventsByType => eventsByType.Items
+                    .First().GetEventReduceBehavior().Invoke(eventsByType.Items))
+                .ToList();
+
+            foreach (var domainEvent in mergedEvents)
             {
                 await _eventDispatcher.DispatchAsync(domainEvent);
             }

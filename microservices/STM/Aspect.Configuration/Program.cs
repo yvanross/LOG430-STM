@@ -27,9 +27,9 @@ using System.Reflection;
 using Aspect.Configuration.Properties;
 using System.Resources;
 using Application.CommandServices.HostedServices.Workers;
-using Application.CommandServices.Seedwork;
 using Application.QueryServices;
 using Application.QueryServices.Seedwork;
+using Infrastructure.Consistency;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Aspect.Configuration
@@ -132,6 +132,8 @@ namespace Aspect.Configuration
 
             services.AddSingleton<IConsumer, InMemoryEventQueue>();
             services.AddSingleton<IPublisher, InMemoryEventQueue>();
+
+            services.AddHostedService<TripProjection>();
         }
 
         private static void ApplicationSetup(IServiceCollection services)

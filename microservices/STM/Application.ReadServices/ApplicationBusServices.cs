@@ -1,7 +1,8 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Extensions;
-using Application.QueryServices.ServiceInterfaces.Repositories;
+using Application.QueryServices.ServiceInterfaces;
 using Application.ViewModels;
+using Domain.Aggregates.Bus;
 using Domain.Aggregates.Trip;
 using Microsoft.Extensions.Logging;
 
@@ -9,10 +10,10 @@ namespace Application.QueryServices;
 
 public class ApplicationBusServices
 {
-    private readonly IBusReadRepository _busRead;
+    private readonly IQueryRepository _busRead;
     private readonly ILogger<ApplicationBusServices> _logger;
 
-    public ApplicationBusServices(IBusReadRepository busRead, ILogger<ApplicationBusServices> logger)
+    public ApplicationBusServices(IQueryRepository busRead, ILogger<ApplicationBusServices> logger)
     {
         _busRead = busRead;
         _logger = logger;
@@ -22,7 +23,9 @@ public class ApplicationBusServices
     {
         try
         {
-            var buses = _busRead.GetAllIdsMatchingTripsIds(trips.Keys);
+            var materializedTrips = trips.Keys.ToList();
+
+            var buses = _busRead.GetData<Bus>().Where(bus => materializedTrips.Contains(bus.TripId));
 
             var rideViewModels = (
                 from bus in buses

@@ -1,4 +1,5 @@
-﻿using Domain.Aggregates.Bus;
+﻿using Application.QueryServices.Seedwork;
+using Domain.Aggregates.Bus;
 
 namespace Application.QueryServices.ServiceInterfaces.Repositories;
 

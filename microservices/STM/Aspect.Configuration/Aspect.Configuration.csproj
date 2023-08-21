@@ -24,6 +24,7 @@
     <ProjectReference Include="..\Application.Queries\Application.Queries.csproj" />
     <ProjectReference Include="..\Controllers.Rest\Controllers.Rest.csproj" />
     <ProjectReference Include="..\Infrastructure.ApiClients\Infrastructure.ApiClients.csproj" />
+    <ProjectReference Include="..\Infrastructure.Consistency\Infrastructure.Consistency.csproj" />
     <ProjectReference Include="..\Infrastructure.FileHandlers\Infrastructure.FileHandlers.csproj" />
     <ProjectReference Include="..\Infrastructure.ReadRepositories\Infrastructure.ReadRepositories.csproj" />
     <ProjectReference Include="..\Infrastructure.TcpClients\Infrastructure.TcpClients.csproj" />

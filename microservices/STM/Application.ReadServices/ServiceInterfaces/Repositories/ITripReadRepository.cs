@@ -1,4 +1,5 @@
-﻿using Domain.Aggregates.Trip;
+﻿using Application.QueryServices.Seedwork;
+using Domain.Aggregates.Trip;
 
 namespace Application.QueryServices.ServiceInterfaces.Repositories;
 

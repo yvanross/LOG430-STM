@@ -1,14 +1,26 @@
-﻿using Domain.Aggregates.Ride;
+﻿using Application.QueryServices.ProjectionModels;
+using Application.QueryServices.ServiceInterfaces;
+using Domain.Aggregates.Ride;
 using Domain.Aggregates.Bus;
 using Domain.Aggregates.Stop;
 using Domain.Aggregates.Trip;
-using Infrastructure.ReadRepositories.ProjectionModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.ReadRepositories;
 
-public class AppReadDbContext : DbContext
+public class AppReadDbContext : DbContext, IQueryRepository
 {
+    public DbSet<Stop> Stops { get; set; }
+
+    public DbSet<Ride> Rides { get; set; }
+
+    public DbSet<Trip> Trips { get; set; }
+
+    public DbSet<Bus> Buses { get; set; }
+
+    public DbSet<ScheduledStopProjection> ScheduledStopProjections { get; set; }
+
+
     public AppReadDbContext(DbContextOptions<AppReadDbContext> options) : base(options)
     {
     }
@@ -57,5 +69,10 @@ public class AppReadDbContext : DbContext
                 b.Property(e => e.CurrentStopIndex);
                 b.Property(e => e.Name);
             });
+    }
+
+    public IQueryable<T> GetData<T>() where T : class
+    {
+        return Set<T>().AsNoTracking();
     }
 }

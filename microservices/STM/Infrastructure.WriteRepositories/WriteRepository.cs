@@ -1,4 +1,4 @@
-﻿using Application.CommandServices.Seedwork;
+﻿using Application.CommandServices.ServiceInterfaces;
 using Domain.Common.Seedwork.Abstract;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
