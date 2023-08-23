@@ -29,8 +29,10 @@ using System.Resources;
 using Application.CommandServices.HostedServices.Workers;
 using Application.QueryServices;
 using Application.QueryServices.Seedwork;
+using Application.QueryServices.ServiceInterfaces;
 using Infrastructure.Consistency;
 using Microsoft.EntityFrameworkCore.Storage;
+using Application.EventHandlers.Messaging;
 
 namespace Aspect.Configuration
 {
@@ -55,7 +57,8 @@ namespace Aspect.Configuration
             RepositoryDbContextOptionConfiguration = (options, builderConfiguration) =>
             {
                 options.UseInMemoryDatabase("InMemory", databaseRoot);
-                options.EnableSensitiveDataLogging();
+                //options.UseNpgsql("Server=host.docker.internal;Port=32672;Username=postgres;Password=secret;Database=postgres;");
+                //options.EnableSensitiveDataLogging();
             };
 
             // Add services to the container.
@@ -122,6 +125,8 @@ namespace Aspect.Configuration
             ScrutorScanForType(services, typeof(IWriteRepository<>), assemblyNames: "Infrastructure.WriteRepositories");
             ScrutorScanForType(services, typeof(IReadRepository<>), assemblyNames: "Infrastructure.ReadRepositories");
 
+            services.AddScoped<IQueryContext, AppReadDbContext>();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IStmClient, StmClient>();
@@ -133,7 +138,7 @@ namespace Aspect.Configuration
             services.AddSingleton<IConsumer, InMemoryEventQueue>();
             services.AddSingleton<IPublisher, InMemoryEventQueue>();
 
-            services.AddHostedService<TripProjection>();
+            services.AddScoped<TripProjection>();
         }
 
         private static void ApplicationSetup(IServiceCollection services)
@@ -151,7 +156,7 @@ namespace Aspect.Configuration
             services.AddHostedService<BusUpdateService>();
             services.AddHostedService<TripUpdateService>();
             services.AddHostedService<LoadStaticGtfsService>();
-            services.AddHostedService<RideTrackingService>();
+            //services.AddHostedService<RideTrackingService>();
 
             services.AddScoped<LoadStaticGtfsProcessor>();
             services.AddScoped<RideTrackingProcessor>();
@@ -175,7 +180,7 @@ namespace Aspect.Configuration
 
             services.AddSingleton<TimeServices>();
 
-            ScrutorScanForType(services, typeof(IDomainEventHandler<>), assemblyNames: "Application.EventHandlers");
+            ScrutorScanForType(services, typeof(IDomainEventHandler<>), ServiceLifetime.Scoped, "Application.EventHandlers", "Infrastructure.Consistency");
         }
 
         private static void ScrutorScanForType(IServiceCollection services, Type type, ServiceLifetime lifetime = ServiceLifetime.Scoped, params string[] assemblyNames)

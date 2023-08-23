@@ -11,11 +11,11 @@ namespace Application.QueryServices;
 
 public class ApplicationTripServices
 {
-    private readonly IQueryRepository _readTrips;
+    private readonly IQueryContext _readTrips;
     private readonly IDatetimeProvider _datetimeProvider;
     private readonly ILogger<ApplicationTripServices> _logger;
 
-    public ApplicationTripServices(IQueryRepository readTrips, IDatetimeProvider datetimeProvider, ILogger<ApplicationTripServices> logger)
+    public ApplicationTripServices(IQueryContext readTrips, IDatetimeProvider datetimeProvider, ILogger<ApplicationTripServices> logger)
     {
         _readTrips = readTrips;
         _datetimeProvider = datetimeProvider;

@@ -9,11 +9,11 @@ namespace Application.QueryServices;
 
 public class ApplicationStopService
 {
-    private readonly IQueryRepository _readStops;
+    private readonly IQueryContext _readStops;
     private readonly StopServices _stopServices;
     private readonly ILogger<ApplicationStopService> _logger;
 
-    public ApplicationStopService(IQueryRepository readStops, StopServices stopServices, ILogger<ApplicationStopService> logger)
+    public ApplicationStopService(IQueryContext readStops, StopServices stopServices, ILogger<ApplicationStopService> logger)
     {
         _readStops = readStops;
         _stopServices = stopServices;

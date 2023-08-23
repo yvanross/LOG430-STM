@@ -15,9 +15,4 @@ public class Stop : Aggregate<Stop>
         Id = id;
         Position = new Position(latitude, longitude);
     }
-
-    public override Stop Clone()
-    {
-        return new Stop(Id, Position.Latitude, Position.Longitude);
-    }
 }

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Domain.Events.AggregateEvents.Trip;
 
-public readonly record struct TripScheduledStopsUpdated(string TripId, params string[] UpdatedScheduledStopsIds) : IDomainEvent
+public record TripScheduledStopsUpdated(string TripId, params string[] UpdatedScheduledStopsIds) : IDomainEvent
 {
     public Func<IEnumerable<IDomainEvent>, IEnumerable<IDomainEvent>> GetEventReduceBehavior()
     {

@@ -11,14 +11,22 @@ public class TripWriteRepository : WriteRepository<Trip>, ITripWriteRepository
     {
     }
 
-    public override async Task<IEnumerable<Trip>> GetAllAsync()
-    {
-        return await Aggregates.AsQueryable().Include(a=>a.ScheduledStops).ToListAsync();
-    }
+    //public override async Task<IEnumerable<Trip>> GetAllAsync()
+    //{
+    //    var trips = await Aggregates.AsQueryable()
+    //        .Include(x => x.ScheduledStops)
+    //        .ToListAsync();
 
-    public override Task<Trip> GetAsync(string id)
-    {
-        return Task.FromResult(Aggregates.AsQueryable().Include(x=>x.ScheduledStops).FirstOrDefault(a=>a.Id.SequenceEqual(id)) ?? 
-                               throw new KeyNotFoundException($"Aggregate of type {typeof(Trip)} could not be found using id: {id}"));
-    }
+    //    return trips;
+    //}
+
+    //public override async Task<Trip> GetAsync(string id)
+    //{
+    //    var trip = await Aggregates.AsQueryable()
+    //        .Where(a => a.Id.Equals(id))
+    //        .Include(x => x.ScheduledStops)
+    //        .FirstOrDefaultAsync() ?? throw new KeyNotFoundException($"Aggregate of type {typeof(Trip)} could not be found using id: {id}");
+
+    //    return trip;
+    //}
 }

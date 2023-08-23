@@ -15,11 +15,6 @@ public class ScheduledStop : Entity<ScheduledStop>
         DepartureTime = departureTime;
     }
 
-    public override ScheduledStop Clone()
-    {
-        return new ScheduledStop(Id, StopId, DepartureTime);
-    }
-
     internal bool UpdateDepartureTime(DateTime departureTime)
     {
         if (DepartureTime.Equals(departureTime)) return false;

@@ -2,7 +2,7 @@
 
 public interface IWriteRepository<T>
 {
-    Task<IEnumerable<T>> GetAllAsync();
+    Task<IEnumerable<T>> GetAllAsync(params string[] ids);
 
     Task<T> GetAsync(string id);
 

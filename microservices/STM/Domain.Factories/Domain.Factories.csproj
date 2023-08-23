@@ -12,10 +12,4 @@
     <ProjectReference Include="..\Domain.Aggregates.Trip\Domain.Aggregates.Trip.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Domain.Aggregates">
-      <HintPath>..\Domain.Aggregates\bin\Debug\net7.0\Domain.Aggregates.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

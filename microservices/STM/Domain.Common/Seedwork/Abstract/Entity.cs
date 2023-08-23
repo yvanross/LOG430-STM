@@ -2,7 +2,7 @@
 
 namespace Domain.Common.Seedwork.Abstract;
 
-public abstract class Entity<T> : IEquatable<Entity<T>>, ICloneableEntity<T> where T : class
+public abstract class Entity<T> : IEquatable<Entity<T>> where T : class
 {
     public string Id { get; set; }
 
@@ -22,6 +22,4 @@ public abstract class Entity<T> : IEquatable<Entity<T>>, ICloneableEntity<T> whe
     {
         return Id.GetHashCode();
     }
-
-    public abstract T Clone();
 }

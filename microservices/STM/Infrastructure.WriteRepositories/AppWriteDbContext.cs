@@ -1,4 +1,5 @@
-﻿using Domain.Aggregates.Bus;
+﻿using System.Collections.Immutable;
+using Domain.Aggregates.Bus;
 using Domain.Aggregates.Ride;
 using Domain.Aggregates.Stop;
 using Domain.Aggregates.Trip;
@@ -14,14 +15,6 @@ public class AppWriteDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        //modelBuilder.Entity<ScheduledStop>(
-        //    b =>
-        //    {
-        //        b.HasKey(e => e.Id);
-        //        b.Property(e => e.DepartureTime);
-        //        b.Property(e => e.StopId);
-        //    });
-
         modelBuilder.Entity<Stop>(
             b =>
             {
@@ -40,8 +33,8 @@ public class AppWriteDbContext : DbContext
                 b.Property(e => e.BusId);
                 b.Property(e => e.DepartureReachedTime);
                 b.Property(e => e.ReachedDepartureStop);
-            });
-        
+            }); ;
+
         modelBuilder.Entity<Trip>(
             b =>
             {

@@ -10,10 +10,10 @@ namespace Application.QueryServices;
 
 public class ApplicationBusServices
 {
-    private readonly IQueryRepository _busRead;
+    private readonly IQueryContext _busRead;
     private readonly ILogger<ApplicationBusServices> _logger;
 
-    public ApplicationBusServices(IQueryRepository busRead, ILogger<ApplicationBusServices> logger)
+    public ApplicationBusServices(IQueryContext busRead, ILogger<ApplicationBusServices> logger)
     {
         _busRead = busRead;
         _logger = logger;

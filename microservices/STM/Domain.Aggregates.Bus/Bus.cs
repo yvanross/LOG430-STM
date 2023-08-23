@@ -17,9 +17,4 @@ public class Bus : Aggregate<Bus>
         TripId = tripId;
         CurrentStopIndex = currentStopIndex;
     }
-
-    public override Bus Clone()
-    {
-        return new Bus(Id, Name, TripId, CurrentStopIndex);
-    }
 }

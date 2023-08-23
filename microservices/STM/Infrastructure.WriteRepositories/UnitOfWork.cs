@@ -22,12 +22,14 @@ public class UnitOfWork : IUnitOfWork
 
             try
             {
+                var aggregatesWithEvents = GetDomainEvents();
+
                 await _context.SaveChangesAsync();
 
-                // Optimal design would use an outbox. See https://microservices.io/patterns/data/transactional-outbox.html
-                await DispatchDomainEventsAsync();
-
                 await transaction.CommitAsync();
+
+                // Optimal design would use an outbox. See https://microservices.io/patterns/data/transactional-outbox.html
+                await DispatchDomainEventsAsync(aggregatesWithEvents);
             }
             catch
             {
@@ -37,38 +39,33 @@ public class UnitOfWork : IUnitOfWork
         }
         else
         {
+            var aggregatesWithEvents = GetDomainEvents();
+
             await _context.SaveChangesAsync();
             
-            await DispatchDomainEventsAsync();
+            await DispatchDomainEventsAsync(aggregatesWithEvents);
         }
     }
 
-    private async Task DispatchDomainEventsAsync()
+    private List<IHasDomainEvents> GetDomainEvents()
     {
-        var entitiesWithEvents = _context.ChangeTracker.Entries<IHasDomainEvents>()
+        return _context.ChangeTracker.Entries<IHasDomainEvents>()
             .Where(entry => entry.Entity.DomainEvents.Any())
             .Select(entry => entry.Entity)
-            .ToArray();
+            .ToList();
+    }
 
-        foreach (var entity in entitiesWithEvents)
+    private async Task DispatchDomainEventsAsync(List<IHasDomainEvents> hasDomainEventsEnumerable)
+    {
+        var events = hasDomainEventsEnumerable
+            .SelectMany(entitiesWithEvent => entitiesWithEvent.DomainEvents.ToList())
+            .ToList();
+
+        foreach (var @event in events)
         {
-            var events = entity.DomainEvents.ToList();
-
-            var eventsByTypes = events
-                .GroupBy(item => item.GetType())
-                .Select(group => new { Type = group.Key, Items = group.ToList() });
-
-            var mergedEvents = eventsByTypes
-                .SelectMany(eventsByType => eventsByType.Items
-                    .First().GetEventReduceBehavior().Invoke(eventsByType.Items))
-                .ToList();
-
-            foreach (var domainEvent in mergedEvents)
-            {
-                await _eventDispatcher.DispatchAsync(domainEvent);
-            }
-
-            entity.ClearDomainEvents();
+            await _eventDispatcher.DispatchAsync(@event);
         }
+
+        hasDomainEventsEnumerable.ForEach(entity => entity.ClearDomainEvents());
     }
 }

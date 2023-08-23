@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.ReadRepositories;
 
-public class AppReadDbContext : DbContext, IQueryRepository
+public class AppReadDbContext : DbContext, IQueryContext
 {
     public DbSet<Stop> Stops { get; set; }
 

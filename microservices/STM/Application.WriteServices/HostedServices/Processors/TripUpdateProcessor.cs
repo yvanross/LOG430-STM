@@ -8,6 +8,8 @@ using Domain.Services.Aggregates;
 using Domain.Services.Utility;
 using Microsoft.Extensions.Logging;
 using STM.ExternalServiceProvider.Proto;
+using System.Linq;
+using System.Runtime.InteropServices;
 using static STM.ExternalServiceProvider.Proto.TripUpdate.Types;
 
 namespace Application.CommandServices.HostedServices.Processors;
@@ -60,23 +62,26 @@ public class TripUpdateProcessor : IScopedProcessor
 
     private async Task ProcessTripUpdates(IEnumerable<TripUpdate> tripUpdates)
     {
+        tripUpdates = tripUpdates.ToList();
+
+        var updatesIds = tripUpdates.Select(tripUpdate => tripUpdate.Trip.TripId).ToArray();
+
+        var storedTrips = (await _tripRepository.GetAllAsync(updatesIds)).ToDictionary(trip => trip.Id);
+
         foreach (var tripUpdate in tripUpdates)
         {
             List<StopTimeUpdate> stopTimeUpdates = tripUpdate.StopTimeUpdate.ToList();
 
-            Trip trip;
-
-            if (await _tripRepository.Exists(tripUpdate.Trip.TripId))
+            if (storedTrips.TryGetValue(tripUpdate.Trip.TripId, out var storedValue))
             {
-                trip = await _tripRepository.GetAsync(tripUpdate.Trip.TripId);
 
-                UpdateScheduledStops(trip, stopTimeUpdates);
+                UpdateScheduledStops(storedValue, stopTimeUpdates);
             }
             else
             {
                 _logger.LogInformation("Trip not found, creating new trip");
 
-                trip = CreateTrip(tripUpdate, stopTimeUpdates);
+                var trip = CreateTrip(tripUpdate, stopTimeUpdates);
 
                 await _tripRepository.AddAsync(trip);
             }

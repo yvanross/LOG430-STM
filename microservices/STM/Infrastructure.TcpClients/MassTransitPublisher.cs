@@ -15,7 +15,7 @@ public class MassTransitPublisher : IPublisher
         _retryPolicy = retryPolicy;
     }
 
-    public async Task Publish<TEvent>(TEvent message) where TEvent : class
+    public async Task Publish<TEvent>(TEvent message)
     {
         await _retryPolicy.ExecuteAsync(async () => await _publishEndpoint.Publish(message, x =>
             {

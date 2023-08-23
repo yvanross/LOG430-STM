@@ -31,11 +31,6 @@ public sealed class Ride : Aggregate<Ride>
         DestinationId = destinationId;
     }
 
-    public override Ride Clone()
-    {
-        return new Ride(Id, BusId, DepartureId, DestinationId);
-    }
-
     public void UpdateRide(string previousStopId, int currentStopIndex, int firstStopIndex, int targetStopIndex, IDatetimeProvider datetimeProvider)
     {
         UpdatePreviousStop();

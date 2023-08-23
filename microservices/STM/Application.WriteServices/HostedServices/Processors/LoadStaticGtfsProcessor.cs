@@ -68,7 +68,7 @@ public class LoadStaticGtfsProcessor : IScopedProcessor
 
             await _unitOfWork.SaveChangesAsync();
 
-            await _publisher.Publish(new StaticGtfsDataLoaded());
+            _publisher.Publish(new StaticGtfsDataLoaded());
         }
         catch (Exception e)
         {

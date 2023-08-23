@@ -16,7 +16,7 @@ public class RideUpdatedEventHandler : IDomainEventHandler<BusTrackingUpdated>
     public async Task HandleAsync(BusTrackingUpdated domainEvent)
     {
         //decoupling the domain event from the infrastructure
-        await _publisher.Publish(
+        _publisher.Publish(
             new Contracts.RideTrackingUpdated(
                 domainEvent.Message,
                 domainEvent.TrackingCompleted,
