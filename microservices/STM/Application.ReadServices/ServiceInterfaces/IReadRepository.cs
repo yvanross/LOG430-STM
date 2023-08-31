@@ -1,4 +1,4 @@
-﻿namespace Application.QueryServices.Seedwork;
+﻿namespace Application.QueryServices.ServiceInterfaces;
 
 public interface IReadRepository<T>
 {

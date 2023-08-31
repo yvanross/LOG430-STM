@@ -1,5 +1,6 @@
-﻿using Application.CommandServices.ServiceInterfaces;
-using Application.CommandServices.ServiceInterfaces.Repositories;
+﻿using Application.Commands.Seedwork;
+using Application.CommandServices;
+using Application.CommandServices.Repositories;
 using Application.EventHandlers.AntiCorruption;
 using Application.Mapping.Interfaces;
 using Application.Mapping.Interfaces.Wrappers;
@@ -8,9 +9,9 @@ using Domain.Aggregates.Stop;
 using Domain.Aggregates.Trip;
 using Microsoft.Extensions.Logging;
 
-namespace Application.CommandServices.HostedServices.Processors;
+namespace Application.Commands.Handlers;
 
-public class LoadStaticGtfsProcessor : IScopedProcessor
+public class LoadStaticGtfsHandler : ICommandHandler<LoadStaticGtfs>
 {
     private readonly ITripWriteRepository _tripWriteRepository;
     private readonly IStopWriteRepository _stopWriteRepository;
@@ -18,17 +19,17 @@ public class LoadStaticGtfsProcessor : IScopedProcessor
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMappingTo<ITripWrapper, Trip> _tripMapper;
     private readonly IMappingTo<IStopWrapper, Stop> _stopMapper;
-    private readonly ILogger<LoadStaticGtfsProcessor> _logger;
+    private readonly ILogger<LoadStaticGtfsHandler> _logger;
     private readonly IPublisher _publisher;
 
-    public LoadStaticGtfsProcessor(
+    public LoadStaticGtfsHandler(
         ITripWriteRepository tripWriteRepository,
         IStopWriteRepository stopWriteRepository,
         ITransitDataReader transitDataReader,
         IUnitOfWork unitOfWork,
         IMappingTo<ITripWrapper, Trip> tripMapper,
         IMappingTo<IStopWrapper, Stop> stopMapper,
-        ILogger<LoadStaticGtfsProcessor> logger,
+        ILogger<LoadStaticGtfsHandler> logger,
         IPublisher publisher)
     {
         _tripWriteRepository = tripWriteRepository;
@@ -41,7 +42,7 @@ public class LoadStaticGtfsProcessor : IScopedProcessor
         _publisher = publisher;
     }
 
-    public async Task ProcessUpdates()
+    public async Task Handle(LoadStaticGtfs command, CancellationToken cancellation)
     {
         try
         {
@@ -68,7 +69,7 @@ public class LoadStaticGtfsProcessor : IScopedProcessor
 
             await _unitOfWork.SaveChangesAsync();
 
-            _publisher.Publish(new StaticGtfsDataLoaded());
+            await _publisher.Publish(new StaticGtfsDataLoaded());
         }
         catch (Exception e)
         {

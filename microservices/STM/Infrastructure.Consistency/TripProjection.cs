@@ -1,51 +1,44 @@
-﻿using System.Threading.Channels;
-using Application.EventHandlers.AntiCorruption;
-using Application.EventHandlers.Messaging.PipeAndFilter;
-using Application.QueryServices.ProjectionModels;
+﻿using Application.QueryServices.ProjectionModels;
 using Domain.Aggregates.Trip;
-using Domain.Common.Seedwork.Abstract;
-using Domain.Events.AggregateEvents.Trip;
-using Domain.Events.Interfaces;
 using Infrastructure.Consistency.BatchEvents;
 using Infrastructure.ReadRepositories;
 using Infrastructure.WriteRepositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Consistency;
 
-public class TripProjection : IDomainEventHandler<TripScheduledStopsUpdated>, IDomainEventHandler<TripCreated>
+public class TripProjection
 {
-    private readonly IConsumer _consumer;
     private readonly AppWriteDbContext _writeDbContext;
     private readonly AppReadDbContext _readDbContext;
     private readonly ILogger<TripProjection> _logger;
 
-    public TripProjection(IConsumer consumer, AppWriteDbContext writeDbContext, AppReadDbContext readDbContext , ILogger<TripProjection> logger)
+    public TripProjection(AppWriteDbContext writeDbContext, AppReadDbContext readDbContext , ILogger<TripProjection> logger)
     {
-        _consumer = consumer;
         _writeDbContext = writeDbContext;
         _readDbContext = readDbContext;
         _logger = logger;
     }
 
-    //Duplication of code because it represents different intent and so it is not a violation of DRY
-
-    public async Task HandleAsync(TripScheduledStopsUpdated domainEvent)
+    public async Task HandleCreatedTrips(TripCreatedBatch batch, CancellationToken token)
     {
+        var ids = batch.Events.Select(e => e.TripId).ToHashSet();
+
+        //db
         var tripsWithModifiedStops = await _writeDbContext
             .Set<Trip>()
             .AsNoTracking()
+            .Where(trip => ids.Contains(trip.Id))
             .Include(trip => trip.ScheduledStops)
             .Select(trip => new
             {
                 TripId = trip.Id,
                 ScheduledStops = trip.ScheduledStops
-                    .Where(scheduledStop => domainEvent.UpdatedScheduledStopsIds.Contains(scheduledStop.Id))
             })
-            .ToListAsync();
+            .ToListAsync(token);
 
+        //local
         var projections = tripsWithModifiedStops
             .SelectMany(tripsWithModifiedStop => tripsWithModifiedStop.ScheduledStops
                 .Select(scheduledStop => new ScheduledStopProjection()
@@ -57,46 +50,33 @@ public class TripProjection : IDomainEventHandler<TripScheduledStopsUpdated>, ID
                 }))
             .ToList();
 
-        var existingProjections = await _readDbContext
-            .ScheduledStopProjections
-            .AsNoTracking()
-            .Where(projection => projection.Id.Equals(domainEvent.UpdatedScheduledStopsIds))
-            .ToListAsync();
+        _readDbContext.ScheduledStopProjections.AddRange(projections);
 
-        var newProjections = projections
-            .Where(scheduledStop => existingProjections
-                .Any(projectedScheduledStop => projectedScheduledStop.Id.Equals(scheduledStop.Id)) is false)
-            .ToList();
+        await _readDbContext.SaveChangesAsync(token);
 
-        var updatedProjections = projections.Except(newProjections).ToList();
-
-        _readDbContext.ScheduledStopProjections.AddRange(newProjections);
-
-        _readDbContext.ScheduledStopProjections.UpdateRange(updatedProjections);
-
-        await _readDbContext.SaveChangesAsync();
-
-        _logger.LogInformation($"Updated {updatedProjections.Count} projections and added {newProjections.Count} new projections");
+        _logger.LogInformation($"Created {projections.Count} ScheduledStopProjections");
     }
 
-    public async Task HandleAsync(TripCreated domainEvent)
+    public async Task HandleUpdatedTrips(TripScheduledUpdatedBatch batch, CancellationToken token)
     {
-        var aggregate = await _writeDbContext
-            .Set<Trip>()
-            .FindAsync(domainEvent.TripId);
+        var ids = batch.Events.Select(e => e.TripId).ToHashSet();
+        var updatedScheduledStops = batch.Events.SelectMany(e => e.UpdatedScheduledStopsIds).ToHashSet();
 
+        //db
         var tripsWithModifiedStops = await _writeDbContext
             .Set<Trip>()
             .AsNoTracking()
-            .Include(trip => trip.ScheduledStops
-                .Where(scheduledStop => domainEvent.UpdatedScheduledStopsIds.Contains(scheduledStop.Id)))
+            .Where(trip => ids.Contains(trip.Id))
+            .Include(trip => trip.ScheduledStops)
             .Select(trip => new
             {
                 TripId = trip.Id,
                 ScheduledStops = trip.ScheduledStops
+                    .Where(scheduledStop => updatedScheduledStops.Contains(scheduledStop.Id))
             })
-            .ToListAsync();
+            .ToListAsync(token);
 
+        //local
         var projections = tripsWithModifiedStops
             .SelectMany(tripsWithModifiedStop => tripsWithModifiedStop.ScheduledStops
                 .Select(scheduledStop => new ScheduledStopProjection()
@@ -108,40 +88,30 @@ public class TripProjection : IDomainEventHandler<TripScheduledStopsUpdated>, ID
                 }))
             .ToList();
 
-        var existingProjections = await _readDbContext
+        //db
+        var existingProjectionIds = _readDbContext
             .ScheduledStopProjections
             .AsNoTracking()
-            .Where(projection => projection.Id.Equals(domainEvent.UpdatedScheduledStopsIds))
-            .ToListAsync();
+            .Where(projection => updatedScheduledStops.Contains(projection.Id))
+            .Select(existingProjection => existingProjection.Id)
+            .ToHashSet();
 
+        //local
         var newProjections = projections
-            .Where(scheduledStop => existingProjections
-                .Any(projectedScheduledStop => projectedScheduledStop.Id.Equals(scheduledStop.Id)) is false)
+            .Where(scheduledStop => existingProjectionIds.Contains(scheduledStop.Id) is false)
             .ToList();
 
-        var updatedProjections = projections.Except(newProjections).ToList();
+        //local
+        var updatedProjections = projections
+            .Where(projection => existingProjectionIds.Contains(projection.Id))
+            .ToList();
 
         _readDbContext.ScheduledStopProjections.AddRange(newProjections);
 
         _readDbContext.ScheduledStopProjections.UpdateRange(updatedProjections);
 
-        await _readDbContext.SaveChangesAsync();
+        await _readDbContext.SaveChangesAsync(token);
 
         _logger.LogInformation($"Updated {updatedProjections.Count} projections and added {newProjections.Count} new projections");
-    }
-
-    //protected override Task ExecuteAsync(CancellationToken stoppingToken)
-    //{
-    //    var funnel = new Func<ChannelReader<TripScheduledStopsUpdated>, ChannelWriter<TripScheduledUpdatedBatch>, Task>((reader, writer) =>
-    //    {
-    //        return Task.CompletedTask;
-    //    });
-
-    //    _consumer.Subscribe<TripScheduledStopsUpdated, TripScheduledUpdatedBatch>(AsyncEventHandler, new Funnel());
-    //}
-
-    private Task AsyncEventHandler(TripScheduledStopsUpdated @event, CancellationToken token)
-    {
-        throw new NotImplementedException();
     }
 }

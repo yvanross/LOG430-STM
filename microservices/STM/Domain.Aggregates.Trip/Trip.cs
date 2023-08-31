@@ -27,7 +27,7 @@ public class Trip : Aggregate<Trip>
 
         var trip = new Trip(tripId, scheduledStops);
 
-        trip.RaiseDomainEvent(new TripCreated(tripId, scheduledStops.Select(st => st.Id).ToArray()));
+        trip.RaiseDomainEvent(new TripCreated(tripId, scheduledStops.Select(st => st.Id).ToHashSet()));
 
         return trip;
     }
@@ -116,13 +116,13 @@ public class Trip : Aggregate<Trip>
         var updated = stop.UpdateDepartureTime(departureTime);
 
         if (updated)
-            RaiseDomainEvent(new TripScheduledStopsUpdated(Id, stop.Id));
+            RaiseDomainEvent(new TripScheduledStopsUpdated(Id, new HashSet<string>(){ stop.Id }));
     }
 
     public void UpdateScheduledStops(IEnumerable<(string stopId, DateTime schedule)> stops)
     {
         ScheduledStops = stops.Select(x => new ScheduledStop(Guid.NewGuid().ToString(), x.stopId, x.schedule)).ToList();
 
-        RaiseDomainEvent(new TripScheduledStopsUpdated(Id, ScheduledStops.Select(st => st.Id).ToArray()));
+        RaiseDomainEvent(new TripScheduledStopsUpdated(Id, ScheduledStops.Select(st => st.Id).ToHashSet()));
     }
 }

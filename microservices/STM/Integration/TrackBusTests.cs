@@ -40,7 +40,7 @@ public class TrackBusTests : IntegrationTest
 
         var command = new TrackBus(rideInfo.BusId, rideInfo.ScheduledDepartureId, rideInfo.ScheduledDestinationId);
 
-        await CommandDispatcher.Dispatch(command, CancellationToken.None);
+        await CommandDispatcher.DispatchAsync(command, CancellationToken.None);
 
         var cancellationTokenRide = new CancellationTokenSource(TimeSpan.FromSeconds(10));
 

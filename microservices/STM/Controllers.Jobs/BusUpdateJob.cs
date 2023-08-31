@@ -1,18 +1,19 @@
-﻿using Application.CommandServices.HostedServices.Processors;
+﻿using Application.Commands;
+using Application.Commands.Seedwork;
 using Application.EventHandlers.AntiCorruption;
 using Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Application.CommandServices.HostedServices.Workers;
+namespace Controllers.Jobs;
 
-public class BusUpdateService : BackgroundService
+public class BusUpdateJob : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<BusUpdateService> _logger;
+    private readonly ILogger<BusUpdateJob> _logger;
 
-    public BusUpdateService(IServiceProvider serviceProvider, ILogger<BusUpdateService> logger)
+    public BusUpdateJob(IServiceProvider serviceProvider, ILogger<BusUpdateJob> logger)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
@@ -32,11 +33,11 @@ public class BusUpdateService : BackgroundService
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                using var scoped = _serviceProvider.CreateScope();
+                using var scope = _serviceProvider.CreateScope();
 
-                var processor = scoped.ServiceProvider.GetRequiredService<BusUpdateProcessor>();
+                var commandDispatcher = scope.ServiceProvider.GetRequiredService<ICommandDispatcher>();
 
-                await processor.ProcessUpdates();
+                await commandDispatcher.DispatchAsync(new UpdateBuses(), stoppingToken);
 
                 await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
             }

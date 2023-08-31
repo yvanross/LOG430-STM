@@ -2,4 +2,4 @@
 
 namespace Domain.Events.AggregateEvents.Trip;
 
-public readonly record struct TripCreated(string TripId, params string[] UpdatedScheduledStopsIds) : IDomainEvent;
+public record TripCreated(string TripId, HashSet<string> UpdatedScheduledStopsIds) : IDomainEvent;

@@ -2,5 +2,5 @@
 
 public interface IPublisher
 {
-    void Publish<TEvent>(TEvent message);
+    Task Publish<TEvent>(TEvent message);
 }

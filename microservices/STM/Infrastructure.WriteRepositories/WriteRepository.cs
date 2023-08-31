@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Linq.Expressions;
-using Application.CommandServices.ServiceInterfaces;
+﻿using Application.CommandServices;
 using Domain.Common.Seedwork.Abstract;
 using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;

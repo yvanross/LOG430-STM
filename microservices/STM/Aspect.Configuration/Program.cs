@@ -1,18 +1,14 @@
 using Application.Commands.Seedwork;
-using Application.CommandServices.HostedServices.Processors;
 using Application.Queries.Seedwork;
 using Aspect.Configuration.Dispatchers;
 using Controllers.Rest;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Application.CommandServices.ServiceInterfaces;
-using Application.CommandServices.ServiceInterfaces.Repositories;
 using Application.EventHandlers.AntiCorruption;
 using Domain.Events.Interfaces;
 using Domain.Events;
 using Infrastructure.ApiClients;
 using Infrastructure.FileHandlers.Gtfs;
 using Infrastructure.ReadRepositories;
-using Infrastructure.TcpClients;
 using Infrastructure.WriteRepositories;
 using Application.Common.Interfaces.Policies;
 using Application.Mapping.Interfaces;
@@ -26,13 +22,16 @@ using Domain.Services.Utility;
 using System.Reflection;
 using Aspect.Configuration.Properties;
 using System.Resources;
-using Application.CommandServices.HostedServices.Workers;
+using Application.Commands.Handlers;
 using Application.QueryServices;
-using Application.QueryServices.Seedwork;
 using Application.QueryServices.ServiceInterfaces;
 using Infrastructure.Consistency;
 using Microsoft.EntityFrameworkCore.Storage;
 using Application.EventHandlers.Messaging;
+using Application.CommandServices.Repositories;
+using Application.CommandServices;
+using Aspect.Configuration.EventRegistration;
+using Controllers.Jobs;
 
 namespace Aspect.Configuration
 {
@@ -81,16 +80,19 @@ namespace Aspect.Configuration
 
             app.UseAuthorization();
             app.MapControllers();
+
+            SubscribeToInternalEvents(app.Services);
+
             app.Run();
         }
 
         public static void ConfigureServices(IServiceCollection services, IConfiguration builderConfiguration)
         {
-            Configuration(services, builderConfiguration);
+            Domain(services);
+            Application(services);
             Infrastructure(services, builderConfiguration);
             Presentation(services);
-            Application(services);
-            Domain(services);
+            Configuration(services, builderConfiguration);
 
             services.AddEndpointsApiExplorer();
 
@@ -101,6 +103,8 @@ namespace Aspect.Configuration
         {
             services.AddScoped(typeof(IInfiniteRetryPolicy<>), typeof(InfiniteRetryPolicy<>));
             services.AddScoped(typeof(IBackOffRetryPolicy<>), typeof(BackOffRetryPolicy<>));
+
+            services.AddScoped<TripEventsRegistration>();
 
             services.AddSingleton(_ => new ResourceManager(typeof(Resources)));
 
@@ -153,15 +157,15 @@ namespace Aspect.Configuration
             services.AddScoped<ICommandDispatcher, CommandDispatcher>();
             services.AddScoped<IQueryDispatcher, QueryDispatcher>();
 
-            services.AddHostedService<BusUpdateService>();
-            services.AddHostedService<TripUpdateService>();
-            services.AddHostedService<LoadStaticGtfsService>();
-            //services.AddHostedService<RideTrackingService>();
+            services.AddHostedService<BusUpdateJob>();
+            services.AddHostedService<UpdateTripsJob>();
+            services.AddHostedService<LoadStaticGtfsJob>();
+            //services.AddHostedService<RideTrackingJob>();
 
-            services.AddScoped<LoadStaticGtfsProcessor>();
-            services.AddScoped<RideTrackingProcessor>();
-            services.AddScoped<BusUpdateProcessor>();
-            services.AddScoped<TripUpdateProcessor>();
+            services.AddScoped<LoadStaticGtfsHandler>();
+            services.AddScoped<UpdateRideTrackingHandler>();
+            services.AddScoped<UpdateBusesHandler>();
+            services.AddScoped<UpdateTripsHandler>();
 
             services.AddScoped<ApplicationStopService>();
             services.AddScoped<ApplicationBusServices>();
@@ -192,6 +196,16 @@ namespace Aspect.Configuration
                     .AsImplementedInterfaces()
                     .WithLifetime(lifetime);
             });
+        }
+
+        private static void SubscribeToInternalEvents(IServiceProvider serviceProvider)
+        {
+            var scope = serviceProvider.CreateScope();
+
+            var tripEventsRegistration = scope.ServiceProvider.GetRequiredService<TripEventsRegistration>();
+
+            tripEventsRegistration.SetupTripCreatedEventHandlerAndBatching();
+            tripEventsRegistration.SetupTripScheduledStopUpdatedEventHandlerAndBatching();
         }
     }
 }

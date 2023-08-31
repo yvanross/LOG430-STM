@@ -1,4 +1,4 @@
-﻿using Application.CommandServices.ServiceInterfaces;
+﻿using Application.CommandServices;
 using Application.Mapping.Interfaces.Wrappers;
 using Domain.Common.Interfaces;
 using Infrastructure.FileHandlers.Gtfs.Wrappers;

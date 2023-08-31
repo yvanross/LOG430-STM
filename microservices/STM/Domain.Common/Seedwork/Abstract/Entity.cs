@@ -1,6 +1,4 @@
-﻿using Domain.Common.Seedwork.Interfaces;
-
-namespace Domain.Common.Seedwork.Abstract;
+﻿namespace Domain.Common.Seedwork.Abstract;
 
 public abstract class Entity<T> : IEquatable<Entity<T>> where T : class
 {

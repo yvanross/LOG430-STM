@@ -8,7 +8,7 @@ public class CommandDispatcher : ICommandDispatcher
 
     public CommandDispatcher(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
 
-    public async Task Dispatch<TCommand>(TCommand command, CancellationToken cancellation)
+    public async Task DispatchAsync<TCommand>(TCommand command, CancellationToken cancellation)
     {
        // using var scope = _serviceProvider.CreateScope();
 

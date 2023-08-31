@@ -1,6 +1,6 @@
 ﻿using Domain.Aggregates.Ride;
 
-namespace Application.CommandServices.ServiceInterfaces.Repositories;
+namespace Application.CommandServices.Repositories;
 
 public interface IRideWriteRepository : IWriteRepository<Ride>
 {

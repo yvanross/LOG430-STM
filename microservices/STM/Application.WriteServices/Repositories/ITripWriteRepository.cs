@@ -1,6 +1,6 @@
 ﻿using Domain.Aggregates.Trip;
 
-namespace Application.CommandServices.ServiceInterfaces.Repositories;
+namespace Application.CommandServices.Repositories;
 
 public interface ITripWriteRepository : IWriteRepository<Trip>
 {

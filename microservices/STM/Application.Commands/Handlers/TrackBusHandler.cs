@@ -1,5 +1,5 @@
 ﻿using Application.Commands.Seedwork;
-using Application.CommandServices.ServiceInterfaces.Repositories;
+using Application.CommandServices.Repositories;
 using Domain.Common.Exceptions;
 using Domain.Services.Aggregates;
 using Microsoft.Extensions.Logging;

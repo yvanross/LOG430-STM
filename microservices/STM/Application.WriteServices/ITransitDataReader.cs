@@ -1,6 +1,6 @@
 ﻿using Application.Mapping.Interfaces.Wrappers;
 
-namespace Application.CommandServices.ServiceInterfaces;
+namespace Application.CommandServices;
 
 public interface ITransitDataReader : IDisposable
 {

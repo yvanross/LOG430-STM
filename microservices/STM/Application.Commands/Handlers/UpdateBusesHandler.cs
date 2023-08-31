@@ -1,27 +1,27 @@
-﻿using Application.CommandServices.HostedServices.Workers;
-using Application.CommandServices.ServiceInterfaces;
-using Application.CommandServices.ServiceInterfaces.Repositories;
+﻿using Application.Commands.Seedwork;
+using Application.CommandServices;
+using Application.CommandServices.Repositories;
 using Application.EventHandlers.AntiCorruption;
 using Contracts;
 using Domain.Services.Aggregates;
 using Microsoft.Extensions.Logging;
 
-namespace Application.CommandServices.HostedServices.Processors;
+namespace Application.Commands.Handlers;
 
-public class BusUpdateProcessor : IScopedProcessor
+public class UpdateBusesHandler : ICommandHandler<UpdateBuses>
 {
     private readonly IStmClient _stmClient;
     private readonly IBusWriteRepository _busRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger<BusUpdateService> _logger;
+    private readonly ILogger<UpdateBusesHandler> _logger;
     private readonly BusServices _busServices;
     private readonly IPublisher _publisher;
 
-    public BusUpdateProcessor(
+    public UpdateBusesHandler(
         IStmClient stmClient,
         IBusWriteRepository busRepository,
         IUnitOfWork unitOfWork,
-        ILogger<BusUpdateService> logger,
+        ILogger<UpdateBusesHandler> logger,
         BusServices busServices,
         IPublisher publisher)
     {
@@ -33,7 +33,7 @@ public class BusUpdateProcessor : IScopedProcessor
         _publisher = publisher;
     }
 
-    public async Task ProcessUpdates()
+    public async Task Handle(UpdateBuses command, CancellationToken cancellation)
     {
         try
         {

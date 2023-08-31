@@ -1,25 +1,25 @@
-﻿using Application.CommandServices.ServiceInterfaces;
-using Application.CommandServices.ServiceInterfaces.Repositories;
+﻿using Application.Commands.Seedwork;
+using Application.CommandServices.Repositories;
 using Domain.Common.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace Application.CommandServices.HostedServices.Processors;
+namespace Application.Commands.Handlers;
 
-public class RideTrackingProcessor : IScopedProcessor
+public class UpdateRideTrackingHandler : ICommandHandler<UpdateRideTracking>
 {
     private readonly IRideWriteRepository _rideRepository;
     private readonly IBusWriteRepository _busRepository;
     private readonly ITripWriteRepository _tripRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger<RideTrackingProcessor> _logger;
+    private readonly ILogger<UpdateRideTrackingHandler> _logger;
     private readonly IDatetimeProvider _datetimeProvider;
 
-    public RideTrackingProcessor(
+    public UpdateRideTrackingHandler(
         IRideWriteRepository rideRepository,
         IBusWriteRepository busRepository,
         ITripWriteRepository tripRepository,
         IUnitOfWork unitOfWork,
-        ILogger<RideTrackingProcessor> logger,
+        ILogger<UpdateRideTrackingHandler> logger,
         IDatetimeProvider datetimeProvider)
     {
         _rideRepository = rideRepository;
@@ -30,7 +30,7 @@ public class RideTrackingProcessor : IScopedProcessor
         _datetimeProvider = datetimeProvider;
     }
 
-    public async Task ProcessUpdates()
+    public async Task Handle(UpdateRideTracking command, CancellationToken cancellation)
     {
         try
         {

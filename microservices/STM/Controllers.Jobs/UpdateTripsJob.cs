@@ -1,18 +1,19 @@
-﻿using Application.CommandServices.HostedServices.Processors;
+﻿using Application.Commands;
+using Application.Commands.Seedwork;
 using Application.EventHandlers.AntiCorruption;
 using Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Application.CommandServices.HostedServices.Workers;
+namespace Controllers.Jobs;
 
-public class TripUpdateService : BackgroundService
+public class UpdateTripsJob : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<TripUpdateService> _logger;
+    private readonly ILogger<UpdateTripsJob> _logger;
 
-    public TripUpdateService(IServiceProvider serviceProvider, ILogger<TripUpdateService> logger)
+    public UpdateTripsJob(IServiceProvider serviceProvider, ILogger<UpdateTripsJob> logger)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
@@ -24,15 +25,15 @@ public class TripUpdateService : BackgroundService
         {
             using var scope = _serviceProvider.CreateScope();
 
+            var commandDispatcher = scope.ServiceProvider.GetRequiredService<ICommandDispatcher>();
+
             var consumer = scope.ServiceProvider.GetRequiredService<IConsumer>();
 
             await consumer.ConsumeNext<StaticGtfsDataLoaded>(stoppingToken);
 
-            var processor = scope.ServiceProvider.GetRequiredService<TripUpdateProcessor>();
-
             while (!stoppingToken.IsCancellationRequested)
             {
-                await processor.ProcessUpdates();
+                await commandDispatcher.DispatchAsync(new UpdateTrips(), stoppingToken);
 
                 await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
             }

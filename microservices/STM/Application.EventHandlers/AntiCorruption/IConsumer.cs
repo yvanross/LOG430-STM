@@ -1,7 +1,4 @@
-﻿using Application.EventHandlers.Messaging;
-using Application.EventHandlers.Messaging.PipeAndFilter;
-using Domain.Events.AggregateEvents.Trip;
-using System.Threading.Channels;
+﻿using Application.EventHandlers.Messaging.PipeAndFilter;
 using Microsoft.Extensions.Logging;
 
 namespace Application.EventHandlers.AntiCorruption;
@@ -15,5 +12,5 @@ public interface IConsumer
         ILogger logger,
         params Funnel[] funnels) where TResult : class;
 
-    void UnSubscribe(Func<object, CancellationToken, Task> asyncEventHandler);
+    void UnSubscribe<TResult>(Func<TResult, CancellationToken, Task> asyncEventHandler) where TResult : class;
 }

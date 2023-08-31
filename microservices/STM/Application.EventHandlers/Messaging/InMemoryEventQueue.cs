@@ -1,8 +1,6 @@
 ﻿using Application.EventHandlers.AntiCorruption;
 using Application.EventHandlers.Messaging.PipeAndFilter;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Channels;
 using Microsoft.Extensions.Logging;
 
@@ -12,11 +10,9 @@ public class InMemoryEventQueue : IPublisher, IConsumer
 {
     private static readonly ConcurrentDictionary<Delegate, CancellationTokenSource> Observers = new();
 
-    //private static readonly ConcurrentDictionary<Type, Channel<object>> Channels = new();
-
     private static readonly ConcurrentDictionary<Type, List<Channel<object>>> Channels = new();
 
-    public async void Publish<TEvent>(TEvent message)
+    public async Task Publish<TEvent>(TEvent message)
     {
         var type = typeof(TEvent);
 
@@ -29,13 +25,6 @@ public class InMemoryEventQueue : IPublisher, IConsumer
         }
     }
 
-    //public async Task Publish<TEvent>(TEvent message)
-    //{
-    //    var channel = Channels.GetOrAdd(typeof(TEvent), Channel.CreateUnbounded<object>());
-
-    //    await channel.Writer.WriteAsync(message);
-    //}
-
     /// <summary>
     /// The restriction on the TEvent type is to discriminate between ConsumeNext and Subscribe where structs come from domain events and classes come from application events
     /// </summary>
@@ -45,7 +34,6 @@ public class InMemoryEventQueue : IPublisher, IConsumer
     /// <exception cref="ChannelClosedException"></exception>
     public async Task<TEvent> ConsumeNext<TEvent>(CancellationToken cancellationToken = default) where TEvent : class
     {
-        //var channel = await WaitForEventRegistration<TEvent>(cancellationToken);
         var channel = Channel.CreateUnbounded<object>();
         var type = typeof(TEvent);
 
@@ -82,8 +70,6 @@ public class InMemoryEventQueue : IPublisher, IConsumer
                 var channels = Channels.GetOrAdd(type, _ => new List<Channel<object>>());
                 channels.Add(channel);
 
-                //   var channel = await WaitForEventRegistration<TEvent>(cancellationToken);
-
                 var pipeline = new Pipeline<TEvent, TResult>(funnels, channel.Reader, cancellationTokenSource, logger);
 
                 await foreach (var message in pipeline.Process().ReadAllAsync(cancellationToken))
@@ -98,14 +84,13 @@ public class InMemoryEventQueue : IPublisher, IConsumer
 
             throw new InvalidOperationException("This event handler has already been subscribed");
         }
-        catch (Exception e)
+        catch (OperationCanceledException)
         {
-            Console.WriteLine(e);
-            throw;
+            // exit gracefully
         }
     }
 
-    public void UnSubscribe(Func<object, CancellationToken, Task> asyncEventHandler)
+    public void UnSubscribe<TResult>(Func<TResult, CancellationToken, Task> asyncEventHandler) where TResult : class
     {
         if (Observers.TryRemove(asyncEventHandler, out var cancellationTokenSource))
         {
@@ -114,22 +99,4 @@ public class InMemoryEventQueue : IPublisher, IConsumer
         else
             throw new InvalidOperationException("This event handler has not been subscribed");
     }
-
-    //private static async Task<Channel<object>> WaitForEventRegistration<TEvent>(CancellationToken cancellationToken)
-    //{
-    //    Channel<object> channel;
-
-    //    while (true)
-    //    {
-    //        var type = typeof(TEvent);
-
-    //        if (Channels.TryGetValue(type, out channel!)) break;
-
-    //        await Task.Delay(100, cancellationToken);
-
-    //        cancellationToken.ThrowIfCancellationRequested();
-    //    }
-
-    //    return channel;
-    //}
 }

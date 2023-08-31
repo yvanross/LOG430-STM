@@ -1,4 +1,4 @@
-﻿namespace Application.CommandServices.ServiceInterfaces;
+﻿namespace Application.CommandServices;
 
 public interface IWriteRepository<T>
 {

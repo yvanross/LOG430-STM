@@ -1,16 +1,17 @@
-﻿using Application.CommandServices.HostedServices.Processors;
+﻿using Application.Commands;
+using Application.Commands.Seedwork;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Application.CommandServices.HostedServices.Workers;
+namespace Controllers.Jobs;
 
-public class RideTrackingService : BackgroundService
+public class RideTrackingJob : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<RideTrackingService> _logger;
+    private readonly ILogger<RideTrackingJob> _logger;
 
-    public RideTrackingService(IServiceProvider serviceProvider, ILogger<RideTrackingService> logger)
+    public RideTrackingJob(IServiceProvider serviceProvider, ILogger<RideTrackingJob> logger)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
@@ -22,11 +23,11 @@ public class RideTrackingService : BackgroundService
         {
             using var scope = _serviceProvider.CreateScope();
 
-            var processor = scope.ServiceProvider.GetRequiredService<RideTrackingProcessor>();
+            var commandDispatcher = scope.ServiceProvider.GetRequiredService<ICommandDispatcher>();
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                await processor.ProcessUpdates();
+                await commandDispatcher.DispatchAsync(new UpdateRideTracking(), stoppingToken);
 
                 await Task.Delay(TimeSpan.FromMilliseconds(50), stoppingToken);
             }

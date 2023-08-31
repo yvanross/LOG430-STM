@@ -28,7 +28,7 @@ namespace Controllers.Rest
         {
             _logger.LogInformation("TrackBus endpoint reached");
 
-            _commandDispatcher.Dispatch(trackBus, CancellationToken.None);
+            _commandDispatcher.DispatchAsync(trackBus, CancellationToken.None);
 
             return Accepted();
         }

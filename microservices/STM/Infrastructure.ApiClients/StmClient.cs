@@ -1,4 +1,4 @@
-﻿using Application.CommandServices.ServiceInterfaces;
+﻿using Application.CommandServices;
 using Application.Common.Interfaces.Policies;
 using Microsoft.Extensions.Logging;
 using RestSharp;

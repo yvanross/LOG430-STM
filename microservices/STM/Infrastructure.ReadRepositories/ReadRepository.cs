@@ -1,4 +1,4 @@
-﻿using Application.QueryServices.Seedwork;
+﻿using Application.QueryServices.ServiceInterfaces;
 using Domain.Common.Seedwork.Abstract;
 using Microsoft.EntityFrameworkCore;
 

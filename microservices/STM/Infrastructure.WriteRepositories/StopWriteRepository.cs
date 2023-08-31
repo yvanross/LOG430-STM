@@ -1,4 +1,4 @@
-﻿using Application.CommandServices.ServiceInterfaces.Repositories;
+﻿using Application.CommandServices.Repositories;
 using Domain.Aggregates.Stop;
 using Microsoft.Extensions.Logging;
 

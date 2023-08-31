@@ -1,15 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Application.EventHandlers.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.EventHandlers.Messaging;
 using Application.EventHandlers.Messaging.PipeAndFilter;
-using Application.EventHandlersTests;
 using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Application.EventHandlers.Messaging.Tests
+namespace Application.EventHandlersTests.Messaging
 {
     [TestClass()]
     public class InMemoryEventQueueTests
@@ -25,18 +19,6 @@ namespace Application.EventHandlers.Messaging.Tests
         }
 
         [TestMethod()]
-        public void PublishTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
-        public void ConsumeNextTest()
-        {
-            Assert.Fail();
-        }
-
-        [TestMethod()]
         public async Task SubscribeTest()
         {
             const string baseName = "test ";
@@ -48,13 +30,13 @@ namespace Application.EventHandlers.Messaging.Tests
 
                     result.GetType().Should().Be<TestEvent>();
 
-                    _queue.Publish(new TestResult_SubscribeTest()
+                    await _queue.Publish(new TestResult_SubscribeTest()
                     {
                         Name = newName
                     });
                 }, new TestLogger(TestContext));
 
-            _queue.Publish(new TestEvent()
+            await _queue.Publish(new TestEvent()
             {
                 Name = baseName
             });
@@ -78,7 +60,7 @@ namespace Application.EventHandlers.Messaging.Tests
 
                 result.GetType().Should().Be<TestResult>();
 
-                _queue.Publish(new TestResult_SubscribeTest_WithFunnel()
+                await _queue.Publish(new TestResult_SubscribeTest_WithFunnel()
                 {
                     Name = result.Name
                 });
@@ -96,7 +78,7 @@ namespace Application.EventHandlers.Messaging.Tests
                     }
                 }, typeof(TestEvent), typeof(TestResult)));
 
-            _queue.Publish(new TestEvent()
+            await _queue.Publish(new TestEvent()
             {
                 Name = baseName
             });
@@ -118,7 +100,7 @@ namespace Application.EventHandlers.Messaging.Tests
                 {
                     result.GetType().Should().Be<TestResult_SubscribeTest_With_Long_Funnel>();
 
-                    _queue.Publish(result);
+                    await _queue.Publish(result);
                 }, logger: new TestLogger(TestContext),
                 new Funnel(async (reader, writer, cancellationToken) =>
                 {
@@ -144,7 +126,7 @@ namespace Application.EventHandlers.Messaging.Tests
                     }
                 }, typeof(TestResult), typeof(TestResult_SubscribeTest_With_Long_Funnel)));
 
-            _queue.Publish(new TestEvent()
+            await _queue.Publish(new TestEvent()
             {
                 Name = baseName
             });
@@ -157,9 +139,39 @@ namespace Application.EventHandlers.Messaging.Tests
         }
 
         [TestMethod()]
-        public void UnSubscribeTest()
+        public async Task UnSubscribeTest()
         {
-            Assert.Fail();
+            const string baseName = "test ";
+            const string newName = nameof(UnSubscribeTest);
+
+            try
+            {
+                async Task AsyncEventHandler(TestEvent result, CancellationToken token)
+                {
+                    result.Name.Should().Be(baseName);
+
+                    result.GetType().Should().Be<TestEvent>();
+
+                    await _queue.Publish(new TestResult_SubscribeTest() { Name = newName });
+                }
+
+                _queue.Subscribe<TestEvent, TestEvent>(AsyncEventHandler, new TestLogger(TestContext));
+
+                _queue.UnSubscribe<TestEvent>(AsyncEventHandler);
+
+                await _queue.Publish(new TestEvent()
+                {
+                    Name = baseName
+                });
+
+                _ = await _queue.ConsumeNext<TestResult_SubscribeTest>(new CancellationTokenSource(1000).Token);
+
+                Assert.Fail();
+            }
+            catch (OperationCanceledException e)
+            {
+                //expected behavior
+            }
         }
 
         private class TestEvent

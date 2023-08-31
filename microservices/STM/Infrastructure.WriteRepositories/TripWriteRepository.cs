@@ -1,6 +1,5 @@
-﻿using Application.CommandServices.ServiceInterfaces.Repositories;
+﻿using Application.CommandServices.Repositories;
 using Domain.Aggregates.Trip;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.WriteRepositories;

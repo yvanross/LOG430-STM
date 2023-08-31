@@ -1,6 +1,6 @@
 ﻿using Domain.Aggregates.Stop;
 
-namespace Application.CommandServices.ServiceInterfaces.Repositories;
+namespace Application.CommandServices.Repositories;
 
 public interface IStopWriteRepository : IWriteRepository<Stop>
 {

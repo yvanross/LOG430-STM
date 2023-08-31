@@ -1,5 +1,6 @@
-﻿using Application.CommandServices.ServiceInterfaces;
-using Application.CommandServices.ServiceInterfaces.Repositories;
+﻿using Application.Commands.Seedwork;
+using Application.CommandServices;
+using Application.CommandServices.Repositories;
 using Application.EventHandlers.AntiCorruption;
 using Contracts;
 using Domain.Aggregates.Trip;
@@ -8,27 +9,25 @@ using Domain.Services.Aggregates;
 using Domain.Services.Utility;
 using Microsoft.Extensions.Logging;
 using STM.ExternalServiceProvider.Proto;
-using System.Linq;
-using System.Runtime.InteropServices;
 using static STM.ExternalServiceProvider.Proto.TripUpdate.Types;
 
-namespace Application.CommandServices.HostedServices.Processors;
+namespace Application.Commands.Handlers;
 
-public class TripUpdateProcessor : IScopedProcessor
+public class UpdateTripsHandler : ICommandHandler<UpdateTrips>
 {
     private readonly IStmClient _stmClient;
     private readonly ITripWriteRepository _tripRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger<TripUpdateProcessor> _logger;
+    private readonly ILogger<UpdateTripsHandler> _logger;
     private readonly TripServices _tripServices;
     private readonly TimeServices _timeServices;
     private readonly IPublisher _publisher;
 
-    public TripUpdateProcessor(
+    public UpdateTripsHandler(
         IStmClient stmClient,
         ITripWriteRepository tripRepository,
         IUnitOfWork unitOfWork,
-        ILogger<TripUpdateProcessor> logger,
+        ILogger<UpdateTripsHandler> logger,
         TripServices tripServices,
         TimeServices timeServices,
         IPublisher publisher)
@@ -42,7 +41,7 @@ public class TripUpdateProcessor : IScopedProcessor
         _publisher = publisher;
     }
 
-    public async Task ProcessUpdates()
+    public async Task Handle(UpdateTrips command, CancellationToken cancellation)
     {
         try
         {

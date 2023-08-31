@@ -1,4 +1,4 @@
-﻿using Application.CommandServices.ServiceInterfaces.Repositories;
+﻿using Application.CommandServices.Repositories;
 using Domain.Events.Interfaces;
 
 namespace Infrastructure.WriteRepositories;

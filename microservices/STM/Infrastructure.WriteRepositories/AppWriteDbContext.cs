@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using Domain.Aggregates.Bus;
+﻿using Domain.Aggregates.Bus;
 using Domain.Aggregates.Ride;
 using Domain.Aggregates.Stop;
 using Domain.Aggregates.Trip;

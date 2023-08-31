@@ -2,5 +2,5 @@
 
 public interface ICommandDispatcher
 {
-    Task Dispatch<TCommand>(TCommand command, CancellationToken cancellation);
+    Task DispatchAsync<TCommand>(TCommand command, CancellationToken cancellation);
 }
