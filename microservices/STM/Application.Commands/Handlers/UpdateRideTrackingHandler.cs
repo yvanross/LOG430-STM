@@ -53,6 +53,10 @@ public class UpdateRideTrackingHandler : ICommandHandler<UpdateRideTracking>
 
             await _unitOfWork.SaveChangesAsync();
         }
+        catch (ArgumentOutOfRangeException e)
+        {
+            _logger.LogError(e, "Error while updating rides, index was out of range, ");
+        }
         catch (Exception e)
         {
             _logger.LogError(e, "Error while updating rides");

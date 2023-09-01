@@ -6,11 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.WriteRepositories;
 
-public class AppWriteDbContext : DbContext
+public sealed class AppWriteDbContext : DbContext
 {
-    public AppWriteDbContext(DbContextOptions<AppWriteDbContext> options) : base(options)
-    {
-    }
+    public AppWriteDbContext(DbContextOptions<AppWriteDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,7 +30,7 @@ public class AppWriteDbContext : DbContext
                 b.Property(e => e.BusId);
                 b.Property(e => e.DepartureReachedTime);
                 b.Property(e => e.ReachedDepartureStop);
-            }); ;
+            });
 
         modelBuilder.Entity<Trip>(
             b =>

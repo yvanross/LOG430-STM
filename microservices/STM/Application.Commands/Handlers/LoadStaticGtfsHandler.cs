@@ -46,6 +46,15 @@ public class LoadStaticGtfsHandler : ICommandHandler<LoadStaticGtfs>
     {
         try
         {
+            if (await _tripWriteRepository.AnyAsync())
+            {
+                await _publisher.Publish(new StaticGtfsDataLoaded());
+
+                return;
+            }
+
+            _transitDataReader.LoadStacks();
+
             var stops = new List<Stop>();
             var trips = new List<Trip>();
 

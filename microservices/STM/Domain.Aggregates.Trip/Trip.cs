@@ -48,6 +48,11 @@ public class Trip : Aggregate<Trip>
         }
     }
 
+    public bool IsDepartureAndDestinationInRightOrder(string departureStopId, string destinationStopId)
+    {
+        return GetIndexOfStop(departureStopId) < GetIndexOfStop(destinationStopId);
+    }
+
     public bool ContainsStop(string stopId)
     {
 
@@ -103,7 +108,7 @@ public class Trip : Aggregate<Trip>
 
     public DateTime GetStopDepartureTime(string id)
     {
-        var departureTime = ScheduledStops.FirstOrDefault(stopSchedule => stopSchedule.Id.Equals(id))?.DepartureTime ??
+        var departureTime = ScheduledStops.FirstOrDefault(stopSchedule => stopSchedule.StopId.Equals(id))?.DepartureTime ??
                             throw new ScheduledStopNotFoundException();
 
         return departureTime;

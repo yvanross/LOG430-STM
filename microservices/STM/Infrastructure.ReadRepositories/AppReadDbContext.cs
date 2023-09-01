@@ -1,5 +1,4 @@
-﻿using Application.QueryServices.ProjectionModels;
-using Application.QueryServices.ServiceInterfaces;
+﻿using Application.QueryServices.ServiceInterfaces;
 using Domain.Aggregates.Ride;
 using Domain.Aggregates.Bus;
 using Domain.Aggregates.Stop;
@@ -8,22 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.ReadRepositories;
 
-public class AppReadDbContext : DbContext, IQueryContext
+public sealed class AppReadDbContext : DbContext, IQueryContext
 {
-    public DbSet<Stop> Stops { get; set; }
-
-    public DbSet<Ride> Rides { get; set; }
-
-    public DbSet<Trip> Trips { get; set; }
-
-    public DbSet<Bus> Buses { get; set; }
-
-    public DbSet<ScheduledStopProjection> ScheduledStopProjections { get; set; }
-
-
-    public AppReadDbContext(DbContextOptions<AppReadDbContext> options) : base(options)
-    {
-    }
+    public AppReadDbContext(DbContextOptions<AppReadDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -51,13 +37,17 @@ public class AppReadDbContext : DbContext, IQueryContext
             b =>
             {
                 b.HasKey(e => e.Id);
-                b.OwnsMany(e => e.ScheduledStops);
+                b.HasMany(e => e.ScheduledStops)
+                    .WithOne()
+                    .HasForeignKey("TripId");
             });
 
-        modelBuilder.Entity<ScheduledStopProjection>(
+        modelBuilder.Entity<ScheduledStop>(
             b =>
             {
-                b.HasKey(e => new {e.TripId, e.StopId});
+                b.HasKey(e => e.Id);
+                b.Property<string>("TripId");
+                b.Property(e => e.StopId);
                 b.Property(e => e.DepartureTime);
             });
 
@@ -74,5 +64,10 @@ public class AppReadDbContext : DbContext, IQueryContext
     public IQueryable<T> GetData<T>() where T : class
     {
         return Set<T>().AsNoTracking();
+    }
+
+    public bool IsInMemory()
+    {
+        return Database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory";
     }
 }

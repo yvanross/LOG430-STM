@@ -1,6 +1,5 @@
 ﻿using Domain.Common.Interfaces;
 using System.Collections.Immutable;
-using Application.QueryServices.ProjectionModels;
 using Application.QueryServices.ServiceInterfaces;
 using Domain.Aggregates.Stop;
 using Domain.Aggregates.Trip;
@@ -28,16 +27,37 @@ public class ApplicationTripServices
         {
             var materializedIds = UniqueKeys(possibleSources, possibleDestinations).ToList();
 
-            var tripIds = await _readTrips
-                .GetData<ScheduledStopProjection>()
-                .Where(projection => materializedIds.Contains(projection.StopId))
-                .Select(projection => projection.TripId)
-                .Distinct()
-                .ToListAsync();
+            List<string> tripIds;
+
+            if (_readTrips.IsInMemory() is false)
+            {
+                tripIds = await _readTrips
+                    .GetData<ScheduledStop>()
+                    .Where(scheduledStop => materializedIds.Contains(scheduledStop.StopId))
+                    .Select(scheduledStop => EF.Property<string>(scheduledStop, "TripId"))
+                    .Distinct()
+                    .ToListAsync();
+            }
+            else
+            {
+                var allTrips = _readTrips
+                    .GetData<Trip>()
+                    //.Include(x => x.ScheduledStops)
+                    .ToList();
+
+                var materializedHashIds = materializedIds.ToHashSet();
+
+                tripIds = allTrips.AsParallel().Where(trip =>
+                        trip.ScheduledStops.Exists(scheduledStop => materializedHashIds.Contains(scheduledStop.StopId)))
+                    .Select(trip => trip.Id)
+                    .Distinct()
+                    .ToList();
+            }
 
             var trips = await _readTrips
                 .GetData<Trip>()
                 .Where(trip => tripIds.Contains(trip.Id))
+                .Include(trip => trip.ScheduledStops)
                 .ToListAsync();
 
             var relevantTrips = trips.Where(trip => trip.IsTimeRelevant(_datetimeProvider)).ToImmutableHashSet();

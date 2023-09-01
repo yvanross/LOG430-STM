@@ -35,9 +35,9 @@ public abstract class WriteRepository<TAggregate> : IWriteRepository<TAggregate>
         return await Aggregates.FindAsync(id) ?? throw new KeyNotFoundException($"Aggregate of type {typeof(TAggregate)} could not be found using id: {id}");
     }
 
-    public async Task<bool> Exists(string id)
+    public async Task<bool> AnyAsync()
     {
-        return await Aggregates.AnyAsync(x => x.Id == id);
+        return await Aggregates.AnyAsync();
     }
 
     public virtual async Task AddAsync(TAggregate aggregate)

@@ -7,4 +7,6 @@ public interface ITransitDataReader : IDisposable
     Stack<IStopWrapper> Stops { get; }
 
     Stack<ITripWrapper> Trips { get; }
+
+    void LoadStacks();
 }

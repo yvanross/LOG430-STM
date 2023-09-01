@@ -10,7 +10,7 @@ public class TransitDataReader : ITransitDataReader
 {
     public Stack<IStopWrapper> Stops { get; } = new();
     public Stack<ITripWrapper> Trips { get; } = new();
-
+    
     private readonly ILogger<TransitDataReader> _logger;
     private readonly GtfsFileFileCache _gtfsFileFileCache;
     private readonly WrapperMediator _wrapperMediator;
@@ -29,9 +29,17 @@ public class TransitDataReader : ITransitDataReader
         _wrapperMediator = wrapperMediator;
         _datetimeProvider = datetimeProvider;
 
+        
+    }
+
+    public void LoadStacks()
+    {
+        _gtfsFileFileCache.LoadFileCache();
+
         FetchStopData();
         FetchTripData();
     }
+
 
     private void FetchStopData()
     {

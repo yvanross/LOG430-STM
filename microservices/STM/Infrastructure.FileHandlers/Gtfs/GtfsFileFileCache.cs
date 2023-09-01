@@ -14,7 +14,10 @@ public class GtfsFileFileCache : IDisposable
     public GtfsFileFileCache(IDataReader dataReader)
     {
         _dataReader = dataReader;
+    }
 
+    public void LoadFileCache()
+    {
         FetchStopTimes();
 
         FetchStringData(DataCategoryEnum.TRIPS);

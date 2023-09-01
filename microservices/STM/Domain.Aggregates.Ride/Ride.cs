@@ -36,13 +36,10 @@ public sealed class Ride : Aggregate<Ride>
         UpdatePreviousStop();
 
         if (_trackingStrategy is null)
-            _trackingStrategy = new AfterDepartureTracking(datetimeProvider, TripBegunTime, DepartureReachedTime);
+            _trackingStrategy = new BeforeDepartureTracking(datetimeProvider, TripBegunTime);
         
-
         if (_trackingStrategy is BeforeDepartureTracking && ReachedDepartureStop)
             _trackingStrategy = new AfterDepartureTracking(datetimeProvider, TripBegunTime, DepartureReachedTime);
-
-        var targetStop = ReachedDepartureStop ? DestinationId : DepartureId;
 
         var message = _trackingStrategy.GetMessage(currentStopIndex, firstStopIndex, targetStopIndex);
 

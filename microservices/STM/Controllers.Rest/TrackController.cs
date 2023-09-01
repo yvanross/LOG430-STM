@@ -24,11 +24,11 @@ namespace Controllers.Rest
 
         [HttpPost]
         [ActionName(nameof(BeginTracking))]
-        public IActionResult BeginTracking([FromBody] TrackBus trackBus)
+        public async Task<AcceptedResult> BeginTracking([FromBody] TrackBus trackBus)
         {
             _logger.LogInformation("TrackBus endpoint reached");
 
-            _commandDispatcher.DispatchAsync(trackBus, CancellationToken.None);
+            await _commandDispatcher.DispatchAsync(trackBus, CancellationToken.None);
 
             return Accepted();
         }

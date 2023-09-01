@@ -8,6 +8,6 @@ public class RideServices
 {
     public Ride CreateRide(string busId, Trip trip, string departureId, string destinationId)
     {
-        return RideFactory.Create(busId, trip, departureId, destinationId);
+        return RideFactory.Create(busId, departureId, destinationId);
     }
 }

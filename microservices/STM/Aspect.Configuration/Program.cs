@@ -25,12 +25,10 @@ using System.Resources;
 using Application.Commands.Handlers;
 using Application.QueryServices;
 using Application.QueryServices.ServiceInterfaces;
-using Infrastructure.Consistency;
 using Microsoft.EntityFrameworkCore.Storage;
 using Application.EventHandlers.Messaging;
 using Application.CommandServices.Repositories;
 using Application.CommandServices;
-using Aspect.Configuration.EventRegistration;
 using Controllers.Jobs;
 
 namespace Aspect.Configuration
@@ -56,7 +54,10 @@ namespace Aspect.Configuration
             RepositoryDbContextOptionConfiguration = (options, builderConfiguration) =>
             {
                 options.UseInMemoryDatabase("InMemory", databaseRoot);
-                //options.UseNpgsql("Server=host.docker.internal;Port=32672;Username=postgres;Password=secret;Database=postgres;");
+                //options.UseNpgsql("Server=localhost;Port=32672;Username=postgres;Password=secret;Database=postgres2;");
+
+                //options.UseNpgsql("Server=host.docker.internal;Port=32672;Username=postgres;Password=secret;Database=postgres2;");
+
                 //options.EnableSensitiveDataLogging();
             };
 
@@ -81,8 +82,6 @@ namespace Aspect.Configuration
             app.UseAuthorization();
             app.MapControllers();
 
-            SubscribeToInternalEvents(app.Services);
-
             app.Run();
         }
 
@@ -103,8 +102,6 @@ namespace Aspect.Configuration
         {
             services.AddScoped(typeof(IInfiniteRetryPolicy<>), typeof(InfiniteRetryPolicy<>));
             services.AddScoped(typeof(IBackOffRetryPolicy<>), typeof(BackOffRetryPolicy<>));
-
-            services.AddScoped<TripEventsRegistration>();
 
             services.AddSingleton(_ => new ResourceManager(typeof(Resources)));
 
@@ -141,8 +138,6 @@ namespace Aspect.Configuration
 
             services.AddSingleton<IConsumer, InMemoryEventQueue>();
             services.AddSingleton<IPublisher, InMemoryEventQueue>();
-
-            services.AddScoped<TripProjection>();
         }
 
         private static void ApplicationSetup(IServiceCollection services)
@@ -160,7 +155,7 @@ namespace Aspect.Configuration
             services.AddHostedService<BusUpdateJob>();
             services.AddHostedService<UpdateTripsJob>();
             services.AddHostedService<LoadStaticGtfsJob>();
-            //services.AddHostedService<RideTrackingJob>();
+            services.AddHostedService<RideTrackingJob>();
 
             services.AddScoped<LoadStaticGtfsHandler>();
             services.AddScoped<UpdateRideTrackingHandler>();
@@ -184,7 +179,7 @@ namespace Aspect.Configuration
 
             services.AddSingleton<TimeServices>();
 
-            ScrutorScanForType(services, typeof(IDomainEventHandler<>), ServiceLifetime.Scoped, "Application.EventHandlers", "Infrastructure.Consistency");
+            ScrutorScanForType(services, typeof(IDomainEventHandler<>), ServiceLifetime.Scoped, "Application.EventHandlers");
         }
 
         private static void ScrutorScanForType(IServiceCollection services, Type type, ServiceLifetime lifetime = ServiceLifetime.Scoped, params string[] assemblyNames)
@@ -196,16 +191,6 @@ namespace Aspect.Configuration
                     .AsImplementedInterfaces()
                     .WithLifetime(lifetime);
             });
-        }
-
-        private static void SubscribeToInternalEvents(IServiceProvider serviceProvider)
-        {
-            var scope = serviceProvider.CreateScope();
-
-            var tripEventsRegistration = scope.ServiceProvider.GetRequiredService<TripEventsRegistration>();
-
-            tripEventsRegistration.SetupTripCreatedEventHandlerAndBatching();
-            tripEventsRegistration.SetupTripScheduledStopUpdatedEventHandlerAndBatching();
         }
     }
 }

@@ -6,7 +6,7 @@ public interface IWriteRepository<T>
 
     Task<T> GetAsync(string id);
 
-    Task<bool> Exists(string id);
+    Task<bool> AnyAsync();
 
     Task AddAsync(T aggregate);
 

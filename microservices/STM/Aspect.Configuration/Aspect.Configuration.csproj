@@ -10,6 +10,10 @@
   <ItemGroup>
     <PackageReference Include="MassTransit" Version="8.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.10" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />
     <PackageReference Include="Npgsql" Version="7.0.4" />
@@ -25,7 +29,6 @@
     <ProjectReference Include="..\Controllers.Jobs\Controllers.Jobs.csproj" />
     <ProjectReference Include="..\Controllers.Rest\Controllers.Rest.csproj" />
     <ProjectReference Include="..\Infrastructure.ApiClients\Infrastructure.ApiClients.csproj" />
-    <ProjectReference Include="..\Infrastructure.Consistency\Infrastructure.Consistency.csproj" />
     <ProjectReference Include="..\Infrastructure.FileHandlers\Infrastructure.FileHandlers.csproj" />
     <ProjectReference Include="..\Infrastructure.ReadRepositories\Infrastructure.ReadRepositories.csproj" />
     <ProjectReference Include="..\Infrastructure.TcpClients\Infrastructure.TcpClients.csproj" />

@@ -4,3 +4,4 @@
 [assembly: InternalsVisibleTo("Infrastructure.ReadRepositories")]
 [assembly: InternalsVisibleTo("Infrastructure.WriteRepositories")]
 [assembly: InternalsVisibleTo("Infrastructure.Consistency")]
+[assembly: InternalsVisibleTo("Application.QueryServices")]

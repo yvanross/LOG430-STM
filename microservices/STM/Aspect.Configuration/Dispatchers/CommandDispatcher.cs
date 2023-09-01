@@ -10,10 +10,6 @@ public class CommandDispatcher : ICommandDispatcher
 
     public async Task DispatchAsync<TCommand>(TCommand command, CancellationToken cancellation)
     {
-       // using var scope = _serviceProvider.CreateScope();
-
-       // var handler = scope.ServiceProvider.GetRequiredService<ICommandHandler<TCommand>>();
-
         var handler = _serviceProvider.GetRequiredService<ICommandHandler<TCommand>>();
 
         await handler.Handle(command, cancellation);

@@ -4,6 +4,7 @@ using Application.QueryServices.ServiceInterfaces;
 using Application.ViewModels;
 using Domain.Aggregates.Bus;
 using Domain.Aggregates.Trip;
+using Domain.Common.Exceptions;
 using Microsoft.Extensions.Logging;
 
 namespace Application.QueryServices;
@@ -25,17 +26,36 @@ public class ApplicationBusServices
         {
             var materializedTrips = trips.Keys.ToList();
 
-            var buses = _busRead.GetData<Bus>().Where(bus => materializedTrips.Contains(bus.TripId));
+            var buses = _busRead.GetData<Bus>().Where(bus => materializedTrips.Contains(bus.TripId)).ToList();
 
-            var rideViewModels = (
-                from bus in buses
-                let tripId = bus.TripId
-                let ride = new RideViewModel(
-                    trips[bus.TripId].FirstMatchingStop(sources).Id,
-                    trips[bus.TripId].LastMatchingStop(destination).Id,
-                    bus.Id)
-                orderby trips[tripId].GetStopDepartureTime(ride.ScheduledDepartureId)
-                select ride).ToList();
+            List<(RideViewModel RideViewModel, string TripId)> viewModels = new ();
+
+            foreach (var bus in buses)
+            {
+                RideViewModel? rideViewModel;
+
+                try
+                {
+                    var firstStopId = trips[bus.TripId].FirstMatchingStop(sources).StopId;
+                    var destinationStopId = trips[bus.TripId].LastMatchingStop(destination).StopId;
+
+                    if(trips[bus.TripId].IsDepartureAndDestinationInRightOrder(firstStopId, destinationStopId) is false)
+                        continue;
+
+                    rideViewModel = new RideViewModel(firstStopId, destinationStopId, bus.Id);
+                }
+                catch (ScheduledStopNotFoundException)
+                {
+                    continue;
+                }
+
+                viewModels.Add((rideViewModel.Value, bus.TripId));
+            }
+
+            var rideViewModels = viewModels
+                .OrderBy(viewModel => trips[viewModel.TripId].GetStopDepartureTime(viewModel.RideViewModel.ScheduledDepartureId))
+                .Select(viewModel => viewModel.RideViewModel)
+                .ToList();
 
             if (rideViewModels.IsEmpty()) throw new NoBusesFoundException();
 
