@@ -76,6 +76,7 @@ public class LoadStaticGtfsHandler : ICommandHandler<LoadStaticGtfs>
 
             await _tripWriteRepository.AddAllAsync(trips.ToList());
 
+            //using bulk inserts so save changes is not needed but it still dispatches the domain events
             await _unitOfWork.SaveChangesAsync();
 
             await _publisher.Publish(new StaticGtfsDataLoaded());

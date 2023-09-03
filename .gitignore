@@ -222,3 +222,5 @@ __pycache__/
 
 # Windows thumbnail cache files
 Thumbs.db
+
+stop_times.txt

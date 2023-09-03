@@ -73,7 +73,6 @@ public class UpdateTripsHandler : ICommandHandler<UpdateTrips>
 
             if (storedTrips.TryGetValue(tripUpdate.Trip.TripId, out var storedValue))
             {
-
                 UpdateScheduledStops(storedValue, stopTimeUpdates);
             }
             else
@@ -104,6 +103,8 @@ public class UpdateTripsHandler : ICommandHandler<UpdateTrips>
             _logger.LogInformation(e, "Scheduled stop not found, creating new scheduled stops");
 
             trip.UpdateScheduledStops(stopTimeUpdates.Select(update => (update.StopId, GetUpdatedStopScheduledTime(update))));
+
+            _tripRepository.Update(trip);
         }
        
     }

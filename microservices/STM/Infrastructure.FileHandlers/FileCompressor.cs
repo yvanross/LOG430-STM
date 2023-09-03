@@ -16,7 +16,7 @@ public class FileCompressor
 
         var byteArray = Encoding.ASCII.GetBytes(singleLine);
 
-        await using var fileStream = new FileStream(pathToDataFolder + "compressed.bin", FileMode.Create);
+        await using var fileStream = new FileStream(pathToDataFolder + "stop_times.bin", FileMode.Create);
 
         await using var zipStream = new GZipStream(fileStream, CompressionMode.Compress, false);
 

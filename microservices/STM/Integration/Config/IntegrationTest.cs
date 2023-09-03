@@ -1,7 +1,6 @@
 ﻿using Application.Commands.Seedwork;
 using Application.EventHandlers.AntiCorruption;
 using Application.Queries.Seedwork;
-using Aspect.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit.Abstractions;
 

@@ -35,7 +35,7 @@ public class UpdateTripsJob : BackgroundService
             {
                 await commandDispatcher.DispatchAsync(new UpdateTrips(), stoppingToken);
 
-                await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
+                await Task.Delay(TimeSpan.FromHours(12), stoppingToken);
             }
         }
         catch (Exception e)

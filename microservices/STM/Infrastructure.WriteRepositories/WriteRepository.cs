@@ -1,31 +1,30 @@
 ﻿using Application.CommandServices;
+using Application.Common.Extensions;
 using Domain.Common.Seedwork.Abstract;
-using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.WriteRepositories;
 
 public abstract class WriteRepository<TAggregate> : IWriteRepository<TAggregate> where TAggregate : Aggregate<TAggregate>, IEquatable<Entity<TAggregate>>
 {
     //use only for bulk insert not saving
-    private readonly AppWriteDbContext _writeDbContext;
-    private readonly ILogger _logger;
+    private protected readonly AppWriteDbContext WriteDbContext;
+    private protected readonly ILogger Logger;
 
     protected DbSet<TAggregate> Aggregates { get; set; }
 
     protected WriteRepository(AppWriteDbContext writeDbContext, ILogger logger)
     {
-        _writeDbContext = writeDbContext;
-        _logger = logger;
+        WriteDbContext = writeDbContext;
+        Logger = logger;
 
         Aggregates = writeDbContext.Set<TAggregate>();
     }
 
     public virtual async Task<IEnumerable<TAggregate>> GetAllAsync(params string[] ids)
     {
-        return await (ids.IsNullOrEmpty() ? 
+        return await (ids.IsEmpty() ? 
             Aggregates.ToListAsync() :
             Aggregates.Where(a => ids.Contains(a.Id)).ToListAsync());
     }
@@ -62,8 +61,8 @@ public abstract class WriteRepository<TAggregate> : IWriteRepository<TAggregate>
 
     public virtual async Task AddAllAsync(IEnumerable<TAggregate> aggregates)
     {
-        if (_writeDbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
-            await _writeDbContext.BulkInsertAsync(aggregates);
+        if (WriteDbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+            await WriteDbContext.BulkInsertAsync(aggregates);
         else
             await Aggregates.AddRangeAsync(aggregates);
     }

@@ -2,6 +2,7 @@
 using Domain.Common.Interfaces;
 using Domain.Common.Seedwork.Abstract;
 using Domain.Events.AggregateEvents.Trip;
+using System.Linq;
 
 namespace Domain.Aggregates.Trip;
 
@@ -126,7 +127,15 @@ public class Trip : Aggregate<Trip>
 
     public void UpdateScheduledStops(IEnumerable<(string stopId, DateTime schedule)> stops)
     {
-        ScheduledStops = stops.Select(x => new ScheduledStop(Guid.NewGuid().ToString(), x.stopId, x.schedule)).ToList();
+        var firstNewStop = stops.First();
+
+        var newStops = ScheduledStops.TakeWhile(scheduledStop => scheduledStop.DepartureTime < firstNewStop.schedule).ToList();
+
+        newStops.AddRange(stops.Select(x => new ScheduledStop(Guid.NewGuid().ToString(), x.stopId, x.schedule)));
+
+        ScheduledStops.Clear();
+
+        ScheduledStops.AddRange(newStops);
 
         RaiseDomainEvent(new TripScheduledStopsUpdated(Id, ScheduledStops.Select(st => st.Id).ToHashSet()));
     }

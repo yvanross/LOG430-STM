@@ -35,6 +35,8 @@ namespace Aspect.Configuration
 {
     public class Program
     {
+        public static bool UseInMemoryDatabase = false;
+
         public static Action<DbContextOptionsBuilder, IConfiguration> RepositoryDbContextOptionConfiguration { get; set; }
 
         public static Action<IServiceCollection, IConfiguration> Configuration { get; set; } = ConfigurationSetup;
@@ -43,23 +45,31 @@ namespace Aspect.Configuration
         public static Action<IServiceCollection> Application { get; set; } = ApplicationSetup;
         public static Action<IServiceCollection> Domain { get; set; } = DomainSetup;
 
+        private static InMemoryDatabaseRoot _databaseRoot = new ();
+
         public static void Main(string[] args)
         {
             Environment.SetEnvironmentVariable("API_KEY", "l7f41468f7c35f4bd39523510d89637523");
 
             var builder = WebApplication.CreateBuilder(args);
 
-            var databaseRoot = new InMemoryDatabaseRoot();
 
-            RepositoryDbContextOptionConfiguration = (options, builderConfiguration) =>
+            RepositoryDbContextOptionConfiguration = UseInMemoryDatabase? 
+                (options, builderConfiguration) =>
+                {
+                    options.UseInMemoryDatabase("InMemory", _databaseRoot);
+                } :
+                (options, builderConfiguration) =>
+                {
+                    options.UseNpgsql("Server=host.docker.internal;Port=32672;Username=postgres;Password=secret;Database=postgres2;");
+
+                };
+
+            builder.Services.AddLogging(builder =>
             {
-                options.UseInMemoryDatabase("InMemory", databaseRoot);
-                //options.UseNpgsql("Server=localhost;Port=32672;Username=postgres;Password=secret;Database=postgres2;");
-
-                //options.UseNpgsql("Server=host.docker.internal;Port=32672;Username=postgres;Password=secret;Database=postgres2;");
-
-                //options.EnableSensitiveDataLogging();
-            };
+                // no need for every ef core commands to pass through the logger
+                builder.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
+            });
 
             // Add services to the container.
             ConfigureServices(builder.Services, builder.Configuration);
@@ -81,6 +91,9 @@ namespace Aspect.Configuration
 
             app.UseAuthorization();
             app.MapControllers();
+
+            if(app.Services.CreateScope().ServiceProvider.GetRequiredService<AppReadDbContext>().Database.IsInMemory() is false) 
+                app.Services.CreateScope().ServiceProvider.GetRequiredService<AppReadDbContext>().Database.Migrate();
 
             app.Run();
         }
@@ -111,6 +124,11 @@ namespace Aspect.Configuration
         private static void PresentationSetup(IServiceCollection services)
         {
             services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(FinderController).Assembly));
+
+            services.AddHostedService<BusUpdateJob>();
+            services.AddHostedService<UpdateTripsJob>();
+            services.AddHostedService<LoadStaticGtfsJob>();
+            services.AddHostedService<RideTrackingJob>();
         }
 
         private static void InfrastructureSetup(IServiceCollection services, IConfiguration configuration)
@@ -149,13 +167,8 @@ namespace Aspect.Configuration
 
             ScrutorScanForType(services, typeof(IMappingTo<,>), assemblyNames: "Application.Mapping");
 
-            services.AddScoped<ICommandDispatcher, CommandDispatcher>();
-            services.AddScoped<IQueryDispatcher, QueryDispatcher>();
-
-            services.AddHostedService<BusUpdateJob>();
-            services.AddHostedService<UpdateTripsJob>();
-            services.AddHostedService<LoadStaticGtfsJob>();
-            services.AddHostedService<RideTrackingJob>();
+            services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
+            services.AddSingleton<IQueryDispatcher, QueryDispatcher>();
 
             services.AddScoped<LoadStaticGtfsHandler>();
             services.AddScoped<UpdateRideTrackingHandler>();
@@ -164,7 +177,10 @@ namespace Aspect.Configuration
 
             services.AddScoped<ApplicationStopService>();
             services.AddScoped<ApplicationBusServices>();
-            services.AddScoped<ApplicationTripServices>();
+
+            _ = UseInMemoryDatabase ?
+                services.AddScoped<IApplicationTripService, ApplicationTripServiceInMemory>() :
+                services.AddScoped<IApplicationTripService, ApplicationTripService>();
         }
 
         private static void DomainSetup(IServiceCollection services)

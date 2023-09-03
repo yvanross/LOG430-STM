@@ -1,5 +1,4 @@
 ﻿using Application.Common.Exceptions;
-using Application.Common.Extensions;
 using Application.QueryServices.ServiceInterfaces;
 using Application.ViewModels;
 using Domain.Aggregates.Bus;
@@ -20,51 +19,83 @@ public class ApplicationBusServices
         _logger = logger;
     }
 
-    public IEnumerable<RideViewModel> GetTimeRelevantRideViewModels(Dictionary<string, Trip> trips, HashSet<string> sources, HashSet<string> destination)
+    public IEnumerable<RideViewModel> GetTimeRelevantRideViewModels(Dictionary<string, Trip> trips, HashSet<string> sources, HashSet<string> destinations)
     {
         try
         {
-            var materializedTrips = trips.Keys.ToList();
+            var relevantBuses = GetRelevantBuses(trips.Keys.ToHashSet());
 
-            var buses = _busRead.GetData<Bus>().Where(bus => materializedTrips.Contains(bus.TripId)).ToList();
+            var viewModels = BuildRideViewModels(relevantBuses, trips, sources, destinations);
 
-            List<(RideViewModel RideViewModel, string TripId)> viewModels = new ();
-
-            foreach (var bus in buses)
-            {
-                RideViewModel? rideViewModel;
-
-                try
-                {
-                    var firstStopId = trips[bus.TripId].FirstMatchingStop(sources).StopId;
-                    var destinationStopId = trips[bus.TripId].LastMatchingStop(destination).StopId;
-
-                    if(trips[bus.TripId].IsDepartureAndDestinationInRightOrder(firstStopId, destinationStopId) is false)
-                        continue;
-
-                    rideViewModel = new RideViewModel(firstStopId, destinationStopId, bus.Id);
-                }
-                catch (ScheduledStopNotFoundException)
-                {
-                    continue;
-                }
-
-                viewModels.Add((rideViewModel.Value, bus.TripId));
-            }
-
-            var rideViewModels = viewModels
-                .OrderBy(viewModel => trips[viewModel.TripId].GetStopDepartureTime(viewModel.RideViewModel.ScheduledDepartureId))
-                .Select(viewModel => viewModel.RideViewModel)
-                .ToList();
-
-            if (rideViewModels.IsEmpty()) throw new NoBusesFoundException();
-
-            return rideViewModels;
+            return SortAndReturnViewModels(viewModels, trips);
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Error while getting time relevant ride view models");
             throw;
         }
+    }
+
+    private List<Bus> GetRelevantBuses(HashSet<string> materializedTrips)
+    {
+        return _busRead.GetData<Bus>().Where(bus => materializedTrips.Contains(bus.TripId)).ToList();
+    }
+
+    private List<(RideViewModel RideViewModel, string TripId)> BuildRideViewModels(List<Bus> buses, Dictionary<string, Trip> trips, HashSet<string> sources, HashSet<string> destinations)
+    {
+        var viewModels = new List<(RideViewModel RideViewModel, string TripId)>();
+
+        foreach (var bus in buses)
+        {
+            if (TryBuildRideViewModel(bus, trips, sources, destinations, out var rideViewModel, out var tripId))
+            {
+                viewModels.Add((rideViewModel, tripId));
+            }
+        }
+
+        return viewModels;
+    }
+
+    private bool TryBuildRideViewModel(Bus bus, Dictionary<string, Trip> trips, HashSet<string> sources, HashSet<string> destinations, out RideViewModel rideViewModel, out string tripId)
+    {
+        rideViewModel = default;
+        tripId = default;
+
+        try
+        {
+            var firstStopId = trips[bus.TripId].FirstMatchingStop(sources).StopId;
+            var destinationStopId = trips[bus.TripId].LastMatchingStop(destinations).StopId;
+
+            if (!trips[bus.TripId].IsDepartureAndDestinationInRightOrder(firstStopId, destinationStopId)
+                && bus.CurrentStopIndex < trips[bus.TripId].GetIndexOfStop(firstStopId))
+            {
+                return false;
+            }
+
+            rideViewModel = new RideViewModel(firstStopId, destinationStopId, bus.Id);
+
+            tripId = bus.TripId;
+
+            return true;
+        }
+        catch (ScheduledStopNotFoundException)
+        {
+            return false;
+        }
+    }
+
+    private IEnumerable<RideViewModel> SortAndReturnViewModels(List<(RideViewModel RideViewModel, string TripId)> viewModels, Dictionary<string, Trip> trips)
+    {
+        var sortedViewModels = viewModels
+            .OrderBy(viewModel => trips[viewModel.TripId].GetStopDepartureTime(viewModel.RideViewModel.ScheduledDepartureId))
+            .Select(viewModel => viewModel.RideViewModel)
+            .ToList();
+
+        if (!sortedViewModels.Any())
+        {
+            throw new NoBusesFoundException();
+        }
+
+        return sortedViewModels;
     }
 }

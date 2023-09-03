@@ -1,5 +1,7 @@
 ﻿using Application.Commands;
 using Application.Commands.Seedwork;
+using Application.EventHandlers.AntiCorruption;
+using Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -24,6 +26,10 @@ public class RideTrackingJob : BackgroundService
             using var scope = _serviceProvider.CreateScope();
 
             var commandDispatcher = scope.ServiceProvider.GetRequiredService<ICommandDispatcher>();
+
+            var consumer = scope.ServiceProvider.GetRequiredService<IConsumer>();
+
+            await consumer.ConsumeNext<StaticGtfsDataLoaded>(stoppingToken);
 
             while (!stoppingToken.IsCancellationRequested)
             {
