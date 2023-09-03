@@ -2,7 +2,6 @@
 using Domain.Common.Interfaces;
 using Domain.Common.Seedwork.Abstract;
 using Domain.Events.AggregateEvents.Trip;
-using System.Linq;
 
 namespace Domain.Aggregates.Trip;
 

@@ -31,7 +31,6 @@
     <ProjectReference Include="..\Infrastructure.ApiClients\Infrastructure.ApiClients.csproj" />
     <ProjectReference Include="..\Infrastructure.FileHandlers\Infrastructure.FileHandlers.csproj" />
     <ProjectReference Include="..\Infrastructure.ReadRepositories\Infrastructure.ReadRepositories.csproj" />
-    <ProjectReference Include="..\Infrastructure.TcpClients\Infrastructure.TcpClients.csproj" />
     <ProjectReference Include="..\Infrastructure.WriteRepositories\Infrastructure.WriteRepositories.csproj" />
   </ItemGroup>
 

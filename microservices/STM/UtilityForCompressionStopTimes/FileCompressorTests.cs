@@ -1,12 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Infrastructure.FileHandlers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Infrastructure.FileHandlers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Infrastructure.FileHandlers.Tests
+namespace UtilityForCompressionStopTimes
 {
     [TestClass()]
     public class FileCompressorTests

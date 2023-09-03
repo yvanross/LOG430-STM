@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application.Common\Application.Common.csproj" />
-    <ProjectReference Include="..\Application.EventHandlers\Application.EventHandlers.csproj" />
     <ProjectReference Include="..\Application.ViewModels\Application.ViewModels.csproj" />
     <ProjectReference Include="..\Domain.Services\Domain.Services.csproj" />
   </ItemGroup>
