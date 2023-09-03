@@ -47,8 +47,6 @@ Equipe: 0x
 - [CU05 - Veux informer l'administrateur sur les changements de statut des microservices.](#cu05){#da-cu05}
 - [CU06 - Veux pouvoir récupérer le temps de trajets d'un service externe.](#cu06){#da-cu06}
 - [CU09 - Veux pouvoir récupérer le temps de trajet de STM](#cu09){#da-cu09}
-
-- [CU02 - Mettre le chaos dans les microservices en termes de disponibilité.](#cu02){#da-cu02}
 - [CU011 - Mettre le chaos dans les microservices en termes de disponibilité.](#cu11){#da-cu11}
 
 # Attributs de qualité

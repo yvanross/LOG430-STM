@@ -4,9 +4,9 @@
 
 # Objectif des laboratoires
 
-L'objectif principal des 4 laboratoires du cours de LOG430 est de vous permettre de maitriser les concepts d'analsyses et de conception d'une architecture logicielle d'un système complexe. Cette architecture sera développé sur la base d'une architecture de microservices. Le système fourni offre un service permettant de faire la comparaison de temps de trajet à partir de données sur les autobus de la STM et d'un service externe fournissant des données sur les automobiles. 
+L'objectif principal des 3 laboratoires du cours de LOG430 est de vous permettre de maitriser les concepts d'analsyses et de conception d'une architecture logicielle d'un système complexe. Cette architecture sera développé sur la base d'une architecture de microservices. Le système fourni offre un service permettant de faire la comparaison de temps de trajet à partir de données sur les autobus de la STM et d'un service externe fournissant des données sur les automobiles. 
 
-# 4 laboratoires (30% de la note finale, 40% implémentation/60% documentation)
+# 3 laboratoires (30% de la note finale, 40% implémentation/60% documentation)
 
 ## Laboratoire #1 (3 semaines, 25%)
   - Intégration des mécaniques de télémétrie
@@ -34,7 +34,7 @@ Vous êtes nouvellement embauché par l'organisation LOG430STM pour améliorer l
 - Responsable d'aider les étudiants à maîtriser les concepts d'architecture
 - Veux un rapport détaillé de l'architecture et des interfaces
 
-## Équipe (3 Étudiants)
+## Équipe (4 Étudiants)
 - L'équipe doit conserver une traçabilité de quel étudiant est responsable de quelles tâches. Ceci correspond à une vue d'allocation à insérer dans votre rapport.
 - L'équipe doit connaître en tout temps l'état d'une tâche assignée à un étudiant
 - Le chargé de cours crée les équipes de laboratoires.
@@ -82,11 +82,11 @@ Les rapports devront être remis dans Moodle.
 | --------: |:-------------------|------|
 |         3 | git tag laboratoire-1 | Remise dans Moodle|
 |       7.5 | git tag laboratoire-2 | Remise dans Moodle |
-|        12 | git tag laboratoire-4 | Remise dans Moodle |
+|        12 | git tag laboratoire-3 | Remise dans Moodle |
 
 * Il y aura des directives supplémentaires pour la remise de la documentation de chaque itération.
 ### Laboratoire #1
-Assurez-vous que votre rapport est situé dans le répertoire laboratoire1, qu'il est au format PDF et se nomme [laboratoire1-rapport.pdf](laboratoire1/laboratoire1.pdf)
+Assurez-vous que votre rapport est situé dans le répertoire laboratoire1, qu'il est au format PDF et se nomme [laboratoire1-rapport.pdf](laboratoire1/laboratoire1.pdf). Assurez vous de remettre votre rapport sur Moodle pour la correction.
 
 ### Laboratoire #2,3 
 Vous devez utiliser le document suivant pour la documentation de votre architecture: [DocumentationArchitecture.md](doc/documentationArchitecture.md)
@@ -95,6 +95,8 @@ Utiliser la commande suivante pour générer le PDF de la documentation avec l'o
 ```bash
 pandoc documentationArchitecture.md vues-module.md footer.md vues-cetc.md footer.md vues-allocation.md footer.md oa1.md footer.md  oa2.md footer.md cu01.md footer.md cu02.md footer.md cu03.md footer.md cu04.md footer.md cu05.md footer.md cu06.md footer.md cu07.md footer.md cu08.md footer.md cu09.md footer.md cu10.md footer.md AQ-disponibilite.md footer.md AQ-modifiabilite.md footer.md AQ-performance.md footer.md AQ-securite.md footer.md AQ-testabilite.md footer.md AQ-usabilite.md footer.md AQ-interoperabilite.md evaluationParLesPairs.md footer.md -o documentationArchitecture.pdf && open documentationArchitecture.pdf
 ```
+
+Assurez vous de remettre votre rapport sur Moodle pour la correction.
 
 ## Relation entre les éléments architecturale et les exigences de qualité
 

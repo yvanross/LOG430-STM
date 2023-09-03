@@ -36,9 +36,8 @@ Equipe: 0x
 >TODO: insérer votre introduction
 
 # Cas d'utilisations
-- [CU02 - Mettre le chaos dans les microservices en termes de disponibilité.](#cu02){#da-cu02}
-
 - [CU01 - Veux comparer les temps de trajet.](#cu01){#da-cu01}
+- [CU02 - Mettre le chaos dans les microservices en termes de disponibilité.](#cu02){#da-cu02}
 - [CU05 - Veux informer l'administrateur sur les changements de statut des microservices.](#cu05){#da-cu05}
 - [CU06 - Veux pouvoir récupérer le temps de trajets d'un service externe.](#cu06){#da-cu06}
 - [CU09 - Veux pouvoir récupérer le temps de trajet de STM](#cu09){#da-cu09}
