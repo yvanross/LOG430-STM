@@ -8,12 +8,12 @@ namespace Application.Commands.Handlers;
 
 public class TrackBusHandler : ICommandHandler<TrackBus>
 {
-    private readonly ITripWriteRepository _tripRepository;
-    private readonly IRideWriteRepository _rideRepository;
     private readonly IBusWriteRepository _busRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly RideServices _domainRideServices;
     private readonly ILogger<TrackBusHandler> _logger;
+    private readonly IRideWriteRepository _rideRepository;
+    private readonly ITripWriteRepository _tripRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public TrackBusHandler(
         ITripWriteRepository tripRepository,
@@ -39,9 +39,13 @@ public class TrackBusHandler : ICommandHandler<TrackBus>
 
             var trip = await _tripRepository.GetAsync(bus.TripId);
 
-            var ride = _domainRideServices.CreateRide(command.BusId, trip, command.ScheduledDepartureId, command.ScheduledDestinationId);
+            var ride = _domainRideServices.CreateRide(
+                bus,
+                trip,
+                command.ScheduledDepartureId,
+                command.ScheduledDestinationId);
 
-            await _rideRepository.AddAsync(ride);
+            await _rideRepository.AddOrUpdateAsync(ride);
 
             await _unitOfWork.SaveChangesAsync();
         }
@@ -57,7 +61,8 @@ public class TrackBusHandler : ICommandHandler<TrackBus>
         }
         catch (Exception e)
         {
-            _logger.LogError($"An unknown error occurred while tracking bus with ID {command.BusId}. Exception: {e.Message}");
+            _logger.LogError(
+                $"An unknown error occurred while tracking bus with ID {command.BusId}. Exception: {e.Message}");
 
             throw;
         }

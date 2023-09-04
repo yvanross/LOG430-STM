@@ -94,6 +94,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Controllers.Jobs", "Control
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtilityForCompressionStopTimes", "UtilityForCompressionStopTimes\UtilityForCompressionStopTimes.csproj", "{7715805B-84C8-45CD-B394-01B5D388D6BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Events", "Infrastructure.Events\Infrastructure.Events.csproj", "{4F78DD6E-A710-4344-BE24-ACEAD581FE8D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -224,6 +226,10 @@ Global
 		{7715805B-84C8-45CD-B394-01B5D388D6BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7715805B-84C8-45CD-B394-01B5D388D6BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7715805B-84C8-45CD-B394-01B5D388D6BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F78DD6E-A710-4344-BE24-ACEAD581FE8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F78DD6E-A710-4344-BE24-ACEAD581FE8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F78DD6E-A710-4344-BE24-ACEAD581FE8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F78DD6E-A710-4344-BE24-ACEAD581FE8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -269,6 +275,7 @@ Global
 		{5C61AD7B-C5C5-4B58-9203-4A24F000B84C} = {0581B46B-2FA3-4D47-B40C-6DC103CBD851}
 		{A1A79557-53AA-4286-B390-D52AC14C7245} = {8217AF0B-A413-47BC-ADE6-D976357D394A}
 		{7715805B-84C8-45CD-B394-01B5D388D6BC} = {0E3D247D-1F90-4834-B818-6F42C1860B09}
+		{4F78DD6E-A710-4344-BE24-ACEAD581FE8D} = {DD04F1B9-DF82-464D-AC39-826BC49B974B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5927D8F1-93E8-4DC8-B237-AB98E004B6A4}

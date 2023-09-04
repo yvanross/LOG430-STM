@@ -56,17 +56,21 @@ namespace Infrastructure.ReadRepositories.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("DepartureReachedTime")
+                    b.Property<DateTime?>("DepartureReachedTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("DestinationId")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PreviousStopId")
+                    b.Property<string>("FirstRecordedStopId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("ReachedDepartureStop")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("TrackingComplete")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime>("TripBegunTime")

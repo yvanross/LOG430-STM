@@ -8,10 +8,10 @@ namespace Application.Queries.Handlers;
 
 public class GetEarliestBusHandler : IQueryHandler<GetEarliestBus, RideViewModel>
 {
-    private readonly ApplicationStopService _stopServices;
-    private readonly IApplicationTripService _tripService;
     private readonly ApplicationBusServices _busServices;
     private readonly ILogger<GetEarliestBusHandler> _logger;
+    private readonly ApplicationStopService _stopServices;
+    private readonly IApplicationTripService _tripService;
 
     public GetEarliestBusHandler(
         ApplicationStopService stopServices,
@@ -33,7 +33,9 @@ public class GetEarliestBusHandler : IQueryHandler<GetEarliestBus, RideViewModel
 
             var destinationStops = await _stopServices.GetClosestStops(query.To);
 
-            var trips = await _tripService.TimeRelevantTripsContainingSourceAndDestination(sourceStops, destinationStops);
+            var trips = await _tripService.TimeRelevantTripsContainingSourceAndDestination(
+                sourceStops,
+                destinationStops);
 
             var relevantBuses = _busServices.GetTimeRelevantRideViewModels(
                 trips.ToDictionary(trip => trip.Id),
@@ -48,6 +50,5 @@ public class GetEarliestBusHandler : IQueryHandler<GetEarliestBus, RideViewModel
 
             throw;
         }
-       
     }
 }

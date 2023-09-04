@@ -12,8 +12,6 @@ namespace Integration.Config;
 
 public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private readonly ITestOutputHelper _outputHelper;
-
     private readonly PostgreSqlContainer _container = new PostgreSqlBuilder()
         .WithImage("postgres:latest")
         .WithDatabase("stm")
@@ -21,35 +19,11 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
         .WithPassword("postgres")
         .Build();
 
+    private readonly ITestOutputHelper _outputHelper;
+
     public IntegrationWebApplicationFactory(ITestOutputHelper outputHelper)
     {
         _outputHelper = outputHelper;
-    }
-
-    protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
-        builder
-        .ConfigureAppConfiguration((_, config) =>
-        {
-            var appSettingsPath = "/app/appsettings.json";
-
-            config.AddJsonFile(appSettingsPath, optional: true, reloadOnChange: true);
-        })
-        .ConfigureServices((hostingContext, services) =>
-        {
-            Program.RepositoryDbContextOptionConfiguration = (options, _) =>
-            {
-                options.UseNpgsql(_container.GetConnectionString());
-            };
-
-            Program.ConfigureServices(services, hostingContext.Configuration);
-
-            services.AddSingleton<ITestOutputHelper>(_outputHelper);
-        })
-        .ConfigureLogging(loggingBuilder =>
-        {
-            loggingBuilder.Services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
-        });
     }
 
     public Task InitializeAsync()
@@ -61,18 +35,45 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
     {
         return _container.StopAsync();
     }
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder
+            .ConfigureAppConfiguration((_, config) =>
+            {
+                var appSettingsPath = "/app/appsettings.json";
+
+                config.AddJsonFile(appSettingsPath, true, true);
+            })
+            .ConfigureServices((hostingContext, services) =>
+            {
+                Program.RepositoryDbContextOptionConfiguration = (options, _) =>
+                {
+                    options.UseNpgsql(_container.GetConnectionString());
+                };
+
+                Program.ConfigureServices(services, hostingContext.Configuration);
+
+                services.AddSingleton(_outputHelper);
+            })
+            .ConfigureLogging(loggingBuilder =>
+            {
+                loggingBuilder.Services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
+            });
+    }
 }
 
 public class Logger<T> : ILogger<T>
 {
-    private ITestOutputHelper _outputHelper;
+    private readonly ITestOutputHelper _outputHelper;
 
     public Logger(ITestOutputHelper outputHelper)
     {
         _outputHelper = outputHelper;
     }
 
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+        Func<TState, Exception?, string> formatter)
     {
         _outputHelper.WriteLine(formatter(state, exception));
     }

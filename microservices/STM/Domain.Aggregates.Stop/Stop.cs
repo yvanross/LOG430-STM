@@ -5,9 +5,7 @@ namespace Domain.Aggregates.Stop;
 
 public class Stop : Aggregate<Stop>
 {
-    public Position Position { get; internal set; }
-
-    // Add a private parameterless constructor
+    //for EF
     private Stop() { }
 
     public Stop(string id, double latitude, double longitude)
@@ -15,4 +13,6 @@ public class Stop : Aggregate<Stop>
         Id = id;
         Position = new Position(latitude, longitude);
     }
+
+    public Position Position { get; internal set; }
 }

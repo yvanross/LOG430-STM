@@ -5,5 +5,4 @@ public interface IHasDomainEvents
     IEnumerable<IDomainEvent> DomainEvents { get; }
 
     void ClearDomainEvents();
-
 }

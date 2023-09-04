@@ -4,6 +4,11 @@ public class GtfsInfo : IDisposable
 {
     public readonly Dictionary<string, string> Info = new();
 
+    public void Dispose()
+    {
+        Info.Clear();
+    }
+
     public string GetValue(string tag)
     {
         Info.TryGetValue(tag, out var value);
@@ -12,10 +17,5 @@ public class GtfsInfo : IDisposable
             throw new ArgumentException($"Tag {tag} not found in GTFS info");
 
         return value;
-    }
-
-    public void Dispose()
-    {
-        Info.Clear();
     }
 }

@@ -7,59 +7,61 @@ namespace Domain.Aggregates.Ride;
 
 public sealed class Ride : Aggregate<Ride>
 {
+    private TrackingStrategy? _trackingStrategy;
+
+    public Ride(string id, string busId, string firstRecordedStopId, string departureId, string destinationId)
+    {
+        Id = id;
+        BusId = busId;
+        FirstRecordedStopId = firstRecordedStopId;
+        DepartureId = departureId;
+        DestinationId = destinationId;
+    }
+
     public string BusId { get; set; }
 
     public string DepartureId { get; internal set; }
 
     public string DestinationId { get; internal set; }
 
-    public string? PreviousStopId { get; internal set; }
+    public string FirstRecordedStopId { get; internal set; }
 
     public bool ReachedDepartureStop { get; internal set; }
 
+    public bool TrackingComplete { get; internal set; }
+
     public DateTime TripBegunTime { get; internal set; }
 
-    public DateTime DepartureReachedTime { get; internal set; }
+    public DateTime? DepartureReachedTime { get; internal set; }
 
-    private TrackingStrategy? _trackingStrategy;
-
-    public Ride(string id, string busId, string departureId, string destinationId)
+    public void UpdateRide(int firstRecordedStopIndex,
+        int currentStopIndex,
+        int firstStopIndex,
+        int targetStopIndex,
+        IDatetimeProvider datetimeProvider)
     {
-        Id = id;
-        BusId = busId;
-        DepartureId = departureId;
-        DestinationId = destinationId;
-    }
+        if(TrackingComplete) throw new InvalidOperationException("Tracking is already complete");
 
-    public void UpdateRide(string previousStopId, int currentStopIndex, int firstStopIndex, int targetStopIndex, IDatetimeProvider datetimeProvider)
-    {
-        UpdatePreviousStop();
+        InvalidateState(currentStopIndex, firstRecordedStopIndex, firstStopIndex, targetStopIndex, datetimeProvider);
 
-        if (_trackingStrategy is null)
-            _trackingStrategy = new BeforeDepartureTracking(datetimeProvider, TripBegunTime);
-        
-        if (_trackingStrategy is BeforeDepartureTracking && ReachedDepartureStop)
-            _trackingStrategy = new AfterDepartureTracking(datetimeProvider, TripBegunTime, DepartureReachedTime);
+        var message = _trackingStrategy!.GetMessage();
 
-        var message = _trackingStrategy.GetMessage(currentStopIndex, firstStopIndex, targetStopIndex);
+        TrackingComplete = currentStopIndex >= targetStopIndex;
 
-        var trackingCompleted = currentStopIndex >= targetStopIndex;
-
-        var trackingUpdatedEvent = new BusTrackingUpdated(message, trackingCompleted, _trackingStrategy.GetDuration());
+        var trackingUpdatedEvent = new BusTrackingUpdated(message, TrackingComplete, _trackingStrategy.GetDuration());
 
         RaiseDomainEvent(trackingUpdatedEvent);
+    }
 
-        void UpdatePreviousStop()
+    private void InvalidateState(int currentStopIndex, int firstRecordedStopIndex, int firstStopIndex, int targetStopIndex, IDatetimeProvider datetimeProvider)
+    {
+        _trackingStrategy ??= new BeforeDepartureTracking(datetimeProvider, TripBegunTime, currentStopIndex, firstRecordedStopIndex, firstStopIndex);
+
+        if (_trackingStrategy is BeforeDepartureTracking && currentStopIndex >= targetStopIndex)
         {
-            if (PreviousStopId?.Equals(previousStopId) is false)
-            {
-                PreviousStopId = previousStopId;
+            DepartureReachedTime ??= datetimeProvider.GetCurrentTime();
 
-                if (PreviousStopId.Equals(DepartureId))
-                {
-                    ReachedDepartureStop = true;
-                }
-            }
+            _trackingStrategy = new AfterDepartureTracking(datetimeProvider, TripBegunTime, DepartureReachedTime.Value, currentStopIndex, firstStopIndex, targetStopIndex);
         }
     }
 }

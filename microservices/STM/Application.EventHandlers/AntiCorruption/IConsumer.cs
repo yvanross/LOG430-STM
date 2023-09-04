@@ -7,6 +7,10 @@ public interface IConsumer
 {
     Task<TMessage> ConsumeNext<TMessage>(CancellationToken token = default) where TMessage : class;
 
+    void Subscribe<TEvent>(
+        Func<TEvent, CancellationToken, Task> asyncEventHandler,
+        ILogger logger) where TEvent : class;
+
     void Subscribe<TEvent, TResult>(
         Func<TResult, CancellationToken, Task> asyncEventHandler,
         ILogger logger,

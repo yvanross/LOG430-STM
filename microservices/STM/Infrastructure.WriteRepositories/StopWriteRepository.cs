@@ -6,7 +6,8 @@ namespace Infrastructure.WriteRepositories;
 
 public class StopWriteRepository : WriteRepository<Stop>, IStopWriteRepository
 {
-    public StopWriteRepository(AppWriteDbContext writeDbContext, ILogger<StopWriteRepository> logger) : base(writeDbContext, logger)
+    public StopWriteRepository(AppWriteDbContext writeDbContext, ILogger<StopWriteRepository> logger) : base(
+        writeDbContext, logger)
     {
     }
 }

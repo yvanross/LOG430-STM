@@ -4,16 +4,16 @@ namespace Domain.Aggregates.Trip;
 
 public class ScheduledStop : Entity<ScheduledStop>
 {
-    public string StopId { get; internal set; }
-
-    public DateTime DepartureTime { get; internal set; }
-
     public ScheduledStop(string id, string stopId, DateTime departureTime)
     {
         Id = id;
         StopId = stopId;
         DepartureTime = departureTime;
     }
+
+    public string StopId { get; internal set; }
+
+    public DateTime DepartureTime { get; internal set; }
 
     internal bool UpdateDepartureTime(DateTime departureTime)
     {

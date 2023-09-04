@@ -3,6 +3,7 @@ using Application.CommandServices;
 using Application.CommandServices.Repositories;
 using Application.EventHandlers.AntiCorruption;
 using Contracts;
+using Domain.Common.Interfaces;
 using Domain.Services.Aggregates;
 using Microsoft.Extensions.Logging;
 
@@ -10,12 +11,13 @@ namespace Application.Commands.Handlers;
 
 public class UpdateBusesHandler : ICommandHandler<UpdateBuses>
 {
-    private readonly IStmClient _stmClient;
     private readonly IBusWriteRepository _busRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger<UpdateBusesHandler> _logger;
     private readonly BusServices _busServices;
+    private readonly ILogger<UpdateBusesHandler> _logger;
     private readonly IPublisher _publisher;
+    private readonly IDatetimeProvider _datetimeProvider;
+    private readonly IStmClient _stmClient;
+    private readonly IUnitOfWork _unitOfWork;
 
     public UpdateBusesHandler(
         IStmClient stmClient,
@@ -23,7 +25,8 @@ public class UpdateBusesHandler : ICommandHandler<UpdateBuses>
         IUnitOfWork unitOfWork,
         ILogger<UpdateBusesHandler> logger,
         BusServices busServices,
-        IPublisher publisher)
+        IPublisher publisher,
+        IDatetimeProvider datetimeProvider)
     {
         _stmClient = stmClient;
         _busRepository = busRepository;
@@ -31,6 +34,7 @@ public class UpdateBusesHandler : ICommandHandler<UpdateBuses>
         _logger = logger;
         _busServices = busServices;
         _publisher = publisher;
+        _datetimeProvider = datetimeProvider;
     }
 
     public async Task Handle(UpdateBuses command, CancellationToken cancellation)
@@ -47,12 +51,12 @@ public class UpdateBusesHandler : ICommandHandler<UpdateBuses>
                     feedPosition.Trip.TripId,
                     Convert.ToInt32(feedPosition.CurrentStopSequence));
 
-                await _busRepository.AddAsync(bus);
+                await _busRepository.AddOrUpdateAsync(bus);
             }
 
             await _unitOfWork.SaveChangesAsync();
 
-            await _publisher.Publish(new BusPositionsUpdated());
+            await _publisher.Publish(new BusPositionsUpdated(Guid.NewGuid(), _datetimeProvider.GetCurrentTime()));
         }
         catch (Exception e)
         {

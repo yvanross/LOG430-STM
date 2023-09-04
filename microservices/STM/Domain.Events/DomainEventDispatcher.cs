@@ -1,13 +1,13 @@
-﻿using Domain.Events.Interfaces;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Reflection;
+using Domain.Events.Interfaces;
 
 namespace Domain.Events;
 
 public sealed class DomainEventDispatcher : IDomainEventDispatcher
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly ConcurrentDictionary<Type, MethodInfo> _handlerMethods = new();
+    private readonly IServiceProvider _serviceProvider;
 
     public DomainEventDispatcher(IServiceProvider serviceProvider)
     {
@@ -27,11 +27,15 @@ public sealed class DomainEventDispatcher : IDomainEventDispatcher
     {
         var handler = _serviceProvider.GetService(
             (handleMethod ??
-             throw new InvalidOperationException($"No handler method found for the domain event type {domainEvent.GetType().Name}."))
+             throw new InvalidOperationException(
+                 $"No handler method found for the domain event type {domainEvent.GetType().Name}."))
             .DeclaringType ??
-            throw new InvalidOperationException($"Declaring type for the handle method not found for the domain event type {domainEvent.GetType().Name}."));
+            throw new InvalidOperationException(
+                $"Declaring type for the handle method not found for the domain event type {domainEvent.GetType().Name}."));
 
-        await ((Task)handleMethod.Invoke(handler ?? throw new InvalidOperationException($"Handler not found for the domain event type {domainEvent.GetType().Name}."), new object[] { domainEvent })!)!;
+        if (handler == null) return;
+
+        await ((Task)handleMethod.Invoke(handler, new object[] { domainEvent })!)!;
     }
 
 
@@ -44,7 +48,8 @@ public sealed class DomainEventDispatcher : IDomainEventDispatcher
         var handlerMethods = handlerType.GetMethods().Where(m => m.Name == "HandleAsync").ToList();
 
         if (handlerMethods.Count != 1)
-            throw new InvalidOperationException($"Expected exactly one HandleAsync method on {handlerType.Name}, but found {handlerMethods.Count}.");
+            throw new InvalidOperationException(
+                $"Expected exactly one HandleAsync method on {handlerType.Name}, but found {handlerMethods.Count}.");
 
         handleMethod = handlerMethods.Single();
 

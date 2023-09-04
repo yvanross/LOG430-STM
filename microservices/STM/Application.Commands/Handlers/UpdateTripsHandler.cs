@@ -1,8 +1,6 @@
 ﻿using Application.Commands.Seedwork;
 using Application.CommandServices;
 using Application.CommandServices.Repositories;
-using Application.EventHandlers.AntiCorruption;
-using Contracts;
 using Domain.Aggregates.Trip;
 using Domain.Common.Exceptions;
 using Domain.Services.Aggregates;
@@ -15,13 +13,12 @@ namespace Application.Commands.Handlers;
 
 public class UpdateTripsHandler : ICommandHandler<UpdateTrips>
 {
-    private readonly IStmClient _stmClient;
-    private readonly ITripWriteRepository _tripRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly ILogger<UpdateTripsHandler> _logger;
-    private readonly TripServices _tripServices;
+    private readonly IStmClient _stmClient;
     private readonly TimeServices _timeServices;
-    private readonly IPublisher _publisher;
+    private readonly ITripWriteRepository _tripRepository;
+    private readonly TripServices _tripServices;
+    private readonly IUnitOfWork _unitOfWork;
 
     public UpdateTripsHandler(
         IStmClient stmClient,
@@ -29,8 +26,7 @@ public class UpdateTripsHandler : ICommandHandler<UpdateTrips>
         IUnitOfWork unitOfWork,
         ILogger<UpdateTripsHandler> logger,
         TripServices tripServices,
-        TimeServices timeServices,
-        IPublisher publisher)
+        TimeServices timeServices)
     {
         _stmClient = stmClient;
         _tripRepository = tripRepository;
@@ -38,7 +34,6 @@ public class UpdateTripsHandler : ICommandHandler<UpdateTrips>
         _logger = logger;
         _tripServices = tripServices;
         _timeServices = timeServices;
-        _publisher = publisher;
     }
 
     public async Task Handle(UpdateTrips command, CancellationToken cancellation)
@@ -50,8 +45,6 @@ public class UpdateTripsHandler : ICommandHandler<UpdateTrips>
             await ProcessTripUpdates(tripUpdates);
 
             await _unitOfWork.SaveChangesAsync();
-
-            await _publisher.Publish(new StmTripModificationApplied());
         }
         catch (Exception e)
         {
@@ -81,7 +74,7 @@ public class UpdateTripsHandler : ICommandHandler<UpdateTrips>
 
                 var trip = CreateTrip(tripUpdate, stopTimeUpdates);
 
-                await _tripRepository.AddAsync(trip);
+                await _tripRepository.AddOrUpdateAsync(trip);
             }
         }
     }
@@ -96,17 +89,16 @@ public class UpdateTripsHandler : ICommandHandler<UpdateTrips>
 
                 trip.UpdateScheduledStop(stopTimeUpdate.StopId, datetime);
             }
-           
         }
         catch (ScheduledStopNotFoundException e)
         {
             _logger.LogInformation(e, "Scheduled stop not found, creating new scheduled stops");
 
-            trip.UpdateScheduledStops(stopTimeUpdates.Select(update => (update.StopId, GetUpdatedStopScheduledTime(update))));
+            trip.UpdateScheduledStops(stopTimeUpdates.Select(update =>
+                (update.StopId, GetUpdatedStopScheduledTime(update))));
 
             _tripRepository.Update(trip);
         }
-       
     }
 
     private Trip CreateTrip(TripUpdate tripUpdate, List<StopTimeUpdate> stopTimeUpdates)
@@ -121,7 +113,8 @@ public class UpdateTripsHandler : ICommandHandler<UpdateTrips>
 
     private DateTime GetUpdatedStopScheduledTime(StopTimeUpdate stopTimeUpdate)
     {
-        var datetime = _timeServices.LongToDatetime(stopTimeUpdate.Departure?.Time ?? stopTimeUpdate.Arrival?.Time ?? 0L);
+        var datetime =
+            _timeServices.LongToDatetime(stopTimeUpdate.Departure?.Time ?? stopTimeUpdate.Arrival?.Time ?? 0L);
 
         return datetime;
     }

@@ -8,7 +8,9 @@ public interface IWriteRepository<T>
 
     Task<bool> AnyAsync();
 
-    Task AddAsync(T aggregate);
+    Task AddOrUpdateAsync(T aggregate);
 
     Task AddAllAsync(IEnumerable<T> aggregates);
+
+    void Remove(T ride);
 }

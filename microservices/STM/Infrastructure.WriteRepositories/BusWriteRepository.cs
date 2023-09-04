@@ -6,7 +6,8 @@ namespace Infrastructure.WriteRepositories;
 
 public class BusWriteRepository : WriteRepository<Bus>, IBusWriteRepository
 {
-    public BusWriteRepository(AppWriteDbContext writeDbContext, ILogger<BusWriteRepository> logger) : base(writeDbContext, logger)
+    public BusWriteRepository(AppWriteDbContext writeDbContext, ILogger<BusWriteRepository> logger) : base(
+        writeDbContext, logger)
     {
     }
 }

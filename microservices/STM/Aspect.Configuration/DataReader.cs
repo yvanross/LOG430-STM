@@ -16,10 +16,7 @@ public class DataReader : IDataReader
     {
         var data = _manager.GetString(key);
 
-        if (string.IsNullOrWhiteSpace(data))
-        {
-            throw new Exception($"Data not found for key {key}");
-        }
+        if (string.IsNullOrWhiteSpace(data)) throw new Exception($"Data not found for key {key}");
 
         return data;
     }
@@ -28,11 +25,8 @@ public class DataReader : IDataReader
     {
         var data = _manager.GetObject(key);
 
-        if (data is null)
-        {
-            throw new Exception($"Data not found for key {key}");
-        }
-        
+        if (data is null) throw new Exception($"Data not found for key {key}");
+
         return data;
     }
 }

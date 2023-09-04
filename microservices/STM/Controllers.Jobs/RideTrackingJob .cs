@@ -10,8 +10,8 @@ namespace Controllers.Jobs;
 
 public class RideTrackingJob : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<RideTrackingJob> _logger;
+    private readonly IServiceProvider _serviceProvider;
 
     public RideTrackingJob(IServiceProvider serviceProvider, ILogger<RideTrackingJob> logger)
     {
@@ -29,7 +29,7 @@ public class RideTrackingJob : BackgroundService
 
             var consumer = scope.ServiceProvider.GetRequiredService<IConsumer>();
 
-            await consumer.ConsumeNext<StaticGtfsDataLoaded>(stoppingToken);
+            await consumer.ConsumeNext<ServiceInitialized>(stoppingToken);
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -42,6 +42,5 @@ public class RideTrackingJob : BackgroundService
         {
             _logger.LogError(e, "Error in RideTrackingService");
         }
-      
     }
 }

@@ -6,5 +6,6 @@ namespace Application.QueryServices.ServiceInterfaces;
 
 public interface IApplicationTripService
 {
-    Task<ImmutableHashSet<Trip>> TimeRelevantTripsContainingSourceAndDestination(IEnumerable<Stop> possibleSources, IEnumerable<Stop> possibleDestinations);
+    Task<ImmutableHashSet<Trip>> TimeRelevantTripsContainingSourceAndDestination(IEnumerable<Stop> possibleSources,
+        IEnumerable<Stop> possibleDestinations);
 }

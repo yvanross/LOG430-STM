@@ -6,12 +6,6 @@ public sealed class StopWrapper : IStopWrapper
 {
     private readonly GtfsInfo _info;
 
-    public string Id { get; }
-
-    public double Longitude { get; }
-
-    public double Latitude { get; }
-
     public StopWrapper(GtfsInfo info)
     {
         _info = info;
@@ -21,6 +15,12 @@ public sealed class StopWrapper : IStopWrapper
         Latitude = GetLatitude();
     }
 
+    public string Id { get; }
+
+    public double Longitude { get; }
+
+    public double Latitude { get; }
+
     private string GetId()
     {
         return _info.GetValue("stop_id");
@@ -29,9 +29,7 @@ public sealed class StopWrapper : IStopWrapper
     private double GetLongitude()
     {
         if (double.TryParse(_info.GetValue("stop_lon"), out var longitude) is false)
-        {
             throw new ArgumentException("Longitude is not a double");
-        }
 
         return longitude;
     }
@@ -39,9 +37,7 @@ public sealed class StopWrapper : IStopWrapper
     private double GetLatitude()
     {
         if (double.TryParse(_info.GetValue("stop_lat"), out var latitude) is false)
-        {
             throw new ArgumentException("Latitude is not a double");
-        }
 
         return latitude;
     }

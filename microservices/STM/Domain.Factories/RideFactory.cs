@@ -1,16 +1,18 @@
 ﻿using Domain.Aggregates.Ride;
+using Domain.Common.Interfaces;
 
 namespace Domain.Factories;
 
 internal static class RideFactory
 {
-    internal static Ride Create(string busId, string departureId, string destinationId)
+    internal static Ride Create(string busId, string firstRecordedStopId, string departureId, string destinationId, IDatetimeProvider datetimeProvider)
     {
         var rideId = Guid.NewGuid().ToString();
 
-        var ride = new Ride(rideId, busId, departureId, destinationId);
-
-        ride.TripBegunTime = DateTime.UtcNow;
+        var ride = new Ride(rideId, busId, firstRecordedStopId, departureId, destinationId)
+        {
+            TripBegunTime = datetimeProvider.GetCurrentTime()
+        };
 
         return ride;
     }

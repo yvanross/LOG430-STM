@@ -2,5 +2,7 @@
 
 public abstract class StmException : Exception
 {
-    protected StmException(string message) : base(message) { }
+    protected StmException(string message) : base(message)
+    {
+    }
 }

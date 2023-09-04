@@ -8,13 +8,11 @@ namespace Infrastructure.FileHandlers.Gtfs;
 
 public class TransitDataReader : ITransitDataReader
 {
-    public Stack<IStopWrapper> Stops { get; } = new();
-    public Stack<ITripWrapper> Trips { get; } = new();
-    
-    private readonly ILogger<TransitDataReader> _logger;
-    private readonly GtfsFileFileCache _gtfsFileFileCache;
-    private readonly WrapperMediator _wrapperMediator;
     private readonly IDatetimeProvider _datetimeProvider;
+    private readonly GtfsFileFileCache _gtfsFileFileCache;
+
+    private readonly ILogger<TransitDataReader> _logger;
+    private readonly WrapperMediator _wrapperMediator;
 
     private bool _disposed;
 
@@ -28,9 +26,10 @@ public class TransitDataReader : ITransitDataReader
         _gtfsFileFileCache = gtfsFileFileCache;
         _wrapperMediator = wrapperMediator;
         _datetimeProvider = datetimeProvider;
-
-        
     }
+
+    public Stack<IStopWrapper> Stops { get; } = new();
+    public Stack<ITripWrapper> Trips { get; } = new();
 
     public void LoadStacks()
     {
@@ -38,48 +37,6 @@ public class TransitDataReader : ITransitDataReader
 
         FetchStopData();
         FetchTripData();
-    }
-
-
-    private void FetchStopData()
-    {
-        var stopsInfo = _gtfsFileFileCache.GetInfo(DataCategoryEnum.STOPS);
-
-        foreach (var info in stopsInfo)
-        {
-            try
-            {
-                var stop = new StopWrapper(info);
-
-                _wrapperMediator.AddStop(stop);
-
-                Stops.Push(stop);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError($"An error occurred while creating a stop, this is non fatal and trivial in small quantities. Exception: {e.Message}");
-            }
-          
-        }
-    }
-
-    private void FetchTripData()
-    {
-        var tripsInfo = _gtfsFileFileCache.GetInfo(DataCategoryEnum.TRIPS).ToList();
-
-        foreach (var info in tripsInfo)
-        {
-            try
-            {
-                var tripWrapper = new TripWrapper(info, _gtfsFileFileCache, _wrapperMediator, _datetimeProvider);
-
-                Trips.Push(tripWrapper);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError($"An error occurred while creating a trip, this is non fatal and trivial in small quantities. Exception: {e.Message}");
-            }
-        }
     }
 
     public void Dispose()
@@ -102,5 +59,44 @@ public class TransitDataReader : ITransitDataReader
             GC.SuppressFinalize(_gtfsFileFileCache);
             GC.SuppressFinalize(this);
         }
+    }
+
+
+    private void FetchStopData()
+    {
+        var stopsInfo = _gtfsFileFileCache.GetInfo(DataCategoryEnum.STOPS);
+
+        foreach (var info in stopsInfo)
+            try
+            {
+                var stop = new StopWrapper(info);
+
+                _wrapperMediator.AddStop(stop);
+
+                Stops.Push(stop);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(
+                    $"An error occurred while creating a stop, this is non fatal and trivial in small quantities. Exception: {e.Message}");
+            }
+    }
+
+    private void FetchTripData()
+    {
+        var tripsInfo = _gtfsFileFileCache.GetInfo(DataCategoryEnum.TRIPS).ToList();
+
+        foreach (var info in tripsInfo)
+            try
+            {
+                var tripWrapper = new TripWrapper(info, _gtfsFileFileCache, _wrapperMediator, _datetimeProvider);
+
+                Trips.Push(tripWrapper);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(
+                    $"An error occurred while creating a trip, this is non fatal and trivial in small quantities. Exception: {e.Message}");
+            }
     }
 }

@@ -5,15 +5,28 @@ namespace Infrastructure.FileHandlers.Gtfs;
 
 public class GtfsFileFileCache : IDisposable
 {
-    private readonly IDataReader _dataReader;
-
     private static readonly Dictionary<DataCategoryEnum, GtfsInfo[]> _GtfsInfos = new();
+    private readonly IDataReader _dataReader;
 
     private bool _disposed;
 
     public GtfsFileFileCache(IDataReader dataReader)
     {
         _dataReader = dataReader;
+    }
+
+    public void Dispose()
+    {
+        if (_disposed is false)
+        {
+            foreach (var item in _GtfsInfos.Values)
+            foreach (var gtfsInfo in item)
+                gtfsInfo.Dispose();
+
+            _GtfsInfos.Clear();
+
+            _disposed = true;
+        }
     }
 
     public void LoadFileCache()
@@ -74,11 +87,11 @@ public class GtfsFileFileCache : IDisposable
         {
             var tags = rows[0].Split(',');
 
-            for (int i = 1; i < rows.Length; i++)
+            for (var i = 1; i < rows.Length; i++)
             {
                 var fields = rows[i].Split(',');
 
-                for (int j = 0; j < fields.Length; j++)
+                for (var j = 0; j < fields.Length; j++)
                 {
                     gtfsInfo[i - 1] ??= new GtfsInfo();
 
@@ -90,32 +103,10 @@ public class GtfsFileFileCache : IDisposable
 
     private void CopyTo(Stream src, Stream dest)
     {
-        byte[] bytes = new byte[4096];
+        var bytes = new byte[4096];
 
         int cnt;
 
-        while ((cnt = src.Read(bytes, 0, bytes.Length)) != 0)
-        {
-            dest.Write(bytes, 0, cnt);
-        }
-    }
-
-    public void Dispose()
-    {
-        if (_disposed is false)
-        {
-            foreach (var item in _GtfsInfos.Values)
-            {
-                foreach (var gtfsInfo in item)
-                {
-                    gtfsInfo.Dispose();
-                }
-            }
-
-            _GtfsInfos.Clear();
-
-            _disposed = true;
-        }
-
+        while ((cnt = src.Read(bytes, 0, bytes.Length)) != 0) dest.Write(bytes, 0, cnt);
     }
 }

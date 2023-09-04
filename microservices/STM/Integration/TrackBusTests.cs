@@ -20,7 +20,8 @@ public class TrackBusTests : IntegrationTest
     {
         var cancellationToken = new CancellationTokenSource(TimeSpan.FromSeconds(25000));
 
-        var consumeTasks = new Task[] {
+        var consumeTasks = new Task[]
+        {
             Consumer.ConsumeNext<StaticGtfsDataLoaded>(cancellationToken.Token),
             Consumer.ConsumeNext<BusPositionsUpdated>(cancellationToken.Token),
             Consumer.ConsumeNext<StmTripModificationApplied>(cancellationToken.Token)

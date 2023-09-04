@@ -4,9 +4,9 @@ namespace Application.EventHandlers.Messaging.PipeAndFilter;
 
 public sealed class LastPipe : Pipe
 {
-    private readonly Funnel _previousFunnel;
     private readonly Type _outGoingType;
     private readonly Channel<object> _outgoingTypeCheck;
+    private readonly Funnel _previousFunnel;
 
     public LastPipe(
         ChannelReader<object> incomingChannel,

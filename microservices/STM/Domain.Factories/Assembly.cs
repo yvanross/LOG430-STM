@@ -2,4 +2,5 @@
 
 [assembly: InternalsVisibleTo("Domain.Services")]
 [assembly: InternalsVisibleTo("Application.Mapping")]
+
 namespace Domain.Factories;

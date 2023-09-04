@@ -1,33 +1,33 @@
 ﻿using Application.Commands.Seedwork;
 using Application.CommandServices.Repositories;
-using Domain.Common.Interfaces;
+using Domain.Services.Aggregates;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Commands.Handlers;
 
 public class UpdateRideTrackingHandler : ICommandHandler<UpdateRideTracking>
 {
-    private readonly IRideWriteRepository _rideRepository;
     private readonly IBusWriteRepository _busRepository;
+    private readonly ILogger<UpdateRideTrackingHandler> _logger;
+    private readonly IRideWriteRepository _rideRepository;
     private readonly ITripWriteRepository _tripRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly ILogger<UpdateRideTrackingHandler> _logger;
-    private readonly IDatetimeProvider _datetimeProvider;
+    private readonly RideServices _rideServices;
 
     public UpdateRideTrackingHandler(
         IRideWriteRepository rideRepository,
         IBusWriteRepository busRepository,
         ITripWriteRepository tripRepository,
         IUnitOfWork unitOfWork,
-        ILogger<UpdateRideTrackingHandler> logger,
-        IDatetimeProvider datetimeProvider)
+        RideServices rideServices,
+        ILogger<UpdateRideTrackingHandler> logger)
     {
         _rideRepository = rideRepository;
         _busRepository = busRepository;
         _tripRepository = tripRepository;
         _unitOfWork = unitOfWork;
+        _rideServices = rideServices;
         _logger = logger;
-        _datetimeProvider = datetimeProvider;
     }
 
     public async Task Handle(UpdateRideTracking command, CancellationToken cancellation)
@@ -42,13 +42,12 @@ public class UpdateRideTrackingHandler : ICommandHandler<UpdateRideTracking>
 
                 var trip = _tripRepository.GetAsync(bus.TripId).Result;
 
-                var previousStopId = trip.GetStopIdByIndex(bus.CurrentStopIndex);
+                _rideServices.UpdateRide(ride, bus, trip);
 
-                ride.UpdateRide(
-                    previousStopId, bus.CurrentStopIndex,
-                    trip.GetIndexOfStop(ride.DepartureId),
-                    trip.GetIndexOfStop(ride.DestinationId),
-                    _datetimeProvider);
+                if (ride.TrackingComplete)
+                {
+                    _rideRepository.Remove(ride);
+                }
             }
 
             await _unitOfWork.SaveChangesAsync();

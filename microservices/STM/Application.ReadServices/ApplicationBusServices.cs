@@ -19,7 +19,10 @@ public class ApplicationBusServices
         _logger = logger;
     }
 
-    public IEnumerable<RideViewModel> GetTimeRelevantRideViewModels(Dictionary<string, Trip> trips, HashSet<string> sources, HashSet<string> destinations)
+    public IEnumerable<RideViewModel> GetTimeRelevantRideViewModels(
+        Dictionary<string, Trip> trips,
+        HashSet<string> sources,
+        HashSet<string> destinations)
     {
         try
         {
@@ -41,7 +44,11 @@ public class ApplicationBusServices
         return _busRead.GetData<Bus>().Where(bus => materializedTrips.Contains(bus.TripId)).ToList();
     }
 
-    private List<(RideViewModel RideViewModel, string TripId)> BuildRideViewModels(List<Bus> buses, Dictionary<string, Trip> trips, HashSet<string> sources, HashSet<string> destinations)
+    private List<(RideViewModel RideViewModel, string TripId)> BuildRideViewModels(
+        List<Bus> buses,
+        Dictionary<string, Trip> trips,
+        HashSet<string> sources, 
+        HashSet<string> destinations)
     {
         var viewModels = new List<(RideViewModel RideViewModel, string TripId)>();
 
@@ -56,45 +63,55 @@ public class ApplicationBusServices
         return viewModels;
     }
 
-    private bool TryBuildRideViewModel(Bus bus, Dictionary<string, Trip> trips, HashSet<string> sources, HashSet<string> destinations, out RideViewModel rideViewModel, out string tripId)
+    private bool TryBuildRideViewModel(
+        Bus bus, 
+        Dictionary<string, Trip> trips, 
+        HashSet<string> sources,
+        HashSet<string> destinations,
+        out RideViewModel rideViewModel,
+        out string tripId)
     {
         rideViewModel = default;
-        tripId = default;
+        tripId = string.Empty;
+
+        string firstStopId, destinationStopId;
+
+        var trip = trips[bus.TripId];
 
         try
         {
-            var firstStopId = trips[bus.TripId].FirstMatchingStop(sources).StopId;
-            var destinationStopId = trips[bus.TripId].LastMatchingStop(destinations).StopId;
-
-            if (!trips[bus.TripId].IsDepartureAndDestinationInRightOrder(firstStopId, destinationStopId)
-                && bus.CurrentStopIndex < trips[bus.TripId].GetIndexOfStop(firstStopId))
-            {
-                return false;
-            }
-
-            rideViewModel = new RideViewModel(firstStopId, destinationStopId, bus.Id);
-
-            tripId = bus.TripId;
-
-            return true;
+            firstStopId = trip.FirstMatchingStop(sources).StopId;
+            destinationStopId = trip.LastMatchingStop(destinations).StopId;
         }
         catch (ScheduledStopNotFoundException)
         {
             return false;
         }
+
+        var indexOfFirstStopOnTrip = trip.GetIndexOfStop(firstStopId);
+
+        if (trip.IsDepartureAndDestinationInRightOrder(firstStopId, destinationStopId) is false ||
+            bus.CurrentStopIndex >= indexOfFirstStopOnTrip) 
+            return false;
+        
+        rideViewModel = new RideViewModel(firstStopId, destinationStopId, bus.Id);
+
+        tripId = bus.TripId;
+
+        return true;
+
     }
 
-    private IEnumerable<RideViewModel> SortAndReturnViewModels(List<(RideViewModel RideViewModel, string TripId)> viewModels, Dictionary<string, Trip> trips)
+    private IEnumerable<RideViewModel> SortAndReturnViewModels(
+        List<(RideViewModel RideViewModel, string TripId)> viewModels, Dictionary<string, Trip> trips)
     {
         var sortedViewModels = viewModels
-            .OrderBy(viewModel => trips[viewModel.TripId].GetStopDepartureTime(viewModel.RideViewModel.ScheduledDepartureId))
+            .OrderBy(viewModel =>
+                trips[viewModel.TripId].GetStopDepartureTime(viewModel.RideViewModel.ScheduledDepartureId))
             .Select(viewModel => viewModel.RideViewModel)
             .ToList();
 
-        if (!sortedViewModels.Any())
-        {
-            throw new NoBusesFoundException();
-        }
+        if (!sortedViewModels.Any()) throw new NoBusesFoundException();
 
         return sortedViewModels;
     }

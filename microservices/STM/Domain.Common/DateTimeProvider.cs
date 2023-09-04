@@ -15,7 +15,8 @@ public class DateTimeProvider : IDatetimeProvider
 
         var utcMinusFourOffset = TimeSpan.FromHours(-4);
 
-        var utcMinusFourTimeZone = TimeZoneInfo.GetSystemTimeZones().FirstOrDefault(timeZone => timeZone.BaseUtcOffset.Equals(utcMinusFourOffset));
+        var utcMinusFourTimeZone = TimeZoneInfo.GetSystemTimeZones()
+            .FirstOrDefault(timeZone => timeZone.BaseUtcOffset.Equals(utcMinusFourOffset));
 
         var isDaylightSavingTime = utcMinusFourTimeZone?.IsDaylightSavingTime(currentUtcDateTime) ?? false;
 

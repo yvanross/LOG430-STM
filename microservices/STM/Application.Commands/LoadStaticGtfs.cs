@@ -2,4 +2,4 @@
 
 namespace Application.Commands;
 
-public record LoadStaticGtfs() : ICommand;
+public record LoadStaticGtfs : ICommand;

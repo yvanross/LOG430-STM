@@ -7,17 +7,22 @@ namespace Domain.Aggregates.Trip;
 
 public class Trip : Aggregate<Trip>
 {
-    //Risk of race condition but since dbcontext is scoped (one instance per request) it should be fine. Unless there's an attempt to multi thread updates to the same trip (why?).
-    //Considering the headaches it saves from EF Core, it's worth it.
-    internal List<ScheduledStop> ScheduledStops { get; set; }
-
-    private Trip(){}
+    private Trip() { }
 
     private Trip(string id, List<ScheduledStop> scheduledStops)
     {
         ScheduledStops = scheduledStops;
         Id = id;
     }
+
+    public void InvalidateState()
+    {
+        ScheduledStops = ScheduledStops.OrderBy(scheduledStop => scheduledStop.DepartureTime).ToList();
+    }
+
+    //Risk of race condition but since dbcontext is scoped (one instance per request) it should be fine. Unless there's an attempt to multi thread updates to the same trip (why?).
+    //Considering the headaches it saves from EF Core, it's worth it.
+    internal List<ScheduledStop> ScheduledStops { get; set; }
 
     internal static Trip CreateTrip(string tripId, IEnumerable<(string stopId, DateTime schedule)> stopSchedules)
     {
@@ -55,7 +60,6 @@ public class Trip : Aggregate<Trip>
 
     public bool ContainsStop(string stopId)
     {
-
         var condition = ScheduledStops.Any(stopSchedule => stopSchedule.StopId.Equals(stopId));
 
         return condition;
@@ -77,7 +81,7 @@ public class Trip : Aggregate<Trip>
 
     public string GetScheduleIdByStopId(string stopId)
     {
-        var id = ScheduledStops.FirstOrDefault(scheduledStop => scheduledStop.StopId.Equals(stopId))?.Id ?? 
+        var id = ScheduledStops.FirstOrDefault(scheduledStop => scheduledStop.StopId.Equals(stopId))?.Id ??
                  throw new ScheduledStopNotFoundException();
 
         return id;
@@ -108,27 +112,30 @@ public class Trip : Aggregate<Trip>
 
     public DateTime GetStopDepartureTime(string id)
     {
-        var departureTime = ScheduledStops.FirstOrDefault(stopSchedule => stopSchedule.StopId.Equals(id))?.DepartureTime ??
-                            throw new ScheduledStopNotFoundException();
+        var departureTime =
+            ScheduledStops.FirstOrDefault(stopSchedule => stopSchedule.StopId.Equals(id))?.DepartureTime ??
+            throw new ScheduledStopNotFoundException();
 
         return departureTime;
     }
 
     public void UpdateScheduledStop(string stopId, DateTime departureTime)
     {
-        var stop = ScheduledStops.FirstOrDefault(scheduledStop => scheduledStop.StopId.Equals(stopId)) ?? throw new ScheduledStopNotFoundException();
+        var stop = ScheduledStops.FirstOrDefault(scheduledStop => scheduledStop.StopId.Equals(stopId)) ??
+                   throw new ScheduledStopNotFoundException();
 
         var updated = stop.UpdateDepartureTime(departureTime);
 
         if (updated)
-            RaiseDomainEvent(new TripScheduledStopsUpdated(Id, new HashSet<string>(){ stop.Id }));
+            RaiseDomainEvent(new TripScheduledStopsUpdated(Id, new HashSet<string> { stop.Id }));
     }
 
     public void UpdateScheduledStops(IEnumerable<(string stopId, DateTime schedule)> stops)
     {
         var firstNewStop = stops.First();
 
-        var newStops = ScheduledStops.TakeWhile(scheduledStop => scheduledStop.DepartureTime < firstNewStop.schedule).ToList();
+        var newStops = ScheduledStops.TakeWhile(scheduledStop => scheduledStop.DepartureTime < firstNewStop.schedule)
+            .ToList();
 
         newStops.AddRange(stops.Select(x => new ScheduledStop(Guid.NewGuid().ToString(), x.stopId, x.schedule)));
 

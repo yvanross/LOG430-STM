@@ -6,7 +6,8 @@ namespace Domain.Services.Aggregates;
 
 public class StopServices
 {
-    public IEnumerable<Stop> GetNearbyStops(Position referencePosition, IEnumerable<Stop> stops, int radiusForBusStopSelection)
+    public IEnumerable<Stop> GetNearbyStops(Position referencePosition, IEnumerable<Stop> stops,
+        int radiusForBusStopSelection)
     {
         const int numberOfStopsInBatch = 15;
         const int radiusIncreaseForNextBatch = 50;
@@ -18,11 +19,13 @@ public class StopServices
                 select stop)
             .ToList();
 
-        return nearbyStops.Count > numberOfStopsInBatch ?
-            nearbyStops :
-            GetNearbyStops(referencePosition, stops, radiusForBusStopSelection + radiusIncreaseForNextBatch);
+        return nearbyStops.Count > numberOfStopsInBatch
+            ? nearbyStops
+            : GetNearbyStops(referencePosition, stops, radiusForBusStopSelection + radiusIncreaseForNextBatch);
     }
 
     public Stop FindClosestStop(Position position, IEnumerable<Stop> stops)
-        => stops.MinBy(s => position.DistanceInMeters(s.Position)) ?? throw new StopNotFoundException();
+    {
+        return stops.MinBy(s => position.DistanceInMeters(s.Position)) ?? throw new StopNotFoundException();
+    }
 }

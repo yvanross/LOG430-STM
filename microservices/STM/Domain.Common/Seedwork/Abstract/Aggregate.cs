@@ -8,13 +8,13 @@ public abstract class Aggregate<T> : Entity<T>, IHasDomainEvents where T : class
 
     public IEnumerable<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
-    protected void RaiseDomainEvent(IDomainEvent eventItem)
-    {
-        _domainEvents.Add(eventItem);
-    }
-
     public void ClearDomainEvents()
     {
         _domainEvents.Clear();
+    }
+
+    protected void RaiseDomainEvent(IDomainEvent eventItem)
+    {
+        _domainEvents.Add(eventItem);
     }
 }

@@ -4,7 +4,8 @@ using System.Text;
 namespace Infrastructure.FileHandlers;
 
 /// <summary>
-/// Quality of life to compress the stop_times file provided by the STM (you can delete and handle compression yourself)
+///     Quality of life to compress the stop_times file provided by the STM (you can delete and handle compression
+///     yourself)
 /// </summary>
 public class FileCompressor
 {

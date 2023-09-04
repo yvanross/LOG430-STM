@@ -2,4 +2,4 @@
 
 namespace Application.Commands;
 
-public record UpdateTrips() : ICommand;
+public record UpdateTrips : ICommand;

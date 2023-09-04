@@ -29,6 +29,7 @@
     <ProjectReference Include="..\Controllers.Jobs\Controllers.Jobs.csproj" />
     <ProjectReference Include="..\Controllers.Rest\Controllers.Rest.csproj" />
     <ProjectReference Include="..\Infrastructure.ApiClients\Infrastructure.ApiClients.csproj" />
+    <ProjectReference Include="..\Infrastructure.Events\Infrastructure.Events.csproj" />
     <ProjectReference Include="..\Infrastructure.FileHandlers\Infrastructure.FileHandlers.csproj" />
     <ProjectReference Include="..\Infrastructure.ReadRepositories\Infrastructure.ReadRepositories.csproj" />
     <ProjectReference Include="..\Infrastructure.WriteRepositories\Infrastructure.WriteRepositories.csproj" />

@@ -6,7 +6,8 @@ namespace Infrastructure.WriteRepositories;
 
 public class RideWriteRepository : WriteRepository<Ride>, IRideWriteRepository
 {
-    public RideWriteRepository(AppWriteDbContext writeDbContext, ILogger<RideWriteRepository> logger) : base(writeDbContext, logger)
+    public RideWriteRepository(AppWriteDbContext writeDbContext, ILogger<RideWriteRepository> logger) : base(
+        writeDbContext, logger)
     {
     }
 }

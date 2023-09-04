@@ -31,7 +31,6 @@ public sealed class MiddlePipe : Pipe
 
         if (messageType != inputType)
             throw new InvalidOperationException($"Expected type {inputType} but got {messageType} in pipeline");
-
     }
 
     private Task BeginProcessing()

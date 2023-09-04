@@ -10,8 +10,8 @@ namespace Controllers.Jobs;
 
 public class BusUpdateJob : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<BusUpdateJob> _logger;
+    private readonly IServiceProvider _serviceProvider;
 
     public BusUpdateJob(IServiceProvider serviceProvider, ILogger<BusUpdateJob> logger)
     {
@@ -27,7 +27,7 @@ public class BusUpdateJob : BackgroundService
 
             var consumer = initialScope.ServiceProvider.GetRequiredService<IConsumer>();
 
-            await consumer.ConsumeNext<StaticGtfsDataLoaded>(stoppingToken);
+            await consumer.ConsumeNext<ServiceInitialized>(stoppingToken);
 
             initialScope.Dispose();
 
@@ -46,6 +46,5 @@ public class BusUpdateJob : BackgroundService
         {
             _logger.LogError(e, "Error in BusUpdateService");
         }
-       
     }
 }

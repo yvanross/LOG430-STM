@@ -8,7 +8,9 @@ namespace Infrastructure.WriteRepositories;
 
 public sealed class AppWriteDbContext : DbContext
 {
-    public AppWriteDbContext(DbContextOptions<AppWriteDbContext> options) : base(options){}
+    public AppWriteDbContext(DbContextOptions<AppWriteDbContext> options) : base(options)
+    {
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -25,7 +27,7 @@ public sealed class AppWriteDbContext : DbContext
                 b.HasKey(e => e.Id);
                 b.Property(e => e.DestinationId);
                 b.Property(e => e.DepartureId);
-                b.Property(e => e.PreviousStopId);
+                b.Property(e => e.FirstRecordedStopId);
                 b.Property(e => e.TripBegunTime);
                 b.Property(e => e.BusId);
                 b.Property(e => e.DepartureReachedTime);
@@ -61,7 +63,6 @@ public sealed class AppWriteDbContext : DbContext
                     b.Property(e => e.StopId);
                     b.Property(e => e.DepartureTime);
                 });
-
         }
         else
         {

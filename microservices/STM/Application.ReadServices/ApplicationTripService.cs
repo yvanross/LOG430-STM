@@ -1,27 +1,29 @@
-﻿using Application.QueryServices.ServiceInterfaces;
+﻿using System.Collections.Immutable;
+using Application.QueryServices.ServiceInterfaces;
 using Domain.Aggregates.Stop;
 using Domain.Aggregates.Trip;
 using Domain.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Collections.Immutable;
 
 namespace Application.QueryServices;
 
 public class ApplicationTripService : IApplicationTripService
 {
-    private readonly IQueryContext _readTrips;
     private readonly IDatetimeProvider _datetimeProvider;
     private readonly ILogger<ApplicationTripServiceInMemory> _logger;
+    private readonly IQueryContext _readTrips;
 
-    public ApplicationTripService(IQueryContext readTrips, IDatetimeProvider datetimeProvider, ILogger<ApplicationTripServiceInMemory> logger)
+    public ApplicationTripService(IQueryContext readTrips, IDatetimeProvider datetimeProvider,
+        ILogger<ApplicationTripServiceInMemory> logger)
     {
         _readTrips = readTrips;
         _datetimeProvider = datetimeProvider;
         _logger = logger;
     }
 
-    public async Task<ImmutableHashSet<Trip>> TimeRelevantTripsContainingSourceAndDestination(IEnumerable<Stop> possibleSources, IEnumerable<Stop> possibleDestinations)
+    public async Task<ImmutableHashSet<Trip>> TimeRelevantTripsContainingSourceAndDestination(
+        IEnumerable<Stop> possibleSources, IEnumerable<Stop> possibleDestinations)
     {
         try
         {
@@ -55,8 +57,11 @@ public class ApplicationTripService : IApplicationTripService
             .GetData<ScheduledStop>()
             .Where(scheduledStop => materializedIds.Contains(scheduledStop.StopId) &&
                                     scheduledStop.DepartureTime > currentTime)
-            .Select(scheduledStop => EF.Property<string>(scheduledStop, "TripId"))
-            .Distinct()
+            .GroupBy(scheduledStop => EF.Property<string>(scheduledStop, "TripId"))
+            //this makes sure that the trip has at least 2 stops for the trip, doesn't mean that it's one source and one destination,
+            //but it filters a bit more out of memory
+            .Where(g => g.Count() > 1)
+            .Select(g => g.Key)
             .ToListAsync();
 
         return tripIds;

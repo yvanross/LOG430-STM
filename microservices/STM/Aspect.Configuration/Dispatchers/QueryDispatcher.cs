@@ -6,11 +6,16 @@ public class QueryDispatcher : IQueryDispatcher
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public QueryDispatcher(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
-
-    public async Task<TQueryResult> Dispatch<TQuery, TQueryResult>(TQuery query, CancellationToken cancellation) where TQuery : IQuery<TQueryResult>
+    public QueryDispatcher(IServiceProvider serviceProvider)
     {
-        var handler = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<IQueryHandler<TQuery, TQueryResult>>();
+        _serviceProvider = serviceProvider;
+    }
+
+    public async Task<TQueryResult> Dispatch<TQuery, TQueryResult>(TQuery query, CancellationToken cancellation)
+        where TQuery : IQuery<TQueryResult>
+    {
+        var handler = _serviceProvider.CreateScope().ServiceProvider
+            .GetRequiredService<IQueryHandler<TQuery, TQueryResult>>();
 
         return await handler.Handle(query, cancellation);
     }

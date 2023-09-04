@@ -33,10 +33,11 @@ namespace Infrastructure.ReadRepositories.Migrations
                     BusId = table.Column<string>(type: "text", nullable: false),
                     DepartureId = table.Column<string>(type: "text", nullable: false),
                     DestinationId = table.Column<string>(type: "text", nullable: false),
-                    PreviousStopId = table.Column<string>(type: "text", nullable: true),
+                    FirstRecordedStopId = table.Column<string>(type: "text", nullable: false),
                     ReachedDepartureStop = table.Column<bool>(type: "boolean", nullable: false),
+                    TrackingComplete = table.Column<bool>(type: "boolean", nullable: false),
                     TripBegunTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    DepartureReachedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    DepartureReachedTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {

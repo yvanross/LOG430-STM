@@ -23,5 +23,8 @@ public record Position(double Latitude, double Longitude) : IValueObject<Positio
         return h2 * earthRadius * 1000;
     }
 
-    private static double ToRad(double degree) => degree * (Math.PI / 180);
+    private static double ToRad(double degree)
+    {
+        return degree * (Math.PI / 180);
+    }
 }

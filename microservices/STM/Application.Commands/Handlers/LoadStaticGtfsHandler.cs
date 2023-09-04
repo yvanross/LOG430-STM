@@ -1,10 +1,8 @@
 ﻿using Application.Commands.Seedwork;
 using Application.CommandServices;
 using Application.CommandServices.Repositories;
-using Application.EventHandlers.AntiCorruption;
 using Application.Mapping.Interfaces;
 using Application.Mapping.Interfaces.Wrappers;
-using Contracts;
 using Domain.Aggregates.Stop;
 using Domain.Aggregates.Trip;
 using Microsoft.Extensions.Logging;
@@ -13,14 +11,13 @@ namespace Application.Commands.Handlers;
 
 public class LoadStaticGtfsHandler : ICommandHandler<LoadStaticGtfs>
 {
-    private readonly ITripWriteRepository _tripWriteRepository;
+    private readonly ILogger<LoadStaticGtfsHandler> _logger;
+    private readonly IMappingTo<IStopWrapper, Stop> _stopMapper;
     private readonly IStopWriteRepository _stopWriteRepository;
     private readonly ITransitDataReader _transitDataReader;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IMappingTo<ITripWrapper, Trip> _tripMapper;
-    private readonly IMappingTo<IStopWrapper, Stop> _stopMapper;
-    private readonly ILogger<LoadStaticGtfsHandler> _logger;
-    private readonly IPublisher _publisher;
+    private readonly ITripWriteRepository _tripWriteRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
     public LoadStaticGtfsHandler(
         ITripWriteRepository tripWriteRepository,
@@ -29,8 +26,7 @@ public class LoadStaticGtfsHandler : ICommandHandler<LoadStaticGtfs>
         IUnitOfWork unitOfWork,
         IMappingTo<ITripWrapper, Trip> tripMapper,
         IMappingTo<IStopWrapper, Stop> stopMapper,
-        ILogger<LoadStaticGtfsHandler> logger,
-        IPublisher publisher)
+        ILogger<LoadStaticGtfsHandler> logger)
     {
         _tripWriteRepository = tripWriteRepository;
         _stopWriteRepository = stopWriteRepository;
@@ -39,29 +35,22 @@ public class LoadStaticGtfsHandler : ICommandHandler<LoadStaticGtfs>
         _tripMapper = tripMapper;
         _stopMapper = stopMapper;
         _logger = logger;
-        _publisher = publisher;
     }
 
     public async Task Handle(LoadStaticGtfs command, CancellationToken cancellation)
     {
         try
         {
-            if (await _tripWriteRepository.AnyAsync())
-            {
-                await _publisher.Publish(new StaticGtfsDataLoaded());
-
-                return;
-            }
-
             _transitDataReader.LoadStacks();
 
             var stops = new List<Stop>();
             var trips = new List<Trip>();
 
-            while (_transitDataReader.Stops.TryPop(out var stop))
-            {
-                stops.Add(_stopMapper.MapFrom(stop));
-            }
+            _logger.LogInformation("Static gtfs data loaded in memory, mapping to aggregates...");
+
+            while (_transitDataReader.Stops.TryPop(out var stop)) stops.Add(_stopMapper.MapFrom(stop));
+
+            _logger.LogInformation("Stops mapped");
 
             while (_transitDataReader.Trips.TryPop(out var trip))
             {
@@ -70,7 +59,11 @@ public class LoadStaticGtfsHandler : ICommandHandler<LoadStaticGtfs>
                 trip.Dispose();
             }
 
+            _logger.LogInformation("Trips mapped");
+
             _transitDataReader.Dispose();
+
+            _logger.LogInformation("Saving Aggregates, this is a long operation... (Between 1-5 minutes on most systems)");
 
             await _stopWriteRepository.AddAllAsync(stops.ToList());
 
@@ -78,8 +71,6 @@ public class LoadStaticGtfsHandler : ICommandHandler<LoadStaticGtfs>
 
             //using bulk inserts so save changes is not needed but it still dispatches the domain events
             await _unitOfWork.SaveChangesAsync();
-
-            await _publisher.Publish(new StaticGtfsDataLoaded());
         }
         catch (Exception e)
         {

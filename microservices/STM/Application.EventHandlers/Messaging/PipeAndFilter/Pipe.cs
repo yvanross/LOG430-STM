@@ -6,11 +6,11 @@ public abstract class Pipe
 {
     private readonly ChannelReader<object> _incomingChannel;
 
+    private protected readonly Channel<object> OutgoingChannel;
+
     private protected readonly Channel<object> PipeChannel;
 
     private protected readonly CancellationToken Token;
-
-    private protected readonly Channel<object> OutgoingChannel;
 
     protected Pipe(
         ChannelReader<object> incomingChannel,
@@ -19,20 +19,23 @@ public abstract class Pipe
         _incomingChannel = incomingChannel;
         Token = token;
 
-        PipeChannel = Channel.CreateUnbounded<dynamic>(new UnboundedChannelOptions()
+        PipeChannel = Channel.CreateUnbounded<dynamic>(new UnboundedChannelOptions
         {
             SingleReader = true,
-            SingleWriter = true,
+            SingleWriter = true
         });
 
-        OutgoingChannel = Channel.CreateUnbounded<object>(new UnboundedChannelOptions()
+        OutgoingChannel = Channel.CreateUnbounded<object>(new UnboundedChannelOptions
         {
             SingleReader = true,
-            SingleWriter = true,
+            SingleWriter = true
         });
     }
 
-    public virtual ChannelReader<object>GetPipeReader() => OutgoingChannel.Reader;
+    public virtual ChannelReader<object> GetPipeReader()
+    {
+        return OutgoingChannel.Reader;
+    }
 
     public abstract Task WireAndBeginProcessing();
 

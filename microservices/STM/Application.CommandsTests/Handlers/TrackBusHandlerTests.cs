@@ -1,15 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Application.CommandsTests.Handlers
+namespace Application.CommandsTests.Handlers;
+
+[TestClass]
+public class TrackBusHandlerTests
 {
-    [TestClass()]
-    public class TrackBusHandlerTests
+    [TestMethod]
+    public void HandleTest()
     {
-        [TestMethod()]
-        public void HandleTest()
-        {
-            
-            Assert.Fail();
-        }
+        Assert.Fail();
     }
 }

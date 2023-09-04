@@ -2,4 +2,4 @@
 
 namespace Application.Commands;
 
-public record UpdateRideTracking() : ICommand;
+public record UpdateRideTracking : ICommand;

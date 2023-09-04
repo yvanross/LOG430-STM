@@ -8,13 +8,13 @@ namespace Integration.Config;
 
 public class IntegrationTest
 {
-    protected readonly ITestOutputHelper OutputHelper;
-    protected readonly IQueryDispatcher QueryDispatcher;
+    private readonly IntegrationWebApplicationFactory _factory;
     protected readonly ICommandDispatcher CommandDispatcher;
     protected readonly IConsumer Consumer;
+    protected readonly ITestOutputHelper OutputHelper;
+    protected readonly IQueryDispatcher QueryDispatcher;
 
     protected readonly IServiceScope Scope;
-    private readonly IntegrationWebApplicationFactory _factory;
 
     protected IntegrationTest(ITestOutputHelper outputHelper)
     {

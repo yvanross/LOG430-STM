@@ -1,20 +1,21 @@
-﻿using Domain.Common.Interfaces;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using Application.QueryServices.ServiceInterfaces;
 using Domain.Aggregates.Stop;
 using Domain.Aggregates.Trip;
-using Microsoft.Extensions.Logging;
+using Domain.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Application.QueryServices;
 
 public class ApplicationTripServiceInMemory : IApplicationTripService
 {
-    private readonly IQueryContext _readTrips;
     private readonly IDatetimeProvider _datetimeProvider;
     private readonly ILogger<ApplicationTripServiceInMemory> _logger;
+    private readonly IQueryContext _readTrips;
 
-    public ApplicationTripServiceInMemory(IQueryContext readTrips, IDatetimeProvider datetimeProvider, ILogger<ApplicationTripServiceInMemory> logger)
+    public ApplicationTripServiceInMemory(IQueryContext readTrips, IDatetimeProvider datetimeProvider,
+        ILogger<ApplicationTripServiceInMemory> logger)
     {
         _readTrips = readTrips;
         _datetimeProvider = datetimeProvider;
@@ -22,13 +23,15 @@ public class ApplicationTripServiceInMemory : IApplicationTripService
     }
 
     //this code is a bit much, but for the needs of the lab it needs to work both for "in memory" and for the database with relative efficiency
-    public async Task<ImmutableHashSet<Trip>> TimeRelevantTripsContainingSourceAndDestination(IEnumerable<Stop> possibleSources, IEnumerable<Stop> possibleDestinations)
+    public async Task<ImmutableHashSet<Trip>> TimeRelevantTripsContainingSourceAndDestination(
+        IEnumerable<Stop> possibleSources, IEnumerable<Stop> possibleDestinations)
     {
         try
         {
             var materializedIds = GetUniqueStopIds(possibleSources, possibleDestinations);
 
-            var tripProjection = await GetRelevantTripProjectionAsync(materializedIds, _datetimeProvider.GetCurrentTime());
+            var tripProjection =
+                await GetRelevantTripProjectionAsync(materializedIds, _datetimeProvider.GetCurrentTime());
 
             var trips = await GetTripsByTripIdsAsync(tripProjection.Keys);
 
@@ -52,7 +55,8 @@ public class ApplicationTripServiceInMemory : IApplicationTripService
         return uniqueKeys.ToList();
     }
 
-    private async Task<Dictionary<string, List<ScheduledStop>>> GetRelevantTripProjectionAsync(List<string> materializedIds, DateTime currentTime)
+    private async Task<Dictionary<string, List<ScheduledStop>>> GetRelevantTripProjectionAsync(
+        List<string> materializedIds, DateTime currentTime)
     {
         var tripsIdsAndScheduledStops = await _readTrips
             .GetData<ScheduledStop>()
@@ -61,17 +65,18 @@ public class ApplicationTripServiceInMemory : IApplicationTripService
             .Select(scheduledStop => new
             {
                 TripId = EF.Property<string>(scheduledStop, "TripId"),
-                ScheduledStop = scheduledStop,
+                ScheduledStop = scheduledStop
             })
             .ToListAsync();
 
         return tripsIdsAndScheduledStops
             .GroupBy(tuple => tuple.TripId)
+            .Where(g => g.Count() > 1)
             .ToDictionary(
                 group => group.Key,
                 group => group.Select(tuple => tuple.ScheduledStop)
-                             .OrderBy(scheduledStop => scheduledStop.DepartureTime)
-                             .ToList());
+                    .OrderBy(scheduledStop => scheduledStop.DepartureTime)
+                    .ToList());
     }
 
     private async Task<List<Trip>> GetTripsByTripIdsAsync(IEnumerable<string> tripIds)
@@ -84,9 +89,6 @@ public class ApplicationTripServiceInMemory : IApplicationTripService
 
     private void AttachScheduledStopsToTrips(List<Trip> trips, Dictionary<string, List<ScheduledStop>> tripProjection)
     {
-        foreach (var trip in trips)
-        {
-            trip.ScheduledStops = new List<ScheduledStop>(tripProjection[trip.Id]);
-        }
+        foreach (var trip in trips) trip.ScheduledStops = new List<ScheduledStop>(tripProjection[trip.Id]);
     }
 }

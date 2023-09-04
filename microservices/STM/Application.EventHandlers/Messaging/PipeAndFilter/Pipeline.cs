@@ -6,24 +6,24 @@ namespace Application.EventHandlers.Messaging.PipeAndFilter;
 
 public class Pipeline<TEvent, TResult>
 {
+    private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly List<Funnel> _funnels;
 
     private readonly ChannelReader<dynamic> _incomingChannel;
-
-    private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly ILogger _logger;
 
-    public Pipeline(IEnumerable<Funnel> funnels, ChannelReader<dynamic> incomingChannel, CancellationTokenSource cancellationTokenSource, ILogger logger)
+    public Pipeline(IEnumerable<Funnel> funnels, ChannelReader<dynamic> incomingChannel,
+        CancellationTokenSource cancellationTokenSource, ILogger logger)
     {
         _funnels = funnels.ToList();
         _incomingChannel = incomingChannel;
         _cancellationTokenSource = cancellationTokenSource;
         _logger = logger;
 
-        if (_funnels.Any() && _funnels.First().InputType != typeof(TEvent) && _funnels.Last().OutputType != typeof(TResult))
-        {
-            throw new InvalidOperationException($"InputType in first Funnel must be {typeof(TEvent)} and OutputType must be {typeof(TResult)}");
-        }
+        if (_funnels.Any() && _funnels.First().InputType != typeof(TEvent) &&
+            _funnels.Last().OutputType != typeof(TResult))
+            throw new InvalidOperationException(
+                $"InputType in first Funnel must be {typeof(TEvent)} and OutputType must be {typeof(TResult)}");
     }
 
     public ChannelReader<object> Process()
@@ -46,9 +46,7 @@ public class Pipeline<TEvent, TResult>
     private async Task HandleEmptySinks(ChannelWriter<object> channelWriter)
     {
         await foreach (var @object in _incomingChannel.ReadAllAsync(_cancellationTokenSource.Token))
-        {
             await channelWriter.WriteAsync(@object, _cancellationTokenSource.Token);
-        }
     }
 
     private ChannelReader<object> LayoutPipeline()
@@ -98,10 +96,7 @@ public class Pipeline<TEvent, TResult>
 
     private static void CheckForException(Task task)
     {
-        if (task.Status == TaskStatus.Faulted)
-        {
-            throw task.Exception.InnerException;
-        }
+        if (task.Status == TaskStatus.Faulted) throw task.Exception.InnerException;
 
         if (task is Task<Task> nestedTaskContainer)
         {

@@ -5,47 +5,42 @@ using Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Controllers.Rest
+namespace Controllers.Rest;
+
+[ApiController]
+[Route("[controller]/[action]")]
+public class TrackController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]/[action]")]
-    public class TrackController : ControllerBase
+    private readonly ICommandDispatcher _commandDispatcher;
+    private readonly IConsumer _consumer;
+    private readonly ILogger<TrackController> _logger;
+
+    public TrackController(ILogger<TrackController> logger, ICommandDispatcher commandDispatcher, IConsumer consumer)
     {
-        private readonly ILogger<TrackController> _logger;
-        private readonly ICommandDispatcher _commandDispatcher;
-        private readonly IConsumer _consumer;
+        _logger = logger;
+        _commandDispatcher = commandDispatcher;
+        _consumer = consumer;
+    }
 
-        public TrackController(ILogger<TrackController> logger, ICommandDispatcher commandDispatcher, IConsumer consumer)
-        {
-            _logger = logger;
-            _commandDispatcher = commandDispatcher;
-            _consumer = consumer;
-        }
+    [HttpPost]
+    [ActionName(nameof(BeginTracking))]
+    public async Task<AcceptedResult> BeginTracking([FromBody] TrackBus trackBus)
+    {
+        _logger.LogInformation("TrackBus endpoint reached");
 
-        [HttpPost]
-        [ActionName(nameof(BeginTracking))]
-        public async Task<AcceptedResult> BeginTracking([FromBody] TrackBus trackBus)
-        {
-            _logger.LogInformation("TrackBus endpoint reached");
+        await _commandDispatcher.DispatchAsync(trackBus, CancellationToken.None);
 
-            await _commandDispatcher.DispatchAsync(trackBus, CancellationToken.None);
+        return Accepted();
+    }
 
-            return Accepted();
-        }
+    [HttpGet]
+    [ActionName(nameof(GetTrackingUpdate))]
+    public async Task<ActionResult<RideTrackingUpdated>> GetTrackingUpdate()
+    {
+        var update = await _consumer.ConsumeNext<RideTrackingUpdated>();
 
-        [HttpGet]
-        [ActionName(nameof(GetTrackingUpdate))]
-        public async Task<ActionResult<RideTrackingUpdated>> GetTrackingUpdate()
-        {
-            var update = await _consumer.ConsumeNext<RideTrackingUpdated>();
+        if (update is null) return NoContent();
 
-            if (update is null)
-            {
-                return NoContent();
-            }
-
-            return Ok(update);
-        }
+        return Ok(update);
     }
 }
-

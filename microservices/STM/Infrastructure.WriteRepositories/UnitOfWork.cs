@@ -5,8 +5,8 @@ namespace Infrastructure.WriteRepositories;
 
 public class UnitOfWork : IUnitOfWork
 {
-    private readonly IDomainEventDispatcher _eventDispatcher;
     private readonly AppWriteDbContext _context;
+    private readonly IDomainEventDispatcher _eventDispatcher;
 
     public UnitOfWork(AppWriteDbContext context, IDomainEventDispatcher eventDispatcher)
     {
@@ -42,7 +42,7 @@ public class UnitOfWork : IUnitOfWork
             var aggregatesWithEvents = GetDomainEvents();
 
             await _context.SaveChangesAsync();
-            
+
             await DispatchDomainEventsAsync(aggregatesWithEvents);
         }
     }
@@ -61,10 +61,7 @@ public class UnitOfWork : IUnitOfWork
             .SelectMany(entitiesWithEvent => entitiesWithEvent.DomainEvents.ToList())
             .ToList();
 
-        foreach (var @event in events)
-        {
-            await _eventDispatcher.DispatchAsync(@event);
-        }
+        foreach (var @event in events) await _eventDispatcher.DispatchAsync(@event);
 
         hasDomainEventsEnumerable.ForEach(entity => entity.ClearDomainEvents());
     }

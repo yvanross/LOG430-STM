@@ -3,6 +3,4 @@
 namespace Application.CommandServices.Repositories;
 
 public interface IRideWriteRepository : IWriteRepository<Ride>
-{
-
-}
+{ }

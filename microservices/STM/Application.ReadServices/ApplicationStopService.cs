@@ -1,19 +1,20 @@
-﻿using Domain.Services.Aggregates;
-using Domain.ValueObjects;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using Application.QueryServices.ServiceInterfaces;
 using Domain.Aggregates.Stop;
+using Domain.Services.Aggregates;
+using Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
 
 namespace Application.QueryServices;
 
 public class ApplicationStopService
 {
+    private readonly ILogger<ApplicationStopService> _logger;
     private readonly IQueryContext _readStops;
     private readonly StopServices _stopServices;
-    private readonly ILogger<ApplicationStopService> _logger;
 
-    public ApplicationStopService(IQueryContext readStops, StopServices stopServices, ILogger<ApplicationStopService> logger)
+    public ApplicationStopService(IQueryContext readStops, StopServices stopServices,
+        ILogger<ApplicationStopService> logger)
     {
         _readStops = readStops;
         _stopServices = stopServices;
@@ -30,16 +31,16 @@ public class ApplicationStopService
 
             var closestStop = _stopServices.FindClosestStop(position, stops);
 
-            var closestStops = _stopServices.GetNearbyStops(closestStop.Position, stops, radiusForBusStopSelectionInMeters);
+            var closestStops =
+                _stopServices.GetNearbyStops(closestStop.Position, stops, radiusForBusStopSelectionInMeters);
 
             return closestStops.ToImmutableHashSet();
         }
         catch (Exception e)
-        { 
+        {
             _logger.LogError(e, "Error while getting closest stops");
 
             throw;
         }
-        
     }
 }

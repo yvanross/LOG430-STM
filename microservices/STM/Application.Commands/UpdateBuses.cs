@@ -2,4 +2,4 @@
 
 namespace Application.Commands;
 
-public record UpdateBuses() : ICommand;
+public record UpdateBuses : ICommand;
