@@ -1,6 +1,4 @@
-﻿using Application.EventHandlers;
-
-namespace Application.CommandServices.Repositories;
+﻿namespace Application.EventHandlers;
 
 public interface IEventContext
 {

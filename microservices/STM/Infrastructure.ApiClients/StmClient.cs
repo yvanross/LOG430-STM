@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using Application.CommandServices;
+using Application.Common.Interfaces;
 using Application.Common.Interfaces.Policies;
 using Google.Protobuf;
 using Microsoft.Extensions.Logging;
@@ -19,11 +20,13 @@ public class StmClient : IStmClient
     //is a disposable reference
     private static Timer? _timer;
     private readonly IBackOffRetryPolicy<StmClient> _backOffRetryPolicy;
+    private readonly IHostInfo _hostInfo;
     private readonly ILogger<StmClient> _logger;
 
-    public StmClient(IBackOffRetryPolicy<StmClient> backOffRetryPolicy, ILogger<StmClient> logger)
+    public StmClient(IBackOffRetryPolicy<StmClient> backOffRetryPolicy, IHostInfo hostInfo, ILogger<StmClient> logger)
     {
         _backOffRetryPolicy = backOffRetryPolicy;
+        _hostInfo = hostInfo;
         _logger = logger;
 
         _timer ??= new Timer(_ => Task.Run(ProduceFeedPositionsAsync).ContinueWith(t =>
@@ -31,8 +34,6 @@ public class StmClient : IStmClient
             if (t.IsFaulted) _logger.LogError(t.Exception, "Error while updating feed positions");
         }), null, 0, (int)TimeSpan.FromSeconds(10).TotalMilliseconds);
     }
-
-    private static string ApiKey => Environment.GetEnvironmentVariable("API_KEY") ?? string.Empty;
 
     public IEnumerable<VehiclePosition> RequestFeedPositions()
     {
@@ -43,17 +44,26 @@ public class StmClient : IStmClient
     {
         return await _backOffRetryPolicy.ExecuteAsync(async () =>
         {
-            var requestTripUpdates = new RestRequest("tripUpdates/");
+            try
+            {
+                var requestTripUpdates = new RestRequest("tripUpdates/");
 
-            requestTripUpdates.AddHeader("apikey", ApiKey);
+                requestTripUpdates.AddHeader("apikey", _hostInfo.GetStmApiKey());
 
-            var responseTripUpdate = await _stmClient.ExecuteAsync(requestTripUpdates);
+                var responseTripUpdate = await _stmClient.ExecuteAsync(requestTripUpdates);
 
-            var feed = new FeedMessage();
+                var feed = new FeedMessage();
 
-            feed.MergeFrom(new CodedInputStream(responseTripUpdate.RawBytes));
+                feed.MergeFrom(new CodedInputStream(responseTripUpdate.RawBytes));
 
-            return feed.Entity.ToList().ConvertAll(x => x.TripUpdate);
+                return feed.Entity.ToList().ConvertAll(x => x.TripUpdate);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
         });
     }
 
@@ -84,16 +94,31 @@ public class StmClient : IStmClient
 
     private async Task<IEnumerable<VehiclePosition>> UpdateFeedPositions()
     {
-        var requestPosition = new RestRequest("vehiclePositions/");
+        try
+        {
+            var requestPosition = new RestRequest("vehiclePositions/");
 
-        requestPosition.AddHeader("apikey", ApiKey);
+            requestPosition.AddHeader("apikey", _hostInfo.GetStmApiKey());
 
-        var responsePosition = await _stmClient.ExecuteAsync(requestPosition);
+            var responsePosition = await _stmClient.ExecuteAsync(requestPosition);
 
-        var feed = new FeedMessage();
+            var feed = new FeedMessage();
 
-        feed.MergeFrom(new CodedInputStream(responsePosition.RawBytes));
+            feed.MergeFrom(new CodedInputStream(responsePosition.RawBytes));
 
-        return feed.Entity.ToList().ConvertAll(x => x.Vehicle);
+            return feed.Entity.ToList().ConvertAll(x => x.Vehicle);
+        }
+        catch (InvalidProtocolBufferException)
+        {
+            _logger.LogError(
+                """
+                        Error while parsing STM feed
+                        This nearly always due to a wrong API key
+                        Validate your key by testing it on 
+                        https://portail.developpeurs.stm.info/apihub/?_gl=1*nsvvxk*_ga*MTA1MTIyMTQ0Mi4xNjc2MDU0OTc3*_ga_37MDMXFX83*MTY5MzkxNzMzNC4yMS4xLjE2OTM5MTc0MjYuNDAuMC4w#/apis/bc64b63f-4ef4-4055-bd2f-eb3bf30ddd16/show/spec
+                        """);
+        }
+       
+        return Enumerable.Empty<VehiclePosition>();
     }
 }

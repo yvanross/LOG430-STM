@@ -1,5 +1,5 @@
-﻿using Application.Commands;
-using Application.Commands.Seedwork;
+﻿using Application.Commands.Seedwork;
+using Application.Commands.UpdateBus;
 using Application.EventHandlers.AntiCorruption;
 using Contracts;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +12,8 @@ public class BusUpdateJob : BackgroundService
 {
     private readonly ILogger<BusUpdateJob> _logger;
     private readonly IServiceProvider _serviceProvider;
+
+    const int BusPositionUpdateIntervalInSeconds = 10;
 
     public BusUpdateJob(IServiceProvider serviceProvider, ILogger<BusUpdateJob> logger)
     {
@@ -39,9 +41,9 @@ public class BusUpdateJob : BackgroundService
 
                 var commandDispatcher = scope.ServiceProvider.GetRequiredService<ICommandDispatcher>();
 
-                await commandDispatcher.DispatchAsync(new UpdateBuses(), stoppingToken);
+                await commandDispatcher.DispatchAsync(new UpdateBusesCommand(), stoppingToken);
 
-                await Task.Delay(TimeSpan.FromSeconds(10), stoppingToken);
+                await Task.Delay(TimeSpan.FromSeconds(BusPositionUpdateIntervalInSeconds), stoppingToken);
             }
         }
         catch (Exception e)

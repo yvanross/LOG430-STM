@@ -1,5 +1,4 @@
-﻿using Domain.Common;
-using Domain.Common.Interfaces;
+﻿using Domain.Common.Interfaces;
 
 namespace Domain.Aggregates.Ride.Strategy;
 

@@ -2,9 +2,7 @@
 using Application.EventHandlers.Messaging;
 using Application.EventHandlers.Messaging.PipeAndFilter;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace Application.EventHandlersTests.Messaging;
 

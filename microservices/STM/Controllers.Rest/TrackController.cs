@@ -1,5 +1,5 @@
-﻿using Application.Commands;
-using Application.Commands.Seedwork;
+﻿using Application.Commands.Seedwork;
+using Application.Commands.TrackBus;
 using Application.EventHandlers.AntiCorruption;
 using Contracts;
 using Microsoft.AspNetCore.Mvc;
@@ -24,11 +24,11 @@ public class TrackController : ControllerBase
 
     [HttpPost]
     [ActionName(nameof(BeginTracking))]
-    public async Task<AcceptedResult> BeginTracking([FromBody] TrackBus trackBus)
+    public async Task<AcceptedResult> BeginTracking([FromBody] TrackBusCommand trackBusCommand)
     {
         _logger.LogInformation("TrackBus endpoint reached");
 
-        await _commandDispatcher.DispatchAsync(trackBus, CancellationToken.None);
+        await _commandDispatcher.DispatchAsync(trackBusCommand, CancellationToken.None);
 
         return Accepted();
     }

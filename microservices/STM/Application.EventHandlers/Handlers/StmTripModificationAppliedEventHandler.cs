@@ -1,5 +1,4 @@
-﻿using Application.CommandServices.Repositories;
-using Contracts;
+﻿using Contracts;
 
 namespace Application.EventHandlers.Handlers;
 

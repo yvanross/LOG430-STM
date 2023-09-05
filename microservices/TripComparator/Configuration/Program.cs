@@ -81,7 +81,9 @@ namespace Configuration
 
         private static void ConfigureMassTransit(IServiceCollection services)
         {
-            var host = TcpController.GetTcpSocketForRabbitMq(HostInfo.MqServiceName).Result;
+            var hostInfo = new HostInfo();
+            
+            var host = TcpController.GetTcpSocketForRabbitMq(hostInfo.GetMQServiceName()).Result;
 
             var uniqueQueueName = $"time_comparison.node_controller-to-any.query.{Guid.NewGuid()}";
 

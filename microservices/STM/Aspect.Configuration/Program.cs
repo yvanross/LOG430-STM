@@ -1,9 +1,13 @@
 using System.Reflection;
 using System.Resources;
-using Application.Commands.Handlers;
+using Application.Commands.LoadStaticGtfs;
 using Application.Commands.Seedwork;
+using Application.Commands.UpdateBus;
+using Application.Commands.UpdateRidesTracking;
+using Application.Commands.UpdateTrips;
 using Application.CommandServices;
 using Application.CommandServices.Repositories;
+using Application.Common.Interfaces;
 using Application.Common.Interfaces.Policies;
 using Application.EventHandlers;
 using Application.EventHandlers.AntiCorruption;
@@ -54,7 +58,6 @@ public class Program
         Environment.SetEnvironmentVariable("API_KEY", "l7f41468f7c35f4bd39523510d89637523");
 
         var builder = WebApplication.CreateBuilder(args);
-
 
         RepositoryDbContextOptionConfiguration = UseInMemoryDatabase
             ? (options, builderConfiguration) => { options.UseInMemoryDatabase("InMemory", _databaseRoot); }
@@ -122,6 +125,8 @@ public class Program
 
         services.AddSingleton(_ => new ResourceManager(typeof(Resources)));
 
+        services.AddSingleton<IHostInfo, HostInfo>();
+
         services.AddSingleton<IDataReader, DataReader>();
     }
 
@@ -183,7 +188,7 @@ public class Program
         services.AddSingleton<IQueryDispatcher, QueryDispatcher>();
 
         services.AddScoped<LoadStaticGtfsHandler>();
-        services.AddScoped<UpdateRideTrackingHandler>();
+        services.AddScoped<UpdateRidesTrackingHandler>();
         services.AddScoped<UpdateBusesHandler>();
         services.AddScoped<UpdateTripsHandler>();
 

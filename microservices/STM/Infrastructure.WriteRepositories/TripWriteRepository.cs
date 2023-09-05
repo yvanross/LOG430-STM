@@ -16,50 +16,36 @@ public class TripWriteRepository : WriteRepository<Trip>, ITripWriteRepository
         _writeDbContext = writeDbContext;
     }
 
-    public override async Task AddAllAsync(IEnumerable<Trip> aggregates)
-    {
-        try
-        {
-            if (WriteDbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
-                await BatchInsertAsync(aggregates);
-            else
-                await Aggregates.AddRangeAsync(aggregates);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
-
     public void Update(Trip trip)
     {
-        //the in memory provider is configured differently to avoid shadow props making this step necessary
-        if (WriteDbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
-            return;
-
-        var trackedTrip = Aggregates.Attach(trip);
-
-        foreach (var scheduledStop in trip.ScheduledStops)
+        //the in memory provider is configured differently to avoid shadow props, it doesn't track updates to child collections in this configuration
+        //so we need to manually attach the child collection and set the foreign key
+        //highly advise against using an in memory provider (we use it to demonstrate how bad it is)
+        if (DatabaseIsInMemory)
         {
-            var trackedScheduledStop = _writeDbContext.Entry(scheduledStop);
+            var trackedTrip = Aggregates.Attach(trip);
 
-            if (trackedScheduledStop.State == EntityState.Detached)
-                _writeDbContext.Set<ScheduledStop>().Attach(scheduledStop);
+            foreach (var scheduledStop in trip.ScheduledStops)
+            {
+                var trackedScheduledStop = _writeDbContext.Entry(scheduledStop);
 
-            trackedScheduledStop.Property("TripId").CurrentValue = trip.Id;
+                if (trackedScheduledStop.State == EntityState.Detached)
+                    _writeDbContext.Set<ScheduledStop>().Attach(scheduledStop);
+
+                trackedScheduledStop.Property("TripId").CurrentValue = trip.Id;
+            }
+
+            trackedTrip.State = EntityState.Modified;
         }
-
-        trackedTrip.State = EntityState.Modified;
     }
 
     public override async Task<Trip> GetAsync(string id)
     {
-        var trip = WriteDbContext.Database.ProviderName!.Equals("Microsoft.EntityFrameworkCore.InMemory")
-            ? await Aggregates
-                  .Include(x => x.ScheduledStops)
-                  .FirstOrDefaultAsync(x => x.Id == id)
-              ?? throw new KeyNotFoundException($"Aggregate of type {typeof(Trip)} could not be found using id: {id}")
+        var trip = DatabaseIsInMemory ? 
+            await Aggregates
+                                            .Include(x => x.ScheduledStops)
+                                            .FirstOrDefaultAsync(x => x.Id == id)
+                                        ?? throw new KeyNotFoundException($"Aggregate of type {typeof(Trip)} could not be found using id: {id}")
             : await base.GetAsync(id);
 
         trip.InvalidateState();
@@ -76,6 +62,23 @@ public class TripWriteRepository : WriteRepository<Trip>, ITripWriteRepository
         trips.ForEach(x => x.InvalidateState());
 
         return trips;
+    }
+
+    public override async Task AddAllAsync(IEnumerable<Trip> aggregates)
+    {
+        if (DatabaseIsInMemory)
+            await Aggregates.AddRangeAsync(aggregates);
+        else
+            await BatchInsertAsync(aggregates);
+    }
+
+    public override async Task UpdateAllAsync(IEnumerable<Trip> aggregates)
+    {
+        if (DatabaseIsInMemory)
+            Aggregates.UpdateRange(aggregates);
+        else
+            await BatchUpdateAsync(aggregates);
+
     }
 
     private async Task BatchInsertAsync(IEnumerable<Trip> aggregates)
@@ -100,6 +103,34 @@ public class TripWriteRepository : WriteRepository<Trip>, ITripWriteRepository
 
         if (batch.Count > 0)
             await WriteDbContext.BulkInsertAsync(batch, operation =>
+            {
+                operation.BatchSize = 1000;
+                operation.BatchTimeout = 360;
+            });
+    }
+
+    private async Task BatchUpdateAsync(IEnumerable<Trip> aggregates)
+    {
+        var batch = new List<Trip>(100000);
+
+        foreach (var trip in aggregates)
+        {
+            batch.Add(trip);
+
+            if (batch.Count >= 100000)
+            {
+                await WriteDbContext.BulkUpdateAsync(batch, operation =>
+                {
+                    operation.BatchSize = 1000;
+                    operation.BatchTimeout = 360;
+                });
+
+                batch.Clear();
+            }
+        }
+
+        if (batch.Count > 0)
+            await WriteDbContext.BulkUpdateAsync(batch, operation =>
             {
                 operation.BatchSize = 1000;
                 operation.BatchTimeout = 360;

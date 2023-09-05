@@ -6,5 +6,5 @@ public struct StopScheduleWrapper : IStopScheduleWrapper
 {
     public string StopId { get; set; }
 
-    public DateTime DepartureTime { get; set; }
+    public TimeSpan DepartureTime { get; set; }
 }

@@ -1,5 +1,5 @@
-﻿using Application.Commands;
-using Application.Commands.Seedwork;
+﻿using Application.Commands.Seedwork;
+using Application.Commands.UpdateRidesTracking;
 using Application.EventHandlers.AntiCorruption;
 using Contracts;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +12,8 @@ public class RideTrackingJob : BackgroundService
 {
     private readonly ILogger<RideTrackingJob> _logger;
     private readonly IServiceProvider _serviceProvider;
+
+    private const int UpdateIntervalInMs = 50;
 
     public RideTrackingJob(IServiceProvider serviceProvider, ILogger<RideTrackingJob> logger)
     {
@@ -31,11 +33,13 @@ public class RideTrackingJob : BackgroundService
 
             await consumer.ConsumeNext<ServiceInitialized>(stoppingToken);
 
+            _logger.LogInformation($"Begin updating rides tracking, the command logging is muted for this one as the interval of {UpdateIntervalInMs}ms would clutter the console");
+
             while (!stoppingToken.IsCancellationRequested)
             {
-                await commandDispatcher.DispatchAsync(new UpdateRideTracking(), stoppingToken);
+                await commandDispatcher.DispatchAsync(new UpdateRidesTrackingCommand(), stoppingToken);
 
-                await Task.Delay(TimeSpan.FromMilliseconds(50), stoppingToken);
+                await Task.Delay(TimeSpan.FromMilliseconds(UpdateIntervalInMs), stoppingToken);
             }
         }
         catch (Exception e)

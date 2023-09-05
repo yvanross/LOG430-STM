@@ -14,6 +14,8 @@ public abstract class WriteRepository<TAggregate> : IWriteRepository<TAggregate>
     //use only for bulk insert not saving
     private protected readonly AppWriteDbContext WriteDbContext;
 
+    private protected bool DatabaseIsInMemory => WriteDbContext.IsInMemory();
+
     protected WriteRepository(AppWriteDbContext writeDbContext, ILogger logger)
     {
         WriteDbContext = writeDbContext;
@@ -69,6 +71,14 @@ public abstract class WriteRepository<TAggregate> : IWriteRepository<TAggregate>
             await WriteDbContext.BulkInsertAsync(aggregates);
         else
             await Aggregates.AddRangeAsync(aggregates);
+    }
+
+    public virtual async Task UpdateAllAsync(IEnumerable<TAggregate> aggregates)
+    {
+        if (WriteDbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+            await WriteDbContext.BulkUpdateAsync(aggregates);
+        else
+            Aggregates.UpdateRange(aggregates);
     }
 
     public void Remove(TAggregate aggregate)

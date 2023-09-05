@@ -44,7 +44,7 @@ public sealed class AppWriteDbContext : DbContext
             });
 
         //needed since the in memory provider doesn't fare well with shadow properties
-        if (Database.ProviderName?.Equals("Microsoft.EntityFrameworkCore.InMemory") ?? true)
+        if (this.IsInMemory())
         {
             modelBuilder.Entity<Trip>(
                 b =>

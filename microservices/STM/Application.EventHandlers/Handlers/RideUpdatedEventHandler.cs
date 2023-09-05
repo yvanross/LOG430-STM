@@ -1,5 +1,4 @@
-﻿using Application.CommandServices.Repositories;
-using Application.EventHandlers.AntiCorruption;
+﻿using Application.EventHandlers.AntiCorruption;
 using Contracts;
 using Domain.Common.Interfaces;
 using Domain.Events.AggregateEvents.Ride;

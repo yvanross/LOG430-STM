@@ -12,5 +12,7 @@ public interface IWriteRepository<T>
 
     Task AddAllAsync(IEnumerable<T> aggregates);
 
+    Task UpdateAllAsync(IEnumerable<T> aggregates);
+
     void Remove(T ride);
 }

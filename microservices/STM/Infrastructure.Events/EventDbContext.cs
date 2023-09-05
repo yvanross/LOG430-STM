@@ -1,6 +1,5 @@
 ﻿using Application.EventHandlers;
 using Microsoft.EntityFrameworkCore;
-using Application.CommandServices.Repositories;
 using Newtonsoft.Json;
 
 namespace Infrastructure.Events;

@@ -2,4 +2,5 @@
 
 public interface IQuery<TResult>
 {
+    string GetQueryName();
 }

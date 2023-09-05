@@ -2,4 +2,5 @@
 
 public interface ICommand
 {
+    string GetCommandName();
 }

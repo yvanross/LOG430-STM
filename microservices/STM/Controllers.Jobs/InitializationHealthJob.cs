@@ -1,4 +1,4 @@
-﻿using Application.CommandServices.Repositories;
+﻿using Application.EventHandlers;
 using Application.EventHandlers.AntiCorruption;
 using Contracts;
 using Domain.Common.Interfaces;

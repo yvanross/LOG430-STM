@@ -1,15 +1,10 @@
-﻿using Application.Commands;
-using Application.CommandServices.Repositories;
+﻿using Application.Commands.TrackBus;
 using Application.Queries;
-using Application.QueryServices.ServiceInterfaces;
+using Application.Queries.GetEarliestBus;
 using Application.ViewModels;
 using Contracts;
 using Domain.ValueObjects;
-using Google.Protobuf.WellKnownTypes;
-using Infrastructure.Events;
-using Infrastructure.ReadRepositories;
 using Integration.Config;
-using Microsoft.EntityFrameworkCore;
 using Xunit.Abstractions;
 
 namespace Integration;
@@ -34,7 +29,7 @@ public class TrackBusTests : IntegrationTest
 
         var destination = new Position(45.50174862045254, -73.57655617412391);
 
-        var query = new GetEarliestBus(initialPosition, destination);
+        var query = new GetEarliestBusQuery(initialPosition, destination);
 
         OutputHelper.WriteLine("Querying for earliest bus");
 
@@ -46,7 +41,7 @@ public class TrackBusTests : IntegrationTest
         {
             try
             {
-                rideInfo = await QueryDispatcher.Dispatch<GetEarliestBus, RideViewModel>(query, CancellationToken.None);
+                rideInfo = await QueryDispatcher.Dispatch<GetEarliestBusQuery, RideViewModel>(query, CancellationToken.None);
             }
             catch (Exception e)
             {
@@ -58,7 +53,7 @@ public class TrackBusTests : IntegrationTest
 
         OutputHelper.WriteLine($"Found bus {rideInfo.BusId} at {rideInfo.ScheduledDepartureId} going to {rideInfo.ScheduledDestinationId}");
 
-        var command = new TrackBus(rideInfo.BusId, rideInfo.ScheduledDepartureId, rideInfo.ScheduledDestinationId);
+        var command = new TrackBusCommand(rideInfo.BusId, rideInfo.ScheduledDepartureId, rideInfo.ScheduledDestinationId);
 
         await CommandDispatcher.DispatchAsync(command, CancellationToken.None);
 

@@ -1,6 +1,7 @@
-﻿using Application.Commands;
+﻿using Application.Commands.LoadStaticGtfs;
 using Application.Commands.Seedwork;
-using Application.CommandServices.Repositories;
+using Application.Commands.UpdateStaticGtfs;
+using Application.EventHandlers;
 using Application.EventHandlers.AntiCorruption;
 using Contracts;
 using Domain.Common.Interfaces;
@@ -16,7 +17,7 @@ public class LoadStaticGtfsJob : BackgroundService
     private readonly IServiceProvider _serviceProvider;
     private readonly IDatetimeProvider _datetimeProvider;
 
-    private const int UpdateIntervalInHours = 6;
+    private const double UpdateIntervalInHours = 0.01;//6;
 
     public LoadStaticGtfsJob(
         IServiceProvider serviceProvider,
@@ -42,24 +43,39 @@ public class LoadStaticGtfsJob : BackgroundService
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                var storedEvent = await eventContext.TryGetAsync<StaticGtfsDataLoaded>();
+                var staticGtfsDataLoaded = await eventContext.TryGetAsync<StaticGtfsDataLoaded>();
+                var staticGtfsDataUpdated = await eventContext.TryGetAsync<StaticGtfsDataUpdated>();
 
-                if (storedEvent is null || _datetimeProvider.GetCurrentTime() - storedEvent.Created > TimeSpan.FromHours(UpdateIntervalInHours))
+                var staticGtfsWasNeverLoaded = staticGtfsDataLoaded is null;
+
+                var staticGtfsWasLoadedButLongAgo = _datetimeProvider.GetCurrentTime() - (staticGtfsDataUpdated as Event ?? staticGtfsDataLoaded)?.Created > TimeSpan.FromHours(UpdateIntervalInHours);
+
+                if (staticGtfsWasNeverLoaded)
                 {
                     _logger.LogInformation("Loading static GTFS data");
 
-                    await commandDispatcher.DispatchAsync(new LoadStaticGtfs(), stoppingToken);
+                    await commandDispatcher.DispatchAsync(new LoadStaticGtfsCommand(), stoppingToken);
 
                     await publisher.Publish(new StaticGtfsDataLoaded(Guid.NewGuid(), _datetimeProvider.GetCurrentTime()));
 
                     _logger.LogInformation("Static GTFS data loaded");
+                }
+                else if (staticGtfsWasLoadedButLongAgo)
+                {
+                    _logger.LogInformation("Updating static GTFS data");
+
+                    await commandDispatcher.DispatchAsync(new UpdateStaticGtfsCommand(), stoppingToken);
+
+                    await publisher.Publish(new StaticGtfsDataUpdated(Guid.NewGuid(), _datetimeProvider.GetCurrentTime()));
+
+                    _logger.LogInformation("Static GTFS data updated");
                 }
                 else
                 {
                     _logger.LogInformation("Static GTFS data already loaded");
                 }
 
-                await Task.Delay(TimeSpan.FromHours(6), stoppingToken);
+                await Task.Delay(TimeSpan.FromHours(UpdateIntervalInHours), stoppingToken);
             }
         }
         catch (Exception e)

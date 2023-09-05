@@ -1,6 +1,6 @@
-﻿using Application.Commands;
-using Application.Commands.Seedwork;
-using Application.CommandServices.Repositories;
+﻿using Application.Commands.Seedwork;
+using Application.Commands.UpdateTrips;
+using Application.EventHandlers;
 using Application.EventHandlers.AntiCorruption;
 using Contracts;
 using Domain.Common.Interfaces;
@@ -16,7 +16,7 @@ public class UpdateTripsJob : BackgroundService
     private readonly IServiceProvider _serviceProvider;
     private readonly IDatetimeProvider _datetimeProvider;
 
-    private const int MaxUpdateIntervalInHours = 12;
+    private const int MaxUpdateIntervalInHours = 6;
 
     public UpdateTripsJob(IServiceProvider serviceProvider, IDatetimeProvider datetimeProvider, ILogger<UpdateTripsJob> logger)
     {
@@ -44,6 +44,11 @@ public class UpdateTripsJob : BackgroundService
                 await DispatchUpdateTrips(commandDispatcher, token, publisher);
             }, _logger);
 
+            consumer.Subscribe<StaticGtfsDataUpdated>(async (_, token) =>
+            {
+                await DispatchUpdateTrips(commandDispatcher, token, publisher);
+            }, _logger);
+
             await ApplyImmediateUpdateIfRequired(stoppingToken, eventContext, commandDispatcher, publisher);
         }
         catch (Exception e)
@@ -58,7 +63,7 @@ public class UpdateTripsJob : BackgroundService
         ICommandDispatcher commandDispatcher,
         IPublisher publisher)
     {
-        var priorEvent = await eventContext.TryGetAsync<StaticGtfsDataLoaded>();
+        var priorEvent = await eventContext.TryGetAsync<StaticGtfsDataUpdated>() as Event ?? await eventContext.TryGetAsync<StaticGtfsDataLoaded>();
 
         var @event = await eventContext.TryGetAsync<StmTripModificationApplied>();
 
@@ -67,6 +72,7 @@ public class UpdateTripsJob : BackgroundService
         var staticGtfsWasLoadedAndUpdatedButLongAgo = priorEvent is not null &&
                                                       _datetimeProvider.GetCurrentTime() - @event.Created >
                                                       TimeSpan.FromHours(MaxUpdateIntervalInHours);
+
         if (staticGtfsWasLoadedButNotUpdated || staticGtfsWasLoadedAndUpdatedButLongAgo)
         {
             await DispatchUpdateTrips(commandDispatcher, stoppingToken, publisher);
@@ -75,7 +81,7 @@ public class UpdateTripsJob : BackgroundService
 
     private async Task DispatchUpdateTrips(ICommandDispatcher commandDispatcher, CancellationToken token, IPublisher publisher)
     {
-        await commandDispatcher.DispatchAsync(new UpdateTrips(), token);
+        await commandDispatcher.DispatchAsync(new UpdateTripsCommand(), token);
 
         await publisher.Publish(new StmTripModificationApplied(Guid.NewGuid(), _datetimeProvider.GetCurrentTime()));
     }

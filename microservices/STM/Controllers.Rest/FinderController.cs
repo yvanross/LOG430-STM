@@ -1,4 +1,5 @@
 using Application.Queries;
+using Application.Queries.GetEarliestBus;
 using Application.Queries.Seedwork;
 using Application.ViewModels;
 using Domain.ValueObjects;
@@ -33,16 +34,14 @@ public class FinderController : ControllerBase
     public async Task<ActionResult<RideViewModel>> OptimalBuses(string fromLatitudeLongitude,
         string toLatitudeLongitude)
     {
-        _logger.LogInformation(
-            $"OptimalBus endpoint called with coordinated: from: {fromLatitudeLongitude}; to: {toLatitudeLongitude}");
+        _logger.LogInformation($"OptimalBus endpoint called with coordinated: from: {fromLatitudeLongitude}; to: {toLatitudeLongitude}");
 
         var (fromLatitude, fromLongitude, toLatitude, toLongitude) = ParseParams();
 
         var from = new Position(fromLatitude, fromLongitude);
         var to = new Position(toLatitude, toLongitude);
 
-        var ride = await _queryDispatcher.Dispatch<GetEarliestBus, RideViewModel>(new GetEarliestBus(from, to),
-            CancellationToken.None);
+        var ride = await _queryDispatcher.Dispatch<GetEarliestBusQuery, RideViewModel>(new GetEarliestBusQuery(from, to), CancellationToken.None);
 
         return Ok(ride);
 
