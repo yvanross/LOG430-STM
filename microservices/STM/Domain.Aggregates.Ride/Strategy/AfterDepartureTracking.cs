@@ -16,7 +16,7 @@ internal class AfterDepartureTracking : TrackingStrategy
     {
         return
             $"""
-                Tracking started at {TrackingStartedTime} and the bus crossed the first stop at {_crossedFirstStopTime}.
+                Tracking started at {TrackingStartedTime.AddHours(-_datetimeProvider.GetUtcDifference())} and the bus crossed the first stop at {_crossedFirstStopTime}.
                 The bus is currently at stop {_currentStopIndex} of {_targetStopIndex}.
                 {Convert.ToInt32(GetProgression(_currentStopIndex, _firstStopIndex, _targetStopIndex) * 100)}% in {Convert.ToInt32(DeltaTime(_crossedFirstStopTime).TotalSeconds)} seconds
             """;

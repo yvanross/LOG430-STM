@@ -1,6 +1,9 @@
 ﻿using Application.Commands.Seedwork;
 using Application.EventHandlers.AntiCorruption;
 using Application.Queries.Seedwork;
+using Infrastructure.Events;
+using Infrastructure.ReadRepositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit.Abstractions;
 
@@ -29,5 +32,10 @@ public class IntegrationTest
         QueryDispatcher = Scope.ServiceProvider.GetRequiredService<IQueryDispatcher>();
         CommandDispatcher = Scope.ServiceProvider.GetRequiredService<ICommandDispatcher>();
         Consumer = Scope.ServiceProvider.GetRequiredService<IConsumer>();
+        var readDbContext = Scope.ServiceProvider.GetRequiredService<AppReadDbContext>();
+        var eventDbContext = Scope.ServiceProvider.GetRequiredService<EventDbContext>();
+
+        readDbContext.Database.Migrate();
+        eventDbContext.Database.Migrate();
     }
 }

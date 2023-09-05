@@ -4,7 +4,7 @@ namespace Domain.Aggregates.Ride.Strategy;
 
 internal abstract class TrackingStrategy
 {
-    private readonly IDatetimeProvider _datetimeProvider;
+    private protected readonly IDatetimeProvider _datetimeProvider;
 
     private protected readonly DateTime TrackingStartedTime;
     private protected readonly int _currentStopIndex;
@@ -27,14 +27,9 @@ internal abstract class TrackingStrategy
 
     protected internal abstract string GetMessage();
 
-    protected internal int EstimatedTimeToArrival(DateTime target)
-    {
-        return Math.Abs(Convert.ToInt32(DeltaTime(target).TotalSeconds));
-    }
-
     protected internal double GetDuration()
     {
-        return Convert.ToInt32(DeltaTime(TrackingStartedTime).Microseconds);
+        return DeltaTime(TrackingStartedTime).TotalMicroseconds;
     }
 
     private protected double GetProgression(double currentStopIndex, double firstStopIndex, double targetStopIndex)

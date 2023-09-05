@@ -31,6 +31,8 @@ public class BusUpdateJob : BackgroundService
 
             initialScope.Dispose();
 
+            _logger.LogInformation("Begin updating bus positions");
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 using var scope = _serviceProvider.CreateScope();

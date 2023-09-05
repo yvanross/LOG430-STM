@@ -1,4 +1,5 @@
-﻿using Domain.Common.Interfaces;
+﻿using Domain.Common;
+using Domain.Common.Interfaces;
 
 namespace Domain.Aggregates.Ride.Strategy;
 
@@ -12,8 +13,8 @@ internal class BeforeDepartureTracking : TrackingStrategy
     {
         return
         $"""
-        Tracking started at {TrackingStartedTime}. Bus has not yet reached the first stop.
-        It has crossed {_targetStopIndex - _currentStopIndex} stops, completing {Convert.ToInt32(GetProgression(_currentStopIndex, _firstStopIndex, _targetStopIndex) * 100)}% in {Convert.ToInt32(DeltaTime(TrackingStartedTime).TotalSeconds)} seconds
+        Tracking started at {TrackingStartedTime.AddHours(-_datetimeProvider.GetUtcDifference())}. Bus has not yet reached the first stop.
+        It has crossed {_currentStopIndex - _firstStopIndex} stops, completing {Convert.ToInt32(GetProgression(_currentStopIndex, _firstStopIndex, _targetStopIndex) * 100)}% in {Convert.ToInt32(DeltaTime(TrackingStartedTime).TotalSeconds)} seconds
         """;
     }
 }
