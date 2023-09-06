@@ -37,10 +37,19 @@ public class TrackController : ControllerBase
     [ActionName(nameof(GetTrackingUpdate))]
     public async Task<ActionResult<RideTrackingUpdated>> GetTrackingUpdate()
     {
-        var update = await _consumer.ConsumeNext<RideTrackingUpdated>();
+        const int timeoutInMs = 5000;
 
-        if (update is null) return NoContent();
+        try
+        {
+            var update = await _consumer.ConsumeNext<RideTrackingUpdated>(new CancellationTokenSource(timeoutInMs).Token);
 
-        return Ok(update);
+            if (update is null) return NoContent();
+
+            return Ok(update);
+        }
+        catch (OperationCanceledException)
+        {
+            return Problem("Timeout while waiting for tracking update");
+        }
     }
 }

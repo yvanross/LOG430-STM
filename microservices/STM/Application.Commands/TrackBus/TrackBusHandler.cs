@@ -1,6 +1,5 @@
 ﻿using Application.Commands.Seedwork;
 using Application.CommandServices.Repositories;
-using Domain.Common.Exceptions;
 using Domain.Services.Aggregates;
 using Microsoft.Extensions.Logging;
 
@@ -51,12 +50,6 @@ public class TrackBusHandler : ICommandHandler<TrackBusCommand>
         }
         catch (KeyNotFoundException)
         {
-            throw;
-        }
-        catch (AggregateInvalidStateException e)
-        {
-            _logger.LogError($"An error occurred while creating ride. Exception: {e.Message}");
-
             throw;
         }
         catch (Exception e)

@@ -1,9 +1,9 @@
 ﻿using Application.Common.Exceptions;
+using Application.Dtos;
 using Application.QueryServices.ServiceInterfaces;
 using Application.ViewModels;
 using Domain.Aggregates.Bus;
-using Domain.Aggregates.Trip;
-using Domain.Common.Exceptions;
+using Domain.Common.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace Application.QueryServices;
@@ -11,26 +11,28 @@ namespace Application.QueryServices;
 public class ApplicationBusServices
 {
     private readonly IQueryContext _busRead;
+    private readonly IDatetimeProvider _datetimeProvider;
     private readonly ILogger<ApplicationBusServices> _logger;
 
-    public ApplicationBusServices(IQueryContext busRead, ILogger<ApplicationBusServices> logger)
+    public ApplicationBusServices(IQueryContext busRead, IDatetimeProvider datetimeProvider, ILogger<ApplicationBusServices> logger)
     {
         _busRead = busRead;
+        _datetimeProvider = datetimeProvider;
         _logger = logger;
     }
 
     public IEnumerable<RideViewModel> GetTimeRelevantRideViewModels(
-        Dictionary<string, Trip> trips,
+        Dictionary<string, List<ScheduledStopDto>> tripProjection,
         HashSet<string> sources,
         HashSet<string> destinations)
     {
         try
         {
-            var relevantBuses = GetRelevantBuses(trips.Keys.ToHashSet());
+            var relevantBuses = GetRelevantBuses(new HashSet<string>(tripProjection.Keys));
 
-            var viewModels = BuildRideViewModels(relevantBuses, trips, sources, destinations);
+            var viewModels = BuildRideViewModels(relevantBuses, tripProjection, sources, destinations);
 
-            return SortAndReturnViewModels(viewModels, trips);
+            return SortAndReturnViewModels(viewModels);
         }
         catch (Exception e)
         {
@@ -44,19 +46,19 @@ public class ApplicationBusServices
         return _busRead.GetData<Bus>().Where(bus => materializedTrips.Contains(bus.TripId)).ToList();
     }
 
-    private List<(RideViewModel RideViewModel, string TripId)> BuildRideViewModels(
+    private List<(RideViewModel RideViewModel, TimeSpan firstStopTimespan)> BuildRideViewModels(
         List<Bus> buses,
-        Dictionary<string, Trip> trips,
+        Dictionary<string, List<ScheduledStopDto>> tripProjection,
         HashSet<string> sources, 
         HashSet<string> destinations)
     {
-        var viewModels = new List<(RideViewModel RideViewModel, string TripId)>();
+        var viewModels = new List<(RideViewModel RideViewModel, TimeSpan firstStopTimespan)>();
 
         foreach (var bus in buses)
         {
-            if (TryBuildRideViewModel(bus, trips, sources, destinations, out var rideViewModel, out var tripId))
+            if (TryBuildRideViewModel(bus, tripProjection[bus.TripId], sources, destinations, out var rideViewModel, out var firstStopTimespan))
             {
-                viewModels.Add((rideViewModel, tripId));
+                viewModels.Add((rideViewModel, firstStopTimespan));
             }
         }
 
@@ -65,49 +67,54 @@ public class ApplicationBusServices
 
     private bool TryBuildRideViewModel(
         Bus bus, 
-        Dictionary<string, Trip> trips, 
+        List<ScheduledStopDto> scheduledStopDtos, 
         HashSet<string> sources,
         HashSet<string> destinations,
         out RideViewModel rideViewModel,
-        out string tripId)
+        out TimeSpan firstStopTimespan)
     {
         rideViewModel = default;
-        tripId = string.Empty;
+        firstStopTimespan = default;
 
-        string firstStopId, destinationStopId;
+        ScheduledStopDto firstStop, destinationStop;
 
-        var trip = trips[bus.TripId];
+        scheduledStopDtos = scheduledStopDtos.OrderBy(scheduledStopDto => scheduledStopDto.StopSequence).ToList();
 
         try
         {
-            firstStopId = trip.FirstMatchingStop(sources).StopId;
-            destinationStopId = trip.LastMatchingStop(destinations).StopId;
+            firstStop = scheduledStopDtos.First(scheduledStopDto => sources.Contains(scheduledStopDto.StopId));
+            destinationStop = scheduledStopDtos.Last(scheduledStopDto => destinations.Contains(scheduledStopDto.StopId));
         }
-        catch (ScheduledStopNotFoundException)
+        catch (Exception)
         {
             return false;
         }
 
-        var indexOfFirstStopOnTrip = trip.GetIndexOfStop(firstStopId);
-
-        if (trip.IsDepartureAndDestinationInRightOrder(firstStopId, destinationStopId) is false ||
-            bus.CurrentStopIndex >= indexOfFirstStopOnTrip) 
+        if (firstStop.StopSequence < destinationStop.StopSequence is false || bus.CurrentStopIndex >= firstStop.StopSequence) 
             return false;
         
-        rideViewModel = new RideViewModel(firstStopId, destinationStopId, bus.Id);
+        rideViewModel = new RideViewModel(firstStop.StopId, destinationStop.StopId, bus.Id);
 
-        tripId = bus.TripId;
+        var numberOfHoursInADayOnEarth = TimeSpan.FromHours(24);
+
+        var currentTimeOfDay = _datetimeProvider.GetCurrentTime().TimeOfDay;
+
+        var possibleTimespans = new List<TimeSpan>() { firstStop.DepartureTimespan };
+
+        if (firstStop.DepartureTimespan >= numberOfHoursInADayOnEarth)
+            possibleTimespans.Add(TimeSpan.FromSeconds(firstStop.DepartureTimespan.TotalSeconds % numberOfHoursInADayOnEarth.TotalSeconds));
+
+        firstStopTimespan = possibleTimespans.MinBy(timespan => timespan - currentTimeOfDay);
 
         return true;
 
     }
 
     private IEnumerable<RideViewModel> SortAndReturnViewModels(
-        List<(RideViewModel RideViewModel, string TripId)> viewModels, Dictionary<string, Trip> trips)
+        List<(RideViewModel RideViewModel, TimeSpan firstStopTimespan)> viewModels)
     {
         var sortedViewModels = viewModels
-            .OrderBy(viewModel =>
-                trips[viewModel.TripId].GetStopDepartureTime(viewModel.RideViewModel.ScheduledDepartureId))
+            .OrderBy(viewModel => viewModel.firstStopTimespan - _datetimeProvider.GetCurrentTime().TimeOfDay)
             .Select(viewModel => viewModel.RideViewModel)
             .ToList();
 

@@ -1,5 +1,4 @@
-﻿using Application.EventHandlers;
-using Application.EventHandlers.AntiCorruption;
+﻿using Application.EventHandlers.AntiCorruption;
 using Contracts;
 using Domain.Common.Interfaces;
 using Microsoft.Extensions.DependencyInjection;

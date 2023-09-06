@@ -6,21 +6,35 @@ internal class AfterDepartureTracking : TrackingStrategy
 {
     private readonly DateTime _crossedFirstStopTime;
 
-    public AfterDepartureTracking(IDatetimeProvider datetimeProvider, DateTime trackingStartedTime, DateTime crossedFirstStopTime, int currentStopIndex, int firstStopIndex, int targetStopIndex) :
-        base(datetimeProvider, trackingStartedTime, currentStopIndex, firstStopIndex, targetStopIndex)
+    private readonly int _firstStopIndex;
+    private readonly int _targetStopIndex;
+
+    public AfterDepartureTracking(
+        IDatetimeProvider datetimeProvider, 
+        DateTime trackingStartedTime, 
+        DateTime crossedFirstStopTime, 
+        RideUpdateInfo rideUpdateInfo) 
+        : base(
+            datetimeProvider,
+            trackingStartedTime,
+            rideUpdateInfo.CurrentStopIndex, 
+            rideUpdateInfo.BusName)
     {
         _crossedFirstStopTime = crossedFirstStopTime;
+        _firstStopIndex = rideUpdateInfo.FirstStopIndex;
+        _targetStopIndex = rideUpdateInfo.TargetStopIndex;
     }
 
     protected internal override string GetMessage()
     {
         return
             $"""
-                Tracking started at {TrackingStartedTime.AddHours(-_datetimeProvider.GetUtcDifference())} and the bus crossed the first stop at {_crossedFirstStopTime}.
-                The bus is currently at stop {_currentStopIndex} of {_targetStopIndex}.
-                {Convert.ToInt32(GetProgression(_currentStopIndex, _firstStopIndex, _targetStopIndex) * 100)}% in {Convert.ToInt32(DeltaTime(_crossedFirstStopTime).TotalSeconds)} seconds
+                Tracking of bus {BusName} started at {TrackingStartedTime.AddHours(-DatetimeProvider.GetUtcDifference()).ToShortTimeString()} and it has crossed the first stop at {_crossedFirstStopTime.ToShortTimeString()}.
+                The {BusName} is currently at stop {CurrentStopIndex} of {_targetStopIndex}.
+                It completed {Convert.ToInt32(GetProgression(CurrentStopIndex, _firstStopIndex, _targetStopIndex) * 100)}% in {Convert.ToInt32(DeltaTime(_crossedFirstStopTime).TotalSeconds)} seconds
             """;
     }
 
-   
+
+    
 }

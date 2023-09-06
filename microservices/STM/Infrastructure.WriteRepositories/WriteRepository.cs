@@ -14,8 +14,6 @@ public abstract class WriteRepository<TAggregate> : IWriteRepository<TAggregate>
     //use only for bulk insert not saving
     private protected readonly AppWriteDbContext WriteDbContext;
 
-    private protected bool DatabaseIsInMemory => WriteDbContext.IsInMemory();
-
     protected WriteRepository(AppWriteDbContext writeDbContext, ILogger logger)
     {
         WriteDbContext = writeDbContext;

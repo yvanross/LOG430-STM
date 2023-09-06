@@ -1,7 +1,7 @@
-﻿using Domain.Aggregates.Bus;
+﻿using Application.Dtos;
+using Domain.Aggregates.Bus;
 using Domain.Aggregates.Ride;
 using Domain.Aggregates.Stop;
-using Domain.Aggregates.Trip;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.WriteRepositories;
@@ -43,35 +43,14 @@ public sealed class AppWriteDbContext : DbContext
                 b.Property(e => e.Name);
             });
 
-        //needed since the in memory provider doesn't fare well with shadow properties
-        if (this.IsInMemory())
-        {
-            modelBuilder.Entity<Trip>(
-                b =>
-                {
-                    b.HasKey(e => e.Id);
-                    b.HasMany(e => e.ScheduledStops)
-                        .WithOne()
-                        .HasForeignKey("TripId");
-                });
-
-            modelBuilder.Entity<ScheduledStop>(
-                b =>
-                {
-                    b.HasKey(e => e.Id);
-                    b.Property<string>("TripId");
-                    b.Property(e => e.StopId);
-                    b.Property(e => e.DepartureTime);
-                });
-        }
-        else
-        {
-            modelBuilder.Entity<Trip>(
-                b =>
-                {
-                    b.HasKey(e => e.Id);
-                    b.OwnsMany(e => e.ScheduledStops);
-                });
-        }
+        modelBuilder.Entity<ScheduledStopDto>(
+            b =>
+            {
+                b.HasKey(e => e.Id);
+                b.Property(e => e.StopId);
+                b.HasIndex(e => e.TripId);
+                b.Property(e => e.DepartureTimespan);
+                b.Property(e => e.StopSequence);
+            });
     }
 }

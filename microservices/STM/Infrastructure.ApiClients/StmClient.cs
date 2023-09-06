@@ -56,7 +56,7 @@ public class StmClient : IStmClient
 
                 feed.MergeFrom(new CodedInputStream(responseTripUpdate.RawBytes));
 
-                return feed.Entity.ToList().ConvertAll(x => x.TripUpdate);
+                return feed.Entity.ToList().ConvertAll(x => x.TripUpdate).ToList();
             }
             catch (Exception e)
             {

@@ -1,5 +1,4 @@
 ﻿using Application.Commands.TrackBus;
-using Application.Queries;
 using Application.Queries.GetEarliestBus;
 using Application.ViewModels;
 using Contracts;

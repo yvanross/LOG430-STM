@@ -8,11 +8,11 @@ namespace Infrastructure.FileHandlers.Gtfs;
 
 public class TransitDataReader : ITransitDataReader
 {
-    private readonly IDatetimeProvider _datetimeProvider;
     private readonly GtfsFileFileCache _gtfsFileFileCache;
 
     private readonly ILogger<TransitDataReader> _logger;
     private readonly WrapperMediator _wrapperMediator;
+    private readonly IDatetimeProvider _datetimeProvider;
 
     private bool _disposed;
 

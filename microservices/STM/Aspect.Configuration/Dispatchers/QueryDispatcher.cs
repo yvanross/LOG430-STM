@@ -12,7 +12,7 @@ public class QueryDispatcher : IQueryDispatcher
     }
 
     public async Task<TQueryResult> Dispatch<TQuery, TQueryResult>(TQuery query, CancellationToken cancellation)
-        where TQuery : IQuery<TQueryResult>
+        where TQuery : IQuery
     {
         var handler = _serviceProvider.CreateScope().ServiceProvider
             .GetRequiredService<IQueryHandler<TQuery, TQueryResult>>();

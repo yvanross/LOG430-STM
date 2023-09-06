@@ -1,4 +1,4 @@
-﻿namespace Application.EventHandlers;
+﻿namespace Application.EventHandlers.AntiCorruption;
 
 public interface IEventContext
 {

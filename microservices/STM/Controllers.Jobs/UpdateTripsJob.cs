@@ -1,6 +1,5 @@
 ﻿using Application.Commands.Seedwork;
 using Application.Commands.UpdateTrips;
-using Application.EventHandlers;
 using Application.EventHandlers.AntiCorruption;
 using Contracts;
 using Domain.Common.Interfaces;
@@ -44,11 +43,6 @@ public class UpdateTripsJob : BackgroundService
                 await DispatchUpdateTrips(commandDispatcher, token, publisher);
             }, _logger);
 
-            consumer.Subscribe<StaticGtfsDataUpdated>(async (_, token) =>
-            {
-                await DispatchUpdateTrips(commandDispatcher, token, publisher);
-            }, _logger);
-
             await ApplyImmediateUpdateIfRequired(stoppingToken, eventContext, commandDispatcher, publisher);
         }
         catch (Exception e)
@@ -63,7 +57,7 @@ public class UpdateTripsJob : BackgroundService
         ICommandDispatcher commandDispatcher,
         IPublisher publisher)
     {
-        var priorEvent = await eventContext.TryGetAsync<StaticGtfsDataUpdated>() as Event ?? await eventContext.TryGetAsync<StaticGtfsDataLoaded>();
+        var priorEvent = await eventContext.TryGetAsync<StaticGtfsDataLoaded>();
 
         var @event = await eventContext.TryGetAsync<StmTripModificationApplied>();
 
@@ -84,5 +78,7 @@ public class UpdateTripsJob : BackgroundService
         await commandDispatcher.DispatchAsync(new UpdateTripsCommand(), token);
 
         await publisher.Publish(new StmTripModificationApplied(Guid.NewGuid(), _datetimeProvider.GetCurrentTime()));
+
+        _logger.LogInformation("Trips updated");
     }
 }

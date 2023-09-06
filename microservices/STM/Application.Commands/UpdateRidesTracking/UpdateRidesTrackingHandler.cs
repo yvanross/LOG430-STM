@@ -1,5 +1,6 @@
 ﻿using Application.Commands.Seedwork;
 using Application.CommandServices.Repositories;
+using Domain.Common.Exceptions;
 using Domain.Services.Aggregates;
 using Microsoft.Extensions.Logging;
 
@@ -38,23 +39,33 @@ public class UpdateRidesTrackingHandler : ICommandHandler<UpdateRidesTrackingCom
 
             foreach (var ride in rides)
             {
-                var bus = _busRepository.GetAsync(ride.BusId).Result;
-
-                var trip = _tripRepository.GetAsync(bus.TripId).Result;
-
-                _rideServices.UpdateRide(ride, bus, trip);
-
-                if (ride.TrackingComplete)
+                try
                 {
-                    _rideRepository.Remove(ride);
+                    var bus = await _busRepository.GetAsync(ride.BusId);
+
+                    var trip = await _tripRepository.GetAsync(bus.TripId);
+
+                    _rideServices.UpdateRide(ride, bus, trip);
                 }
+                catch (IndexOutsideOfTripException e)
+                {
+                    _logger.LogError(e, $"Error while updating ride with ID {ride.Id}");
+
+                    _rideServices.CompleteTracking(ride);
+                }
+                finally
+                {
+                    if (ride.TrackingComplete)
+                    {
+                        _logger.LogInformation($"Tracking completed for ride with ID {ride.Id}");
+
+                        _rideRepository.Remove(ride);
+                    }
+                }
+               
             }
 
             await _unitOfWork.SaveChangesAsync();
-        }
-        catch (ArgumentOutOfRangeException e)
-        {
-            _logger.LogError(e, "Error while updating rides, index was out of range, ");
         }
         catch (Exception e)
         {

@@ -10,12 +10,4 @@
 		<ProjectReference Include="..\Application.WriteServices\Application.CommandServices.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<Folder Include="Gtfs\Wrappers\" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Google.Protobuf" Version="3.24.0" />
-	</ItemGroup>
-
 </Project>

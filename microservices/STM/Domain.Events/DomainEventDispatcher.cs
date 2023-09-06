@@ -6,7 +6,7 @@ namespace Domain.Events;
 
 public sealed class DomainEventDispatcher : IDomainEventDispatcher
 {
-    private readonly ConcurrentDictionary<Type, MethodInfo> _handlerMethods = new();
+    private static readonly ConcurrentDictionary<Type, MethodInfo> HandlerMethods = new();
     private readonly IServiceProvider _serviceProvider;
 
     public DomainEventDispatcher(IServiceProvider serviceProvider)
@@ -41,7 +41,7 @@ public sealed class DomainEventDispatcher : IDomainEventDispatcher
 
     private MethodInfo GetHandleMethod(Type eventType)
     {
-        if (_handlerMethods.TryGetValue(eventType, out var handleMethod)) return handleMethod;
+        if (HandlerMethods.TryGetValue(eventType, out var handleMethod)) return handleMethod;
 
         var handlerType = typeof(IDomainEventHandler<>).MakeGenericType(eventType);
 
@@ -53,7 +53,7 @@ public sealed class DomainEventDispatcher : IDomainEventDispatcher
 
         handleMethod = handlerMethods.Single();
 
-        _handlerMethods[eventType] = handleMethod;
+        HandlerMethods[eventType] = handleMethod;
 
         return handleMethod;
     }

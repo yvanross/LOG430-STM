@@ -22,6 +22,32 @@ namespace Infrastructure.ReadRepositories.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Application.Dtos.ScheduledStopDto", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<TimeSpan>("DepartureTimespan")
+                        .HasColumnType("interval");
+
+                    b.Property<string>("StopId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("StopSequence")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TripId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TripId");
+
+                    b.ToTable("ScheduledStopDto");
+                });
+
             modelBuilder.Entity("Domain.Aggregates.Bus.Bus", b =>
                 {
                     b.Property<string>("Id")
@@ -91,38 +117,6 @@ namespace Infrastructure.ReadRepositories.Migrations
                     b.ToTable("Stop");
                 });
 
-            modelBuilder.Entity("Domain.Aggregates.Trip.ScheduledStop", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("DepartureTime")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("StopId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("TripId")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TripId");
-
-                    b.ToTable("ScheduledStop");
-                });
-
-            modelBuilder.Entity("Domain.Aggregates.Trip.Trip", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Trip");
-                });
-
             modelBuilder.Entity("Domain.Aggregates.Stop.Stop", b =>
                 {
                     b.OwnsOne("Domain.ValueObjects.Position", "Position", b1 =>
@@ -146,18 +140,6 @@ namespace Infrastructure.ReadRepositories.Migrations
 
                     b.Navigation("Position")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.Aggregates.Trip.ScheduledStop", b =>
-                {
-                    b.HasOne("Domain.Aggregates.Trip.Trip", null)
-                        .WithMany("ScheduledStops")
-                        .HasForeignKey("TripId");
-                });
-
-            modelBuilder.Entity("Domain.Aggregates.Trip.Trip", b =>
-                {
-                    b.Navigation("ScheduledStops");
                 });
 #pragma warning restore 612, 618
         }

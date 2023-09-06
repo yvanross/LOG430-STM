@@ -1,18 +1,19 @@
 ﻿using Application.Mapping.Interfaces.Wrappers;
 using Domain.Common.Interfaces;
-using Google.Protobuf.WellKnownTypes;
 
 namespace Infrastructure.FileHandlers.Gtfs.Wrappers;
 
 public sealed class TripWrapper : ITripWrapper
 {
-    private readonly IDatetimeProvider _datetimeProvider;
     private readonly GtfsFileFileCache _gtfsFileFileCache;
-
     private readonly GtfsInfo _info;
     private readonly WrapperMediator _mediator;
+    private readonly IDatetimeProvider _datetimeProvider;
 
-    public TripWrapper(GtfsInfo info, GtfsFileFileCache gtfsFileFileCache, WrapperMediator mediator,
+    public TripWrapper(
+        GtfsInfo info,
+        GtfsFileFileCache gtfsFileFileCache, 
+        WrapperMediator mediator,
         IDatetimeProvider datetimeProvider)
     {
         _info = info;
@@ -58,14 +59,26 @@ public sealed class TripWrapper : ITripWrapper
                 throw new NullReferenceException(
                     "TripId was null, this is a critical failure, make sure the data is accessible");
 
+            var stopSequence = Convert.ToInt32(stopTime.GetValue("stop_sequence"));
+
             var hoursMinutesSeconds = stopTime.GetValue("arrival_time");
 
-            var timeSpan = TimeSpan.Parse(hoursMinutesSeconds);
+            var HMSArray = hoursMinutesSeconds.Split(":");
+
+            var hours = int.Parse(HMSArray[0]);
+            var minutes = int.Parse(HMSArray[1]);
+            var seconds = int.Parse(HMSArray[2]);
+
+            var timeSpan = new TimeSpan(hours, minutes, seconds);
+
+            //since the gtfs in local time, we need to add the utc difference to get the correct UTC time
+            timeSpan = timeSpan.Add(TimeSpan.FromHours(_datetimeProvider.GetUtcDifference()));
 
             var stopSchedule = new StopScheduleWrapper
             {
                 DepartureTime = timeSpan,
-                StopId = stopWrapper.Id
+                StopId = stopWrapper.Id,
+                StopSequence = stopSequence
             };
 
             if (schedules.TryGetValue(tripId, out var stopSchedules))

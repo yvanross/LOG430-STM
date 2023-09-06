@@ -4,25 +4,18 @@ namespace Domain.Aggregates.Ride.Strategy;
 
 internal abstract class TrackingStrategy
 {
-    private protected readonly IDatetimeProvider _datetimeProvider;
+    private protected readonly IDatetimeProvider DatetimeProvider;
 
     private protected readonly DateTime TrackingStartedTime;
-    private protected readonly int _currentStopIndex;
-    private protected readonly int _firstStopIndex;
-    private protected readonly int _targetStopIndex;
+    private protected readonly int CurrentStopIndex;
+    private protected readonly string BusName;
 
-    internal TrackingStrategy(
-        IDatetimeProvider datetimeProvider, 
-        DateTime trackingStartedTime,
-        int currentStopIndex,
-        int firstStopIndex,
-        int targetStopIndex)
+    protected TrackingStrategy(IDatetimeProvider datetimeProvider, DateTime trackingStartedTime, int currentStopIndex, string busName)
     {
-        _datetimeProvider = datetimeProvider;
+        DatetimeProvider = datetimeProvider;
         TrackingStartedTime = trackingStartedTime;
-        _currentStopIndex = currentStopIndex;
-        _firstStopIndex = firstStopIndex;
-        _targetStopIndex = targetStopIndex;
+        CurrentStopIndex = currentStopIndex;
+        BusName = busName;
     }
 
     protected internal abstract string GetMessage();
@@ -41,6 +34,6 @@ internal abstract class TrackingStrategy
 
     private protected TimeSpan DeltaTime(DateTime dateTime)
     {
-        return _datetimeProvider.GetCurrentTime() - dateTime;
+        return DatetimeProvider.GetCurrentTime() - dateTime;
     }
 }

@@ -178,7 +178,7 @@ public class Program
         ScrutorScanForType(services, typeof(IQueryHandler<,>), assemblyNames: "Application.Queries");
         ScrutorScanForType(services, typeof(ICommandHandler<>), assemblyNames: "Application.Commands");
         ScrutorScanForType(services, typeof(ICommand), assemblyNames: "Application.Commands");
-        ScrutorScanForType(services, typeof(IQuery<>), assemblyNames: "Application.Queries");
+        ScrutorScanForType(services, typeof(IQuery), assemblyNames: "Application.Queries");
 
         ScrutorScanForType(services, typeof(IMappingTo<,>), assemblyNames: "Application.Mapping");
 
@@ -194,10 +194,11 @@ public class Program
 
         services.AddScoped<ApplicationStopService>();
         services.AddScoped<ApplicationBusServices>();
+        services.AddScoped<ApplicationTripService>();
 
-        _ = UseInMemoryDatabase
-            ? services.AddScoped<IApplicationTripService, ApplicationTripServiceInMemory>()
-            : services.AddScoped<IApplicationTripService, ApplicationTripService>();
+        //_ = UseInMemoryDatabase
+        //    ? services.AddScoped<IApplicationTripService, ApplicationTripServiceInMemory>()
+        //    : services.AddScoped<IApplicationTripService, ApplicationTripService>();
     }
 
     private static void DomainSetup(IServiceCollection services)

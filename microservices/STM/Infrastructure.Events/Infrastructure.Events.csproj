@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application.EventHandlers\Application.EventHandlers.csproj" />
-    <ProjectReference Include="..\Application.WriteServices\Application.CommandServices.csproj" />
   </ItemGroup>
 
 </Project>

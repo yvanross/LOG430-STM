@@ -11,7 +11,7 @@ public class DateTimeProvider : IDatetimeProvider
 
     public int GetUtcDifference()
     {
-        var currentUtcDateTime = GetCurrentTime();
+        var currentUtcDateTime = DateTime.UtcNow;
 
         var utcMinusFourOffset = TimeSpan.FromHours(-4);
 

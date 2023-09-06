@@ -1,4 +1,3 @@
-using Application.Queries;
 using Application.Queries.GetEarliestBus;
 using Application.Queries.Seedwork;
 using Application.ViewModels;

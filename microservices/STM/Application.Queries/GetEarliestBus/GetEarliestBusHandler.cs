@@ -1,6 +1,5 @@
 ﻿using Application.Queries.Seedwork;
 using Application.QueryServices;
-using Application.QueryServices.ServiceInterfaces;
 using Application.ViewModels;
 using Microsoft.Extensions.Logging;
 
@@ -11,11 +10,11 @@ public class GetEarliestBusHandler : IQueryHandler<GetEarliestBusQuery, RideView
     private readonly ApplicationBusServices _busServices;
     private readonly ILogger<GetEarliestBusHandler> _logger;
     private readonly ApplicationStopService _stopServices;
-    private readonly IApplicationTripService _tripService;
+    private readonly ApplicationTripService _tripService;
 
     public GetEarliestBusHandler(
         ApplicationStopService stopServices,
-        IApplicationTripService applicationTripService,
+        ApplicationTripService applicationTripService,
         ApplicationBusServices busServices,
         ILogger<GetEarliestBusHandler> logger)
     {
@@ -33,12 +32,12 @@ public class GetEarliestBusHandler : IQueryHandler<GetEarliestBusQuery, RideView
 
             var destinationStops = await _stopServices.GetClosestStops(query.To);
 
-            var trips = await _tripService.TimeRelevantTripsContainingSourceAndDestination(
+            var tripProjection = await _tripService.TimeRelevantTripsContainingSourceAndDestination(
                 sourceStops,
                 destinationStops);
 
             var relevantBuses = _busServices.GetTimeRelevantRideViewModels(
-                trips.ToDictionary(trip => trip.Id),
+                tripProjection,
                 sourceStops.Select(stop => stop.Id).ToHashSet(),
                 destinationStops.Select(stop => stop.Id).ToHashSet());
 

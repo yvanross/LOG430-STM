@@ -16,7 +16,15 @@ public class UnitOfWork : IUnitOfWork
 
     public async Task SaveChangesAsync()
     {
-        if (_context.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+        if (_context.IsInMemory())
+        {
+            var aggregatesWithEvents = GetDomainEvents();
+
+            await _context.SaveChangesAsync();
+
+            await DispatchDomainEventsAsync(aggregatesWithEvents);
+        }
+        else
         {
             await using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -36,14 +44,6 @@ public class UnitOfWork : IUnitOfWork
                 await transaction.RollbackAsync();
                 throw;
             }
-        }
-        else
-        {
-            var aggregatesWithEvents = GetDomainEvents();
-
-            await _context.SaveChangesAsync();
-
-            await DispatchDomainEventsAsync(aggregatesWithEvents);
         }
     }
 

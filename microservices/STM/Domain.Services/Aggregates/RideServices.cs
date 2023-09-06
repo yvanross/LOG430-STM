@@ -22,11 +22,20 @@ public class RideServices
 
     public void UpdateRide(Ride ride, Bus bus, Trip trip)
     {
+        trip.ValidateStopIndex(bus.CurrentStopIndex);
+
         ride.UpdateRide(
-            trip.GetIndexOfStop(ride.FirstRecordedStopId), 
-            bus.CurrentStopIndex,
-            trip.GetIndexOfStop(ride.DepartureId),
-            trip.GetIndexOfStop(ride.DestinationId),
+            new RideUpdateInfo(
+                trip.GetIndexOfStop(ride.FirstRecordedStopId),
+                bus.CurrentStopIndex,
+                trip.GetIndexOfStop(ride.DepartureId),
+                trip.GetIndexOfStop(ride.DestinationId),
+                bus.Name), 
             _datetimeProvider);
+    }
+
+    public void CompleteTracking(Ride ride)
+    {
+        ride.CompleteTracking(_datetimeProvider);
     }
 }

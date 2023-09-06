@@ -1,6 +1,6 @@
 ﻿namespace Application.Queries.Seedwork;
 
-public interface IQuery<TResult>
+public interface IQuery
 {
     string GetQueryName();
 }

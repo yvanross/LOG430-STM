@@ -34,34 +34,43 @@ public sealed class Ride : Aggregate<Ride>
 
     public DateTime? DepartureReachedTime { get; internal set; }
 
-    public void UpdateRide(int firstRecordedStopIndex,
-        int currentStopIndex,
-        int firstStopIndex,
-        int targetStopIndex,
-        IDatetimeProvider datetimeProvider)
+    public void UpdateRide(RideUpdateInfo rideUpdateInfo, IDatetimeProvider datetimeProvider)
     {
         if(TrackingComplete) throw new InvalidOperationException("Tracking is already complete");
 
-        InvalidateState(currentStopIndex, firstRecordedStopIndex, firstStopIndex, targetStopIndex, datetimeProvider);
+        ValidateState(rideUpdateInfo, datetimeProvider);
 
         var message = _trackingStrategy!.GetMessage();
 
-        TrackingComplete = currentStopIndex >= targetStopIndex;
+        TrackingComplete = rideUpdateInfo.CurrentStopIndex >= rideUpdateInfo.TargetStopIndex;
 
         var trackingUpdatedEvent = new BusTrackingUpdated(message, TrackingComplete, _trackingStrategy.GetDuration());
 
         RaiseDomainEvent(trackingUpdatedEvent);
     }
 
-    private void InvalidateState(int currentStopIndex, int firstRecordedStopIndex, int firstStopIndex, int targetStopIndex, IDatetimeProvider datetimeProvider)
+    private void ValidateState(RideUpdateInfo rideUpdateInfo, IDatetimeProvider datetimeProvider)
     {
-        _trackingStrategy ??= new BeforeDepartureTracking(datetimeProvider, TripBegunTime, currentStopIndex, firstRecordedStopIndex, firstStopIndex);
+        _trackingStrategy ??= new BeforeDepartureTracking(datetimeProvider, TripBegunTime, rideUpdateInfo);
 
-        if (_trackingStrategy is BeforeDepartureTracking && currentStopIndex >= targetStopIndex)
+        if (_trackingStrategy is BeforeDepartureTracking && rideUpdateInfo.CurrentStopIndex >= rideUpdateInfo.FirstStopIndex)
         {
-            DepartureReachedTime ??= datetimeProvider.GetCurrentTime();
+            DepartureReachedTime ??= datetimeProvider.GetCurrentTime().AddHours(-datetimeProvider.GetUtcDifference());
 
-            _trackingStrategy = new AfterDepartureTracking(datetimeProvider, TripBegunTime, DepartureReachedTime.Value, currentStopIndex, firstStopIndex, targetStopIndex);
+            _trackingStrategy = new AtDepartureTracking(datetimeProvider, TripBegunTime, DepartureReachedTime.Value, rideUpdateInfo);
         }
+        if (_trackingStrategy is AtDepartureTracking && rideUpdateInfo.CurrentStopIndex > rideUpdateInfo.FirstStopIndex)
+        {
+            _trackingStrategy = new AfterDepartureTracking(datetimeProvider, TripBegunTime, DepartureReachedTime.Value, rideUpdateInfo);
+        }
+    }
+
+    public void CompleteTracking(IDatetimeProvider datetimeProvider)
+    {
+        TrackingComplete = true;
+
+        var trackingUpdatedEvent = new BusTrackingUpdated("Tracking completed by exception, see logs for more info", TrackingComplete, (datetimeProvider.GetCurrentTime() - TripBegunTime).TotalSeconds);
+
+        RaiseDomainEvent(trackingUpdatedEvent);
     }
 }

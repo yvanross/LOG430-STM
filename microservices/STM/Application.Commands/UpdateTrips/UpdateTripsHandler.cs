@@ -2,7 +2,6 @@
 using Application.CommandServices;
 using Application.CommandServices.Repositories;
 using Domain.Aggregates.Trip;
-using Domain.Common.Exceptions;
 using Domain.Services.Aggregates;
 using Domain.Services.Utility;
 using Microsoft.Extensions.Logging;
@@ -54,67 +53,53 @@ public class UpdateTripsHandler : ICommandHandler<UpdateTripsCommand>
 
     private async Task ProcessTripUpdates(IEnumerable<TripUpdate> tripUpdates)
     {
-        tripUpdates = tripUpdates.ToList();
-
-        var updatesIds = tripUpdates.Select(tripUpdate => tripUpdate.Trip.TripId).ToArray();
-
-        var storedTrips = (await _tripRepository.GetAllAsync(updatesIds)).ToDictionary(trip => trip.Id);
-
         foreach (var tripUpdate in tripUpdates)
         {
             List<StopTimeUpdate> stopTimeUpdates = tripUpdate.StopTimeUpdate.ToList();
 
-            if (storedTrips.TryGetValue(tripUpdate.Trip.TripId, out var storedValue))
+            switch (tripUpdate.Trip.ScheduleRelationship)
             {
-                UpdateScheduledStops(storedValue, stopTimeUpdates);
+                case TripDescriptor.Types.ScheduleRelationship.Scheduled:
+                    //updating scheduled stops time to the minute is not actually worth it since this isn't a production software
+                    break;
+                case TripDescriptor.Types.ScheduleRelationship.Added:
+
+                    _logger.LogInformation("Creating new trip");
+
+                    var trip = CreateTrip(tripUpdate, stopTimeUpdates);
+
+                    await _tripRepository.AddOrUpdateAsync(trip);
+
+                    break;
+                case TripDescriptor.Types.ScheduleRelationship.Unscheduled:
+                case TripDescriptor.Types.ScheduleRelationship.Canceled:
+                    //not worth db call to handle it
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            else
-            {
-                _logger.LogInformation("Trip not found, creating new trip");
-
-                var trip = CreateTrip(tripUpdate, stopTimeUpdates);
-
-                await _tripRepository.AddOrUpdateAsync(trip);
-            }
-        }
-    }
-
-    private void UpdateScheduledStops(Trip trip, List<StopTimeUpdate> stopTimeUpdates)
-    {
-        try
-        {
-            foreach (var stopTimeUpdate in stopTimeUpdates)
-            {
-                var datetime = GetUpdatedStopScheduledTime(stopTimeUpdate);
-
-                trip.UpdateScheduledStop(stopTimeUpdate.StopId, datetime);
-            }
-        }
-        catch (ScheduledStopNotFoundException e)
-        {
-            _logger.LogInformation(e, "Scheduled stop not found, creating new scheduled stops");
-
-            trip.UpdateScheduledStops(stopTimeUpdates.Select(update => (update.StopId, GetUpdatedStopScheduledTime(update))));
-
-            _tripRepository.Update(trip);
         }
     }
 
     private Trip CreateTrip(TripUpdate tripUpdate, List<StopTimeUpdate> stopTimeUpdates)
     {
-        var updatedStopTimes = stopTimeUpdates
-            .ConvertAll(stopTimeUpdate => (stopTimeUpdate.StopId, GetUpdatedStopScheduledTime(stopTimeUpdate)));
+        var newStopTimes = stopTimeUpdates
+            .ConvertAll(stopTimeUpdate =>
+            {
+                var stopId = stopTimeUpdate.StopId;
 
-        var trip = _tripServices.CreateTrip(tripUpdate.Trip.TripId, updatedStopTimes);
+                var secondsSinceEpoch =
+                    stopTimeUpdate.Departure?.Time ??
+                    stopTimeUpdate.Arrival?.Time ??
+                    throw new Exception("timespan was null will creating a new Trip based on Feed Trip Data");
+
+                var datetime = _timeServices.LongToDatetime(secondsSinceEpoch);
+
+                return (stopId, datetime.TimeOfDay);
+            });
+
+        var trip = _tripServices.CreateTrip(tripUpdate.Trip.TripId, newStopTimes);
 
         return trip;
-    }
-
-    private DateTime GetUpdatedStopScheduledTime(StopTimeUpdate stopTimeUpdate)
-    {
-        var datetime =
-            _timeServices.LongToDatetime(stopTimeUpdate.Departure?.Time ?? stopTimeUpdate.Arrival?.Time ?? 0L);
-
-        return datetime;
     }
 }

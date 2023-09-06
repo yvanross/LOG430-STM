@@ -1,84 +1,98 @@
 ﻿using Application.CommandServices.Repositories;
 using Application.Common.Extensions;
+using Application.Dtos;
+using Application.Mapping.Interfaces;
 using Domain.Aggregates.Trip;
+using Domain.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.WriteRepositories;
 
-public class TripWriteRepository : WriteRepository<Trip>, ITripWriteRepository
+public class TripWriteRepository : ITripWriteRepository
 {
     private readonly AppWriteDbContext _writeDbContext;
+    private readonly IMappingTo<IEnumerable<ScheduledStopDto>, Trip> _scheduledStopDtoToTripMapper;
+    private readonly IMappingTo<Trip, IEnumerable<ScheduledStopDto>> _tripToScheduledStopDtoMapper;
+    private readonly IDatetimeProvider _dateTimeProvider;
+    private readonly ILogger<TripWriteRepository> _logger;
 
-    public TripWriteRepository(AppWriteDbContext writeDbContext, ILogger<TripWriteRepository> logger) : base(
-        writeDbContext, logger)
+    private readonly DbSet<ScheduledStopDto> _scheduledStopDtos;
+
+    public TripWriteRepository(
+        AppWriteDbContext writeDbContext,
+        IMappingTo<IEnumerable<ScheduledStopDto>, Trip> scheduledStopDtoToTripMapper,
+        IMappingTo<Trip, IEnumerable<ScheduledStopDto>> tripToScheduledStopDtoMapper,
+        IDatetimeProvider dateTimeProvider,
+        ILogger<TripWriteRepository> logger)
     {
         _writeDbContext = writeDbContext;
+        _scheduledStopDtoToTripMapper = scheduledStopDtoToTripMapper;
+        _tripToScheduledStopDtoMapper = tripToScheduledStopDtoMapper;
+        _dateTimeProvider = dateTimeProvider;
+        _logger = logger;
+        _scheduledStopDtos = _writeDbContext.Set<ScheduledStopDto>();
     }
 
-    public void Update(Trip trip)
+    public async Task AddOrUpdateAsync(Trip aggregate)
     {
-        //the in memory provider is configured differently to avoid shadow props, it doesn't track updates to child collections in this configuration
-        //so we need to manually attach the child collection and set the foreign key
-        //highly advise against using an in memory provider (we use it to demonstrate how bad it is)
-        if (DatabaseIsInMemory)
-        {
-            var trackedTrip = Aggregates.Attach(trip);
-
-            foreach (var scheduledStop in trip.ScheduledStops)
-            {
-                var trackedScheduledStop = _writeDbContext.Entry(scheduledStop);
-
-                if (trackedScheduledStop.State == EntityState.Detached)
-                    _writeDbContext.Set<ScheduledStop>().Attach(scheduledStop);
-
-                trackedScheduledStop.Property("TripId").CurrentValue = trip.Id;
-            }
-
-            trackedTrip.State = EntityState.Modified;
-        }
+        await _writeDbContext.AddAsync(_tripToScheduledStopDtoMapper.MapFrom(aggregate));
     }
 
-    public override async Task<Trip> GetAsync(string id)
+    public async Task<Trip> GetAsync(string id)
     {
-        var trip = DatabaseIsInMemory ? 
-            await Aggregates
-                                            .Include(x => x.ScheduledStops)
-                                            .FirstOrDefaultAsync(x => x.Id == id)
-                                        ?? throw new KeyNotFoundException($"Aggregate of type {typeof(Trip)} could not be found using id: {id}")
-            : await base.GetAsync(id);
+        var scheduledStopDtos = await _scheduledStopDtos
+            .AsNoTracking()
+            .Where(scheduledStopDto => scheduledStopDto.TripId.Equals(id))
+            .ToListAsync()
+           ??
+           throw new KeyNotFoundException($"Aggregate of type {typeof(Trip)} could not be found using id: {id}");
 
-        trip.InvalidateState();
+        var trip = _scheduledStopDtoToTripMapper.MapFrom(scheduledStopDtos);
 
         return trip;
     }
 
-    public override async Task<IEnumerable<Trip>> GetAllAsync(params string[] ids)
+    public async Task<IEnumerable<Trip>> GetAllAsync(params string[] ids)
     {
-        var trips = await (ids.IsEmpty()
-            ? Aggregates.Include(x => x.ScheduledStops).ToListAsync()
-            : Aggregates.Where(a => ids.Contains(a.Id)).Include(x => x.ScheduledStops).ToListAsync());
-        
-        trips.ForEach(x => x.InvalidateState());
+        List<IGrouping<string, ScheduledStopDto>> scheduledStopDtos;
+
+        if (ids.IsEmpty())
+        {
+            _logger.LogInformation("Good luck on getting 5M+ entities from the db, filter it first by id");
+
+            scheduledStopDtos = await _scheduledStopDtos
+                .AsNoTracking()
+                .GroupBy(scheduledStopDto => scheduledStopDto.TripId)
+                .ToListAsync();
+        }
+        else
+        {
+             scheduledStopDtos = await _scheduledStopDtos
+                .AsNoTracking()
+                .Where(scheduledStopDto => ids.Contains(scheduledStopDto.TripId))
+                .GroupBy(scheduledStopDto => scheduledStopDto.TripId)
+                .ToListAsync();
+        }
+
+        var trips = scheduledStopDtos.Select(_scheduledStopDtoToTripMapper.MapFrom).ToList();
 
         return trips;
     }
 
-    public override async Task AddAllAsync(IEnumerable<Trip> aggregates)
+    public async Task AddAllAsync(IEnumerable<Trip> aggregates)
     {
-        if (DatabaseIsInMemory)
-            await Aggregates.AddRangeAsync(aggregates);
+        var scheduledStopDtos = aggregates.SelectMany(_tripToScheduledStopDtoMapper.MapFrom).ToList();
+
+        if (_writeDbContext.IsInMemory())
+            await _scheduledStopDtos.AddRangeAsync(scheduledStopDtos);
         else
-            await BatchInsertAsync(aggregates);
+            await _writeDbContext.BulkInsertAsync(scheduledStopDtos);
     }
 
-    public override async Task UpdateAllAsync(IEnumerable<Trip> aggregates)
+    public void Remove(Trip ride)
     {
-        if (DatabaseIsInMemory)
-            Aggregates.UpdateRange(aggregates);
-        else
-            await BatchUpdateAsync(aggregates);
-
+        throw new NotImplementedException();
     }
 
     private async Task BatchInsertAsync(IEnumerable<Trip> aggregates)
@@ -91,7 +105,7 @@ public class TripWriteRepository : WriteRepository<Trip>, ITripWriteRepository
 
             if (batch.Count >= 100000)
             {
-                await WriteDbContext.BulkInsertAsync(batch, operation =>
+                await _writeDbContext.BulkInsertAsync(batch, operation =>
                 {
                     operation.BatchSize = 1000;
                     operation.BatchTimeout = 360;
@@ -102,35 +116,7 @@ public class TripWriteRepository : WriteRepository<Trip>, ITripWriteRepository
         }
 
         if (batch.Count > 0)
-            await WriteDbContext.BulkInsertAsync(batch, operation =>
-            {
-                operation.BatchSize = 1000;
-                operation.BatchTimeout = 360;
-            });
-    }
-
-    private async Task BatchUpdateAsync(IEnumerable<Trip> aggregates)
-    {
-        var batch = new List<Trip>(100000);
-
-        foreach (var trip in aggregates)
-        {
-            batch.Add(trip);
-
-            if (batch.Count >= 100000)
-            {
-                await WriteDbContext.BulkUpdateAsync(batch, operation =>
-                {
-                    operation.BatchSize = 1000;
-                    operation.BatchTimeout = 360;
-                });
-
-                batch.Clear();
-            }
-        }
-
-        if (batch.Count > 0)
-            await WriteDbContext.BulkUpdateAsync(batch, operation =>
+            await _writeDbContext.BulkInsertAsync(batch, operation =>
             {
                 operation.BatchSize = 1000;
                 operation.BatchTimeout = 360;

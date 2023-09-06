@@ -11,6 +11,11 @@ public class TimeServices
         _datetimeProvider = datetimeProvider;
     }
 
+    /// <summary>
+    /// Returns UTC datetime from seconds since epoch in UTC-4 (includes daylight savings)
+    /// </summary>
+    /// <param name="time"></param>
+    /// <returns></returns>
     public DateTime LongToDatetime(long time)
     {
         var datetime = DateTime.UnixEpoch.AddSeconds(time);

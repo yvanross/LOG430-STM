@@ -1,8 +1,8 @@
-﻿using Application.QueryServices.ServiceInterfaces;
+﻿using Application.Dtos;
+using Application.QueryServices.ServiceInterfaces;
 using Domain.Aggregates.Bus;
 using Domain.Aggregates.Ride;
 using Domain.Aggregates.Stop;
-using Domain.Aggregates.Trip;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.ReadRepositories;
@@ -45,24 +45,6 @@ public sealed class AppReadDbContext : DbContext, IQueryContext
                 b.Property(e => e.ReachedDepartureStop);
             });
 
-        modelBuilder.Entity<Trip>(
-            b =>
-            {
-                b.HasKey(e => e.Id);
-                b.HasMany(e => e.ScheduledStops)
-                    .WithOne()
-                    .HasForeignKey("TripId");
-            });
-
-        modelBuilder.Entity<ScheduledStop>(
-            b =>
-            {
-                b.HasKey(e => e.Id);
-                b.Property<string>("TripId");
-                b.Property(e => e.StopId);
-                b.Property(e => e.DepartureTime);
-            });
-
         modelBuilder.Entity<Bus>(
             b =>
             {
@@ -70,6 +52,16 @@ public sealed class AppReadDbContext : DbContext, IQueryContext
                 b.Property(e => e.TripId);
                 b.Property(e => e.CurrentStopIndex);
                 b.Property(e => e.Name);
+            });
+
+        modelBuilder.Entity<ScheduledStopDto>(
+            b =>
+            {
+                b.HasKey(e => e.Id);
+                b.Property(e => e.StopId);
+                b.HasIndex(e => e.TripId);
+                b.Property(e => e.DepartureTimespan);
+                b.Property(e => e.StopSequence);
             });
     }
 }

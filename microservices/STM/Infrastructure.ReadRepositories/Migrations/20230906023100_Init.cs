@@ -45,6 +45,21 @@ namespace Infrastructure.ReadRepositories.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ScheduledStopDto",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    StopId = table.Column<string>(type: "text", nullable: false),
+                    TripId = table.Column<string>(type: "text", nullable: false),
+                    DepartureTimespan = table.Column<TimeSpan>(type: "interval", nullable: false),
+                    StopSequence = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ScheduledStopDto", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Stop",
                 columns: table => new
                 {
@@ -57,39 +72,9 @@ namespace Infrastructure.ReadRepositories.Migrations
                     table.PrimaryKey("PK_Stop", x => x.Id);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Trip",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Trip", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ScheduledStop",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    StopId = table.Column<string>(type: "text", nullable: false),
-                    DepartureTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    TripId = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ScheduledStop", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ScheduledStop_Trip_TripId",
-                        column: x => x.TripId,
-                        principalTable: "Trip",
-                        principalColumn: "Id");
-                });
-
             migrationBuilder.CreateIndex(
-                name: "IX_ScheduledStop_TripId",
-                table: "ScheduledStop",
+                name: "IX_ScheduledStopDto_TripId",
+                table: "ScheduledStopDto",
                 column: "TripId");
         }
 
@@ -103,13 +88,10 @@ namespace Infrastructure.ReadRepositories.Migrations
                 name: "Ride");
 
             migrationBuilder.DropTable(
-                name: "ScheduledStop");
+                name: "ScheduledStopDto");
 
             migrationBuilder.DropTable(
                 name: "Stop");
-
-            migrationBuilder.DropTable(
-                name: "Trip");
         }
     }
 }
