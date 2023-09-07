@@ -91,7 +91,6 @@ public class Program
             }
         );
 
-        app.UseAuthorization();
         app.MapControllers();
 
         var scope = app.Services.CreateScope();

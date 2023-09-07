@@ -25,6 +25,7 @@ services:
       BRIDGE_PORT: 32674
     depends_on:
       - event-store
+
   event-store:
     container_name: EventStream
     image: cluster_mq
@@ -42,14 +43,13 @@ services:
       RABBITMQ_ERLANG_COOKIE_FILE: /var/lib/rabbitmq/.erlang.cookie
     labels:
       Artifact_Category: Connector
-      Replicas: EventStream, EventStream2, EventStream3, EventStream4, EventStream5
+      Replicas: EventStream
 
   routetimeprovider:
     container_name: RouteTimeProvider
     image: routetimeprovider
     restart: always
     build:
-      context: ../
       dockerfile: RouteTimeProvider/RouteTimeProvider/Dockerfile
     environment:
       SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
@@ -80,29 +80,27 @@ services:
       - '32773:80'
     labels:
       ARTIFACT_CATEGORY: Computation
-      Pod_links: RouteTimeProvider
-      Replicas: 1
+      Pod_links: RouteTimeProvider, STM
     depends_on:
       - nodecontroller
     
-#  stm:
-#    container_name: STM
-#    image: stm
-#    restart: always
-#    build:
-#      context: ../
-#      dockerfile: STM/Controllers/Dockerfile
-#    environment:
-#      SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
-#      NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
-#      ID: STM
-#      API_KEY: '${STM}'
-#    ports:
-#      - '32774:80'#
-#    labels:
-#      ARTIFACT_CATEGORY: Computation
-#    depends_on:
-#      - nodecontroller
-#      - tripcomparator
+  stm:
+    container_name: STM
+    image: stm
+    restart: always
+    build:
+      dockerfile: STM/Controllers/Configuration/Dockerfile
+    environment:
+      SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
+      NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
+      ID: STM
+      API_KEY: '${STM}'
+    ports:
+      - '32774:80'
+    labels:
+      ARTIFACT_CATEGORY: Computation
+    depends_on:
+      - nodecontroller
+      - tripcomparator
 
   

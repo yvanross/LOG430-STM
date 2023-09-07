@@ -8,13 +8,11 @@
     ".NETCoreApp,Version=v7.0": {
       "RouteTimeProvider/1.0.0": {
         "dependencies": {
-          "ApplicationLogic": "1.0.0",
-          "Entities": "1.0.0",
+          "Application": "1.0.0",
           "Microsoft.AspNetCore.OpenApi": "7.0.3",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.17.2",
           "Newtonsoft.Json": "13.0.3",
-          "Polly": "7.2.3",
-          "ServiceMeshHelper": "1.0.68",
+          "RestSharp": "110.2.0",
           "Swashbuckle.AspNetCore": "6.4.0"
         },
         "runtime": {
@@ -33,7 +31,6 @@
         }
       },
       "Microsoft.Extensions.ApiDescription.Server/6.0.5": {},
-      "Microsoft.Extensions.Logging.Abstractions/7.0.0": {},
       "Microsoft.OpenApi/1.4.3": {
         "runtime": {
           "lib/netstandard2.0/Microsoft.OpenApi.dll": {
@@ -51,31 +48,14 @@
           }
         }
       },
-      "Polly/7.2.3": {
-        "runtime": {
-          "lib/netstandard2.0/Polly.dll": {
-            "assemblyVersion": "7.0.0.0",
-            "fileVersion": "7.2.3.0"
-          }
-        }
-      },
-      "RestSharp/108.0.3": {
-        "runtime": {
-          "lib/net6.0/RestSharp.dll": {
-            "assemblyVersion": "108.0.3.0",
-            "fileVersion": "108.0.3.0"
-          }
-        }
-      },
-      "ServiceMeshHelper/1.0.68": {
+      "RestSharp/110.2.0": {
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "7.0.0",
-          "RestSharp": "108.0.3"
+          "System.Text.Json": "7.0.2"
         },
         "runtime": {
-          "lib/net7.0/ServiceMeshHelper.dll": {
-            "assemblyVersion": "1.0.68.0",
-            "fileVersion": "1.0.68.0"
+          "lib/net7.0/RestSharp.dll": {
+            "assemblyVersion": "110.2.0.0",
+            "fileVersion": "110.2.0.0"
           }
         }
       },
@@ -117,17 +97,15 @@
           }
         }
       },
-      "ApplicationLogic/1.0.0": {
+      "System.Text.Encodings.Web/7.0.0": {},
+      "System.Text.Json/7.0.2": {
         "dependencies": {
-          "Entities": "1.0.0"
-        },
-        "runtime": {
-          "ApplicationLogic.dll": {}
+          "System.Text.Encodings.Web": "7.0.0"
         }
       },
-      "Entities/1.0.0": {
+      "Application/1.0.0": {
         "runtime": {
-          "Entities.dll": {}
+          "Application.dll": {}
         }
       }
     }
@@ -152,13 +130,6 @@
       "path": "microsoft.extensions.apidescription.server/6.0.5",
       "hashPath": "microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512"
     },
-    "Microsoft.Extensions.Logging.Abstractions/7.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-kmn78+LPVMOWeITUjIlfxUPDsI0R6G0RkeAMBmQxAJ7vBJn4q2dTva7pWi65ceN5vPGjJ9q/Uae2WKgvfktJAw==",
-      "path": "microsoft.extensions.logging.abstractions/7.0.0",
-      "hashPath": "microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512"
-    },
     "Microsoft.OpenApi/1.4.3": {
       "type": "package",
       "serviceable": true,
@@ -180,26 +151,12 @@
       "path": "newtonsoft.json/13.0.3",
       "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
     },
-    "Polly/7.2.3": {
+    "RestSharp/110.2.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-DeCY0OFbNdNxsjntr1gTXHJ5pKUwYzp04Er2LLeN3g6pWhffsGuKVfMBLe1lw7x76HrPkLxKEFxBlpRxS2nDEQ==",
-      "path": "polly/7.2.3",
-      "hashPath": "polly.7.2.3.nupkg.sha512"
-    },
-    "RestSharp/108.0.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-phq1AkVhqVXHZxvWDV4fJEJKCR5OHNFUGx2Ix8o5EFShS6654oZhth4X2RWvaU/W7UexIswW0T+lTirxfLU2Ow==",
-      "path": "restsharp/108.0.3",
-      "hashPath": "restsharp.108.0.3.nupkg.sha512"
-    },
-    "ServiceMeshHelper/1.0.68": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Ecu8Qe1cz7rH7yR+hTlhZR9OzhH44e+37A4gr7RLfm2CQdk1nT+iGZjinQfDu+sOJmlITFBpHhJ3VBzyhwk7VQ==",
-      "path": "servicemeshhelper/1.0.68",
-      "hashPath": "servicemeshhelper.1.0.68.nupkg.sha512"
+      "sha512": "sha512-FXGw0IMcqY7yO/hzS9QrD3iNswNgb9UxJnxWmfOxmGs4kRlZWqdtBoGPLuhlbgsDzX1RFo4WKui8TGGKXWKalw==",
+      "path": "restsharp/110.2.0",
+      "hashPath": "restsharp.110.2.0.nupkg.sha512"
     },
     "Swashbuckle.AspNetCore/6.4.0": {
       "type": "package",
@@ -229,12 +186,21 @@
       "path": "swashbuckle.aspnetcore.swaggerui/6.4.0",
       "hashPath": "swashbuckle.aspnetcore.swaggerui.6.4.0.nupkg.sha512"
     },
-    "ApplicationLogic/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
+    "System.Text.Encodings.Web/7.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-OP6umVGxc0Z0MvZQBVigj4/U31Pw72ITihDWP9WiWDm+q5aoe0GaJivsfYGq53o6dxH7DcXWiCTl7+0o2CGdmg==",
+      "path": "system.text.encodings.web/7.0.0",
+      "hashPath": "system.text.encodings.web.7.0.0.nupkg.sha512"
     },
-    "Entities/1.0.0": {
+    "System.Text.Json/7.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/LZf/JrGyilojqwpaywb+sSz8Tew7ij4K/Sk+UW8AKfAK7KRhR6mKpKtTm06cYA7bCpGTWfYksIW+mVsdxPegQ==",
+      "path": "system.text.json/7.0.2",
+      "hashPath": "system.text.json.7.0.2.nupkg.sha512"
+    },
+    "Application/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

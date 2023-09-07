@@ -18,7 +18,7 @@ namespace Application.Usecases
 
         private int _averageCarTravelTime;
 
-        private Ride? _optimalBus;
+        private RideDto? _optimalBus;
 
         public CompareTimes(IRouteTimeProvider routeTimeProvider, IBusInfoProvider iBusInfoProvider, IDataStreamWriteModel dataStreamWriteModel, ILogger<CompareTimes> logger)
         {
@@ -52,6 +52,7 @@ namespace Application.Usecases
             return channel;
         }
 
+        //is polling ideal?
         public async Task PollTrackingUpdate(ChannelWriter<IBusPositionUpdated> channel)
         {
             if (_optimalBus is null) throw new Exception("bus data was null");

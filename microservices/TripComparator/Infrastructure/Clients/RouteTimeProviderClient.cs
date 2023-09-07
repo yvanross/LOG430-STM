@@ -2,8 +2,8 @@
 using Application.Interfaces.Policies;
 using Newtonsoft.Json;
 using ServiceMeshHelper;
-using ServiceMeshHelper.Bo;
-using ServiceMeshHelper.Bo.InterServiceRequests;
+using ServiceMeshHelper.BusinessObjects;
+using ServiceMeshHelper.BusinessObjects.InterServiceRequests;
 using ServiceMeshHelper.Controllers;
 
 namespace Infrastructure.Clients;

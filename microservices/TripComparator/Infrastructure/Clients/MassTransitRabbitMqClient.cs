@@ -29,7 +29,7 @@ public class MassTransitRabbitMqClient : IDataStreamWriteModel
         }
         catch
         {
-            // ignored - no need to fight over ack - single message is not that important
+            // ignored - no need to fight over ack - single message is not that important in our context
         }
     }
 }

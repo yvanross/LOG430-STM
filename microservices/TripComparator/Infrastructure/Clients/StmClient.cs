@@ -7,8 +7,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RestSharp;
 using ServiceMeshHelper;
-using ServiceMeshHelper.Bo;
-using ServiceMeshHelper.Bo.InterServiceRequests;
+using ServiceMeshHelper.BusinessObjects;
+using ServiceMeshHelper.BusinessObjects.InterServiceRequests;
 using ServiceMeshHelper.Controllers;
 
 namespace Infrastructure.Clients;
@@ -26,7 +26,7 @@ public class StmClient : IBusInfoProvider
         _infiniteRetry = infiniteRetry;
     }
 
-    public Task<IEnumerable<Ride>> GetBestBus(string startingCoordinates, string destinationCoordinates)
+    public Task<IEnumerable<RideDto>> GetBestBus(string startingCoordinates, string destinationCoordinates)
     {
         return _infiniteRetry.ExecuteAsync(async () =>
         {
@@ -50,11 +50,11 @@ public class StmClient : IBusInfoProvider
                 Mode = LoadBalancingMode.RoundRobin
             });
 
-            IEnumerable<Ride> busDto = Enumerable.Empty<Ride>();
+            IEnumerable<RideDto> busDto = Enumerable.Empty<RideDto>();
 
             await foreach (var res in channel.ReadAllAsync())
             {
-                busDto = JsonConvert.DeserializeObject<IEnumerable<Ride>>(res.Content);
+                busDto = JsonConvert.DeserializeObject<IEnumerable<RideDto>>(res.Content);
 
                 break;
             }
@@ -63,11 +63,11 @@ public class StmClient : IBusInfoProvider
         });
     }
 
-    public Task BeginTracking(Ride stmBus)
+    public Task BeginTracking(RideDto stmBus)
     {
         return _infiniteRetry.ExecuteAsync(async () =>
         {
-            _ = await RestController.Post(new PostRoutingRequest<Ride>()
+            _ = await RestController.Post(new PostRoutingRequest<RideDto>()
             {
                 TargetService = "STM",
                 Endpoint = $"Track/BeginTracking",
@@ -100,7 +100,7 @@ public class StmClient : IBusInfoProvider
 
             if (data is null || !data.IsSuccessStatusCode || data.StatusCode.Equals(HttpStatusCode.NoContent)) return null;
 
-            var busTracking = JsonConvert.DeserializeObject<BusTracking>(data.Content);
+            var busTracking = JsonConvert.DeserializeObject<BusTracking>(data.Content!);
 
             return busTracking;
 

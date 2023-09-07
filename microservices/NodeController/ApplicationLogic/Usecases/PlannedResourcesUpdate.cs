@@ -16,14 +16,12 @@ public class PlannedResourcesUpdate
         _hostInfo = hostInfo;
     }
 
-    //todo not thread safe
     public void IncreaseNumberOfPod(string? podTypeName)
     {
         if (_podReadService.GetPodType(podTypeName) is { } podType)
             podType.IncreaseNumberOfPod();
     }
 
-    //todo not thread safe
     public void DecreaseNumberOfPod(string? podTypeName)
     {
         if (_podReadService.GetPodType(podTypeName) is { } podType)

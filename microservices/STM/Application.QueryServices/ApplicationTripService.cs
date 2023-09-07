@@ -53,12 +53,12 @@ public class ApplicationTripService
 
     private async Task<Dictionary<string, List<ScheduledStopDto>>> GetRelevantTripIdsAsync(List<string> materializedIds)
     {
-        //For simplicity sake i will assume UTC-4 as the timezone for montreal and not account for daylight savings time.
+        //For simplicity sake I will assume UTC-4 as the timezone for montreal and not account for daylight savings time.
         //Out of the box the static GTFS comes in a 30 hour window.
         //Converting that to UTC and saving to the DB means pushing all timespans by 4 hours.
         //We are now on a weird stretch with a maximum of 34 hours and a minimum of 4 hours.
-        //Issue being that a trip at 33 hours might wrap at hour 3, being the next day.
-        //We can assume that no user selects two points more than 2 hours apart on a same trip (heuristic)
+        //Issue being that a trip at 25 hours might wrap at hour 1, being the next day.
+        //We can assume that no user selects two points more than 4 hours apart on a same trip (heuristic)
 
         var numberOfHoursInADayOnEarth = TimeSpan.FromHours(24);
 
@@ -66,7 +66,6 @@ public class ApplicationTripService
 
         var currentTimeOfDay = _datetimeProvider.GetCurrentTime().TimeOfDay;
 
-        //everything is converted in seconds for EF Core to be able to translate it to SQL
         var scheduledStops = await _readTrips
             .GetData<ScheduledStopDto>()
             .Where(scheduledStop => materializedIds.Contains(scheduledStop.StopId))
@@ -93,14 +92,5 @@ public class ApplicationTripService
         );
 
         return tripProjection;
-    }
-
-    private async Task<List<Trip>> GetTripsByTripIdsAsync(IEnumerable<string> tripIds)
-    {
-        return await _readTrips
-            .GetData<Trip>()
-            .Where(trip => tripIds.Contains(trip.Id))
-            .Include(trip => trip.ScheduledStops)
-            .ToListAsync();
     }
 }

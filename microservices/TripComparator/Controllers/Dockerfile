@@ -7,24 +7,21 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["Nuget/ServiceMeshHelper.*.nupkg", "Controllers/"]
-COPY ["TripComparator/Controllers/nuget.config", ""]
-COPY ["TripComparator/Controllers/Controllers.csproj", "Controllers/"]
-COPY ["TripComparator/ApplicationLogic/ApplicationLogic.csproj", "ApplicationLogic/"]
-COPY ["TripComparator/Infrastructure/Infrastructure.csproj", "Infrastructure/"]
-COPY ["TripComparator/Configuration/Configuration.csproj", "Configuration/"]
-COPY ["TripComparator/Entities/Entities.csproj", "Entities/"]
+COPY ["Controllers/Controllers.csproj", "Controllers/"]
+COPY ["Application/Application.csproj", "Application/"]
+COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+COPY ["Configuration/Configuration.csproj", "Configuration/"]
 RUN dotnet restore "Controllers/Controllers.csproj"
 COPY . .
-WORKDIR "/src/TripComparator"
-RUN dotnet build "Configuration/Configuration.csproj" -c Debug -o /app/build
+WORKDIR "/src/Controllers"
+RUN dotnet build "Controllers.csproj" -c Debug -o /app/build  #-c Release -o /app/build Commenting this to help debugging your container, but it is less performant
 
 FROM build AS publish
-RUN dotnet publish "Configuration/Configuration.csproj" -c Debug -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Controllers.csproj" -c Debug -o /app/publish /p:UseAppHost=false #-c Release -o /app/publish /p:UseAppHost=false Commenting this to help debugging your container, but it is less performant
 
-ENV ASPNETCORE_ENVIRONMENT=Development
+ENV ASPNETCORE_ENVIRONMENT=Development #here again to help debugging your container, but it might be less performant
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Configuration.dll"]
+ENTRYPOINT ["dotnet", "Controllers.dll"]
