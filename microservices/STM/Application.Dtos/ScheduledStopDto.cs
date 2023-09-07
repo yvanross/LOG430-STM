@@ -2,6 +2,15 @@
 
 public class ScheduledStopDto
 {
+    public ScheduledStopDto(string id, string stopId, string tripId, TimeSpan departureTimespan, int stopSequence)
+    {
+        Id = id;
+        StopId = stopId;
+        TripId = tripId;
+        DepartureTimespan = departureTimespan;
+        StopSequence = stopSequence;
+    }
+
     public string Id { get; set; }
 
     public string StopId { get; set; } 

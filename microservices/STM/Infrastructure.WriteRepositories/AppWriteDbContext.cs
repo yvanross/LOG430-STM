@@ -31,7 +31,6 @@ public sealed class AppWriteDbContext : DbContext
                 b.Property(e => e.TripBegunTime);
                 b.Property(e => e.BusId);
                 b.Property(e => e.DepartureReachedTime);
-                b.Property(e => e.ReachedDepartureStop);
             });
 
         modelBuilder.Entity<Bus>(

@@ -93,9 +93,6 @@ namespace Infrastructure.ReadRepositories.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("ReachedDepartureStop")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("TrackingComplete")
                         .HasColumnType("boolean");
 

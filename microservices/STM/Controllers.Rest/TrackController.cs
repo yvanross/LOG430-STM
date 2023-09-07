@@ -1,6 +1,6 @@
 ﻿using Application.Commands.Seedwork;
 using Application.Commands.TrackBus;
-using Application.EventHandlers.AntiCorruption;
+using Application.EventHandlers.Interfaces;
 using Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -33,6 +33,10 @@ public class TrackController : ControllerBase
         return Accepted();
     }
 
+    /// <summary>
+    /// This does not allow to discriminate which bus is being tracked, maybe it should be published as an event by message queue?...
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     [ActionName(nameof(GetTrackingUpdate))]
     public async Task<ActionResult<RideTrackingUpdated>> GetTrackingUpdate()

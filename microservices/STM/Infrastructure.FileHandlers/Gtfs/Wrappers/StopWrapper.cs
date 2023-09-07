@@ -2,17 +2,15 @@
 
 namespace Infrastructure.FileHandlers.Gtfs.Wrappers;
 
-public sealed class StopWrapper : IStopWrapper
+public struct StopWrapper : IStopWrapper
 {
-    private readonly GtfsInfo _info;
-
     public StopWrapper(GtfsInfo info)
     {
-        _info = info;
+        Id = GetId(info);
+        Longitude = GetLongitude(info);
+        Latitude = GetLatitude(info);
 
-        Id = GetId();
-        Longitude = GetLongitude();
-        Latitude = GetLatitude();
+        info.Dispose();
     }
 
     public string Id { get; }
@@ -21,22 +19,22 @@ public sealed class StopWrapper : IStopWrapper
 
     public double Latitude { get; }
 
-    private string GetId()
+    private string GetId(GtfsInfo gtfsInfo)
     {
-        return _info.GetValue("stop_id");
+        return gtfsInfo.GetValue("stop_id");
     }
 
-    private double GetLongitude()
+    private double GetLongitude(GtfsInfo gtfsInfo)
     {
-        if (double.TryParse(_info.GetValue("stop_lon"), out var longitude) is false)
+        if (double.TryParse(gtfsInfo.GetValue("stop_lon"), out var longitude) is false)
             throw new ArgumentException("Longitude is not a double");
 
         return longitude;
     }
 
-    private double GetLatitude()
+    private double GetLatitude(GtfsInfo gtfsInfo)
     {
-        if (double.TryParse(_info.GetValue("stop_lat"), out var latitude) is false)
+        if (double.TryParse(gtfsInfo.GetValue("stop_lat"), out var latitude) is false)
             throw new ArgumentException("Latitude is not a double");
 
         return latitude;

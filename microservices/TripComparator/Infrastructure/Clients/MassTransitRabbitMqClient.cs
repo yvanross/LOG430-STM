@@ -1,5 +1,4 @@
-﻿using ApplicationLogic.Interfaces;
-using Entities.DomainInterfaces;
+﻿using Application.Interfaces;
 using MassTransit;
 using MqContracts;
 

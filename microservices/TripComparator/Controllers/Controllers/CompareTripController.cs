@@ -1,5 +1,5 @@
-using ApplicationLogic.Interfaces.Policies;
-using ApplicationLogic.Usecases;
+using Application.Interfaces.Policies;
+using Application.Usecases;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 

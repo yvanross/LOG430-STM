@@ -1,7 +1,6 @@
-﻿using ApplicationLogic.Interfaces.Policies;
-using Entities.DomainInterfaces;
+﻿using Application.Interfaces;
+using Application.Interfaces.Policies;
 using Newtonsoft.Json;
-using RestSharp;
 using ServiceMeshHelper;
 using ServiceMeshHelper.Bo;
 using ServiceMeshHelper.Bo.InterServiceRequests;
@@ -22,7 +21,7 @@ public class RouteTimeProviderClient : IRouteTimeProvider
     {
         return _infiniteRetry.ExecuteAsync(async () =>
         {
-            /*var res = await RestController.Get(new GetRoutingRequest()
+            var res = await RestController.Get(new GetRoutingRequest()
             {
                 TargetService = "RouteTimeProvider",
                 Endpoint = $"RouteTime/Get",
@@ -49,15 +48,17 @@ public class RouteTimeProviderClient : IRouteTimeProvider
                 times.Add(JsonConvert.DeserializeObject<int>(result.Content));
             }
 
-            return (int)times.Average();*/
-
-            var restClient = new RestClient("http://RouteTimeProvider");
-            var restRequest = new RestRequest("RouteTime/Get");
-
-            restRequest.AddQueryParameter("startingCoordinates", startingCoordinates);
-            restRequest.AddQueryParameter("destinationCoordinates", destinationCoordinates);
-            
-            return (await restClient.ExecuteGetAsync<int>(restRequest)).Data;
+            return (int)times.Average();
         });
     }
 }
+
+//Exemple of how to use Restsharp for a simple request to a service (without the pros (and cons) of using the NodeController)
+
+//var restClient = new RestClient("http://RouteTimeProvider");
+//var restRequest = new RestRequest("RouteTime/Get");
+
+//restRequest.AddQueryParameter("startingCoordinates", startingCoordinates);
+//restRequest.AddQueryParameter("destinationCoordinates", destinationCoordinates);
+            
+//return (await restClient.ExecuteGetAsync<int>(restRequest)).Data;

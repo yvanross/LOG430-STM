@@ -1,8 +1,8 @@
 ﻿using System.Net;
-using System.Runtime.Serialization;
-using ApplicationLogic.Interfaces.Policies;
-using Entities.BusinessObjects;
-using Entities.DomainInterfaces;
+using Application.BusinessObjects;
+using Application.DTO;
+using Application.Interfaces;
+using Application.Interfaces.Policies;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RestSharp;
@@ -10,7 +10,6 @@ using ServiceMeshHelper;
 using ServiceMeshHelper.Bo;
 using ServiceMeshHelper.Bo.InterServiceRequests;
 using ServiceMeshHelper.Controllers;
-using TripComparator.DTO;
 
 namespace Infrastructure.Clients;
 
@@ -27,7 +26,7 @@ public class StmClient : IBusInfoProvider
         _infiniteRetry = infiniteRetry;
     }
 
-    public Task<IEnumerable<IStmBus?>> GetBestBus(string startingCoordinates, string destinationCoordinates)
+    public Task<IEnumerable<Ride>> GetBestBus(string startingCoordinates, string destinationCoordinates)
     {
         return _infiniteRetry.ExecuteAsync(async () =>
         {
@@ -51,11 +50,11 @@ public class StmClient : IBusInfoProvider
                 Mode = LoadBalancingMode.RoundRobin
             });
 
-            IEnumerable<IStmBus?> busDto = Enumerable.Empty<IStmBus>();
+            IEnumerable<Ride> busDto = Enumerable.Empty<Ride>();
 
             await foreach (var res in channel.ReadAllAsync())
             {
-                busDto = JsonConvert.DeserializeObject<IEnumerable<StmBusDto>>(res.Content);
+                busDto = JsonConvert.DeserializeObject<IEnumerable<Ride>>(res.Content);
 
                 break;
             }
@@ -64,17 +63,15 @@ public class StmClient : IBusInfoProvider
         });
     }
 
-    public Task BeginTracking(IStmBus? stmBus)
+    public Task BeginTracking(Ride stmBus)
     {
-        if(stmBus is not StmBusDto busDto) throw new InvalidDataContractException("Make sure to not alter the type stored in the collection returned by GetBestBus");
-
         return _infiniteRetry.ExecuteAsync(async () =>
         {
-            _ = await RestController.Post(new PostRoutingRequest<StmBusDto>()
+            _ = await RestController.Post(new PostRoutingRequest<Ride>()
             {
                 TargetService = "STM",
                 Endpoint = $"Track/BeginTracking",
-                Payload = busDto,
+                Payload = stmBus,
                 Mode = LoadBalancingMode.RoundRobin
             });
         });
@@ -88,14 +85,7 @@ public class StmClient : IBusInfoProvider
             {
                 TargetService = "STM",
                 Endpoint = $"Track/GetTrackingUpdate",
-                Params = new List<NameValue>()
-                {
-                    new()
-                    {
-                        Name = "busId",
-                        Value = busId
-                    }
-                },
+                Params = new List<NameValue>(),
                 Mode = LoadBalancingMode.RoundRobin
             });
 

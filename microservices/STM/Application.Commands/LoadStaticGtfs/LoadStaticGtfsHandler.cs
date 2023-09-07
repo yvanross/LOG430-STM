@@ -1,5 +1,6 @@
 ﻿using Application.Commands.Seedwork;
 using Application.CommandServices;
+using Application.CommandServices.Interfaces;
 using Application.CommandServices.Repositories;
 using Application.Mapping.Interfaces;
 using Application.Mapping.Interfaces.Wrappers;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Commands.LoadStaticGtfs;
 
-public class LoadStaticGtfsHandler : ICommandHandler<LoadStaticGtfsCommand>
+public sealed class LoadStaticGtfsHandler : ICommandHandler<LoadStaticGtfsCommand>
 {
     private readonly ILogger<LoadStaticGtfsHandler> _logger;
     private readonly IMappingTo<IStopWrapper, Stop> _stopMapper;
@@ -41,41 +42,82 @@ public class LoadStaticGtfsHandler : ICommandHandler<LoadStaticGtfsCommand>
     {
         try
         {
-            _transitDataReader.LoadStacks();
-
-            var stops = new List<Stop>();
-            var trips = new List<Trip>();
+            _transitDataReader.LoadStaticGtfsFromFilesInMemory();
 
             _logger.LogInformation("Static gtfs data loaded in memory, mapping to aggregates...");
 
-            while (_transitDataReader.Stops.TryPop(out var stop)) stops.Add(_stopMapper.MapFrom(stop));
+            var stops = new List<Stop>();
 
-            _logger.LogInformation("Stops mapped");
-
-            while (_transitDataReader.Trips.TryPop(out var trip))
+            foreach (var stopWrapper in _transitDataReader.FetchStopData())
             {
-                trips.Add(_tripMapper.MapFrom(trip));
-
-                trip.Dispose();
+                stops.Add(_stopMapper.MapFrom(stopWrapper));
             }
 
-            _logger.LogInformation("Trips mapped");
+            await _stopWriteRepository.AddAllAsync(stops);
+
+            stops.Clear();
+
+            GC.Collect();
+
+            _logger.LogInformation("Stops persisted");
+
+            await BatchInsertTrips(_transitDataReader.FetchTripData());
+
+            GC.Collect();
+
+            _logger.LogInformation("Trips persisted");
 
             _transitDataReader.Dispose();
 
-            _logger.LogInformation("Saving Aggregates, this is a long operation... (Between 1-5 minutes on most systems)");
-
-            await _stopWriteRepository.AddAllAsync(stops.ToList());
-
-            await _tripWriteRepository.AddAllAsync(trips.ToList());
-
-            //using bulk inserts so save changes is not needed but it still dispatches the domain events
+            //for simplicity sake we don't use a transaction here but the events still only fire after the commit
             await _unitOfWork.SaveChangesAsync();
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error while loading static gtfs data");
+            _logger.LogError(e, 
+                """
+                        Error while loading static gtfs data.
+                        This operation doesn't use transaction leaving the database in an inconsistent state.
+                        Make sure to delete all data from the database before trying again.
+                        """);
+
             throw;
+        }
+    }
+
+    /// <summary>
+    /// In order to spare computers with 8gb of ram (obviously only works with an actual database)
+    /// Reducing Batch size lowers memory usage but increases time to insert
+    /// Increasing Batch size increases memory usage but decreases time to insert
+    /// You can always fine tune this to your liking, the current value takes into account systems with 8gb of ram
+    /// </summary>
+    /// <param name="aggregates"></param>
+    /// <returns></returns>
+    private async Task BatchInsertTrips(IEnumerable<ITripWrapper> tripWrappers)
+    {
+        const int batchSize = 10000;
+
+        var batch = new List<Trip>(batchSize);
+
+        foreach (var trip in tripWrappers)
+        {
+            batch.Add(_tripMapper.MapFrom(trip));
+
+            trip.Dispose();
+
+            if (batch.Count >= batchSize)
+            {
+                await _tripWriteRepository.AddAllAsync(batch);
+
+                batch.Clear();
+            }
+        }
+
+        if (batch.Count > 0)
+        {
+            await _tripWriteRepository.AddAllAsync(batch);
+
+            batch.Clear();
         }
     }
 }

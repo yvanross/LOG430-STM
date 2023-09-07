@@ -9,10 +9,9 @@ internal static class RideFactory
     {
         var rideId = Guid.NewGuid().ToString();
 
-        var ride = new Ride(rideId, busId, firstRecordedStopId, departureId, destinationId)
-        {
-            TripBegunTime = datetimeProvider.GetCurrentTime()
-        };
+        var ride = new Ride(rideId, busId, firstRecordedStopId, departureId, destinationId);
+
+        ride.SetTripBegunTime(datetimeProvider.GetCurrentTime());
 
         return ride;
     }

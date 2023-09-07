@@ -1,5 +1,5 @@
 ﻿using Application.EventHandlers;
-using Application.EventHandlers.AntiCorruption;
+using Application.EventHandlers.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 

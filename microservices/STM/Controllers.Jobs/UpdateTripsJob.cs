@@ -1,6 +1,6 @@
 ﻿using Application.Commands.Seedwork;
 using Application.Commands.UpdateTrips;
-using Application.EventHandlers.AntiCorruption;
+using Application.EventHandlers.Interfaces;
 using Contracts;
 using Domain.Common.Interfaces;
 using Microsoft.Extensions.DependencyInjection;

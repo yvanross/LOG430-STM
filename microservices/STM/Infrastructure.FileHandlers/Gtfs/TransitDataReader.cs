@@ -1,4 +1,5 @@
 ﻿using Application.CommandServices;
+using Application.CommandServices.Interfaces;
 using Application.Mapping.Interfaces.Wrappers;
 using Domain.Common.Interfaces;
 using Infrastructure.FileHandlers.Gtfs.Wrappers;
@@ -28,25 +29,15 @@ public class TransitDataReader : ITransitDataReader
         _datetimeProvider = datetimeProvider;
     }
 
-    public Stack<IStopWrapper> Stops { get; } = new();
-    public Stack<ITripWrapper> Trips { get; } = new();
-
-    public void LoadStacks()
+    public void LoadStaticGtfsFromFilesInMemory()
     {
         _gtfsFileFileCache.LoadFileCache();
-
-        FetchStopData();
-        FetchTripData();
     }
 
     public void Dispose()
     {
         if (_disposed is false)
         {
-            Trips.Clear();
-
-            Stops.Clear();
-
             _wrapperMediator.Dispose();
 
             _gtfsFileFileCache.Dispose();
@@ -61,42 +52,62 @@ public class TransitDataReader : ITransitDataReader
         }
     }
 
-
-    private void FetchStopData()
+    /// <summary>
+    /// This needs to be called before FetchTripData
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<IStopWrapper> FetchStopData()
     {
         var stopsInfo = _gtfsFileFileCache.GetInfo(DataCategoryEnum.STOPS);
 
         foreach (var info in stopsInfo)
+        {
+            IStopWrapper stopWrapper;
+
             try
             {
                 var stop = new StopWrapper(info);
 
                 _wrapperMediator.AddStop(stop);
 
-                Stops.Push(stop);
+                stopWrapper = stop;
             }
             catch (Exception e)
             {
                 _logger.LogError(
                     $"An error occurred while creating a stop, this is non fatal and trivial in small quantities. Exception: {e.Message}");
+
+                continue;
             }
+
+            yield return stopWrapper;
+        }
+           
+
+
     }
 
-    private void FetchTripData()
+    public IEnumerable<ITripWrapper> FetchTripData()
     {
         var tripsInfo = _gtfsFileFileCache.GetInfo(DataCategoryEnum.TRIPS).ToList();
 
         foreach (var info in tripsInfo)
+        {
+            ITripWrapper tripWrapper;
             try
             {
-                var tripWrapper = new TripWrapper(info, _gtfsFileFileCache, _wrapperMediator, _datetimeProvider);
-
-                Trips.Push(tripWrapper);
+                tripWrapper = new TripWrapper(info, _gtfsFileFileCache, _wrapperMediator, _datetimeProvider);
             }
             catch (Exception e)
             {
                 _logger.LogError(
                     $"An error occurred while creating a trip, this is non fatal and trivial in small quantities. Exception: {e.Message}");
+
+                continue;
             }
+
+            yield return tripWrapper;
+        }
+            
     }
 }

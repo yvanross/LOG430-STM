@@ -1,7 +1,8 @@
 ﻿using Application.Commands.Seedwork;
 using Application.CommandServices;
+using Application.CommandServices.Interfaces;
 using Application.CommandServices.Repositories;
-using Application.EventHandlers.AntiCorruption;
+using Application.EventHandlers.Interfaces;
 using Contracts;
 using Domain.Common.Interfaces;
 using Domain.Services.Aggregates;

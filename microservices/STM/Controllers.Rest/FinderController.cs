@@ -30,8 +30,7 @@ public class FinderController : ControllerBase
     /// </returns>
     [HttpGet]
     [ActionName(nameof(OptimalBuses))]
-    public async Task<ActionResult<RideViewModel>> OptimalBuses(string fromLatitudeLongitude,
-        string toLatitudeLongitude)
+    public async Task<ActionResult<RideViewModel>> OptimalBuses(string fromLatitudeLongitude, string toLatitudeLongitude)
     {
         _logger.LogInformation($"OptimalBus endpoint called with coordinated: from: {fromLatitudeLongitude}; to: {toLatitudeLongitude}");
 

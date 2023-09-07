@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Reflection;
 using System.Threading.Channels;
-using Application.EventHandlers.AntiCorruption;
+using Application.EventHandlers.Interfaces;
 using Application.EventHandlers.Messaging.PipeAndFilter;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

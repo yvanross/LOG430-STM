@@ -25,14 +25,12 @@ public class TripMapper : IMappingTo<IEnumerable<ScheduledStopDto>, Trip>, IMapp
     public IEnumerable<ScheduledStopDto> MapFrom(Trip aggregate)
     {
         return aggregate.ScheduledStops
-            .Select((scheduledStop, i) => new ScheduledStopDto()
-            {
-                StopSequence = i,
-                DepartureTimespan = scheduledStop.ScheduledDepartureTime,
-                StopId = scheduledStop.StopId,
-                TripId = aggregate.Id,
-                Id = scheduledStop.Id
-            })
+            .Select((scheduledStop, i) => new ScheduledStopDto(
+                scheduledStop.Id,
+                scheduledStop.StopId,
+                aggregate.Id,
+                scheduledStop.ScheduledDepartureTime,
+                i))
             .ToList();
     }
 

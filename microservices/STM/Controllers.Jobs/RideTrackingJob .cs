@@ -1,6 +1,6 @@
 ﻿using Application.Commands.Seedwork;
 using Application.Commands.UpdateRidesTracking;
-using Application.EventHandlers.AntiCorruption;
+using Application.EventHandlers.Interfaces;
 using Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

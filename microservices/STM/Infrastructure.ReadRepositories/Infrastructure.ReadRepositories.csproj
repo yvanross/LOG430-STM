@@ -8,13 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Application.Dtos\Application.Dtos.csproj" />
-    <ProjectReference Include="..\Application.ReadServices\Application.QueryServices.csproj" />
+    <ProjectReference Include="..\Application.QueryServices\Application.QueryServices.csproj" />
   </ItemGroup>
 
 </Project>

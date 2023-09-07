@@ -1,4 +1,4 @@
-﻿using Application.EventHandlers.AntiCorruption;
+﻿using Application.EventHandlers.Interfaces;
 using Contracts;
 
 namespace Application.EventHandlers.Handlers;

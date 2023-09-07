@@ -3,7 +3,6 @@ using Application.Common.Extensions;
 using Application.Dtos;
 using Application.Mapping.Interfaces;
 using Domain.Aggregates.Trip;
-using Domain.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -14,7 +13,6 @@ public class TripWriteRepository : ITripWriteRepository
     private readonly AppWriteDbContext _writeDbContext;
     private readonly IMappingTo<IEnumerable<ScheduledStopDto>, Trip> _scheduledStopDtoToTripMapper;
     private readonly IMappingTo<Trip, IEnumerable<ScheduledStopDto>> _tripToScheduledStopDtoMapper;
-    private readonly IDatetimeProvider _dateTimeProvider;
     private readonly ILogger<TripWriteRepository> _logger;
 
     private readonly DbSet<ScheduledStopDto> _scheduledStopDtos;
@@ -23,13 +21,11 @@ public class TripWriteRepository : ITripWriteRepository
         AppWriteDbContext writeDbContext,
         IMappingTo<IEnumerable<ScheduledStopDto>, Trip> scheduledStopDtoToTripMapper,
         IMappingTo<Trip, IEnumerable<ScheduledStopDto>> tripToScheduledStopDtoMapper,
-        IDatetimeProvider dateTimeProvider,
         ILogger<TripWriteRepository> logger)
     {
         _writeDbContext = writeDbContext;
         _scheduledStopDtoToTripMapper = scheduledStopDtoToTripMapper;
         _tripToScheduledStopDtoMapper = tripToScheduledStopDtoMapper;
-        _dateTimeProvider = dateTimeProvider;
         _logger = logger;
         _scheduledStopDtos = _writeDbContext.Set<ScheduledStopDto>();
     }
@@ -93,33 +89,5 @@ public class TripWriteRepository : ITripWriteRepository
     public void Remove(Trip ride)
     {
         throw new NotImplementedException();
-    }
-
-    private async Task BatchInsertAsync(IEnumerable<Trip> aggregates)
-    {
-        var batch = new List<Trip>(100000);
-
-        foreach (var trip in aggregates)
-        {
-            batch.Add(trip);
-
-            if (batch.Count >= 100000)
-            {
-                await _writeDbContext.BulkInsertAsync(batch, operation =>
-                {
-                    operation.BatchSize = 1000;
-                    operation.BatchTimeout = 360;
-                });
-
-                batch.Clear();
-            }
-        }
-
-        if (batch.Count > 0)
-            await _writeDbContext.BulkInsertAsync(batch, operation =>
-            {
-                operation.BatchSize = 1000;
-                operation.BatchTimeout = 360;
-            });
     }
 }

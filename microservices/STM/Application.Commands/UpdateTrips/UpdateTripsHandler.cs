@@ -1,5 +1,6 @@
 ﻿using Application.Commands.Seedwork;
 using Application.CommandServices;
+using Application.CommandServices.Interfaces;
 using Application.CommandServices.Repositories;
 using Domain.Aggregates.Trip;
 using Domain.Services.Aggregates;

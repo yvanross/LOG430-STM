@@ -12,8 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Application.CommandServices\Application.CommandServices.csproj" />
     <ProjectReference Include="..\Application.Common\Application.Common.csproj" />
-    <ProjectReference Include="..\Application.WriteServices\Application.CommandServices.csproj" />
+    <ProjectReference Include="..\Application.Dtos\Application.Dtos.csproj" />
   </ItemGroup>
 
 </Project>

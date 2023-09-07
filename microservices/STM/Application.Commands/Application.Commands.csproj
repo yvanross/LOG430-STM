@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Application.CommandServices\Application.CommandServices.csproj" />
     <ProjectReference Include="..\Application.EventHandlers\Application.EventHandlers.csproj" />
-    <ProjectReference Include="..\Application.WriteServices\Application.CommandServices.csproj" />
     <ProjectReference Include="..\Domain.Services\Domain.Services.csproj" />
   </ItemGroup>
 

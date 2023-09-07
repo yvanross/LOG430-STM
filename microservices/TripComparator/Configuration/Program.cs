@@ -1,10 +1,9 @@
-using ApplicationLogic.Interfaces;
-using ApplicationLogic.Interfaces.Policies;
-using ApplicationLogic.Usecases;
+using Application.Interfaces;
+using Application.Interfaces.Policies;
+using Application.Usecases;
 using Configuration.Policies;
 using Configuration.Stubs;
 using Controllers.Controllers;
-using Entities.DomainInterfaces;
 using Infrastructure.Clients;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
@@ -14,7 +13,6 @@ using Microsoft.OpenApi.Models;
 using MqContracts;
 using RabbitMQ.Client;
 using ServiceMeshHelper.Controllers;
-using HostInfo = TripComparator.External.HostInfo;
 
 namespace Configuration
 {

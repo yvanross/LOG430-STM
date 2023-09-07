@@ -1,6 +1,6 @@
-﻿using ApplicationLogic.Interfaces;
+﻿using Application.Interfaces;
 
-namespace TripComparator.External;
+namespace Configuration;
 
 public class HostInfo : IHostInfo
 {

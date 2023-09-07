@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using Application.CommandServices;
+using Application.CommandServices.Interfaces;
 using Application.Common.Interfaces;
 using Application.Common.Interfaces.Policies;
 using Google.Protobuf;

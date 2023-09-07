@@ -1,5 +1,5 @@
 ﻿using Application.Common.Interfaces.Policies;
-using Application.EventHandlers.AntiCorruption;
+using Application.EventHandlers.Interfaces;
 using MassTransit;
 using Event = Application.EventHandlers.Event;
 

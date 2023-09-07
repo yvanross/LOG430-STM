@@ -42,7 +42,6 @@ public sealed class AppReadDbContext : DbContext, IQueryContext
                 b.Property(e => e.TripBegunTime);
                 b.Property(e => e.BusId);
                 b.Property(e => e.DepartureReachedTime);
-                b.Property(e => e.ReachedDepartureStop);
             });
 
         modelBuilder.Entity<Bus>(

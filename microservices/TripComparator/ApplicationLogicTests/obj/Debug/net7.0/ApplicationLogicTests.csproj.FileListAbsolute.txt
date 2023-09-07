@@ -321,10 +321,8 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\Applicat
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogicTests\bin\Debug\net7.0\zh-Hant\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogicTests\bin\Debug\net7.0\zh-Hant\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogicTests\bin\Debug\net7.0\ApplicationLogic.dll
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogicTests\bin\Debug\net7.0\Entities.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogicTests\bin\Debug\net7.0\ApplicationLogic.pdb
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogicTests\bin\Debug\net7.0\Entities.pdb
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogicTests\bin\Debug\net7.0\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogicTests\obj\Debug\net7.0\ApplicationLogicTests.csproj.AssemblyReference.cache
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\TripComparator\ApplicationLogicTests\obj\Debug\net7.0\ApplicationLogicTests.GeneratedMSBuildEditorConfig.editorconfig

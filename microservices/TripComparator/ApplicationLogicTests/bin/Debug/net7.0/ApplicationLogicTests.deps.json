@@ -1138,16 +1138,10 @@
       },
       "ApplicationLogic/1.0.0": {
         "dependencies": {
-          "Entities": "1.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "7.0.0"
         },
         "runtime": {
           "ApplicationLogic.dll": {}
-        }
-      },
-      "Entities/1.0.0": {
-        "runtime": {
-          "Entities.dll": {}
         }
       },
       "Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions/14.0.0.0": {
@@ -1839,11 +1833,6 @@
       "hashPath": "system.xml.xmldocument.4.3.0.nupkg.sha512"
     },
     "ApplicationLogic/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Entities/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

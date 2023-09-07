@@ -1,4 +1,4 @@
-﻿using Application.EventHandlers.AntiCorruption;
+﻿using Application.EventHandlers.Interfaces;
 using Contracts;
 using Domain.Common.Interfaces;
 using Domain.Events.AggregateEvents.Ride;
