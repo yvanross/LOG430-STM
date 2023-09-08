@@ -6,9 +6,9 @@ namespace Configuration.Stubs;
 
 public class StmClientStub : IBusInfoProvider
 {
-    public Task<IEnumerable<RideDto>> GetBestBus(string startingCoordinates, string destinationCoordinates)
+    public Task<RideDto> GetBestBus(string startingCoordinates, string destinationCoordinates)
     {
-        return Task.FromResult(new RideDto[]{ new RideDto("0000", "0001", "0002") }.AsEnumerable())!;
+        return Task.FromResult(new RideDto("0000", "0001", "0002"))!;
     }
 
     public Task BeginTracking(RideDto bus)
@@ -16,7 +16,7 @@ public class StmClientStub : IBusInfoProvider
         return Task.CompletedTask;
     }
 
-    public Task<IBusTracking?> GetTrackingUpdate(string busId)
+    public Task<IBusTracking?> GetTrackingUpdate()
     {
         return Task.FromResult((IBusTracking) new BusTracking()
         {

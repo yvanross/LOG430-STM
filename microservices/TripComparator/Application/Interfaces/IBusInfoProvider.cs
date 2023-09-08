@@ -4,9 +4,9 @@ namespace Application.Interfaces;
 
 public interface IBusInfoProvider
 {
-    Task<IEnumerable<RideDto>> GetBestBus(string startingCoordinates, string destinationCoordinates);
+    Task<RideDto> GetBestBus(string startingCoordinates, string destinationCoordinates);
     
     Task BeginTracking (RideDto bus);
     
-    Task<IBusTracking?> GetTrackingUpdate(string busId);
+    Task<IBusTracking?> GetTrackingUpdate();
 }

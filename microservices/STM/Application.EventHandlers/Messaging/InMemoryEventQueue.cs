@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Channels;
 using Application.EventHandlers.Interfaces;
 using Application.EventHandlers.Messaging.PipeAndFilter;
@@ -11,6 +12,7 @@ namespace Application.EventHandlers.Messaging;
 public class InMemoryEventQueue : IPublisher, IConsumer
 {
     private readonly IServiceProvider? _serviceProvider;
+    private readonly ILogger<InMemoryEventQueue>? _logger;
 
     private static readonly ConcurrentDictionary<Type, MethodInfo> HandlerMethods = new();
 
@@ -18,9 +20,12 @@ public class InMemoryEventQueue : IPublisher, IConsumer
 
     private static readonly ConcurrentDictionary<Type, List<Channel<object>>> Channels = new();
 
-    public InMemoryEventQueue(IServiceProvider serviceProvider)
+    private static readonly ConcurrentDictionary<Type, SemaphoreSlim> SemaphoreSlims = new();
+
+    public InMemoryEventQueue(IServiceProvider serviceProvider, ILogger<InMemoryEventQueue> logger)
     {
         _serviceProvider = serviceProvider;
+        _logger = logger;
     }
 
     /// <summary>
@@ -32,15 +37,32 @@ public class InMemoryEventQueue : IPublisher, IConsumer
     /// <exception cref="ChannelClosedException"></exception>
     public async Task<TEvent> ConsumeNext<TEvent>(CancellationToken cancellationToken = default) where TEvent : class
     {
-        var channel = Channel.CreateUnbounded<object>();
-        var type = typeof(TEvent);
+        try
+        {
+            var channel = Channel.CreateUnbounded<object>();
 
-        var channels = Channels.GetOrAdd(type, _ => new List<Channel<object>>());
-        channels.Add(channel);
+            await SafeAddChannelOfType<TEvent>(channel, cancellationToken);
 
-        await foreach (var message in channel.Reader.ReadAllAsync(cancellationToken)) return (TEvent)message;
+            TEvent? result = null;
 
-        throw new ChannelClosedException($"Channel of type {typeof(TEvent)} has been closed");
+            await foreach (var message in channel.Reader.ReadAllAsync(cancellationToken))
+            {
+                result = (TEvent)message;
+
+                break;
+            }
+
+            if (result is null) throw new ChannelClosedException($"Channel of type {typeof(TEvent)} has been closed or result was null");
+
+            await SafeRemoveChannelOfType<TEvent>(channel, CancellationToken.None);
+
+            return result;
+        }
+        catch (Exception e)
+        {
+            _logger?.LogError(e, $"Error consuming next event of type {typeof(TEvent)}");
+            throw;
+        }
     }
 
     public void Subscribe<TEvent>(Func<TEvent, CancellationToken, Task> asyncEventHandler, ILogger logger) where TEvent : class
@@ -55,21 +77,21 @@ public class InMemoryEventQueue : IPublisher, IConsumer
     public async void Subscribe<TEvent, TResult>(
         Func<TResult, CancellationToken, Task> asyncEventHandler,
         ILogger logger,
-        params Funnel[] funnels) where TResult : class
+        params Funnel[] funnels) 
+        where TResult : class
+        where TEvent : class
     {
+        var channel = Channel.CreateUnbounded<object>();
+
+        var cancellationTokenSource = new CancellationTokenSource();
+
+        var cancellationToken = cancellationTokenSource.Token;
+
         try
         {
-            var cancellationTokenSource = new CancellationTokenSource();
-
-            var cancellationToken = cancellationTokenSource.Token;
-
             if (Observers.TryAdd(asyncEventHandler, cancellationTokenSource))
             {
-                var channel = Channel.CreateUnbounded<object>();
-                var type = typeof(TEvent);
-
-                var channels = Channels.GetOrAdd(type, _ => new List<Channel<object>>());
-                channels.Add(channel);
+                await SafeAddChannelOfType<TEvent>(channel, cancellationToken);
 
                 var pipeline = new Pipeline<TEvent, TResult>(funnels, channel.Reader, cancellationTokenSource, logger);
 
@@ -91,25 +113,52 @@ public class InMemoryEventQueue : IPublisher, IConsumer
         {
             // exit gracefully
         }
+        catch (Exception e)
+        {
+            _logger?.LogError(e, "Error in event handler");
+            throw;
+        }
+        finally
+        {
+            await SafeRemoveChannelOfType<TEvent>(channel, CancellationToken.None);
+        }
     }
 
     public void UnSubscribe<TResult>(Func<TResult, CancellationToken, Task> asyncEventHandler) where TResult : class
     {
-        if (Observers.TryRemove(asyncEventHandler, out var cancellationTokenSource))
-            cancellationTokenSource.Cancel();
-        else
-            throw new InvalidOperationException("This event handler has not been subscribed");
+        try
+        {
+            if (Observers.TryRemove(asyncEventHandler, out var cancellationTokenSource))
+                cancellationTokenSource.Cancel();
+            else
+                throw new InvalidOperationException("This event handler has not been subscribed");
+        }
+        catch (Exception e)
+        {
+            _logger?.LogError(e, " Error Unsubscribing from event");
+            throw;
+        }
+        
     }
 
     public async Task Publish<TEvent>(TEvent message) where TEvent : Event
     {
-        var type = typeof(TEvent);
+        try
+        {
+            var type = typeof(TEvent);
 
-        if (Channels.TryGetValue(type, out var channels))
-            foreach (var channel in channels)
-                await channel.Writer.WriteAsync(message);
+            if (Channels.TryGetValue(type, out var channels))
+                foreach (var channel in channels)
+                    await channel.Writer.WriteAsync(message);
 
-        await DispatchAsync(message);
+            await DispatchAsync(message);
+        }
+        catch (Exception e)
+        {
+            _logger?.LogError(e, "Error publishing event");
+            throw;
+        }
+        
     }
 
     private async Task DispatchAsync(Event applicationEvent)
@@ -157,5 +206,43 @@ public class InMemoryEventQueue : IPublisher, IConsumer
         if (handler == null) return;
 
         await ((Task)handleMethod.Invoke(handler, new object[] { applicationEvent })!)!;
+    }
+
+    private async Task SafeAddChannelOfType<TEvent>(Channel<object> channel, CancellationToken cancellationToken) where TEvent : class
+    {
+        var type = typeof(TEvent);
+
+        var channels = Channels.GetOrAdd(type, _ => new List<Channel<object>>());
+        var semaphores = SemaphoreSlims.GetOrAdd(type, _ => new SemaphoreSlim(1));
+
+        await semaphores.WaitAsync(cancellationToken);
+
+        try
+        {
+            channels.Add(channel);
+        }
+        finally
+        {
+            semaphores.Release();
+        }
+    }
+
+    private async Task SafeRemoveChannelOfType<TEvent>(Channel<object> channel, CancellationToken cancellationToken) where TEvent : class
+    {
+        var type = typeof(TEvent);
+
+        var channels = Channels.GetOrAdd(type, _ => new List<Channel<object>>());
+        var semaphores = SemaphoreSlims.GetOrAdd(type, _ => new SemaphoreSlim(1));
+
+        await semaphores.WaitAsync(cancellationToken);
+
+        try
+        {
+            channels.Remove(channel);
+        }
+        finally
+        {
+            semaphores.Release();
+        }
     }
 }

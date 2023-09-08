@@ -74,7 +74,7 @@ namespace Configuration
 
             services.AddScoped<IDataStreamWriteModel, MassTransitRabbitMqClient>();
 
-            services.AddScoped<IBusInfoProvider, StmClientStub>();
+            services.AddScoped<IBusInfoProvider, StmClient>();
         }
 
         private static void ConfigureMassTransit(IServiceCollection services)
@@ -93,8 +93,8 @@ namespace Configuration
                 {
                     cfg.Host(host, c =>
                     {
-                        c.RequestedConnectionTimeout(50);
-                        c.Heartbeat(TimeSpan.FromMilliseconds(50));
+                        //c.RequestedConnectionTimeout(50);
+                        //c.Heartbeat(TimeSpan.FromMilliseconds(50));
                     });
 
                     cfg.Message<BusPositionUpdated>(topologyConfigurator => topologyConfigurator.SetEntityName("bus_position_updated"));
@@ -111,11 +111,9 @@ namespace Configuration
                         });
 
                         endpoint.ConfigureConsumer<TripComparatorMqController>(context);
-
-                        endpoint.SetQuorumQueue();
                     });
                     
-                    cfg.UseMessageRetry(x=>x.SetRetryPolicy(x=>x.Immediate(int.MaxValue)));
+                    //cfg.UseMessageRetry(x=>x.SetRetryPolicy(x=>x.Immediate(int.MaxValue)));
 
                     cfg.Publish<BusPositionUpdated>(p =>
                         p.ExchangeType = ExchangeType.Topic);

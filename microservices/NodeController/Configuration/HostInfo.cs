@@ -28,7 +28,7 @@ public class HostInfo : IHostInfo
 
     private static readonly string Secret = Environment.GetEnvironmentVariable("SECRET")!;
 
-    private static readonly string Username = Environment.GetEnvironmentVariable("USERNAME")!;
+    private static readonly string Username = Environment.GetEnvironmentVariable("STUDENT_NAME")!;
 
     private static readonly string BridgePort = Environment.GetEnvironmentVariable("BRIDGE_PORT")!;
 

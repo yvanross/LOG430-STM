@@ -12,6 +12,8 @@ public class ExperimentReportDto
 
     public double AverageLatency { get; set; }
 
+    public double Stability { get; set; }
+
     public int ErrorCount { get; set; }
 
     public string Message { get; set; }

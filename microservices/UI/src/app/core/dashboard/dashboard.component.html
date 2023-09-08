@@ -43,6 +43,11 @@
         <mat-cell *matCellDef="let element">{{element.StateRequest.experimentReportDto.AverageLatency}}</mat-cell>
       </ng-container>
 
+      <ng-container matColumnDef="Stability">
+        <mat-header-cell *matHeaderCellDef>Stability</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.StateRequest.experimentReportDto.Stability}}</mat-cell>
+      </ng-container>
+
       <ng-container matColumnDef="ErrorCount">
         <mat-header-cell *matHeaderCellDef>Error Count</mat-header-cell>
         <mat-cell *matCellDef="let element">{{element.StateRequest.experimentReportDto.ErrorCount}}</mat-cell>

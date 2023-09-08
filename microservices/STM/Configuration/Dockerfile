@@ -42,7 +42,8 @@ RUN dotnet build "Configuration.csproj" -c Debug -o /app/build  #-c Release -o /
 FROM build AS publish
 RUN dotnet publish "Configuration.csproj" -c Debug -o /app/publish /p:UseAppHost=false #-c Release -o /app/publish /p:UseAppHost=false Commenting this to help debugging your container, but it is less performant
 
-ENV ASPNETCORE_ENVIRONMENT=Development #here again to help debugging your container, but it might be less performant
+#here again to help debugging your container, but it might be less performant
+ENV ASPNETCORE_ENVIRONMENT=Development 
 
 FROM base AS final
 WORKDIR /app

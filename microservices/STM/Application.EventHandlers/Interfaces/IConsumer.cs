@@ -14,7 +14,9 @@ public interface IConsumer
     void Subscribe<TEvent, TResult>(
         Func<TResult, CancellationToken, Task> asyncEventHandler,
         ILogger logger,
-        params Funnel[] funnels) where TResult : class;
+        params Funnel[] funnels) 
+        where TResult : class 
+        where TEvent : class;
 
     void UnSubscribe<TResult>(Func<TResult, CancellationToken, Task> asyncEventHandler) where TResult : class;
 }

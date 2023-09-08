@@ -8,7 +8,7 @@ namespace Domain.Aggregates.Ride;
 
 public sealed class Ride : Aggregate<Ride>
 {
-    private TrackingState? _trackingStrategy;
+    private TrackingStrategy? _trackingStrategy;
 
     public Ride(string id, string busId, string firstRecordedStopId, string departureId, string destinationId)
     {
@@ -77,7 +77,7 @@ public sealed class Ride : Aggregate<Ride>
         }
         else if (rideUpdateInfo.CurrentStopIndex >= rideUpdateInfo.FirstStopIndex)
         {
-            DepartureReachedTime ??= datetimeProvider.GetCurrentTime().AddHours(-datetimeProvider.GetUtcDifference());
+            DepartureReachedTime ??= datetimeProvider.GetCurrentTime();
 
             _trackingStrategy = new AtDepartureTracking(datetimeProvider, TripBegunTime, DepartureReachedTime.Value, rideUpdateInfo);
         }

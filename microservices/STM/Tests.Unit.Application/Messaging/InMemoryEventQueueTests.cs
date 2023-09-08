@@ -16,7 +16,7 @@ public class InMemoryEventQueueTests
     public void Setup()
     {
         //service provider is used to dispatch application level events, not used here
-        _queue = new InMemoryEventQueue(null);
+        _queue = new InMemoryEventQueue(null, null);
     }
 
     [TestMethod]

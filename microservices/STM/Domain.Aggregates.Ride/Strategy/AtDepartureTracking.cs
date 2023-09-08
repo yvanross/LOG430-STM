@@ -2,7 +2,7 @@
 
 namespace Domain.Aggregates.Ride.Strategy;
 
-internal class AtDepartureTracking : TrackingState
+internal class AtDepartureTracking : TrackingStrategy
 {
     private readonly DateTime _crossedFirstStopTime;
 

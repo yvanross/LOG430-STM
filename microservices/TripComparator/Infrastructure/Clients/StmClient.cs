@@ -26,7 +26,7 @@ public class StmClient : IBusInfoProvider
         _infiniteRetry = infiniteRetry;
     }
 
-    public Task<IEnumerable<RideDto>> GetBestBus(string startingCoordinates, string destinationCoordinates)
+    public Task<RideDto> GetBestBus(string startingCoordinates, string destinationCoordinates)
     {
         return _infiniteRetry.ExecuteAsync(async () =>
         {
@@ -50,14 +50,18 @@ public class StmClient : IBusInfoProvider
                 Mode = LoadBalancingMode.RoundRobin
             });
 
-            IEnumerable<RideDto> busDto = Enumerable.Empty<RideDto>();
+            RideDto? busDto = null;
 
             await foreach (var res in channel.ReadAllAsync())
             {
-                busDto = JsonConvert.DeserializeObject<IEnumerable<RideDto>>(res.Content);
+                if (res.Content is null) throw new Exception("Bus request content was null");
+
+                busDto = JsonConvert.DeserializeObject<RideDto>(res.Content);
 
                 break;
             }
+
+            if (busDto is null) throw new Exception("Bus Dto was null");
 
             return busDto;
         });
@@ -77,9 +81,9 @@ public class StmClient : IBusInfoProvider
         });
     }
 
-    public Task<IBusTracking?> GetTrackingUpdate(string busId)
+    public Task<IBusTracking?> GetTrackingUpdate()
     {
-        return _backOffRetry.ExecuteAsync<IBusTracking?>(async () =>
+        return _infiniteRetry.ExecuteAsync<IBusTracking?>(async () =>
         {
             var channel = await RestController.Get(new GetRoutingRequest()
             {

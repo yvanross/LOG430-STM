@@ -4,6 +4,8 @@ public interface IExperimentResult
 {
     double AverageLatency { get; set; }
 
+    double Stability { get; set; }
+
     int ErrorCount { get; set; }
 
     string Message { get; set; }

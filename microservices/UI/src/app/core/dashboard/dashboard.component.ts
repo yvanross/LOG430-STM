@@ -14,7 +14,7 @@ import {exhaustMap, interval, map, mergeMap, startWith, Subject, Subscription, s
 export class DashboardComponent implements OnInit, OnDestroy {
 
   dataSource = new MatTableDataSource<Row>();
-  displayedColumns: string[] = ['User', 'Connected', 'Secure', 'Dirty', 'Version', 'AverageLatency', 'ErrorCount', 'Message', 'Computation', 'Connector', 'Database'];
+  displayedColumns: string[] = ['User', 'Connected', 'Secure', 'Dirty', 'Version', 'AverageLatency', 'Stability', 'ErrorCount', 'Message', 'Computation', 'Connector', 'Database'];
 
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
 

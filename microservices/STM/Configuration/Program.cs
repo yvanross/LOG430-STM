@@ -36,6 +36,7 @@ using Infrastructure.WriteRepositories;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.OpenApi.Models;
 
 namespace Configuration;
 
@@ -63,8 +64,7 @@ public class Program
             ? (options) => { options.UseInMemoryDatabase("InMemory", _databaseRoot); }
             : (options) =>
             {
-                options.UseNpgsql(
-                    "Server=host.docker.internal;Port=32672;Username=postgres;Password=secret;Database=postgres2;");
+                options.UseNpgsql("Server=host.docker.internal;Port=32672;Username=postgres;Password=secret;Database=STM;");
             };
 
         builder.Services.AddLogging(builder =>
@@ -114,7 +114,10 @@ public class Program
 
         services.AddEndpointsApiExplorer();
 
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "STM", Version = "v1" });
+        });
     }
 
     private static void ConfigurationSetup(IServiceCollection services, IConfiguration builderConfiguration)

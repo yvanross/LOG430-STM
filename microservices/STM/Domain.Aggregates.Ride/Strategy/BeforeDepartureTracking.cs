@@ -2,7 +2,7 @@
 
 namespace Domain.Aggregates.Ride.Strategy;
 
-internal class BeforeDepartureTracking : TrackingState
+internal class BeforeDepartureTracking : TrackingStrategy
 {
     private readonly int _firstRecordedStopIndex;
     private readonly int _targetStopIndex;

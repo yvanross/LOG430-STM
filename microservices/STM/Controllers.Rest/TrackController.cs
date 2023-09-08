@@ -47,8 +47,6 @@ public class TrackController : ControllerBase
         {
             var update = await _consumer.ConsumeNext<RideTrackingUpdated>(new CancellationTokenSource(timeoutInMs).Token);
 
-            if (update is null) return NoContent();
-
             return Ok(update);
         }
         catch (OperationCanceledException)

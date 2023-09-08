@@ -21,24 +21,32 @@ namespace NodeController.Controllers
         [HttpPost("{podTypeName}/IncreaseNumberOfPod")]
         public void IncreaseNumberOfPod([FromRoute] string podTypeName)
         {
+            _logger.LogInformation($"Increasing Number Of Pods of type {podTypeName}");
+
             _plannedResources.IncreaseNumberOfPod(podTypeName);
         }
 
         [HttpPost("{podTypeName}/DecreaseNumberOfPod")]
         public void DecreaseNumberOfPod([FromRoute] string podTypeName)
         {
+            _logger.LogInformation($"Decreasing Number Of Pods of type {podTypeName}");
+
             _plannedResources.DecreaseNumberOfPod(podTypeName);
         }
 
         [HttpPost("{podTypeName}/SetNumberOfPod")]
         public void SetNumberOfPod([FromRoute] string podTypeName, int numberOfInstances)
         {
+            _logger.LogInformation($"Setting Number Of Pods of type {podTypeName} to {numberOfInstances}");
+
             _plannedResources.SetNumberOfPod(podTypeName, numberOfInstances);
         }
 
         [HttpPost(nameof(SetGlobalCpu))]
         public void SetGlobalCpu(long nanoCpus)
         {
+            _logger.LogInformation($"Setting Global nano Cpu to {nanoCpus}");
+
             _plannedResources.SetGlobalCpu(nanoCpus);
         }
     }

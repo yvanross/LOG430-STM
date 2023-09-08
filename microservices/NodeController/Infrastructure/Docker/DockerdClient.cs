@@ -227,7 +227,7 @@ public class DockerdClient : IEnvironmentClient
     }
 
     public Task GarbageCollection()
-    {
+    {//not using this for now
         /*
         await Try.WithConsequenceAsync(async () => await ForceTimeout(_dockerClient.Containers.PruneContainersAsync(
             new ContainersPruneParameters())), autoThrow: false);*/

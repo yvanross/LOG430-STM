@@ -25,7 +25,7 @@ public class MassTransitRabbitMqClient : IDataStreamWriteModel
             x =>
             {
                 x.SetRoutingKey("trip_comparison.response");
-            }, new CancellationTokenSource(TimeSpan.FromMilliseconds(50)).Token);
+            }, new CancellationTokenSource(TimeSpan.FromMilliseconds(100)).Token);
         }
         catch
         {

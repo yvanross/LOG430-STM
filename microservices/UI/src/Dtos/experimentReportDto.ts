@@ -12,6 +12,7 @@ export class ExperimentReportDto{
   Timestamp: string | undefined;
   RunningInstances: ArtefactDto[]| undefined;
   AverageLatency: number| undefined;
+  Stability: number | undefined
   ErrorCount: number| undefined;
   Message: string| undefined;
 }

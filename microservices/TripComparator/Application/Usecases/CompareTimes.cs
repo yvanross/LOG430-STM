@@ -13,8 +13,10 @@ namespace Application.Usecases
         private readonly IBusInfoProvider _iBusInfoProvider;
 
         private readonly IDataStreamWriteModel _dataStreamWriteModel;
+        private readonly ILogger<CompareTimes> _logger;
 
-        private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(50));
+        //This is a very aggressive polling rate, is there a better way to do this?
+        private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(25));
 
         private int _averageCarTravelTime;
 
@@ -25,19 +27,20 @@ namespace Application.Usecases
             _routeTimeProvider = routeTimeProvider;
             _iBusInfoProvider = iBusInfoProvider;
             _dataStreamWriteModel = dataStreamWriteModel;
+            _logger = logger;
         }
 
         public async Task<Channel<IBusPositionUpdated>> BeginComparingBusAndCarTime(string startingCoordinates, string destinationCoordinates)
         {
             await Task.WhenAll(
-                
                 _routeTimeProvider.GetTravelTimeInSeconds(startingCoordinates, destinationCoordinates)
                     .ContinueWith(task => _averageCarTravelTime = task.Result),
 
                 _iBusInfoProvider.GetBestBus(startingCoordinates, destinationCoordinates)
                     .ContinueWith(task =>
                     {
-                        _optimalBus = task.Result.First();
+                        _optimalBus = task.Result;
+
                         return _iBusInfoProvider.BeginTracking(_optimalBus);
                     })
                 );
@@ -52,7 +55,7 @@ namespace Application.Usecases
             return channel;
         }
 
-        //is polling ideal?
+        //Is polling ideal?
         public async Task PollTrackingUpdate(ChannelWriter<IBusPositionUpdated> channel)
         {
             if (_optimalBus is null) throw new Exception("bus data was null");
@@ -61,7 +64,7 @@ namespace Application.Usecases
 
             while (trackingOnGoing && await _periodicTimer.WaitForNextTickAsync())
             {
-                var trackingResult = await _iBusInfoProvider.GetTrackingUpdate(_optimalBus.BusId);
+                var trackingResult = await _iBusInfoProvider.GetTrackingUpdate();
 
                 if (trackingResult is null) continue;
 
