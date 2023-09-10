@@ -5,7 +5,6 @@ using Application.Commands.Seedwork;
 using Application.Commands.UpdateBus;
 using Application.Commands.UpdateRidesTracking;
 using Application.Commands.UpdateTrips;
-using Application.CommandServices;
 using Application.CommandServices.Interfaces;
 using Application.CommandServices.Repositories;
 using Application.Common.Interfaces;
@@ -22,9 +21,9 @@ using Configuration.Properties;
 using Controllers.Jobs;
 using Controllers.Rest;
 using Domain.Common;
+using Domain.Common.Events;
 using Domain.Common.Interfaces;
-using Domain.Events;
-using Domain.Events.Interfaces;
+using Domain.Common.Interfaces.Events;
 using Domain.Services.Aggregates;
 using Domain.Services.Utility;
 using Infrastructure.ApiClients;
@@ -44,15 +43,21 @@ public class Program
 {
     public static bool UseInMemoryDatabase = false;
 
-    private static readonly InMemoryDatabaseRoot _databaseRoot = new();
+    private static readonly InMemoryDatabaseRoot DatabaseRoot = new();
 
-    public static Action<DbContextOptionsBuilder> RepositoryDbContextOptionConfiguration { get; set; }
+    public static Action<DbContextOptionsBuilder>? RepositoryDbContextOptionConfiguration { get; set; }
 
     public static Action<IServiceCollection, IConfiguration> Configuration { get; set; } = ConfigurationSetup;
     public static Action<IServiceCollection> Presentation { get; set; } = PresentationSetup;
     public static Action<IServiceCollection, IConfiguration> Infrastructure { get; set; } = InfrastructureSetup;
     public static Action<IServiceCollection> Application { get; set; } = ApplicationSetup;
     public static Action<IServiceCollection> Domain { get; set; } = DomainSetup;
+
+    //this is a quick start configuration, it should use dynamic values
+    private const int DbPort = 32672;
+    private const string DbUsername = "postgres";
+    private const string DbPassword = "secret";
+    private const string DatabaseName = "STM";
 
     public static void Main(string[] args)
     {
@@ -61,16 +66,19 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         RepositoryDbContextOptionConfiguration = UseInMemoryDatabase
-            ? (options) => { options.UseInMemoryDatabase("InMemory", _databaseRoot); }
+            ? (options) => { options.UseInMemoryDatabase("InMemory", DatabaseRoot); }
             : (options) =>
             {
-                options.UseNpgsql("Server=host.docker.internal;Port=32672;Username=postgres;Password=secret;Database=STM;");
+                options.EnableDetailedErrors();
+                options.EnableSensitiveDataLogging();
+                options.EnableThreadSafetyChecks();
+                options.UseNpgsql($"Server=host.docker.internal;Port={DbPort};Username={DbUsername};Password={DbPassword};Database={DatabaseName};");
             };
 
-        builder.Services.AddLogging(builder =>
+        builder.Services.AddLogging(loggingBuilder =>
         {
             // no need for every ef core commands to pass through the logger
-            builder.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
+            loggingBuilder.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
         });
 
         // Add services to the container.
@@ -197,10 +205,6 @@ public class Program
         services.AddScoped<ApplicationStopService>();
         services.AddScoped<ApplicationBusServices>();
         services.AddScoped<ApplicationTripService>();
-
-        //_ = UseInMemoryDatabase
-        //    ? services.AddScoped<IApplicationTripService, ApplicationTripServiceInMemory>()
-        //    : services.AddScoped<IApplicationTripService, ApplicationTripService>();
     }
 
     private static void DomainSetup(IServiceCollection services)
@@ -215,8 +219,7 @@ public class Program
 
         services.AddSingleton<TimeServices>();
 
-        ScrutorScanForType(services, typeof(IDomainEventHandler<>), ServiceLifetime.Scoped,
-            "Application.EventHandlers");
+        ScrutorScanForType(services, typeof(IDomainEventHandler<>), ServiceLifetime.Scoped, "Application.EventHandlers");
     }
 
     private static void ScrutorScanForType(IServiceCollection services, Type type,

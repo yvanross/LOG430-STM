@@ -63,7 +63,7 @@ public class UpdateTripsJob : BackgroundService
 
         var staticGtfsWasLoadedButNotUpdated = priorEvent is not null && @event is null;
 
-        var staticGtfsWasLoadedAndUpdatedButLongAgo = priorEvent is not null &&
+        var staticGtfsWasLoadedAndUpdatedButLongAgo = priorEvent is not null && @event is not null &&
                                                       _datetimeProvider.GetCurrentTime() - @event.Created >
                                                       TimeSpan.FromHours(MaxUpdateIntervalInHours);
 

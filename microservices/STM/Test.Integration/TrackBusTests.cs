@@ -54,7 +54,7 @@ public class TrackBusTests : IntegrationTest
 
         var cancellationTokenRide = new CancellationTokenSource(TimeSpan.FromSeconds(10));
 
-        var update = await Consumer.ConsumeNext<RideTrackingUpdated>(cancellationTokenRide.Token);
+        var update = await Consumer.ConsumeNext<ApplicationRideTrackingUpdated>(cancellationTokenRide.Token);
 
         OutputHelper.WriteLine(update.Message);
 

@@ -1,6 +1,5 @@
 ﻿using System.Net.Sockets;
-using System.Text;
-using System.Threading;
+using System.Threading.Tasks;
 using ApplicationLogic.Interfaces;
 using Entities.BusinessObjects.States;
 using Entities.Dao;
@@ -34,14 +33,27 @@ public sealed class LinkHub : IDisposable
     private readonly SemaphoreSlim _semaphoreSlim = new (NumberOfLinks);
     private readonly CancellationTokenSource _cancellationTokenSource = new ();
 
-    private const int NumberOfLinks = 4;
+    private readonly CancellationTokenSource _readCancellationTokenSource = new ();
+    private readonly CancellationTokenSource _writeCancellationTokenSource = new ();
 
+    private const int NumberOfLinks = 4;
+    //blue -> green
     public LinkHub(ConnectionContext sourceConnection, IServiceType serviceType, IRouting routing, IPodReadService podReadService, ILogger logger)
     {
         _serviceType = serviceType;
         _routing = routing;
         _podReadService = podReadService;
         _logger = logger;
+
+        _cancellationTokenSource.Token.Register(() =>
+        {
+            if(_readCancellationTokenSource.IsCancellationRequested is false)
+                _readCancellationTokenSource.Cancel();
+
+            if(_writeCancellationTokenSource.IsCancellationRequested is false)
+                _writeCancellationTokenSource.Cancel();
+        });
+
 
         var destinationStream = GetTcpClient().GetStream();
 
@@ -56,7 +68,7 @@ public sealed class LinkHub : IDisposable
     {
         try
         {
-            while ((await ScheduleLinks()).Equals(LinkResult.Retry)) { }
+            await ScheduleLinks();
         }
         catch (BlueLinkException e)
         {
@@ -64,17 +76,84 @@ public sealed class LinkHub : IDisposable
         }
     }
 
-    private async Task<LinkResult> ScheduleLinks()
+    private async Task ScheduleLinks()
     {
         _logger.LogInformation("Starting link hub");
 
         var tasks = new[]
         {
-            (nameof(BlueRead), await _blueReadLink.BeginGossiping(_cancellationTokenSource.Token)),
-            (nameof(BlueWrite), await _blueWriteLink.BeginGossiping(_cancellationTokenSource.Token)),
+            (nameof(BlueRead), _blueReadLink.BeginGossiping(_readCancellationTokenSource.Token).ContinueWith(t =>
+            {
+                try
+                {
+                    CheckForException(t);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Blue read link exception");
+                }
+                finally
+                {
+                    if( _readCancellationTokenSource.Token.IsCancellationRequested is false)
+                        _cancellationTokenSource.Cancel();
+                }
 
-            (nameof(GreenWrite), await _greenWriteLink.BeginGossiping(_cancellationTokenSource.Token)),
-            (nameof(GreenRead), await _greenReadLink.BeginGossiping(_cancellationTokenSource.Token)),
+                return t;
+            })),
+            (nameof(BlueWrite), _blueWriteLink.BeginGossiping(_writeCancellationTokenSource.Token).ContinueWith(t =>
+            {
+                try
+                {
+                    CheckForException(t);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Blue write link exception");
+                }
+                finally
+                {
+                    if( _readCancellationTokenSource.Token.IsCancellationRequested is false)
+                        _writeCancellationTokenSource.Cancel();
+                }
+
+                return t;
+            })),
+            (nameof(GreenWrite), _greenWriteLink.BeginGossiping(_writeCancellationTokenSource.Token).ContinueWith(t =>
+            {
+                try
+                {
+                    CheckForException(t);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Green write link exception");
+                }
+                finally
+                {
+                    if( _readCancellationTokenSource.Token.IsCancellationRequested is false)
+                        _writeCancellationTokenSource.Cancel();
+                }
+
+                return t;
+            })),
+            (nameof(GreenRead), _greenReadLink.BeginGossiping(_readCancellationTokenSource.Token).ContinueWith(t =>
+            {
+                try
+                {
+                    CheckForException(t);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Green read link exception");
+                }
+                finally
+                {
+                    if( _readCancellationTokenSource.Token.IsCancellationRequested is false)
+                        _cancellationTokenSource.Cancel();
+                }
+
+                return t;
+            }))
         };
 
         _logger.LogInformation("Chatting...");
@@ -82,8 +161,20 @@ public sealed class LinkHub : IDisposable
         var finishedTask = await Task.WhenAny(tasks.Select(kv=>kv.Item2));
 
         _logger.LogInformation($"Conversation over, {tasks.Single(t => t.Item2.Id.Equals(finishedTask.Id)).Item1} completed.");
+    }
 
-        return await finishedTask;
+
+
+    private static void CheckForException(Task task)
+    {
+        if (task.Status == TaskStatus.Faulted) throw task.Exception.InnerException;
+
+        if (task is Task<Task> nestedTaskContainer)
+        {
+            var nestedTask = nestedTaskContainer.Unwrap();
+
+            CheckForException(nestedTask);
+        }
     }
 
     public void Dispose()
@@ -153,7 +244,7 @@ public sealed class LinkHub : IDisposable
 
                 return destinationClient;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 NotifyRoutingOfUnresponsiveService(port);
 

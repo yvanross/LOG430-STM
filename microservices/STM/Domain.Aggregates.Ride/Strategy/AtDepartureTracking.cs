@@ -9,7 +9,7 @@ internal class AtDepartureTracking : TrackingStrategy
     public AtDepartureTracking(
         IDatetimeProvider datetimeProvider,
         DateTime trackingStartedTime,
-        DateTime crossedFirstStopTime,
+        DateTime? crossedFirstStopTime,
         RideUpdateInfo rideUpdateInfo) 
         : base(
             datetimeProvider,
@@ -17,7 +17,9 @@ internal class AtDepartureTracking : TrackingStrategy
             rideUpdateInfo.CurrentStopIndex,
             rideUpdateInfo.BusName)
     {
-        _crossedFirstStopTime = crossedFirstStopTime;
+        if(crossedFirstStopTime.HasValue == false) throw new Exception("Crossed first stop time cannot be null since the departure stop has been reached");
+
+        _crossedFirstStopTime = crossedFirstStopTime.Value;
     }
 
     protected internal override string GetMessage()

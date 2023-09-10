@@ -1,54 +1,19 @@
 ﻿using System.Net.Sockets;
-using Microsoft.Extensions.Logging;
-using System.Collections.Concurrent;
-using System.Threading;
-using Entities.Extensions;
 using Infrastructure.L4ConnectionListener.L4LinkBuffers;
 
 namespace Infrastructure.L4ConnectionListener.Links;
 
 public abstract class L4Link : IDisposable
 {
-    public ITunnel Source
-    {
-        get => _source;
-        private protected set => _source = value;
-    }
+    protected ITunnel Source { get; }
 
-    public ITunnel Destination
-    {
-        get => _destination;
-        private protected set => _destination = value;
-    }
-
-    private protected ITunnel _source;
-
-    private protected ITunnel _destination;
+    protected ITunnel Destination { get; }
 
     private readonly SingleTokenAdder _tokenAdder;
 
-    private protected readonly ConcurrentQueue<byte[]> FailoverBufferQueue = new();
+    private protected readonly CancellationTokenSource CancellationTokenSource = new ();
 
-    private protected CancellationTokenSource CancellationTokenSource = new();
-
-    private protected Task<LinkResult>? GossipingTask;
-
-    private protected readonly SocketError[] SocketErrorsToRetry =
-    {
-        SocketError.ConnectionReset,
-        SocketError.ConnectionAborted,
-        SocketError.OperationAborted,
-        SocketError.Interrupted,
-        SocketError.Shutdown,
-        SocketError.NotConnected,
-        SocketError.TimedOut,
-        SocketError.HostDown,
-        SocketError.HostUnreachable,
-        SocketError.NetworkDown,
-        SocketError.NetworkUnreachable,
-        SocketError.ConnectionRefused,
-        SocketError.MessageSize
-    };
+    private Task? _gossipingTask;
 
     protected L4Link(ITunnel source, ITunnel destination, SingleTokenAdder tokenAdder)
     {
@@ -57,43 +22,19 @@ public abstract class L4Link : IDisposable
         _tokenAdder = tokenAdder;
     }
 
-    protected async Task SafeAbortGossips()
+    public async Task BeginGossiping(CancellationToken cancellation)
     {
-        if (CancellationTokenSource.IsCancellationRequested is false)
-        {
-            CancellationTokenSource.Cancel();
-
-            await _tokenAdder.Take(new CancellationTokenSource(500).Token);
-
-            _tokenAdder.Release();
-        }
-    }
-
-    public async Task<Task<LinkResult>> BeginGossiping(CancellationToken cancellation)
-    {
-        if (GossipingTask is null)
+        if (_gossipingTask is null)
         {
             await _tokenAdder.Take(cancellation);
 
             byte[] bufferArray = new byte[8_192];
 
-            return GossipingTask ??= TaskRelease(bufferArray);
+            _gossipingTask ??= TaskRelease(bufferArray);
         }
 
-        return GossipingTask;
+        await _gossipingTask;
     }
-
-    private async Task<LinkResult> TaskRelease(byte[] bufferArray)
-    {
-        var result = await TryCopyDataAsync(bufferArray);
-
-        _tokenAdder.Release();
-
-        return result;
-    }
-
-    private protected abstract Task<LinkResult> TryCopyDataAsync(byte[] bufferArray);
-
 
     public void Dispose()
     {
@@ -105,9 +46,31 @@ public abstract class L4Link : IDisposable
 
         CancellationTokenSource.Dispose();
 
-        if(GossipingTask is not null)
-            Interlocked.Exchange(ref GossipingTask, null);
+        if (_gossipingTask is not null)
+            Interlocked.Exchange(ref _gossipingTask, null);
 
-        GossipingTask?.Dispose();
+        _gossipingTask?.Dispose();
+    }
+
+
+    private async Task TaskRelease(byte[] bufferArray)
+    {
+        await TryCopyDataAsync(bufferArray);
+
+        _tokenAdder.Release();
+    }
+
+    private protected abstract Task TryCopyDataAsync(byte[] bufferArray);
+
+    private async Task SafeAbortGossips()
+    {
+        if (CancellationTokenSource.IsCancellationRequested is false)
+        {
+            CancellationTokenSource.Cancel();
+
+            await _tokenAdder.Take(new CancellationTokenSource(500).Token);
+
+            _tokenAdder.Release();
+        }
     }
 }

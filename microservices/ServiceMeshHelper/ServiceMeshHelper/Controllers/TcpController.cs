@@ -13,6 +13,7 @@ public class TcpController
 
     /// <summary>
     /// Allows managed connection over tcp to a service in the mesh using an integrated reverse proxy which is failover capable
+    /// Preflight retried 10 times before giving up with back-off.
     /// </summary>
     /// <param name="targetService">Name of the service type to connect to, ex: EventStream</param>
     /// <returns></returns>
@@ -23,6 +24,7 @@ public class TcpController
 
     /// <summary>
     /// Allows managed connection over tcp to a service in the mesh using an integrated reverse proxy which is failover capable
+    /// Preflight retried 10 times before giving up with back-off.
     /// </summary>
     /// <param name="protocol">Name of the communication protocol, ex: rabbitmq or redis or jdbc:postgresql</param>
     /// <param name="targetService">Name of the service type to connect to, ex: EventStream</param>

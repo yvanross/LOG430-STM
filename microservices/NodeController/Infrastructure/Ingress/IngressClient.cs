@@ -1,5 +1,6 @@
 ﻿using ApplicationLogic.Interfaces;
 using ApplicationLogic.OutGoing;
+using Microsoft.Extensions.Logging;
 using Polly;
 using RestSharp;
 
@@ -8,14 +9,16 @@ namespace Infrastructure.Ingress;
 public class IngressClient : IIngressClient
 {
     private readonly IHostInfo _hostInfo;
+    private readonly ILogger<IngressClient> _logger;
 
     private string _logStoreAddressAndPort = string.Empty;
 
     private readonly RestClient _client;
 
-    public IngressClient(IHostInfo hostInfo)
+    public IngressClient(IHostInfo hostInfo, ILogger<IngressClient> logger)
     {
         _hostInfo = hostInfo;
+        _logger = logger;
 
         _client = new($"http://{_hostInfo.GetIngressAddress()}:{_hostInfo.GetIngressPort()}");
     }
@@ -32,7 +35,7 @@ public class IngressClient : IIngressClient
                 },
             (exception, delay, retryCount) =>
             {
-                Console.WriteLine($"Operation failed with exception: {exception.Message}. Waiting {delay} before next retry. Retry attempt {retryCount}.");
+                _logger.LogError(exception, $"Most of the time this is because the VPN is not ON");
             });
 
         await retryPolicy.ExecuteAsync(async () =>
@@ -49,7 +52,7 @@ public class IngressClient : IIngressClient
 
             res.ThrowIfError();
 
-            Console.WriteLine($"Subscribed to Ingress");
+            _logger.LogInformation($"Subscribed to Ingress");
 
             return Task.CompletedTask;
         });

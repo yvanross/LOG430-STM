@@ -28,12 +28,18 @@ namespace NodeController.Controllers
         [ActionName(nameof(RouteByServiceType))]
         public ActionResult<IEnumerable<RoutingData>> RouteByServiceType([FromRoute] string serviceType, string caller, LoadBalancingMode mode)
         {
-            return Ok(Try.WithConsequenceAsync(() =>
+            try
             {
                 var routingDatas = _routing.RouteByDestinationType(caller, serviceType, mode).ToList();
-                
-                return Task.FromResult(routingDatas);
-            }, retryCount: 2).Result);
+
+                return routingDatas.Any() ? Ok(routingDatas) : BadRequest("Service type not found");
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error while routing");
+
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost("{serviceType}")]
@@ -42,7 +48,7 @@ namespace NodeController.Controllers
         {
             var type = _podReadService.GetServiceType(serviceType);
 
-            return type is null ? BadRequest(new Exception("Service type not found")) : Ok(_routing.NegotiateSocket(type));
+            return type is null ? BadRequest("Service type not found") : Ok(_routing.NegotiateSocket(type));
         }
     }
 }

@@ -12,7 +12,7 @@ internal class AfterDepartureTracking : TrackingStrategy
     public AfterDepartureTracking(
         IDatetimeProvider datetimeProvider, 
         DateTime trackingStartedTime, 
-        DateTime crossedFirstStopTime, 
+        DateTime? crossedFirstStopTime, 
         RideUpdateInfo rideUpdateInfo) 
         : base(
             datetimeProvider,
@@ -20,7 +20,9 @@ internal class AfterDepartureTracking : TrackingStrategy
             rideUpdateInfo.CurrentStopIndex, 
             rideUpdateInfo.BusName)
     {
-        _crossedFirstStopTime = crossedFirstStopTime;
+        if (crossedFirstStopTime.HasValue == false) throw new Exception("Crossed first stop time cannot be null since the departure stop has been reached");
+
+        _crossedFirstStopTime = crossedFirstStopTime.Value;
         _firstStopIndex = rideUpdateInfo.FirstStopIndex;
         _targetStopIndex = rideUpdateInfo.TargetStopIndex;
     }
@@ -29,9 +31,9 @@ internal class AfterDepartureTracking : TrackingStrategy
     {
         return
             $"""
-                Tracking of bus {BusName} started at {TrackingStartedTime.AddHours(-DatetimeProvider.GetUtcDifference()).ToShortTimeString()} and it has crossed the first stop at {_crossedFirstStopTime.ToShortTimeString()}.
-                The {BusName} is currently at stop {CurrentStopIndex} of {_targetStopIndex}.
-                It completed {Convert.ToInt32(GetProgression(CurrentStopIndex, _firstStopIndex, _targetStopIndex) * 100)}% in {Convert.ToInt32(DeltaTime(_crossedFirstStopTime).TotalSeconds)} seconds
+            Tracking of bus {BusName} started at {DatetimeProvider.GetMontrealTime(TrackingStartedTime).ToShortTimeString()} and it has crossed the first stop at {DatetimeProvider.GetMontrealTime(_crossedFirstStopTime).ToShortTimeString()}.
+            The {BusName} is currently at stop {CurrentStopIndex} of {_targetStopIndex}.
+            It completed {Convert.ToInt32(GetProgression(CurrentStopIndex, _firstStopIndex, _targetStopIndex) * 100)}% in {Convert.ToInt32(DeltaTime(_crossedFirstStopTime).TotalSeconds)} seconds
             """;
     }
 

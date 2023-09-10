@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Channels;
 using Application.EventHandlers.Interfaces;
 using Application.EventHandlers.Messaging.PipeAndFilter;
@@ -95,7 +94,7 @@ public class InMemoryEventQueue : IPublisher, IConsumer
 
                 var pipeline = new Pipeline<TEvent, TResult>(funnels, channel.Reader, cancellationTokenSource, logger);
 
-                await foreach (var message in pipeline.Process().ReadAllAsync(cancellationToken))
+                await foreach (var message in pipeline.Process().ReadAllAsync(cancellationToken).ConfigureAwait(false))
                 {
                     var result = message as TResult ??
                                  throw new InvalidOperationException(
@@ -148,8 +147,17 @@ public class InMemoryEventQueue : IPublisher, IConsumer
             var type = typeof(TEvent);
 
             if (Channels.TryGetValue(type, out var channels))
+            {
+                var semaphores = SemaphoreSlims.GetOrAdd(type, _ => new SemaphoreSlim(1));
+
+                await semaphores.WaitAsync();
+
                 foreach (var channel in channels)
                     await channel.Writer.WriteAsync(message);
+
+                semaphores.Release();
+            }
+                
 
             await DispatchAsync(message);
         }
@@ -213,9 +221,9 @@ public class InMemoryEventQueue : IPublisher, IConsumer
         var type = typeof(TEvent);
 
         var channels = Channels.GetOrAdd(type, _ => new List<Channel<object>>());
-        var semaphores = SemaphoreSlims.GetOrAdd(type, _ => new SemaphoreSlim(1));
+        var semaphore = SemaphoreSlims.GetOrAdd(type, _ => new SemaphoreSlim(1));
 
-        await semaphores.WaitAsync(cancellationToken);
+        await semaphore.WaitAsync(cancellationToken);
 
         try
         {
@@ -223,7 +231,7 @@ public class InMemoryEventQueue : IPublisher, IConsumer
         }
         finally
         {
-            semaphores.Release();
+            semaphore.Release();
         }
     }
 
@@ -232,9 +240,9 @@ public class InMemoryEventQueue : IPublisher, IConsumer
         var type = typeof(TEvent);
 
         var channels = Channels.GetOrAdd(type, _ => new List<Channel<object>>());
-        var semaphores = SemaphoreSlims.GetOrAdd(type, _ => new SemaphoreSlim(1));
+        var semaphore = SemaphoreSlims.GetOrAdd(type, _ => new SemaphoreSlim(1));
 
-        await semaphores.WaitAsync(cancellationToken);
+        await semaphore.WaitAsync(cancellationToken);
 
         try
         {
@@ -242,7 +250,7 @@ public class InMemoryEventQueue : IPublisher, IConsumer
         }
         finally
         {
-            semaphores.Release();
+            semaphore.Release();
         }
     }
 }

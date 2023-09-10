@@ -1,5 +1,4 @@
 ﻿using Application.Commands.Seedwork;
-using Application.CommandServices;
 using Application.CommandServices.Interfaces;
 using Application.CommandServices.Repositories;
 using Application.EventHandlers.Interfaces;
@@ -19,6 +18,8 @@ public class UpdateBusesHandler : ICommandHandler<UpdateBusesCommand>
     private readonly IDatetimeProvider _datetimeProvider;
     private readonly IStmClient _stmClient;
     private readonly IUnitOfWork _unitOfWork;
+
+    private const int MaxBusAgeInMinutes = 30;
 
     public UpdateBusesHandler(
         IStmClient stmClient,
@@ -44,6 +45,8 @@ public class UpdateBusesHandler : ICommandHandler<UpdateBusesCommand>
         {
             var feedPositions = _stmClient.RequestFeedPositions();
 
+            _busRepository.RemoveOldBuses(GetMaxBusAge());
+
             foreach (var feedPosition in feedPositions)
             {
                 var bus = _busServices.CreateBus(
@@ -63,5 +66,10 @@ public class UpdateBusesHandler : ICommandHandler<UpdateBusesCommand>
         {
             _logger.LogError(e, "Error while updating buses");
         }
+    }
+
+    private DateTime GetMaxBusAge()
+    {
+        return _datetimeProvider.GetCurrentTime().Subtract(TimeSpan.FromMinutes(MaxBusAgeInMinutes));
     }
 }

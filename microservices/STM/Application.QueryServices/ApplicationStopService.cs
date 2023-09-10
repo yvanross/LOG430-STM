@@ -3,6 +3,7 @@ using Application.QueryServices.ServiceInterfaces;
 using Domain.Aggregates.Stop;
 using Domain.Services.Aggregates;
 using Domain.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Application.QueryServices;
@@ -27,7 +28,7 @@ public class ApplicationStopService
         {
             const int radiusForBusStopSelectionInMeters = 50;
 
-            var stops = _readStops.GetData<Stop>().ToList();
+            var stops = await _readStops.GetData<Stop>().ToListAsync();
 
             var closestStop = _stopServices.FindClosestStop(position, stops);
 

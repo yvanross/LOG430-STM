@@ -78,6 +78,9 @@ namespace ApplicationLogic.Usecases
                 {
                     var minNumberOfInstances = _readServiceService.GetPodType(podInstance.Type)!.NumberOfInstances;
 
+                    // if no replication is asked, there is no need to clean the pool, useful for debugging logs
+                    if(minNumberOfInstances.Equals(0)) continue;
+
                     if (IsAnyPodServiceDownOnInstance(podInstance, runningContainerIds))
                     {
                         if (IsNumberOfRunningInstancesGreaterThanRequired(podInstance, minNumberOfInstances))

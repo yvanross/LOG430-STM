@@ -51,6 +51,7 @@ public sealed class AppReadDbContext : DbContext, IQueryContext
                 b.Property(e => e.TripId);
                 b.Property(e => e.CurrentStopIndex);
                 b.Property(e => e.Name);
+                b.Property(e => e.LastUpdateTime);
             });
 
         modelBuilder.Entity<ScheduledStopDto>(

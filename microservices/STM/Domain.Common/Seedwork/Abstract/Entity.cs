@@ -2,7 +2,17 @@
 
 public abstract class Entity<T> : IEquatable<Entity<T>> where T : class
 {
-    public string Id { get; set; }
+    protected Entity(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            throw new ArgumentException("The ID cannot be null or whitespace.", nameof(id));
+        }
+
+        Id = id;
+    }
+
+    public string Id { get; }
 
     public bool Equals(Entity<T>? other)
     {

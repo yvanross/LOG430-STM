@@ -22,7 +22,7 @@ internal abstract class TrackingStrategy
 
     protected internal double GetDuration()
     {
-        return DeltaTime(TrackingStartedTime).TotalMicroseconds;
+        return DeltaTime(TrackingStartedTime).TotalSeconds;
     }
 
     private protected double GetProgression(double currentStopIndex, double firstStopIndex, double targetStopIndex)

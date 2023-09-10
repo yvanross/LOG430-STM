@@ -5,14 +5,13 @@ namespace Domain.Aggregates.Stop;
 
 public class Stop : Aggregate<Stop>
 {
-    //for EF
-    private Stop() { }
+    // for EF
+    private Stop(string id) : base(id) { }
 
-    public Stop(string id, double latitude, double longitude)
+    internal Stop(string id, double latitude, double longitude) : base(id)
     {
-        Id = id;
         Position = new Position(latitude, longitude);
     }
 
-    public Position Position { get; internal set; }
+    public Position Position { get; }
 }

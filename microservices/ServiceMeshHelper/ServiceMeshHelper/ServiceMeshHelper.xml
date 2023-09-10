@@ -84,6 +84,7 @@
         <member name="M:ServiceMeshHelper.Controllers.RestController.Get(ServiceMeshHelper.BusinessObjects.InterServiceRequests.GetRoutingRequest)">
             <summary>
             Create a GET request to the target service by it's name (ID in docker-compose).
+            Retries 3 times before giving up.
             </summary>
             <param name="routingRequest"></param>
             <returns>RestResponse(s) in an async manner as they become available</returns>
@@ -91,6 +92,7 @@
         <member name="M:ServiceMeshHelper.Controllers.RestController.Post``1(ServiceMeshHelper.BusinessObjects.InterServiceRequests.PostRoutingRequest{``0})">
             <summary>
             Creates a POST request to the target service by it's name (ID in docker-compose).
+            Retries 3 times before giving up.
             </summary>
             <typeparam name="T"></typeparam>
             <param name="routingRequest"></param>
@@ -112,6 +114,7 @@
         <member name="M:ServiceMeshHelper.Controllers.TcpController.GetTcpSocketForRabbitMq(System.String)">
             <summary>
             Allows managed connection over tcp to a service in the mesh using an integrated reverse proxy which is failover capable
+            Preflight retried 10 times before giving up with back-off.
             </summary>
             <param name="targetService">Name of the service type to connect to, ex: EventStream</param>
             <returns></returns>
@@ -119,6 +122,7 @@
         <member name="M:ServiceMeshHelper.Controllers.TcpController.GetTcpSocket(System.String,System.String)">
             <summary>
             Allows managed connection over tcp to a service in the mesh using an integrated reverse proxy which is failover capable
+            Preflight retried 10 times before giving up with back-off.
             </summary>
             <param name="protocol">Name of the communication protocol, ex: rabbitmq or redis or jdbc:postgresql</param>
             <param name="targetService">Name of the service type to connect to, ex: EventStream</param>

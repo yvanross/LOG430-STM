@@ -36,6 +36,8 @@ public class Routing : IRouting
 
         var serviceType = _podReadService.GetServiceType(destinationType);
 
+        sourceServiceId = DetectAndAdjustSourceIdForComposeDeployedServices(sourceServiceId);
+
         if (serviceType is null) 
             throw new ArgumentNullException(nameof(serviceType), 
                 $"No services were found to be eligible to receive the request according to the defined parameters: from {sourceServiceId} to {destinationServiceType}. Check that the target service is accessible according to routing rules.");
@@ -68,15 +70,6 @@ public class Routing : IRouting
         };
     }
 
-    private void UpdateUnresponsiveServiceList()
-    {
-        const int unresponsiveThreashold = 10;
-
-        _unresponsive.Where(u => u.Value.checkedIn < DateTime.UtcNow.AddSeconds(-unresponsiveThreashold))
-            .ToList()
-            .ForEach(u => _unresponsive.TryRemove(u.Key, out _));
-    }
-
     public int NegotiateSocket(IServiceType type)
     {
         var port = _podReadService.TryGetSocketPortForType(type);
@@ -87,13 +80,22 @@ public class Routing : IRouting
 
         var availablePorts = _hostInfo.GetTunnelPortRange().Where(tunnelPort => takenPorts.Contains(tunnelPort) is false).ToList();
 
-        if(availablePorts.Any() is false) throw new Exception("No available ports, too many target services types registered");
+        if (availablePorts.Any() is false) throw new Exception("No available ports, too many target services types registered");
 
         port = availablePorts.First();
 
         _podWriteService.AddTunnel(port.Value, type);
 
         return port.Value;
+    }
+
+    private void UpdateUnresponsiveServiceList()
+    {
+        const int unresponsiveThreashold = 10;
+
+        _unresponsive.Where(u => u.Value.checkedIn < DateTime.UtcNow.AddSeconds(-unresponsiveThreashold))
+            .ToList()
+            .ForEach(u => _unresponsive.TryRemove(u.Key, out _));
     }
 
     private IEnumerable<RoutingData> L7RouteByDestinationType(string sourceServiceId, string destinationServiceType, LoadBalancingMode mode)
@@ -140,7 +142,7 @@ public class Routing : IRouting
         {
             var sourcePod = GetSourcePod(sourceServiceId);
 
-            if (sourcePod is null) throw new ArgumentNullException(nameof(sourcePod));
+            if (sourcePod is null) throw new ArgumentNullException(nameof(sourcePod), $"No source pod was found for service {sourceServiceId}");
 
             var checkInLocalPod = CheckInLocalPod(sourcePod, destinationNamespace, destinationType, sourceServiceId);
 
@@ -156,6 +158,13 @@ public class Routing : IRouting
         destinationServices = destinationServices.Where(si => si.Id.EqualsIgnoreCase(sourceServiceId) is false);
 
         return destinationServices;
+    }
+
+    private string DetectAndAdjustSourceIdForComposeDeployedServices(string sourceServiceId)
+    {
+        return sourceServiceId.Split(".") is { Length: > 1 } podNameAndServiceId ?
+            podNameAndServiceId[1] :
+            sourceServiceId;
     }
 
     private (string destinationType, string destinationNamespace) GetDestinationNamespaceAndType(string type)
@@ -200,9 +209,15 @@ public class Routing : IRouting
                 podType.ServiceTypes.Any(serviceType =>
                     serviceType.Type.EqualsIgnoreCase(destinationType) &&
                     (serviceType.DnsAccessibilityModifier.EqualsIgnoreCase(Enum.GetName(AccessibilityModifierEnum.Public)) ||
-                        (serviceType.DnsAccessibilityModifier.EqualsIgnoreCase(Enum.GetName(AccessibilityModifierEnum.Private)) &&
-                        podType.Type.EqualsIgnoreCase(serviceType.Type))))
+                        PartOfAVirtualPod(serviceType, podType)))
             select podType;
+
+        // if the service doesn't define a pod, it's service type is de facto it's pod type
+        bool PartOfAVirtualPod(IServiceType serviceType, IPodType podType)
+        {
+            return serviceType.DnsAccessibilityModifier.EqualsIgnoreCase(Enum.GetName(AccessibilityModifierEnum.Private)) &&
+                   podType.Type.EqualsIgnoreCase(serviceType.Type);
+        }
     }
 
     private record Unresponsive(IServiceInstance ServiceInstance, DateTime checkedIn);

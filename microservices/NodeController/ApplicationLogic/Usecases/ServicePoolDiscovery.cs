@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using ApplicationLogic.Interfaces;
 using Entities.BusinessObjects.Live;
 using Entities.BusinessObjects.Planned;
@@ -36,14 +35,30 @@ namespace ApplicationLogic.Usecases
         {
             var unregisteredServices = await GetUnregisteredServices();
 
-            var containerInfos = await Task.WhenAll(unregisteredServices.ConvertAll(async unregisteredService =>
+            var containerInfos = (await Task.WhenAll(unregisteredServices.ConvertAll(async unregisteredService =>
             {
-                var container = await _environmentClient.GetContainerInfo(unregisteredService);
+                var containerConfig = await _environmentClient.GetContainerInfo(unregisteredService);
 
-                return new ServiceConfigurationWrapper(container.CuratedInfo, container.RawConfig);
-            }));
+                try
+                {
+                    return new ServiceConfigurationWrapper(containerConfig.CuratedInfo, containerConfig.RawConfig);
+                }
+                catch (Exception e)
+                {
+                    BanId(e, containerConfig.CuratedInfo.Id);
+                }
 
-            //sorting by the number of links (sidecars), so that the services with the most links are registered first
+                return null;
+            })))
+                .OfType<ServiceConfigurationWrapper>()
+                .ToList();
+
+            foreach (var container in containerInfos.OrderByDescending(container => container.PodLinks.Count()))
+            {
+                _logger.LogInformation($"Registering service {container.CuratedInfo.Name} with {container.PodLinks.Count()} links");
+            }
+
+            //sorting by the number of links (sidecars), so that the services with the most links are registered first, to avoid creating pods that are not needed
             foreach (var container in containerInfos.OrderByDescending(container => container.PodLinks.Count()))
             {
                 try
@@ -70,14 +85,12 @@ namespace ApplicationLogic.Usecases
                     var serviceInstance = CreateService(container, podId);
 
                     RegisterOrUpdatePodInstance(container, serviceInstance, podId);
+
+                    MergeVirtualPodTypesNeededInThisPod(podId);
                 }
                 catch (Exception e)
                 {
-                    //ignore because we don't control the assigned Ids, they are set in the docker compose
-                    _logger.LogCritical("Invalid Service configuration found in container pool");
-                    _logger.LogCritical(e.Message);
-
-                    ImmutableInterlocked.Update(ref BannedIds, (set) => set.Add(container.CuratedInfo.Id));
+                    BanId(e, container.CuratedInfo.Id);
                 }
             }
 
@@ -117,6 +130,53 @@ namespace ApplicationLogic.Usecases
             }
         }
 
+        private void MergeVirtualPodTypesNeededInThisPod(string podId)
+        {
+            var newPodInstance = _podReadService.GetPodById(podId);
+
+            if (newPodInstance is null) throw new Exception("Pod should be registered");
+
+            var newPodType = _podReadService.GetPodType(newPodInstance.Type);
+
+            if (newPodType is null) throw new Exception("PodType should be registered");
+
+            var missingServices = newPodType.ServiceTypes
+                .Where(st => newPodInstance.ServiceInstances
+                    .All(si => si.Type.EqualsIgnoreCase(st.Type) is false));
+
+            if (missingServices.Any())
+            {
+                var virtualPodTypesNeededInThisPod = _podReadService.GetAllPodTypes()
+                    .Where(podType =>
+                        podType.ServiceTypes.Count.Equals(1) &&
+                        podType.NumberOfInstances.Equals(0) &&
+                        podType.Type.Equals(podType.ServiceTypes.First().Type) &&
+                        missingServices.Any(st => st.Type.EqualsIgnoreCase(podType.Type)))
+                    .ToList();
+
+                if (virtualPodTypesNeededInThisPod.Any())
+                {
+                    foreach (var virtualPodType in virtualPodTypesNeededInThisPod)
+                    {
+                        var virtualPodInstance = _podReadService.GetServiceInstances(virtualPodType.ServiceTypes.Single().Type).Single();
+
+                        newPodInstance.AddServiceInstance(virtualPodInstance);
+
+                        _podWriteService.RemovePodType(virtualPodType);
+                    }
+
+                    _podWriteService.AddOrUpdatePod(newPodInstance);
+                }
+            }
+        }
+
+        private void BanId(Exception e, string id)
+        {
+            _logger.LogCritical(e, "Invalid Service configuration found in container pool");
+
+            ImmutableInterlocked.Update(ref BannedIds, (set) => set.Add(id));
+        }
+
         private void RegisterOrUpdatePodInstance(ServiceConfigurationWrapper container, IServiceInstance newService, string podId)
         {
             var pod = _podReadService.GetPodById(podId) ?? new PodInstance(_podReadService)
@@ -134,14 +194,11 @@ namespace ApplicationLogic.Usecases
 
         private ServiceInstance CreateService(ServiceConfigurationWrapper container, string newPodId)
         {
-            if (container.CuratedInfo.PortsInfo.RoutingPortNumber.Equals(default))
-                throw new Exception("Port not found, adding to banned id");
-
             var volumes = container.RawConfig.Config.Mounts.Select(v => v.Name).ToList();
 
             var newService = new ServiceInstance
             {
-                Id = container.RawConfig.Config.Config.Env.First(e => e.ToString().StartsWith("ID="))[3..],
+                Id = container.ServiceId,
                 ContainerInfo = container.CuratedInfo,
                 Address = _hostInfo.GetAddress(),
                 Type = container.ArtifactName,

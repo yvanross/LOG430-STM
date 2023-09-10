@@ -10,4 +10,12 @@ public class BusWriteRepository : WriteRepository<Bus>, IBusWriteRepository
         writeDbContext, logger)
     {
     }
+
+
+    public void RemoveOldBuses(DateTime cutOffDate)
+    {
+        var oldBuses = Aggregates.Where(b => b.LastUpdateTime < cutOffDate);
+
+        Aggregates.RemoveRange(oldBuses);
+    }
 }

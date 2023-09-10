@@ -2,7 +2,7 @@
 
 namespace Entities.DomainInterfaces.Planned;
 
-public interface IPodType
+public interface IPodType : IEquatable<IPodType>
 {
     string Type { get; set; }
 

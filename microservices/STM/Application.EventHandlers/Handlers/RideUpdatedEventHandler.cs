@@ -1,12 +1,12 @@
 ﻿using Application.EventHandlers.Interfaces;
 using Contracts;
+using Domain.Aggregates.Ride.Events;
 using Domain.Common.Interfaces;
-using Domain.Events.AggregateEvents.Ride;
-using Domain.Events.Interfaces;
+using Domain.Common.Interfaces.Events;
 
 namespace Application.EventHandlers.Handlers;
 
-public class RideUpdatedEventHandler : IDomainEventHandler<BusTrackingUpdated>
+public class RideUpdatedEventHandler : IDomainEventHandler<RideTrackingUpdated>
 {
     private readonly IPublisher _publisher;
     private readonly IEventContext _eventContext;
@@ -19,9 +19,9 @@ public class RideUpdatedEventHandler : IDomainEventHandler<BusTrackingUpdated>
         _datetimeProvider = datetimeProvider;
     }
 
-    public async Task HandleAsync(BusTrackingUpdated domainEvent)
+    public async Task HandleAsync(RideTrackingUpdated domainEvent)
     {
-        var applicationEvent = new RideTrackingUpdated(
+        var applicationEvent = new ApplicationRideTrackingUpdated(
             domainEvent.Message,
             domainEvent.TrackingCompleted,
             domainEvent.Duration,

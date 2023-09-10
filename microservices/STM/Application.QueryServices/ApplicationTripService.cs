@@ -1,7 +1,6 @@
 ﻿using Application.Dtos;
 using Application.QueryServices.ServiceInterfaces;
 using Domain.Aggregates.Stop;
-using Domain.Aggregates.Trip;
 using Domain.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

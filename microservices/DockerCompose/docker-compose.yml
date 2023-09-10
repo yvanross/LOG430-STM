@@ -41,7 +41,7 @@ services:
       RABBITMQ_ERLANG_COOKIE_FILE: /var/lib/rabbitmq/.erlang.cookie
     labels:
       Artifact_Category: Connector
-      Replicas: EventStream
+      Replicas: EventStream, EventStream1, EventStream2, EventStream3, EventStream4
   routetimeprovider:
     container_name: RouteTimeProvider
     image: routetimeprovider
@@ -58,9 +58,6 @@ services:
       - '32772:80'
     labels:
       ARTIFACT_CATEGORY: Computation
-    depends_on:
-      - nodecontroller
-      - tripcomparator
   tripcomparator:
     container_name: TripComparator
     image: tripcomparator
@@ -78,8 +75,6 @@ services:
     labels:
       ARTIFACT_CATEGORY: Computation
       Pod_links: RouteTimeProvider, STM
-    depends_on:
-      - nodecontroller
   stm:
     container_name: STM
     image: stm
@@ -96,6 +91,3 @@ services:
       - '32774:80'
     labels:
       ARTIFACT_CATEGORY: Computation
-    depends_on:
-      - nodecontroller
-      - tripcomparator

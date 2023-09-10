@@ -1,5 +1,8 @@
 ﻿namespace Infrastructure.L4ConnectionListener.L4LinkBuffers;
 
+/// <summary>
+///   A tunnel is a wrapper around a stream that allows for reading and writing to an external TCP connection.
+/// </summary>
 public class StreamTunnel : ITunnel
 {
     private readonly Stream _stream;

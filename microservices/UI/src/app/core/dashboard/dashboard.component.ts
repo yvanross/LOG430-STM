@@ -43,6 +43,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 {
                   Timestamp: "No Data",
                   AverageLatency: -1,
+                  Stability: -1,
                   ErrorCount: -1,
                   Message: "No Data",
                   RunningInstances: []

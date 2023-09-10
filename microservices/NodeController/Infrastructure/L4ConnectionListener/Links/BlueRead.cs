@@ -1,39 +1,27 @@
 ﻿using Infrastructure.L4ConnectionListener.L4LinkBuffers;
-using Microsoft.Extensions.Logging;
 using Infrastructure.L4ConnectionListener.Exceptions;
 
 namespace Infrastructure.L4ConnectionListener.Links;
 
+/// <summary>
+///   This link is responsible for reading data from the source service and writing it to the hub.
+/// </summary>
 public class BlueRead : L4Link
 {
     public BlueRead(ITunnel source, ITunnel destination, SingleTokenAdder tokenAdder) : base(source, destination, tokenAdder) {}
 
-    private protected override async Task<LinkResult> TryCopyDataAsync(byte[] bufferArray)
+    private protected override async Task TryCopyDataAsync(byte[] bufferArray)
     {
         int bytesRead;
-        try
+
+        while ((bytesRead = await Source.ReadAsync(bufferArray, CancellationTokenSource.Token)) > 0)
         {
-            while ((bytesRead = await Source.ReadAsync(bufferArray, CancellationTokenSource.Token)) > 0)
-            {
-                var dataChunk = new byte[bytesRead];
+            var dataChunk = new byte[bytesRead];
 
-                Buffer.BlockCopy(bufferArray, 0, dataChunk, 0, bytesRead);
+            Buffer.BlockCopy(bufferArray, 0, dataChunk, 0, bytesRead);
 
-                // Add the data chunk to the queue.
-                FailoverBufferQueue.Enqueue(dataChunk);
-
-                // Write the data chunk to the destination stream.
-                await Destination.WriteAsync(dataChunk, CancellationTokenSource.Token);
-
-                // Remove the data chunk from the queue, as it has been successfully written to the destination.
-                FailoverBufferQueue.TryDequeue(out _);
-            }
+            // Write the data chunk to the destination stream.
+            await Destination.WriteAsync(dataChunk, CancellationTokenSource.Token);
         }
-        catch
-        {
-            throw new BlueLinkException("Read Closed");
-        }
-
-        return LinkResult.Abort;
     }
 }

@@ -5,17 +5,16 @@ namespace Domain.Aggregates.Trip;
 
 public class ScheduledStop : Entity<ScheduledStop>
 {
-    public ScheduledStop(string id, string stopId, TimeSpan scheduledDepartureTime)
+    internal ScheduledStop(string id, string stopId, TimeSpan scheduledDepartureTime) : base(id)
     {
-        Id = id;
         StopId = stopId;
         ScheduledDepartureTime = scheduledDepartureTime;
     }
 
-    public string StopId { get; internal set; }
+    public string StopId { get; }
 
     //Timespan in UTC time from midnight at which the bus is scheduled to depart
-    public TimeSpan ScheduledDepartureTime { get; internal set; }
+    public TimeSpan ScheduledDepartureTime { get; }
 
     public DateTime GetDepartureTime(IDatetimeProvider datetimeProvider)
     {

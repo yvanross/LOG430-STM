@@ -70,7 +70,7 @@ namespace Configuration
 
             var scheduling = app.Services.GetRequiredService<TaskScheduling>();
 
-            scheduling.ScheduleRecurringTasks();
+            scheduling.ScheduleRecurringTasks().Wait();
 
             app.Run();
         }

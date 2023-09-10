@@ -1,5 +1,6 @@
 ﻿using Application.CommandServices.Repositories;
-using Domain.Events.Interfaces;
+using Domain.Common.Interfaces.Events;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.WriteRepositories;
 
@@ -7,11 +8,13 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly AppWriteDbContext _context;
     private readonly IDomainEventDispatcher _eventDispatcher;
+    private readonly ILogger<UnitOfWork> _logger;
 
-    public UnitOfWork(AppWriteDbContext context, IDomainEventDispatcher eventDispatcher)
+    public UnitOfWork(AppWriteDbContext context, IDomainEventDispatcher eventDispatcher, ILogger<UnitOfWork> logger)
     {
         _context = context;
         _eventDispatcher = eventDispatcher;
+        _logger = logger;
     }
 
     public async Task SaveChangesAsync()
@@ -39,9 +42,12 @@ public class UnitOfWork : IUnitOfWork
                 // Optimal design would use an outbox. See https://microservices.io/patterns/data/transactional-outbox.html
                 await DispatchDomainEventsAsync(aggregatesWithEvents);
             }
-            catch
+            catch(Exception ex)
             {
+                _logger.LogError(ex, "Error saving changes to database. Rolling back transaction.");
+
                 await transaction.RollbackAsync();
+
                 throw;
             }
         }

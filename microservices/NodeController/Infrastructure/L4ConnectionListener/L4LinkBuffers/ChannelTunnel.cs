@@ -1,5 +1,6 @@
 ﻿using System.Threading.Channels;
-using Infrastructure.L4ConnectionListener.L4LinkBuffers;
+
+namespace Infrastructure.L4ConnectionListener.L4LinkBuffers;
 
 public class ChannelTunnel : ITunnel
 {

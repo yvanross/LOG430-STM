@@ -16,6 +16,7 @@ public static class RestController
 
     /// <summary>
     /// Create a GET request to the target service by it's name (ID in docker-compose).
+    /// Retries 3 times before giving up.
     /// </summary>
     /// <param name="routingRequest"></param>
     /// <returns>RestResponse(s) in an async manner as they become available</returns>
@@ -26,6 +27,7 @@ public static class RestController
 
     /// <summary>
     /// Creates a POST request to the target service by it's name (ID in docker-compose).
+    /// Retries 3 times before giving up.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="routingRequest"></param>

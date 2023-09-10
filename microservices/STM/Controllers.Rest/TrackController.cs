@@ -39,13 +39,13 @@ public class TrackController : ControllerBase
     /// <returns></returns>
     [HttpGet]
     [ActionName(nameof(GetTrackingUpdate))]
-    public async Task<ActionResult<RideTrackingUpdated>> GetTrackingUpdate()
+    public async Task<ActionResult<ApplicationRideTrackingUpdated>> GetTrackingUpdate()
     {
         const int timeoutInMs = 5000;
 
         try
         {
-            var update = await _consumer.ConsumeNext<RideTrackingUpdated>(new CancellationTokenSource(timeoutInMs).Token);
+            var update = await _consumer.ConsumeNext<ApplicationRideTrackingUpdated>(new CancellationTokenSource(timeoutInMs).Token);
 
             return Ok(update);
         }

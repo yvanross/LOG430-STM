@@ -13,5 +13,7 @@ public interface IPodWriteService
 
     void AddOrUpdatePodType(IPodType podType);
 
+    void RemovePodType(IPodType podType);
+
     void AddTunnel(int port, IServiceType type);
 }

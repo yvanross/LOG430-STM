@@ -94,4 +94,9 @@ public class PodType : IPodType
     }
 
     internal ImmutableList<string> GetLinkedServiceTypes() => _linkedServiceTypes;
+
+    public bool Equals(IPodType? other)
+    {
+        return other is not null && Type.EqualsIgnoreCase(other.Type);
+    }
 }

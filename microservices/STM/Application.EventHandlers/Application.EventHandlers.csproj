@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application.Common\Application.Common.csproj" />
-    <ProjectReference Include="..\Domain.Events\Domain.Events.csproj" />
+    <ProjectReference Include="..\Domain.Aggregates.Ride\Domain.Aggregates.Ride.csproj" />
   </ItemGroup>
 
 </Project>

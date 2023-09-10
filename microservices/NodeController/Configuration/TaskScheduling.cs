@@ -25,13 +25,14 @@ public class TaskScheduling
         _hostInfo = hostInfo;
     }
 
-    public void ScheduleRecurringTasks()
+    public async Task ScheduleRecurringTasks()
     {
         _logger.LogInformation("# Schedule Recurring Tasks #");
 
         if (_hostInfo.IsIngressConfigValid())
         {
-            _ = _ingress.Register();
+            await _ingress.Register();
+
             _scheduler.TryAddTask(nameof(_ingress.HeartBeat), _ingress.HeartBeat);
         }
 

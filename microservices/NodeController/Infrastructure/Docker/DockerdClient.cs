@@ -39,19 +39,29 @@ public class DockerdClient : IEnvironmentClient
 
         return await retryPolicy.ExecuteAsync(async () =>
         {
-            var restRequest = new RestRequest("containers/json");
+            try
+            {
+                var restRequest = new RestRequest("containers/json");
 
-            restRequest.AddQueryParameter("filters", JsonConvert.SerializeObject(
-                new Dictionary<string, IDictionary<string, bool>>()
-                {
-                    { "status", statuses.ToDictionary(k => k, v => true) }
-                }));
+                restRequest.AddQueryParameter("filters", JsonConvert.SerializeObject(
+                    new Dictionary<string, IDictionary<string, bool>>()
+                    {
+                        { "status", statuses.ToDictionary(k => k, v => true) }
+                    }));
 
-            var res = await _restClient.GetAsync(restRequest);
+                var res = await _restClient.GetAsync(restRequest);
 
-            var containers = JsonConvert.DeserializeObject<ContainerSummary[]>(res.Content);
+                var containers = JsonConvert.DeserializeObject<ContainerSummary[]>(res.Content);
 
-            return containers.Select(c => c.Id).ToImmutableList();
+                return containers.Select(c => c.Id).ToImmutableList();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error while getting running services");
+
+                throw;
+            }
+            
         });
     }
 
@@ -87,41 +97,50 @@ public class DockerdClient : IEnvironmentClient
 
         return await retryPolicy.ExecuteAsync(async () =>
         {
-            var restRequest = new RestRequest($"containers/{containerId}/json");
+            try
+            {
+                var restRequest = new RestRequest($"containers/{containerId}/json");
 
-            var res = await _restClient.GetAsync(restRequest);
+                var res = await _restClient.GetAsync(restRequest);
 
-            var container = JsonConvert.DeserializeObject<ContainerInspectResponse>(res.Content);
+                var container = JsonConvert.DeserializeObject<ContainerInspectResponse>(res.Content);
 
-            var labels = container.Config.Labels
-                .Where(kv => Enum.TryParse(typeof(ServiceLabelsEnum), kv.Key, true, out _))
-                .ToList()
-                .ConvertAll(kv =>
-                    new KeyValuePair<ServiceLabelsEnum, string>(
-                        (ServiceLabelsEnum)Enum.Parse(typeof(ServiceLabelsEnum), kv.Key, true),
-                        kv.Value));
+                var labels = container.Config.Labels
+                    .Where(kv => Enum.TryParse(typeof(ServiceLabelsEnum), kv.Key, true, out _))
+                    .ToList()
+                    .ConvertAll(kv =>
+                        new KeyValuePair<ServiceLabelsEnum, string>(
+                            (ServiceLabelsEnum)Enum.Parse(typeof(ServiceLabelsEnum), kv.Key, true),
+                            kv.Value));
 
-            var labelDict = new ConcurrentDictionary<ServiceLabelsEnum, string>(labels);
+                var labelDict = new ConcurrentDictionary<ServiceLabelsEnum, string>(labels);
 
-            var ports = GetPortsInfo(container);
+                var ports = GetPortsInfo(container);
 
-            return (
-                CuratedInfo: new ContainerInfo()
-                {
-                    Id = container.Id,
-                    Name = container.Name[1..] ?? string.Empty,
-                    ImageName = container.Image,
-                    Status = container.State.ToString(),
-                    PortsInfo = ports,
-                    Labels = labelDict,
-                    NanoCpus = container.HostConfig.NanoCpus ?? -1L,
-                    Memory = container.HostConfig.Memory
-                },
-                RawConfig: new ContainerRaw()
-                {
-                    Config = container,
-                    PortsInfo = ports,
-                });
+                return (
+                    CuratedInfo: new ContainerInfo()
+                    {
+                        Id = container.Id,
+                        Name = container.Name[1..] ?? string.Empty,
+                        ImageName = container.Image,
+                        Status = container.State.ToString(),
+                        PortsInfo = ports,
+                        Labels = labelDict,
+                        NanoCpus = container.HostConfig.NanoCpus ?? -1L,
+                        Memory = container.HostConfig.Memory
+                    },
+                    RawConfig: new ContainerRaw()
+                    {
+                        Config = container,
+                        PortsInfo = ports,
+                    });
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error while getting container info");
+
+                throw;
+            }
         });
 
         PortsInfo GetPortsInfo(ContainerInspectResponse container)
@@ -219,10 +238,12 @@ public class DockerdClient : IEnvironmentClient
         },
             onFailure: async (e, _) =>
             {
+                _logger.LogError(e, "Error while creating container");
+
                 if (creationId is not null)
-                    await RemoveContainerInstance(creationId, quiet: true);
+                    await RemoveContainerInstance(creationId);
             },
-            autoThrow: false,
+            autoThrow: true,
             retryCount: 2);
     }
 

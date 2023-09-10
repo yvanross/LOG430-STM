@@ -2,7 +2,6 @@
 using Application.BusinessObjects;
 using Application.DTO;
 using Application.Interfaces;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Usecases
 {
@@ -13,21 +12,19 @@ namespace Application.Usecases
         private readonly IBusInfoProvider _iBusInfoProvider;
 
         private readonly IDataStreamWriteModel _dataStreamWriteModel;
-        private readonly ILogger<CompareTimes> _logger;
 
         //This is a very aggressive polling rate, is there a better way to do this?
-        private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(25));
+        private readonly PeriodicTimer _periodicTimer = new(TimeSpan.FromMilliseconds(50));
 
         private int _averageCarTravelTime;
 
         private RideDto? _optimalBus;
 
-        public CompareTimes(IRouteTimeProvider routeTimeProvider, IBusInfoProvider iBusInfoProvider, IDataStreamWriteModel dataStreamWriteModel, ILogger<CompareTimes> logger)
+        public CompareTimes(IRouteTimeProvider routeTimeProvider, IBusInfoProvider iBusInfoProvider, IDataStreamWriteModel dataStreamWriteModel)
         {
             _routeTimeProvider = routeTimeProvider;
             _iBusInfoProvider = iBusInfoProvider;
             _dataStreamWriteModel = dataStreamWriteModel;
-            _logger = logger;
         }
 
         public async Task<Channel<IBusPositionUpdated>> BeginComparingBusAndCarTime(string startingCoordinates, string destinationCoordinates)

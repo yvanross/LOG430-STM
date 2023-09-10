@@ -66,6 +66,11 @@ internal static class RouteCache
         PodTypes.AddOrUpdate(podType.Type, podType, (_, _) => podType);
     }
 
+    internal static void RemovePodType(IPodType podType)
+    {
+        PodTypes.TryRemove(podType.Type, out _);
+    }
+
     internal static void RemovePodInstance(IPodInstance podInstance)
     {
         PodInstances.TryRemove(podInstance.Id, out _);

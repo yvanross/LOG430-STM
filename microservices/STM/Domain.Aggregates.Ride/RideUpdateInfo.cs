@@ -16,4 +16,9 @@ public class RideUpdateInfo
     public int FirstStopIndex { get; }
     public int TargetStopIndex { get; }
     public string BusName { get; }
+
+    public override string ToString()
+    {
+        return $"FirstRecordedStopIndex: {FirstRecordedStopIndex}, CurrentStopIndex: {CurrentStopIndex}, FirstStopIndex: {FirstStopIndex}, TargetStopIndex: {TargetStopIndex}, BusName: {BusName}";
+    }
 }

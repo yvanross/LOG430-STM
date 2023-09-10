@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApplicationLogic\ApplicationLogic.csproj" />
-    <ProjectReference Include="..\NodeController\NodeController.csproj" />
   </ItemGroup>
 
 </Project>

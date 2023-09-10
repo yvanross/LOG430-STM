@@ -6,8 +6,11 @@ services:
         restart: always
         environment:
           POSTGRES_PASSWORD: secret
+          ID: StmDb
+        labels:
+            Artifact_Category: Database
         ports:
-          - '32672:5432'
+          - '32572:5432'
         volumes:
           - 'stm-db:/var/lib/postgresql/data'
 volumes:

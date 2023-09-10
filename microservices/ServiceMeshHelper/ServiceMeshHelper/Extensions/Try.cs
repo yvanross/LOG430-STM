@@ -2,7 +2,7 @@
 
 internal static class Try
 {
-    internal static async Task<T> WithConsequenceAsync<T>(Func<Task<T>> todo, Func<Exception, int, Task>? onFailure = null, int retryCount = 0, bool autoThrow = true)
+    internal static async Task<T> WithConsequenceAsync<T>(Func<Task<T>> todo, Func<Exception, int, Task>? onFailure = null, int retryCount = 0, bool autoThrow = true, bool quiet = false)
     {
         var retry = 0;
 
@@ -16,7 +16,7 @@ internal static class Try
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                if (quiet is false) Console.WriteLine(e);
 
                 if (retry < retryCount)
                 {

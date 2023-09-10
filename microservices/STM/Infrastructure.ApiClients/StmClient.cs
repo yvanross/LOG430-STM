@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using Application.CommandServices;
+using System.Net;
 using Application.CommandServices.Interfaces;
 using Application.Common.Interfaces;
 using Application.Common.Interfaces.Policies;
@@ -12,11 +12,10 @@ namespace Infrastructure.ApiClients;
 
 public class StmClient : IStmClient
 {
-    private static readonly RestClient _stmClient = new("https://api.stm.info/pub/od/gtfs-rt/ic/v2");
+    private static readonly RestClient Client = new("https://api.stm.info/pub/od/gtfs-rt/ic/v2");
 
     //Caching of feed position to not get rate limited by the STM Api
-    private static readonly ConcurrentDictionary<string, (VehiclePosition VehiclePosition, DateTime DateTime)>
-        _feedPositions = new();
+    private static readonly ConcurrentDictionary<string, (VehiclePosition VehiclePosition, DateTime DateTime)> _feedPositions = new();
 
     //is a disposable reference
     private static Timer? _timer;
@@ -51,7 +50,9 @@ public class StmClient : IStmClient
 
                 requestTripUpdates.AddHeader("apikey", _hostInfo.GetStmApiKey());
 
-                var responseTripUpdate = await _stmClient.ExecuteAsync(requestTripUpdates);
+                var responseTripUpdate = await Client.ExecuteAsync(requestTripUpdates);
+
+                IsRateLimited(responseTripUpdate);
 
                 var feed = new FeedMessage();
 
@@ -61,7 +62,8 @@ public class StmClient : IStmClient
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, "Error while requesting feed trip updates");
+
                 throw;
             }
             
@@ -101,7 +103,9 @@ public class StmClient : IStmClient
 
             requestPosition.AddHeader("apikey", _hostInfo.GetStmApiKey());
 
-            var responsePosition = await _stmClient.ExecuteAsync(requestPosition);
+            var responsePosition = await Client.ExecuteAsync(requestPosition);
+
+            IsRateLimited(responsePosition);
 
             var feed = new FeedMessage();
 
@@ -114,12 +118,22 @@ public class StmClient : IStmClient
             _logger.LogError(
                 """
                         Error while parsing STM feed
-                        This nearly always due to a wrong API key
+                        This is nearly always due to a wrong API key
                         Validate your key by testing it on 
                         https://portail.developpeurs.stm.info/apihub/?_gl=1*nsvvxk*_ga*MTA1MTIyMTQ0Mi4xNjc2MDU0OTc3*_ga_37MDMXFX83*MTY5MzkxNzMzNC4yMS4xLjE2OTM5MTc0MjYuNDAuMC4w#/apis/bc64b63f-4ef4-4055-bd2f-eb3bf30ddd16/show/spec
                         """);
         }
        
         return Enumerable.Empty<VehiclePosition>();
+    }
+
+    private void IsRateLimited(RestResponse response)
+    {
+        if (response.StatusCode is HttpStatusCode.BadRequest or HttpStatusCode.TooManyRequests)
+        {
+            _logger.LogError(response.ErrorMessage);
+
+            throw new Exception(response.ErrorMessage);
+        }
     }
 }

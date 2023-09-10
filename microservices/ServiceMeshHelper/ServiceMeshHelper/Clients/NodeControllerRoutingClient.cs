@@ -1,5 +1,7 @@
-﻿using RestSharp;
+﻿using System.Net;
+using RestSharp;
 using ServiceMeshHelper.BusinessObjects;
+using ServiceMeshHelper.Extensions;
 using ServiceMeshHelper.Services;
 
 namespace ServiceMeshHelper.Clients;
@@ -16,27 +18,49 @@ internal class NodeControllerRoutingClient
 
     private async Task<IEnumerable<RoutingData>> Route(string serviceType, LoadBalancingMode routingRequestMode)
     {
-        var request = new RestRequest($"Routing/RouteByServiceType/{serviceType}");
+        const int retryAttempts = 5;
 
-        request.AddQueryParameter("caller", ServiceMeshConfiguration.ServiceId);
+        return await Try.WithConsequenceAsync(async () =>
+        {
+            var request = new RestRequest($"Routing/RouteByServiceType/{serviceType}");
 
-        request.AddQueryParameter("mode", routingRequestMode);
+            request.AddQueryParameter("caller", ServiceMeshConfiguration.ServiceId);
 
-        var response = await NodeControllerClient.ExecuteAsync<IEnumerable<RoutingData>>(request);
+            request.AddQueryParameter("mode", routingRequestMode);
 
-        response.ThrowIfError();
+            var response = await NodeControllerClient.ExecuteAsync<IEnumerable<RoutingData>>(request);
 
-        return response.Data!;
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                throw new Exception($"Couldn't route to service type, more info may be provided in the NodeController's logs. The response received from the NodeController: {response.Content}");
+            }
+
+            response.ThrowIfError();
+
+            return response.Data!;
+        },
+            (_, i) => Task.Delay(TimeSpan.FromSeconds(i / 5.0)), retryAttempts, quiet: true);
     }
 
     private async Task<int> NegotiateSocket(string serviceType)
     {
-        var request = new RestRequest($"Routing/NegotiateSocket/{serviceType}", Method.Post);
+        const int retryAttempts = 10;
 
-        var response = await NodeControllerClient.ExecuteAsync<int>(request);
+        return await Try.WithConsequenceAsync(async () =>
+        {
+            var request = new RestRequest($"Routing/NegotiateSocket/{serviceType}", Method.Post);
 
-        response.ThrowIfError();
+            var response = await NodeControllerClient.ExecuteAsync<int>(request);
 
-        return response.Data!;
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                throw new Exception("No available sockets for service type. Check the NodeController for logs. This can happen if no viable registered service exist for the tcp connection");
+            }
+
+            response.ThrowIfError();
+
+            return response.Data!;
+        },
+            (_, i) => Task.Delay(TimeSpan.FromSeconds(i / 5.0)), retryAttempts, quiet: true);
     }
 }

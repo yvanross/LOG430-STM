@@ -56,6 +56,9 @@ namespace Infrastructure.ReadRepositories.Migrations
                     b.Property<int>("CurrentStopIndex")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("LastUpdateTime")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");

@@ -1,8 +1,8 @@
 ﻿using Entities.BusinessObjects.Live;
 using Entities.DomainInterfaces.Live;
 using Entities.DomainInterfaces.Planned;
-using System;
 using System.Collections.Concurrent;
+using System.ComponentModel;
 
 namespace MqContracts;
 
@@ -43,32 +43,50 @@ public class ServiceConfigurationWrapper
         Dns = GetDnsAccessibilityModifier(curatedInfo);
         PodLinks = GetPodLinks(curatedInfo);
         ShareVolumesWithReplicas = GetShareVolumesWithReplicas(curatedInfo);
-        ServiceId = GetArtifactNameFromEnvironmentId(rawConfig);
+        ServiceId = GetArtifactNameFromEnvironmentId(curatedInfo, rawConfig);
 
         CuratedInfo = curatedInfo;
         RawConfig = rawConfig;
+
+        CheckForRoutingPort(CuratedInfo);
+    }
+
+    private static void CheckForRoutingPort(ContainerInfo curatedInfo)
+    {
+        if (curatedInfo.PortsInfo.RoutingPortNumber.Equals(default))
+            throw new Exception(
+            $"""
+                            Port not found on container named: {curatedInfo.Name}
+                            Make sure the container has ports defined in the compose and if the internal port is not 80, add it to the parameter 'CUSTOM_CONTAINER_PORTS_DISCOVERY' on the NodeController.
+                            e.g. CUSTOM_CONTAINER_PORTS_DISCOVERY: 5672, 5432⁠
+                            """);
     }
 
     private static string GetArtifactName(ContainerInfo infos, IContainerConfig rawConfig)
     {
         var value = GetLabelValue(ServiceLabelsEnum.ARTIFACT_NAME, infos.Labels);
 
-        return string.IsNullOrEmpty(value) ? GetArtifactNameFromEnvironmentId(rawConfig) : value;
+        return string.IsNullOrEmpty(value) ? GetArtifactNameFromEnvironmentId(infos, rawConfig) : value;
     }
 
-    private static string GetArtifactNameFromEnvironmentId(IContainerConfig rawConfig)
+    private static string GetArtifactNameFromEnvironmentId(ContainerInfo infos, IContainerConfig rawConfig)
     {
-        return rawConfig.Config.Config.Env
+        var podNameAndId = rawConfig.Config.Config.Env
             .FirstOrDefault(e => e.ToString().StartsWith("ID="))?
-            .Split("=").LastOrDefault()?
-            .Split(".").LastOrDefault() ?? throw new Exception("ID environment variable not defined in compose");
+            .Split("=").LastOrDefault() ?? throw new Exception($"ID environment variable not defined in compose for container named: {infos.Name}");
+
+        var id = podNameAndId.Split(".") is { Length: > 1 } podNameAndIdArray
+            ? podNameAndIdArray.LastOrDefault() ?? throw new Exception($"ID environment variable not defined in compose for container named: {infos.Name}")
+            : podNameAndId;
+
+        return id;
     }
 
     private static string GetArtifactCategory(ContainerInfo infos)
     {
         var value = GetLabelValue(ServiceLabelsEnum.ARTIFACT_CATEGORY, infos.Labels);
 
-        return string.IsNullOrEmpty(value) ? throw new Exception("Artifact category not defined in compose") : value;
+        return string.IsNullOrEmpty(value) ? throw new Exception($"Artifact category not defined in compose for container named: {infos.Name}") : value;
     }
 
     private static int GetNumberOfInstancesAsNumber(ContainerInfo infos)
@@ -90,15 +108,15 @@ public class ServiceConfigurationWrapper
     {
         var value = GetLabelValue(ServiceLabelsEnum.POD_NAME, infos.Labels);
 
-        return string.IsNullOrWhiteSpace(value) ? GetPodNameFromEnvironmentId() : value;
+        return string.IsNullOrWhiteSpace(value) ? GetPodNameFromEnvironmentId(infos, rawConfig) : value;
+    }
 
-        string GetPodNameFromEnvironmentId()
-        {
-            return rawConfig.Config.Config.Env
-                .FirstOrDefault(e => e.ToString().StartsWith("ID="))?
-                .Split("=").LastOrDefault()?
-                .Split(".").FirstOrDefault() ?? throw new Exception("ID environment variable not defined in compose");
-        }
+    private static string GetPodNameFromEnvironmentId(ContainerInfo infos, IContainerConfig rawConfig)
+    {
+        return rawConfig.Config.Config.Env
+            .FirstOrDefault(e => e.ToString().StartsWith("ID="))?
+            .Split("=").LastOrDefault()?
+            .Split(".").FirstOrDefault() ?? throw new Exception($"Pod name not defined for container named: {infos.Name}");
     }
 
     private static string? GetPodId(ContainerInfo infos)

@@ -10,7 +10,8 @@ namespace ApplicationLogic.Usecases;
 
 public class ExperimentMonitoring
 {
-    private static MessageProcessor _messageProcessor = new ();
+    // This is static because there is only one experiment running per service lifetime.
+    private static readonly MessageProcessor MessageProcessingService = new ();
 
     private readonly ISystemStateWriteService _systemStateWriteService;
 
@@ -32,14 +33,14 @@ public class ExperimentMonitoring
 
     public void AnalyzeAndStoreRealtimeTestData(IBusPositionUpdated busPositionUpdated)
     {
-        _messageProcessor.StartProcessing();
+        MessageProcessingService.StartProcessing();
 
-        _messageProcessor.OnMessageProcessed();
+        MessageProcessingService.MessageProcessed();
 
-        if (GetSagaDuration() > busPositionUpdated.Seconds)
+        if (GetExepirmentDuration() > busPositionUpdated.Seconds)
             IncrementTestErrorCount();
 
-        SetSagaDuration(busPositionUpdated.Seconds);
+        SetExperimentDuration(busPositionUpdated.Seconds);
 
         IncrementProcessedMessageCount();
 
@@ -54,18 +55,13 @@ public class ExperimentMonitoring
             RunningInstances = _readService.GetAllServices().ToList(),
             ExperimentResult = new ExperimentResult()
             {
-                AverageLatency = _messageProcessor.GetAverageOfProcessingTimes(),
+                AverageLatency = MessageProcessingService.GetAverageTimeBetweenMessages(),
+                Stability = MessageProcessingService.GetStandardDeviation(),
                 ErrorCount = GetTestErrorCount(),
                 Message = GetMessage()
             }
         });
     }
-
-    //private double GetAverageLatency()
-    //{
-    //    return Convert.ToDouble(_stopwatch?.Elapsed.TotalMilliseconds ?? 1) / Convert.ToDouble(GetProcessedMessageCount());
-    //}
-
 
     private void IncrementTestErrorCount()
     {
@@ -79,17 +75,17 @@ public class ExperimentMonitoring
 
     private int GetTestErrorCount() => _testErrorCount;
 
-    private void SetSagaDuration(int seconds)
+    private void SetExperimentDuration(int seconds)
     {
         Interlocked.Exchange(ref _sagaDuration, seconds);
     }
 
-    private void ResetSagaDuration()
+    private void ResetExperimentDuration()
     {
         Interlocked.Exchange(ref _sagaDuration, 0);
     }
 
-    private int GetSagaDuration() => _sagaDuration;
+    private int GetExepirmentDuration() => _sagaDuration;
 
     private void IncrementProcessedMessageCount()
     {
@@ -120,117 +116,98 @@ public class ExperimentMonitoring
     //    private const int ResetInterval = 5_000;
 
     //    private readonly Stopwatch _stopwatch = new();
-    //    private readonly ConcurrentBag<double> _processingTimesAverageDeviations = new();
+    //    private readonly ConcurrentBag<double> _timeDeltas = new();
+    //    private readonly ConcurrentBag<double> _processingTimeStdDevs = new();
     //    private readonly PeriodicTimer _timer = new(period: TimeSpan.FromMilliseconds(ResetInterval));
     //    private readonly CancellationTokenSource _cancellationTokenSource = new();
 
-    //    private int _messagesProcessedDuringInterval = 0;
-
     //    public void StartProcessing()
     //    {
-    //        if (_stopwatch.IsRunning) return;
-
     //        _stopwatch.Start();
     //        _ = ResetProcessingTimesPeriodically();
     //    }
 
     //    public void MessageProcessed()
     //    {
-    //        Interlocked.Increment(ref _messagesProcessedDuringInterval);
+    //        long currentTime = _stopwatch.ElapsedMilliseconds;
+    //        _timeDeltas.Add(currentTime);
+    //        _stopwatch.Restart();
     //    }
 
-    //    public double GetProcessingTimesCumulativeOfAverageDeviations()
+    //    public double GetAverageTimeBetweenMessages()
     //    {
-    //        return _processingTimesAverageDeviations.Average();
+    //        return _timeDeltas.Count > 0 ? _timeDeltas.Average() : double.MaxValue;
+    //    }
+
+    //    public double GetAverageStandardDeviation()
+    //    {
+    //        return _processingTimeStdDevs.Count > 0 ? _processingTimeStdDevs.Average() : 0;
     //    }
 
     //    private async Task ResetProcessingTimesPeriodically()
     //    {
     //        while (await _timer.WaitForNextTickAsync(_cancellationTokenSource.Token))
     //        {
-    //            CalculateProcessingTimeStandardDeviation();
-    //            _stopwatch.Reset();
-    //            _stopwatch.Start();
-    //            Interlocked.Exchange(ref _messagesProcessedDuringInterval, 0);
+    //            double stdDev = CalculateStandardDeviation();
+    //            _processingTimeStdDevs.Add(stdDev);
     //        }
     //    }
 
-    //    private void CalculateProcessingTimeStandardDeviation()
+    //    private double CalculateStandardDeviation()
     //    {
-    //        var average = CalculateAverageProcessingTime();
+    //        if (_timeDeltas.Count < 2)
+    //        {
+    //            return ResetInterval;
+    //        }
 
-    //        _processingTimesAverageDeviations.Add(average);
-    //    }
+    //        double average = _timeDeltas.Average();
+    //        double sumOfSquaresOfDifferences = _timeDeltas.Select(val => (val - average) * (val - average)).Sum();
+    //        double stdDev = Math.Sqrt(sumOfSquaresOfDifferences / (_timeDeltas.Count - 1));
 
-    //    private double CalculateAverageProcessingTime()
-    //    {
-    //        return Math.Min(_stopwatch.Elapsed.TotalMilliseconds / _messagesProcessedDuringInterval, ResetInterval);
+    //        return stdDev;
     //    }
     //}
 
-    private class MessageProcessor : IDisposable
+    private class MessageProcessor
     {
-        private const int IntervalToResetProcessingTime = 5_000;
+        private readonly Stopwatch _stopwatch = new();
+        private readonly ConcurrentBag<long> _timeDeltas = new();
 
-        private readonly Stopwatch _processingTimeStopwatch = new();
-        private readonly ConcurrentBag<double> _averageProcessingTimes = new();
-        private readonly PeriodicTimer _resetTimer = new(period: TimeSpan.FromMilliseconds(IntervalToResetProcessingTime));
-        private readonly CancellationTokenSource _cancellationTokenSource = new();
-
-        private int _messageCountInCurrentInterval = 0;
+        private double _mean = 0;
+        private double _m2 = 0;
+        private int _count = 0;
 
         public void StartProcessing()
         {
-            if (_processingTimeStopwatch.IsRunning) return;
-
-            _processingTimeStopwatch.Start();
-
-            _ = ResetProcessingTimesPeriodicallyAsync();
+            _stopwatch.Start();
         }
 
-        public void OnMessageProcessed()
+        public void MessageProcessed()
         {
-            Interlocked.Increment(ref _messageCountInCurrentInterval);
+            long currentTime = _stopwatch.ElapsedMilliseconds;
+            _timeDeltas.Add(currentTime);
+            _stopwatch.Restart();
+
+            _count++;
+            double delta = currentTime - _mean;
+            _mean += delta / _count;
+            double delta2 = currentTime - _mean;
+            _m2 += delta * delta2;
         }
 
-        public double GetAverageOfProcessingTimes()
+        public double GetStandardDeviation()
         {
-            return _averageProcessingTimes.Average();
-        }
-
-        private async Task ResetProcessingTimesPeriodicallyAsync()
-        {
-            while (await _resetTimer.WaitForNextTickAsync(_cancellationTokenSource.Token))
+            if (_count < 2)
             {
-                ComputeAndStoreAverageProcessingTime();
-                ResetProcessingTimeAndCount();
+                return 0;
             }
+
+            return Math.Sqrt(_m2 / (_count - 1));
         }
 
-        private void ComputeAndStoreAverageProcessingTime()
+        public double GetAverageTimeBetweenMessages()
         {
-            var averageProcessingTimeInCurrentInterval = CalculateAverageProcessingTime();
-
-            _averageProcessingTimes.Add(averageProcessingTimeInCurrentInterval);
-        }
-
-        private void ResetProcessingTimeAndCount()
-        {
-            _processingTimeStopwatch.Restart();
-
-            Interlocked.Exchange(ref _messageCountInCurrentInterval, 0);
-        }
-
-        private double CalculateAverageProcessingTime()
-        {
-            return Math.Min(_processingTimeStopwatch.Elapsed.TotalMilliseconds / _messageCountInCurrentInterval, IntervalToResetProcessingTime);
-        }
-
-        public void Dispose()
-        {
-            _resetTimer.Dispose();
-            _cancellationTokenSource.Dispose();
+            return _timeDeltas.Count > 0 ? _timeDeltas.Average() : 0;
         }
     }
-
 }

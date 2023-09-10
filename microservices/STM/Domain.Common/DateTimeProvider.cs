@@ -22,4 +22,14 @@ public class DateTimeProvider : IDatetimeProvider
 
         return isDaylightSavingTime ? 5 : 4;
     }
+
+    public DateTime GetMontrealTime()
+    {
+        return DateTime.UtcNow.AddHours(-GetUtcDifference());
+    }
+
+    public DateTime GetMontrealTime(DateTime from)
+    {
+        return from.AddHours(-GetUtcDifference());
+    }
 }

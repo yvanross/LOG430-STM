@@ -4,13 +4,21 @@ namespace Domain.Factories;
 
 internal static class TripFactory
 {
-    internal static Trip Create(string id, List<(string id, string stopId, TimeSpan departureTimeSpan)> scheduledStops)
+    internal static Trip Create(string id, List<(string id, string stopId, TimeSpan departureTimeSpan)> stopSchedules)
     {
-        return Trip.CreateTrip(id, scheduledStops);
+        var scheduledStops = stopSchedules
+            .Select(x => new ScheduledStop(x.id, x.stopId, x.departureTimeSpan))
+            .ToList();
+
+        return new Trip(id, scheduledStops);
     }
 
-    public static Trip Create(string id, IEnumerable<(string stopId, TimeSpan schedule)> scheduledStops)
+    internal static Trip Create(string id, IEnumerable<(string stopId, TimeSpan schedule)> stopSchedules)
     {
-        return Trip.CreateTrip(id, scheduledStops.ToList().ConvertAll(scheduledStop => (Guid.NewGuid().ToString(), scheduledStop.stopId, scheduledStop.schedule)));
+        var scheduledStops = stopSchedules
+            .Select(x => new ScheduledStop(Guid.NewGuid().ToString(), x.stopId, x.schedule))
+            .ToList();
+
+        return new Trip(id, scheduledStops);
     }
 }

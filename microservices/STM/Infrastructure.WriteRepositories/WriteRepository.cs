@@ -1,5 +1,4 @@
-﻿using Application.CommandServices;
-using Application.CommandServices.Interfaces;
+﻿using Application.CommandServices.Interfaces;
 using Application.Common.Extensions;
 using Domain.Common.Seedwork.Abstract;
 using Microsoft.EntityFrameworkCore;

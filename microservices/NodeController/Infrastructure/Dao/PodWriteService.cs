@@ -27,6 +27,11 @@ public class PodWriteService : IPodWriteService
         RouteCache.AddOrUpdatePodType(podType);
     }
 
+    public void RemovePodType(IPodType podType)
+    {
+        RouteCache.RemovePodType(podType);
+    }
+
     public void AddTunnel(int port, IServiceType type)
     {
         RouteCache.AddTunnel(port, type);

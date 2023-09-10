@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using MqContracts;
 using NodeController.Controllers.Mq;
 using RabbitMQ.Client;
-using System.Threading;
 
 namespace Configuration;
 

@@ -13,10 +13,10 @@ COPY ["AuthService/Entities/Entities.csproj", "Entities/"]
 RUN dotnet restore "AuthService/AuthService.csproj"
 COPY . .
 WORKDIR "/src/AuthService"
-RUN dotnet build "AuthService/AuthService.csproj" -c Debug -o /app/build
+RUN dotnet build "AuthService/AuthService.csproj" -c Release -o /app/build #-c Debug -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "AuthService/AuthService.csproj" -c Debug -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "AuthService/AuthService.csproj" -c Release -o /app/publish /p:UseAppHost=false #-c Debug -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
