@@ -6,22 +6,23 @@
 
 L'objectif principal des 3 laboratoires du cours de LOG430 est de vous permettre de maitriser les concepts d'analsyses et de conception d'une architecture logicielle d'un système complexe. Cette architecture sera développé sur la base d'une architecture de microservices. Le système fourni offre un service permettant de faire la comparaison de temps de trajet à partir de données sur les autobus de la STM et d'un service externe fournissant des données sur les automobiles. 
 
-# 3 laboratoires (30% de la note finale, 40% implémentation/60% documentation)
+## 3 laboratoires (40% implémentation/60% documentation)
 
 ## Laboratoire #1 (3 semaines, 25%)
   - Intégration des mécaniques de télémétrie
+  - Exploration de l'architecture actuelle
 
 ## Laboratoire #2 #2 (4.5 semaines, 37.5%) 
   - Réalisation de tactiques de disponibilité
   - ChaosMonkey détruit aléatoirement les conteneurs de calcul
 
 ## Laboratoire #3 (4.5 semaines, 37.5%)
-    - Réalisation des tactiques de performance
-    - ChaosMonkey s'attaque aux connecteurs (message queue, bus, etc.)
-    - Chaosmonkey attaque à la limitation du nombre d'instruction par secondes
-    - ChaosMonkey s'attaque à la mémoire disponible pour les containers
-    - ChaosMonkey s'attaque au Data store (BD, cache, etc.)
-      
+  - Réalisation des tactiques de performance
+  - ChaosMonkey s'attaque aux connecteurs (message queue, bus, etc.)
+  - Chaosmonkey attaque à la limitation du nombre d'instruction par secondes et à la mémoire vive (calcul seulement)
+  - ChaosMonkey s'attaque à la mémoire disponible pour les containers
+  - ChaosMonkey s'attaque au Data store (BD, cache, etc.)
+    
 
 # Le contexte de l'organisation
 
@@ -46,6 +47,7 @@ Vous êtes nouvellement embauché par l'organisation LOG430STM pour améliorer l
   - STM
 ### Service Externes
   - API de la STM
+  - API de TomTom
 ### Language¶
 Nous n’imposons aucune contrainte au niveau du langage de développement utilisé à l'exception que celui-ci doit être de type **Orienté objet**.
 
@@ -62,11 +64,11 @@ Vos Kanban doivent avoir au minimum les colonnes suivantes:
 Ces données serviront pour la réalisation d'une vue de type allocation.
 
 ## Directive de déploiement
-Vous devez déployer vos solutions de chaque itération sur docker desktop sur votre propre ordinateur. 
+Vous devez déployer vos solutions de chaque itération sur docker desktop sur votre propre ordinateur. (Excusivement)
 
 ## Directive de Démonstration
-- Vous n'aurez droit qu'à une seule démonstration pour l'intégration et/ou l'implémentation de chaque exigence. 
-- Chaque équipe disposera d'un maximum de 10 minutes par démonstration/exigence.
+- Vous n'aurez droit à une 4 démonstration maximum pour l'intégration et ou l'implémentation. 
+- Chaque équipe disposera d'un maximum de 10 minutes par démonstration/exigence. (itération 1)
 - Donc soyez bien préparé
   - Assurez-vous d'avoir testé votre architecture
   - Assurez-vous de ne pas faire des modifications de dernières minutes qui pourraient impacter votre démonstration
@@ -88,13 +90,11 @@ Les rapports devront être remis dans Moodle.
 ### Laboratoire #1
 Assurez-vous que votre rapport est situé dans le répertoire laboratoire1, qu'il est au format PDF et se nomme [laboratoire1-rapport.pdf](laboratoire1/laboratoire1.pdf). Assurez vous de remettre votre rapport sur Moodle pour la correction.
 
-### Laboratoire #2,3 
-Vous devez utiliser le document suivant pour la documentation de votre architecture: [DocumentationArchitecture.md](doc/documentationArchitecture.md)
+### Laboratoire #2
+Vous devez utiliser le document suivant pour la documentation de votre architecture: [DocumentationArchitecture.md](laboratoire2\documentationArchitecture2.md)
 
-Utiliser la commande suivante pour générer le PDF de la documentation avec l'outil [Pandoc](https://pandoc.org)
-```bash
-pandoc documentationArchitecture.md vues-module.md footer.md vues-cetc.md footer.md vues-allocation.md footer.md oa1.md footer.md  oa2.md footer.md cu01.md footer.md cu02.md footer.md cu03.md footer.md cu04.md footer.md cu05.md footer.md cu06.md footer.md cu07.md footer.md cu08.md footer.md cu09.md footer.md cu10.md footer.md AQ-disponibilite.md footer.md AQ-modifiabilite.md footer.md AQ-performance.md footer.md AQ-securite.md footer.md AQ-testabilite.md footer.md AQ-usabilite.md footer.md AQ-interoperabilite.md evaluationParLesPairs.md footer.md -o documentationArchitecture.pdf && open documentationArchitecture.pdf
-```
+### Laboratoire #3
+Vous devez utiliser le document suivant pour la documentation de votre architecture: [DocumentationArchitecture.md](laboratoire3\documentationArchitecture3.md)
 
 Assurez vous de remettre votre rapport sur Moodle pour la correction.
 
@@ -116,5 +116,5 @@ participant "<<cu01>>\n<<Composant>>\n:ChaosMonkey" as monkey
 
 ```
 # Parasites et mollasson
-À la fin de chaque laboratoire, les membres de l'équipe doivent réaliser leur propre évaluation par les pairs pour chacun des membres de l'équipe.  Référez-vous à l'article Parasites et mollasson pour vous aider à faire l'évaluation des autres étudiants. Voici en référence un exemple de [fichiers Excel d'évaluation par les pairs](docs/../doc/EvaluationParLesPairs-etudiant1.xlsx) dans le répertoire DOC. Vous pouvez utiliser ce fichier pour faire vos évaluations par les pairs. Vous devez indiquer clairement dans votre rapport de laboratoire le résultats de cette évaluation et spécifie si nous appliquons celui-ci à la note de votre laboratoire.
+À la fin de chaque laboratoire, les membres de l'équipe doivent réaliser leur propre évaluation par les pairs pour chacun des membres de l'équipe.  Référez-vous à l'article Parasites et mollasson pour vous aider à faire l'évaluation des autres étudiants. Voici en référence un exemple de [fichiers Excel d'évaluation par les pairs](doc\EvaluationParLesPairs.xlsx) dans le répertoire DOC. Vous pouvez utiliser ce fichier pour faire vos évaluations par les pairs. Vous devez indiquer clairement dans votre rapport de laboratoire le résultats de cette évaluation et spécifie si nous appliquons celui-ci à la note de votre laboratoire.
 

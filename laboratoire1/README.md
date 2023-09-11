@@ -9,45 +9,34 @@
 - Documenter la mise en place de l'infrastructure de télémétrie
 - Documenter ce que la télémétrie vous révèle sur l'architecture du système
 - Documenter la responsabilité détaillée de chaque composant du système
+- Documenter les modules de chaques composant du système
 - Proposer des solutions pour améliorer l'architecture du système
+- Configurer Zipkins ou Jaeger
 
 ## Configuration de votre environnement
 - [ ] installer Dotnet runtime  https://dotnet.microsoft.com/en-us/download/dotnet/7.0
 - [ ] installer docker desktop https://www.docker.com/products/docker-desktop/
-  - [ ] settings/Activer "Expose Expose daemon on tcp://localhost:2375 without TLS"
+  - [ ] settings/Activer "Expose Expose daemon on tcp://localhost:2375 without TLS" (mac/linux voir https://github.com/yvanross/LOG430-STM/issues/11 )
 - [ ] installer dockstation https://dockstation.io/
 - [ ] création de votre compte STM https://www.stm.info/en/about/developers
 - [ ] création de votre compte de TOMTOM https://developer.tomtom.com/user/register
-- [ ] 19 juin 2023 - mise à jour des données de la STM (Readme à faire)
+- [ ] October 29, 2023 - mise à jour des données de la STM (https://www.stm.info/en/about/developers)
 
 ## Récupération de l'infrastructure
 ```bash
 git clone git@github.com:yvanross/LOG430-STM.git
 ```
 
- ### Démarrer l'application avec des lignes de commande
- ```bash
-cd microservices 
-cd DockerCompose 
-export APP_DATA = /home/etudiant/LOG430-STM/microservices/DockerCompose/app_data
-docker-compose  -f "docker-compose.yml" -p dockercompose1041557551265095097 --ansi never up -d --build --remove-orphans
-```
-
-### Démarrer l'application avec DockerDesktop
-    - Utiliser le fichier docker-compose.yml dans le répertoire DockerCompose
-    - Démarrer dockstation
-    - Todo: Tout ce qu'on peut faire avec les services existant: ex: comment accéder aux données de rabbitmq
+### Démarrer l'application
+ - Remplir microservices\DockerCompose\.env
+ - Utiliser dockstation
+ - Faire un lien vers microservices\DockerCompose\docker-compose.yml
+ - Build (global pas sur un seul conteneur)
+ - Start
     
-
 ## Déployer des mécaniques de télémétrie (open telemetry)
-- [] installler open telemetry exporter for zipkin (todo: Documentation à faire (4))
+- Installler Zipkin ou Jaeger (Tutoriel en ligne, Jaeger est probablement plus facile)
   
-Utiliser dockstation pour trouver les images docker suivant et les intégrer dans le docker-compose.yml
-- [] installer et configurer l'image de prometheus pour l'acquisition des Métriques: https://hub.docker.com/r/prom/prometheus/
-- [] installer et configurer l'image de graphana pour la visualisation de la télémétrie https://hub.docker.com/r/grafana/grafana
-- [] installer et configurer l'image d'opentelemetry collector pour le traçage distribué https://hub.docker.com/r/openzipkin/zipkin/
-
-
 ## Documenter ce que la télémétrie et l'analyse du code vous révèlent sur l'architecture du système
 - Analyser votre architecture en termes de 
   - [] disponibilité
@@ -56,7 +45,7 @@ Utiliser dockstation pour trouver les images docker suivant et les intégrer dan
 ## Documenter la responsabilité détaillée de chaque composant du système
 - [] réaliser une documentation (vue de type composant et connecteur) de l'infrastructure incluant les composants de télémétrie
 - [] on veut comprendre le rôle de chaque composant du système
-- [] faire une vue de type module pour le composant TripComparator 
+- [] faire une vue de type module pour le composant STM 
 
 
 ## Perturbation de l'infrastructure
@@ -72,12 +61,9 @@ En fonctions de vos analyses et de la description sommaire des itérations à ve
 - [] disponibilité
 - [] performance   
 
-# Réaliser une évaluation par les pairs
-- [ ] réaliser une évaluation par les pairs de votre travail et spécifier les améliorations à apporter
-- [ ] indiquer le pourcentage de la note que vous attribuez à chaque étudiant
-
 # Génération du rapport
 Utiliser la commande suivante pour générer le PDF de la documentation avec l'outil [Pandoc](https://pandoc.org)
+
 ```bash
-pandoc --verbose documentationArchitecture.md ../doc/telemetrie.md ../doc/footer.md ../doc/vues-module.md ../doc/footer.md ../doc/vues-cetc.md ../doc/footer.md ../doc/vues-allocation.md ../doc/footer.md  ameliorations.md ../doc/footer.md ../doc/cu01.md ../doc/footer.md ../doc/cu05.md ../doc/footer.md ../doc/cu06.md ../doc/footer.md ../doc/cu09.md ../doc/footer.md  -o documentationArchitecture.pdf && open documentationArchitecture.pdf
+pandoc --verbose documentationArchitecture.md ../doc/telemetrie.md ../doc/footer.md ../doc/vues-module.md ../doc/footer.md ../doc/vues-cetc.md ../doc/footer.md ../doc/vues-allocation.md ../doc/footer.md  ameliorations.md ../doc/footer.md -o documentationArchitecture.pdf && open documentationArchitecture.pdf
 ```
