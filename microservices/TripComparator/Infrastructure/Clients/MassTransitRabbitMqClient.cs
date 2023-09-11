@@ -1,6 +1,4 @@
-﻿using ApplicationLogic.Interfaces;
-using ApplicationLogic.Interfaces.Policies;
-using Entities.DomainInterfaces;
+﻿using Application.Interfaces;
 using MassTransit;
 using MqContracts;
 
@@ -9,27 +7,29 @@ namespace Infrastructure.Clients;
 public class MassTransitRabbitMqClient : IDataStreamWriteModel
 {
     private readonly IPublishEndpoint _publishEndpoint;
-    private readonly IBackOffRetryPolicy<MassTransitRabbitMqClient> _backOffRetry;
 
-    public MassTransitRabbitMqClient(IPublishEndpoint publishEndpoint, IBackOffRetryPolicy<MassTransitRabbitMqClient> backOffRetry)
+    public MassTransitRabbitMqClient(IPublishEndpoint publishEndpoint)
     {
         _publishEndpoint = publishEndpoint;
-        _backOffRetry = backOffRetry;
     }
 
     public async Task Produce(IBusPositionUpdated busPositionUpdated)
     {
-        await _backOffRetry.ExecuteAsync(async () =>
+        try
         {
             await _publishEndpoint.Publish(new BusPositionUpdated()
-                {
-                    Message = busPositionUpdated.Message,
-                    Seconds = busPositionUpdated.Seconds,
-                },
-                x =>
-                {
-                    x.SetRoutingKey("trip_comparison.response");
-                });
-        }).ConfigureAwait(false);
+            {
+                Message = busPositionUpdated.Message,
+                Seconds = busPositionUpdated.Seconds,
+            },
+            x =>
+            {
+                x.SetRoutingKey("trip_comparison.response");
+            }, new CancellationTokenSource(TimeSpan.FromMilliseconds(100)).Token);
+        }
+        catch
+        {
+            // ignored - no need to fight over ack - single message is not that important in our context
+        }
     }
 }

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Domain.Aggregates.Bus\Domain.Aggregates.Bus.csproj" />
+    <ProjectReference Include="..\Domain.Aggregates.Ride\Domain.Aggregates.Ride.csproj" />
+    <ProjectReference Include="..\Domain.Aggregates.Stop\Domain.Aggregates.Stop.csproj" />
+    <ProjectReference Include="..\Domain.Aggregates.Trip\Domain.Aggregates.Trip.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -118,35 +118,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="agency" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\agency.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="calendar" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\calendar.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="calendar_dates" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\calendar_dates.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="fare_attributes" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\fare_attributes.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="fare_rules" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\fare_rules.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="feed_info" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\feed_info.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="routes" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\routes.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="shapes" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\shapes.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
   <data name="stops" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\stops.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="stop_times" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Data\stop_timescompressed.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Data\stop_times.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="trips" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Data\trips.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>

@@ -1,3 +1,9 @@
+using System.Threading.RateLimiting;
+using Application.Interfaces;
+using Application.Usecases;
+using Microsoft.AspNetCore.RateLimiting;
+using RouteTimeProvider.RestClients;
+
 namespace RouteTimeProvider
 {
     public class Program
@@ -7,19 +13,21 @@ namespace RouteTimeProvider
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy(name: "AllowOrigin",
-                    builder =>
-                    {
-                        builder.WithOrigins("*")
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                    });
-            });
+
+            builder.Services.AddRateLimiter(_ => _
+                .AddFixedWindowLimiter(policyName: "fixed", options =>
+                {
+                    options.PermitLimit = 2;
+                    options.Window = TimeSpan.FromSeconds(10);
+                    options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                    options.QueueLimit = 0;
+                }));
+
+            builder.Services.AddSingleton<IRouteTimeProvider, TomTomClient>();
+            builder.Services.AddScoped<CarTravel>();
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -28,12 +36,16 @@ namespace RouteTimeProvider
             app.UseSwagger();
             app.UseSwaggerUI();
 
-            app.UseHttpsRedirection();
+            app.UseCors(
+                options =>
+                {
+                    options.AllowAnyOrigin();
+                    options.AllowAnyHeader();
+                    options.AllowAnyMethod();
+                }
+            );
 
             app.UseCors();
-
-            app.UseAuthorization();
-
 
             app.MapControllers();
 

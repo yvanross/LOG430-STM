@@ -1,16 +1,15 @@
 ﻿using System.Net;
-using System.Runtime.Serialization;
-using ApplicationLogic.Interfaces.Policies;
-using Entities.BusinessObjects;
-using Entities.DomainInterfaces;
+using Application.BusinessObjects;
+using Application.DTO;
+using Application.Interfaces;
+using Application.Interfaces.Policies;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RestSharp;
 using ServiceMeshHelper;
-using ServiceMeshHelper.Bo;
-using ServiceMeshHelper.Bo.InterServiceRequests;
+using ServiceMeshHelper.BusinessObjects;
+using ServiceMeshHelper.BusinessObjects.InterServiceRequests;
 using ServiceMeshHelper.Controllers;
-using TripComparator.DTO;
 
 namespace Infrastructure.Clients;
 
@@ -27,7 +26,7 @@ public class StmClient : IBusInfoProvider
         _infiniteRetry = infiniteRetry;
     }
 
-    public Task<IEnumerable<IStmBus?>> GetBestBus(string startingCoordinates, string destinationCoordinates)
+    public Task<RideDto> GetBestBus(string startingCoordinates, string destinationCoordinates)
     {
         return _infiniteRetry.ExecuteAsync(async () =>
         {
@@ -51,51 +50,46 @@ public class StmClient : IBusInfoProvider
                 Mode = LoadBalancingMode.RoundRobin
             });
 
-            IEnumerable<IStmBus?> busDto = Enumerable.Empty<IStmBus>();
+            RideDto? busDto = null;
 
             await foreach (var res in channel.ReadAllAsync())
             {
-                busDto = JsonConvert.DeserializeObject<IEnumerable<StmBusDto>>(res.Content);
+                if (res.Content is null) throw new Exception("Bus request content was null");
+
+                busDto = JsonConvert.DeserializeObject<RideDto>(res.Content);
 
                 break;
             }
+
+            if (busDto is null) throw new Exception("Bus Dto was null");
 
             return busDto;
         });
     }
 
-    public Task BeginTracking(IStmBus? stmBus)
+    public Task BeginTracking(RideDto stmBus)
     {
-        if(stmBus is not StmBusDto busDto) throw new InvalidDataContractException("Make sure to not alter the type stored in the collection returned by GetBestBus");
-
         return _infiniteRetry.ExecuteAsync(async () =>
         {
-            _ = await RestController.Post(new PostRoutingRequest<StmBusDto>()
+            _ = await RestController.Post(new PostRoutingRequest<RideDto>()
             {
                 TargetService = "STM",
                 Endpoint = $"Track/BeginTracking",
-                Payload = busDto,
+                Payload = stmBus,
                 Mode = LoadBalancingMode.RoundRobin
             });
         });
     }
 
-    public Task<IBusTracking?> GetTrackingUpdate(string busId)
+    public Task<IBusTracking?> GetTrackingUpdate()
     {
-        return _backOffRetry.ExecuteAsync<IBusTracking?>(async () =>
+        return _infiniteRetry.ExecuteAsync<IBusTracking?>(async () =>
         {
             var channel = await RestController.Get(new GetRoutingRequest()
             {
                 TargetService = "STM",
                 Endpoint = $"Track/GetTrackingUpdate",
-                Params = new List<NameValue>()
-                {
-                    new()
-                    {
-                        Name = "busId",
-                        Value = busId
-                    }
-                },
+                Params = new List<NameValue>(),
                 Mode = LoadBalancingMode.RoundRobin
             });
 
@@ -110,7 +104,7 @@ public class StmClient : IBusInfoProvider
 
             if (data is null || !data.IsSuccessStatusCode || data.StatusCode.Equals(HttpStatusCode.NoContent)) return null;
 
-            var busTracking = JsonConvert.DeserializeObject<BusTracking>(data.Content);
+            var busTracking = JsonConvert.DeserializeObject<BusTracking>(data.Content!);
 
             return busTracking;
 

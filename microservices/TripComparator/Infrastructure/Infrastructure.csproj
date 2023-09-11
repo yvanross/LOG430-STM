@@ -8,12 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="MassTransit.Abstractions" Version="8.0.14" />
-    <PackageReference Include="ServiceMeshHelper" Version="1.0.66" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="ServiceMeshHelper" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ApplicationLogic\ApplicationLogic.csproj" />
-    <ProjectReference Include="..\Entities\Entities.csproj" />
+    <ProjectReference Include="..\Application\Application.csproj" />
   </ItemGroup>
 
 </Project>

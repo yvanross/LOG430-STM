@@ -1,14 +1,14 @@
-﻿using ApplicationLogic.Interfaces;
+﻿using Application.Interfaces;
 
-namespace TripComparator.External;
+namespace Configuration;
 
 public class HostInfo : IHostInfo
 {
-    public static readonly string ServiceAddress = Environment.GetEnvironmentVariable("SERVICES_ADDRESS")!;
+    private static readonly string ServiceAddress = Environment.GetEnvironmentVariable("SERVICES_ADDRESS")!;
     
-    public static readonly string MqServiceName = Environment.GetEnvironmentVariable("MQ_SERVICE_NAME")!;
+    private static readonly string MqServiceName = Environment.GetEnvironmentVariable("MQ_SERVICE_NAME")!;
 
-    public static readonly string NodeControllerPort = Environment.GetEnvironmentVariable("NODE_CONTROLLER_PORT")!;
+    private static readonly string NodeControllerPort = Environment.GetEnvironmentVariable("NODE_CONTROLLER_PORT")!;
 
     public string GetAddress()
     {

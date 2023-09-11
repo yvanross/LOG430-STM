@@ -1,9 +1,9 @@
-using ApplicationLogic.Interfaces;
-using ApplicationLogic.Interfaces.Policies;
-using ApplicationLogic.Usecases;
+using Application.Interfaces;
+using Application.Interfaces.Policies;
+using Application.Usecases;
 using Configuration.Policies;
+using Configuration.Stubs;
 using Controllers.Controllers;
-using Entities.DomainInterfaces;
 using Infrastructure.Clients;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
@@ -11,54 +11,46 @@ using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using MqContracts;
-using Polly;
 using RabbitMQ.Client;
-using ServiceMeshHelper;
 using ServiceMeshHelper.Controllers;
-using TripComparator.External;
-using HostInfo = TripComparator.External.HostInfo;
 
 namespace Configuration
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            //Todo tactique disponibilité retry
-            Policy.Handle<Exception>().RetryForever().Execute(() =>
-            {
-                var builder = WebApplication.CreateBuilder(args);
+            var builder = WebApplication.CreateBuilder(args);
 
-                ConfigureServices(builder.Services);
+            ConfigureServices(builder.Services);
 
-                var app = builder.Build();
+            var app = builder.Build();
 
-                app.UseSwagger();
-                
-                app.UseSwaggerUI();
+            app.UseSwagger();
 
-                app.UseHttpsRedirection();
+            app.UseSwaggerUI();
 
-                app.UseCors(
-                    options =>
-                    {
-                        options.AllowAnyOrigin();
-                        options.AllowAnyHeader();
-                        options.AllowAnyMethod();
-                    }
-                );
+            app.UseHttpsRedirection();
 
-                app.UseAuthorization();
+            app.UseCors(
+                options =>
+                {
+                    options.AllowAnyOrigin();
+                    options.AllowAnyHeader();
+                    options.AllowAnyMethod();
+                }
+            );
 
-                app.MapControllers();
+            app.UseAuthorization();
 
-                app.Run();
-            });
+            app.MapControllers();
+
+            await app.RunAsync();
         }
 
         private static void ConfigureServices(IServiceCollection services)
         {
-            ConfigureMassTransit(services).Wait();
+            ConfigureMassTransit(services);
 
             services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(CompareTripController).Assembly));
 
@@ -77,26 +69,21 @@ namespace Configuration
             services.AddScoped(typeof(IBackOffRetryPolicy<>), typeof(BackOffRetryPolicy<>));
 
             services.AddScoped<CompareTimes>();
-            
+
             services.AddScoped<IRouteTimeProvider, RouteTimeProviderClient>();
-            
+
             services.AddScoped<IDataStreamWriteModel, MassTransitRabbitMqClient>();
-            
+
             services.AddScoped<IBusInfoProvider, StmClient>();
         }
 
-        private static async Task ConfigureMassTransit(IServiceCollection services)
+        private static void ConfigureMassTransit(IServiceCollection services)
         {
-            //Leaving some time for the node controller to map the pool
-            await Task.Delay(5000);
+            var hostInfo = new HostInfo();
+            
+            var host = TcpController.GetTcpSocketForRabbitMq(hostInfo.GetMQServiceName()).Result;
 
-            var mq = (await RestController.GetAddress(HostInfo.MqServiceName, LoadBalancingMode.RoundRobin)).FirstOrDefault();
-
-            var reformattedAddress = $"rabbitmq{mq!.Address[4..]}";
-
-            const string baseQueueName = "time_comparison.node_controller-to-any.query";
-
-            var uniqueQueueName = $"{baseQueueName}.{Guid.NewGuid()}";
+            var uniqueQueueName = $"time_comparison.node_controller-to-any.query.{Guid.NewGuid()}";
 
             services.AddMassTransit(x =>
             {
@@ -104,7 +91,12 @@ namespace Configuration
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host(reformattedAddress);
+                    cfg.Host(host, c =>
+                    {
+                        c.RequestedConnectionTimeout(100);
+                        c.Heartbeat(TimeSpan.FromMilliseconds(50));
+                        c.PublisherConfirmation = true;
+                    });
 
                     cfg.Message<BusPositionUpdated>(topologyConfigurator => topologyConfigurator.SetEntityName("bus_position_updated"));
                     cfg.Message<CoordinateMessage>(topologyConfigurator => topologyConfigurator.SetEntityName("coordinate_message"));

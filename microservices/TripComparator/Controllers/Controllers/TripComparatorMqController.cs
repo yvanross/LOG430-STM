@@ -1,8 +1,7 @@
-﻿using ApplicationLogic.Interfaces.Policies;
-using ApplicationLogic.Usecases;
+﻿using Application.Interfaces.Policies;
+using Application.Usecases;
 using MassTransit;
 using MqContracts;
-using Polly;
 
 namespace Controllers.Controllers;
 

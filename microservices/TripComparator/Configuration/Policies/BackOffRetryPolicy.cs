@@ -1,5 +1,4 @@
-﻿using ApplicationLogic.Interfaces.Policies;
-using Entities.DomainInterfaces;
+﻿using Application.Interfaces.Policies;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Retry;

@@ -76,7 +76,6 @@ C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvi
 C:\Users\david\Documents\GitHub\LOG430-STM-Template\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\nuget.config
 C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\nuget.config
 C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Newtonsoft.Json.dll
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\nuget.config
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\appsettings.Development.json
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\appsettings.json
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\RouteTimeProvider.exe
@@ -91,8 +90,6 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\Route
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\ApplicationLogic.dll
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\ApplicationLogic.pdb
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\obj\Debug\net7.0\RouteTimeProvider.csproj.AssemblyReference.cache
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\obj\Debug\net7.0\RouteTimeProvider.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\obj\Debug\net7.0\RouteTimeProvider.AssemblyInfoInputs.cache
@@ -114,12 +111,8 @@ C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\Route
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\obj\Debug\net7.0\RouteTimeProvider.pdb
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\obj\Debug\net7.0\RouteTimeProvider.genruntimeconfig.cache
 C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\obj\Debug\net7.0\ref\RouteTimeProvider.dll
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Entities.dll
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Entities.pdb
 C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Entities.dll
 C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Entities.pdb
 C:\Users\david\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Polly.dll
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Microsoft.DotNet.PlatformAbstractions.dll
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Polly.dll
-C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\ServiceMeshHelper.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Application.dll
+C:\Users\david\Documents\GitHub\LOG430-STM\microservices\RouteTimeProvider\RouteTimeProvider\bin\Debug\net7.0\Application.pdb

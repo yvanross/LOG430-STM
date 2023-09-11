@@ -1,9 +1,9 @@
-﻿using ApplicationLogic.Interfaces.Policies;
-using Entities.DomainInterfaces;
+﻿using Application.Interfaces;
+using Application.Interfaces.Policies;
 using Newtonsoft.Json;
 using ServiceMeshHelper;
-using ServiceMeshHelper.Bo;
-using ServiceMeshHelper.Bo.InterServiceRequests;
+using ServiceMeshHelper.BusinessObjects;
+using ServiceMeshHelper.BusinessObjects.InterServiceRequests;
 using ServiceMeshHelper.Controllers;
 
 namespace Infrastructure.Clients;
@@ -52,3 +52,13 @@ public class RouteTimeProviderClient : IRouteTimeProvider
         });
     }
 }
+
+//Exemple of how to use Restsharp for a simple request to a service (without the pros (and cons) of using the NodeController)
+
+//var restClient = new RestClient("http://RouteTimeProvider");
+//var restRequest = new RestRequest("RouteTime/Get");
+
+//restRequest.AddQueryParameter("startingCoordinates", startingCoordinates);
+//restRequest.AddQueryParameter("destinationCoordinates", destinationCoordinates);
+            
+//return (await restClient.ExecuteGetAsync<int>(restRequest)).Data;
