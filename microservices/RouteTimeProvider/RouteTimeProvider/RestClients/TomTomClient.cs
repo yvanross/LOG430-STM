@@ -12,7 +12,7 @@ public class TomTomClient : IRouteTimeProvider
 
     private readonly RestClient _restClient = new(TomTomUrl);
 
-    private readonly string _apiKey = Environment.GetEnvironmentVariable("API_KEY") ?? throw new Exception("API_KEY environment variable not found");
+    private readonly string _apiKey = Environment.GetEnvironmentVariable("API_KEY")!;
 
     public async Task<int> GetTravelTimeInSeconds(string startingCoordinates, string destinationCoordinates)
     {

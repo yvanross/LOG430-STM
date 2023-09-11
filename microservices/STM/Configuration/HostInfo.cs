@@ -19,4 +19,11 @@ public class HostInfo : IHostInfo
     {
         return StmApiKey;
     }
+
+    public void Validate()
+    {
+        if (string.IsNullOrWhiteSpace(StmApiKey))
+            throw new ArgumentNullException("API_KEY",
+                "The api key was not defined in the env variables, this is critical");
+    }
 }

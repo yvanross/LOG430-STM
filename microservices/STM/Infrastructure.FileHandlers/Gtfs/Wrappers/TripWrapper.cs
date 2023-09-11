@@ -31,6 +31,7 @@ public sealed class TripWrapper : ITripWrapper
     }
 
     private static Dictionary<string, List<IStopScheduleWrapper>>? GlobalScheduledStops { get; set; }
+
     public string TripId { get; }
 
     public List<IStopScheduleWrapper> ScheduledStops { get; }
@@ -91,50 +92,4 @@ public sealed class TripWrapper : ITripWrapper
 
         return schedules;
     }
-
-    //private Dictionary<string, List<IStopScheduleWrapper>> GetStopWrappers()
-    //{
-    //    var schedules = new Dictionary<string, List<IStopScheduleWrapper>>();
-
-    //    foreach (var stopTime in _gtfsFileFileCache.GetInfo(DataCategoryEnum.STOP_TIMES))
-    //    {
-    //        if (_mediator.Stops.TryGetValue(stopTime.GetValue("stop_id"), out var stopWrapper) is false)
-    //            throw new NullReferenceException(
-    //                "Stop was null, this is a critical failure, make sure the data is accessible");
-
-    //        if (stopTime.GetValue("trip_id") is not { } tripId || string.IsNullOrEmpty(tripId))
-    //            throw new NullReferenceException(
-    //                "TripId was null, this is a critical failure, make sure the data is accessible");
-
-    //        var HMS = stopTime.GetValue("arrival_time");
-
-    //        var HMSArray = HMS.Split(":");
-
-    //        var dateTime = DateTime.UtcNow.Date;
-
-    //        dateTime = dateTime.AddHours(Convert.ToDouble(HMSArray[0])).AddMinutes(Convert.ToDouble(HMSArray[1]))
-    //            .AddSeconds(Convert.ToDouble(HMSArray[2])).AddHours(_datetimeProvider.GetUtcDifference());
-
-    //        var differenceInDaysBetweenStopTimeAndCurrentTime =
-    //            (dateTime.Date.ToTimestamp().Seconds - _datetimeProvider.GetCurrentTime().Date.ToTimestamp().Seconds) /
-    //            TimeSpan.FromDays(1).TotalSeconds;
-
-    //        dateTime = dateTime.AddDays(-(int)differenceInDaysBetweenStopTimeAndCurrentTime);
-
-    //        var stopSchedule = new StopScheduleWrapper
-    //        {
-    //            DepartureTime = dateTime,
-    //            StopId = stopWrapper.Id
-    //        };
-
-    //        if (schedules.TryGetValue(tripId, out var stopSchedules))
-    //            stopSchedules.Add(stopSchedule);
-    //        else
-    //            schedules.Add(tripId, new List<IStopScheduleWrapper> { stopSchedule });
-
-    //        stopTime.Dispose();
-    //    }
-
-    //    return schedules;
-    //}
 }

@@ -101,6 +101,10 @@ public class Program
 
         var scope = app.Services.CreateScope();
 
+        var hostInfo = (HostInfo)scope.ServiceProvider.GetRequiredService<IHostInfo>();
+
+        hostInfo.Validate();
+
         if (scope.ServiceProvider.GetRequiredService<AppReadDbContext>().Database.IsInMemory() is false)
             scope.ServiceProvider.GetRequiredService<AppReadDbContext>().Database.Migrate();
 

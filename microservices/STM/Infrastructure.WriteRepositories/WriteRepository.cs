@@ -38,11 +38,6 @@ public abstract class WriteRepository<TAggregate> : IWriteRepository<TAggregate>
                    $"Aggregate of type {typeof(TAggregate)} could not be found using id: {id}");
     }
 
-    public async Task<bool> AnyAsync()
-    {
-        return await Aggregates.AnyAsync();
-    }
-
     public virtual async Task AddOrUpdateAsync(TAggregate aggregate)
     {
         var persistedAggregate = await Aggregates.FindAsync(aggregate.Id);

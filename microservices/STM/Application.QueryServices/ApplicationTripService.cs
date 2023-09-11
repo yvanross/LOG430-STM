@@ -30,8 +30,6 @@ public class ApplicationTripService
 
             var tripProjection = await GetRelevantTripIdsAsync(materializedIds);
 
-            //var trips = await GetTripsByTripIdsAsync(tripIds);
-
             return tripProjection;
         }
         catch (Exception e)

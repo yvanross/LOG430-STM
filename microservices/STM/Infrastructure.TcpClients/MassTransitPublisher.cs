@@ -20,7 +20,10 @@ public class MassTransitPublisher : IPublisher
     public async Task Publish<TEvent>(TEvent message) where TEvent : Event
     {
         await _retryPolicy.ExecuteAsync(async () => await _publishEndpoint.Publish(message,
-            x => { x.SetRoutingKey("Stm.RideTrackingUpdated"); },
+            x =>
+            {
+                x.SetRoutingKey("Stm.RideTrackingUpdated");
+            },
             new CancellationTokenSource(TimeSpan.FromMilliseconds(50)).Token));
     }
 }

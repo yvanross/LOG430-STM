@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Threading.RateLimiting;
 using Application.Interfaces;
 using Application.Usecases;
@@ -10,6 +11,8 @@ namespace RouteTimeProvider
     {
         public static void Main(string[] args)
         {
+            Validate();
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -50,6 +53,15 @@ namespace RouteTimeProvider
             app.MapControllers();
 
             app.Run();
+        }
+
+        private static void Validate()
+        {
+            var apiKey = Environment.GetEnvironmentVariable("API_KEY") ?? throw new Exception("API_KEY environment variable not found");
+
+            if (string.IsNullOrWhiteSpace(apiKey))
+                throw new ArgumentNullException("API_KEY",
+                    "The api key was not defined in the env variables, this is critical");
         }
     }
 }
