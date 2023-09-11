@@ -5,17 +5,20 @@ using ApplicationLogic.Interfaces.Dao;
 using Entities.BusinessObjects.Live;
 using Entities.BusinessObjects.ResourceManagement;
 using Entities.Dao;
+using Microsoft.Extensions.Logging;
 
 namespace ApplicationLogic.Usecases;
 
 public class ExperimentMonitoring
 {
     // This is static because there is only one experiment running per service lifetime.
-    private static readonly MessageProcessor MessageProcessingService = new ();
+    private static MessageProcessor? MessageProcessingService;
 
     private readonly ISystemStateWriteService _systemStateWriteService;
 
     private readonly IPodReadService _readService;
+
+    private protected readonly ILogger<ExperimentMonitoring> _logger;
 
     private static int _testErrorCount;
 
@@ -25,10 +28,12 @@ public class ExperimentMonitoring
     
     private static string _message = "";
 
-    public ExperimentMonitoring(ISystemStateWriteService systemStateWriteService, IPodReadService readService)
+    public ExperimentMonitoring(ISystemStateWriteService systemStateWriteService, IPodReadService readService, ILogger<ExperimentMonitoring> logger)
     {
         _systemStateWriteService = systemStateWriteService;
         _readService = readService;
+        MessageProcessingService ??= new MessageProcessor(logger);
+        _logger = logger;
     }
 
     public void AnalyzeAndStoreRealtimeTestData(IBusPositionUpdated busPositionUpdated)
@@ -170,44 +175,60 @@ public class ExperimentMonitoring
 
     private class MessageProcessor
     {
-        private readonly Stopwatch _stopwatch = new();
-        private readonly ConcurrentBag<long> _timeDeltas = new();
+        private readonly ILogger _logger;
+        private readonly Stopwatch _totalElapsedStopwatch = new();
+        private readonly Stopwatch _intervalElapsedStopwatch = new();
 
-        private double _mean = 0;
-        private double _m2 = 0;
-        private int _count = 0;
+        private long _sumOfSquareDifferences = 0;
+        private long _count = 0;
+
+        public MessageProcessor(ILogger logger)
+        {
+            _logger = logger;
+        }
 
         public void StartProcessing()
         {
-            _stopwatch.Start();
+            _intervalElapsedStopwatch.Start();
+            _totalElapsedStopwatch.Start();
         }
 
         public void MessageProcessed()
         {
-            long currentTime = _stopwatch.ElapsedMilliseconds;
-            _timeDeltas.Add(currentTime);
-            _stopwatch.Restart();
+            long currentInterval = _intervalElapsedStopwatch.ElapsedMilliseconds;
 
-            _count++;
-            double delta = currentTime - _mean;
-            _mean += delta / _count;
-            double delta2 = currentTime - _mean;
-            _m2 += delta * delta2;
+            _intervalElapsedStopwatch.Restart();
+
+            long previousSumOfSquareDifferences = Interlocked.Read(ref _sumOfSquareDifferences);
+            long localCount = Interlocked.Increment(ref _count);
+
+            long meanIntervalTime = _totalElapsedStopwatch.ElapsedMilliseconds / localCount;  // Calculate mean locally
+            long delta = currentInterval - meanIntervalTime;
+
+            long newSumOfSquareDifferences = previousSumOfSquareDifferences + delta * delta;
+
+            Interlocked.Exchange(ref _sumOfSquareDifferences, newSumOfSquareDifferences);
         }
 
         public double GetStandardDeviation()
         {
-            if (_count < 2)
-            {
-                return 0;
-            }
+            long localSumOfSquareDifferences = Interlocked.Read(ref _sumOfSquareDifferences);
+            long localCount = Interlocked.Read(ref _count);
 
-            return Math.Sqrt(_m2 / (_count - 1));
+            var standardDeviation = (localCount > 1) ? Math.Sqrt((double)localSumOfSquareDifferences / (localCount - 1)) : 0;
+
+            _logger.LogInformation($"Standard Deviation: {standardDeviation}");
+
+            return standardDeviation;
         }
 
         public double GetAverageTimeBetweenMessages()
         {
-            return _timeDeltas.Count > 0 ? _timeDeltas.Average() : 0;
+            long localCount = Interlocked.Read(ref _count);
+            long totalElapsedTime = _totalElapsedStopwatch.ElapsedMilliseconds;
+
+            return localCount > 0 ? (double)totalElapsedTime / localCount : 0;
         }
     }
+
 }

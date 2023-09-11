@@ -16,12 +16,12 @@ COPY ["NodeController/Configuration/Configuration.csproj", "Configuration/"]
 RUN dotnet restore "Configuration/Configuration.csproj"
 COPY . .
 WORKDIR "/src/NodeController"
-RUN dotnet build "Configuration/Configuration.csproj" -c Debug -o /app/build #-c Release -o /app/build  #-c Debug -o /app/build ##
+RUN dotnet build "Configuration/Configuration.csproj" -c Release -o /app/build  #-c Debug -o /app/build ##
 
 FROM build AS publish
-RUN dotnet publish "Configuration/Configuration.csproj" -c Debug -o /app/publish /p:UseAppHost=false #-c Release -o /app/publish /p:UseAppHost=false  # -c Debug -o /app/publish /p:UseAppHost=false ##
+RUN dotnet publish "Configuration/Configuration.csproj" -c Release -o /app/publish /p:UseAppHost=false  # -c Debug -o /app/publish /p:UseAppHost=false ##
 
-ENV ASPNETCORE_ENVIRONMENT=Development
+#ENV ASPNETCORE_ENVIRONMENT=Development
 
 FROM base AS final
 WORKDIR /app

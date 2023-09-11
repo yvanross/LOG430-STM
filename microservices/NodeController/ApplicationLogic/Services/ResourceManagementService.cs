@@ -68,7 +68,6 @@ public class ResourceManagementService
             await RemovePodInstance(podInstance);
 
             throw new Exception($"{nameof(ReplacePodInstance)} {e}");
-
         }
     }
 
@@ -172,7 +171,8 @@ public class ResourceManagementService
                     Id = newServiceId,
                     ContainerInfo = default,
                     Type = serviceType.Type,
-                    PodId = newPodId
+                    PodId = newPodId,
+                    ServiceStatus = new LaunchedState(),
                 });
             }
 

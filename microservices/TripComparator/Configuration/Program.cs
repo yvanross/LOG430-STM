@@ -93,8 +93,9 @@ namespace Configuration
                 {
                     cfg.Host(host, c =>
                     {
-                        //c.RequestedConnectionTimeout(50);
-                        //c.Heartbeat(TimeSpan.FromMilliseconds(50));
+                        c.RequestedConnectionTimeout(100);
+                        c.Heartbeat(TimeSpan.FromMilliseconds(50));
+                        c.PublisherConfirmation = true;
                     });
 
                     cfg.Message<BusPositionUpdated>(topologyConfigurator => topologyConfigurator.SetEntityName("bus_position_updated"));
@@ -112,11 +113,10 @@ namespace Configuration
 
                         endpoint.ConfigureConsumer<TripComparatorMqController>(context);
                     });
-                    
+
                     //cfg.UseMessageRetry(x=>x.SetRetryPolicy(x=>x.Immediate(int.MaxValue)));
 
-                    cfg.Publish<BusPositionUpdated>(p =>
-                        p.ExchangeType = ExchangeType.Topic);
+                    cfg.Publish<BusPositionUpdated>(p => p.ExchangeType = ExchangeType.Topic);
                 });
             });
         }

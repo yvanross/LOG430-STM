@@ -219,6 +219,13 @@ namespace Configuration
 
             var uniqueQueueName = $"{baseQueueName}.{Guid.NewGuid()}";
 
+            services.AddOptions<MassTransitHostOptions>()
+                .Configure(options =>
+                {
+                    options.StopTimeout = TimeSpan.FromMilliseconds(50);
+                    options.ConsumerStopTimeout = TimeSpan.FromMilliseconds(50);
+                });
+
             services.AddMassTransit(x =>
             {
                 if (hostInfo.IsIngressConfigValid() is false) return;

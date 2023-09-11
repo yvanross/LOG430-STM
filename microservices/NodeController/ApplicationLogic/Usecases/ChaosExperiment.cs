@@ -1,6 +1,7 @@
 ﻿using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Dao;
 using ApplicationLogic.Services;
+using Entities.BusinessObjects.States;
 using Entities.Dao;
 using Entities.DomainInterfaces.Planned;
 using Entities.DomainInterfaces.ResourceManagement;
@@ -38,7 +39,10 @@ public class ChaosExperiment
         await _streamService.Produce(coordinates);
     }
 
-    public void SetChaosCodex(IChaosCodex codex) => _codex = codex;
+    public void SetChaosCodex(IChaosCodex codex)
+    {
+        _codex = codex;
+    }
 
     public async Task InduceChaos()
     {
@@ -66,9 +70,9 @@ public class ChaosExperiment
 
                 var nanoCpus = (long)(chaosConfig.NanoCpus / completionPercentage);
 
-                await InduceHardwareFailures(category, expectedHardwareFailureCountAtThisMoment);
+                await InduceHardwareFailures(category, expectedHardwareFailureCountAtThisMoment, _codex.StartTestAt);
 
-                await ChaosMonkey(expectedKillCountAtThisMoment, chaosConfig.MaxNumberOfPods, category);
+                await ChaosMonkey(expectedKillCountAtThisMoment, chaosConfig.MaxNumberOfPods, category, _codex.StartTestAt);
 
                 await SetResourcesOnPods(category, nanoCpus, memory);
             }
@@ -77,7 +81,7 @@ public class ChaosExperiment
         double GetSecondsSinceEpoch(DateTime datetime) => (datetime - DateTime.UnixEpoch).TotalSeconds;
     }
 
-    private async Task ChaosMonkey(double expectedKillCountAtThisMoment, double maxNumberOfPods, string category)
+    private async Task ChaosMonkey(double expectedKillCountAtThisMoment, double maxNumberOfPods, string category, DateTime codexStartTestAt)
     {
         var getPodCountOfType = _podReadService.GetAllPods().Count(pod => _podReadService.GetPodType(pod.Type)?.ServiceTypes.Any(st => st.ArtifactType.EqualsIgnoreCase(category)) ?? false);
 
@@ -94,7 +98,8 @@ public class ChaosExperiment
 
             var podToKill = _podReadService.GetAllPods()
                 .Where(pod => podsOfType.ContainsKey(pod.Type))
-                .MinBy(_ => Random.Shared.Next());
+                .Where(pod => pod.ServiceStatus is ReadyState)
+                .MinBy(pod => codexStartTestAt > pod.ServiceStatus.GetStateChangeTime() ? codexStartTestAt  :  pod.ServiceStatus.GetStateChangeTime());
 
             if (podToKill is not null)
             {
@@ -107,7 +112,7 @@ public class ChaosExperiment
         }
     }
 
-    private async Task InduceHardwareFailures(string category, double expectedHardwareFailureCountAtThisMoment)
+    private async Task InduceHardwareFailures(string category, double expectedHardwareFailureCountAtThisMoment, DateTime codexStartTestAt)
     {
         for (int i = _hardwareFailCount; i < Math.Floor(expectedHardwareFailureCountAtThisMoment); i++)
         {
@@ -117,11 +122,12 @@ public class ChaosExperiment
 
             var serviceInstances = _podReadService.GetAllServices()
                 .Where(serviceInstance => servicesOfCurrentType.ContainsKey(serviceInstance.Type))
+                .OrderBy(serviceInstance => codexStartTestAt > serviceInstance.ServiceStatus.GetStateChangeTime() ? codexStartTestAt : serviceInstance.ServiceStatus.GetStateChangeTime())
                 .SelectMany(serviceInstance => serviceInstance.VolumeIds)
                 .Where(volumeId => string.IsNullOrWhiteSpace(volumeId) is false)
                 .ToList();
 
-            var volumeToFailName = serviceInstances.MinBy(_ => Random.Shared.Next());
+            var volumeToFailName = serviceInstances.FirstOrDefault();
 
             if (volumeToFailName is not null)
             {
@@ -138,7 +144,6 @@ public class ChaosExperiment
                     {
                         var serviceType = _podReadService.GetServiceType(serviceInstance.Type);
 
-                        //mount yanking
                         serviceType?.ContainerConfig.Config.Mounts?.Clear();
 
                         var softKill = category.EqualsIgnoreCase(Enum.GetName(ArtifactTypeEnum.Connector)) || category.EqualsIgnoreCase(Enum.GetName(ArtifactTypeEnum.Database));

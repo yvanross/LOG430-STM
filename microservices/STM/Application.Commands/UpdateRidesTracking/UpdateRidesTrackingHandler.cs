@@ -47,7 +47,7 @@ public class UpdateRidesTrackingHandler : ICommandHandler<UpdateRidesTrackingCom
 
                     _rideServices.UpdateRide(ride, bus, trip);
                 }
-                catch (IndexOutsideOfTripException e)
+                catch (Exception e) when(e is IndexOutsideOfTripException or KeyNotFoundException)
                 {
                     _logger.LogError(e, $"Error while updating ride with ID {ride.Id}");
 

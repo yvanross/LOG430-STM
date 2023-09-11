@@ -20,8 +20,17 @@ public static class Try
                 {
                     retry++;
 
-                    if(onFailure is not null)
-                        await onFailure(e, retry);
+                    if (onFailure is not null)
+                    {
+                        try
+                        {
+                            await onFailure(e, retry);
+                        }
+                        catch (Exception exception)
+                        {
+                            // ignored it's a fire and forget
+                        }
+                    }
 
                     return await SafeAction(func, onFailure);
                 }

@@ -38,8 +38,7 @@ public class JsonProvider
                         NanoCpus = 0
                     }
                 },
-                EndTestAt = DateTime.UtcNow.AddDays(100),
-                StartTestAt = DateTime.UtcNow.AddDays(10),
+                Duration = DateTime.UtcNow.AddDays(100),
             },
 
             Coordinates = new CoordinatesDto()

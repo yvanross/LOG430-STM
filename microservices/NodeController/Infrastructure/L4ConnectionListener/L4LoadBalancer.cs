@@ -43,7 +43,7 @@ public class L4LoadBalancer : ConnectionHandler
             if (_podReadService.TryGetServiceTypeFromPort(incomingPort) is not { } serviceType)
                 throw new Exception("Port number not resolved to target service type. Call NegotiateSocket from Routing/ first to create or get the right socket");
 
-            using var linkHub = new LinkHub(connection, serviceType, _routing, _podReadService, _logger);
+            using var linkHub = new LinkHub(connection, serviceType, _routing, _podReadService, _logger, connection.ConnectionClosed);
 
             await linkHub.BeginAsync();
         }
@@ -55,7 +55,7 @@ public class L4LoadBalancer : ConnectionHandler
         {
             connection.Abort();
 
-            await connection.DisposeAsync();
+            _ = connection.DisposeAsync();
 
             _logger.LogInformation($"Connection disposed: {connection.ConnectionId}");
         }

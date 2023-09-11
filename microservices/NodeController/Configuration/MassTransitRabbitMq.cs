@@ -1,6 +1,7 @@
 ﻿using ApplicationLogic.Interfaces;
 using ApplicationLogic.Usecases;
 using Entities.Dao;
+using Infrastructure.Dao;
 using Infrastructure.Interfaces;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,7 +58,7 @@ public class MassTransitRabbitMq : IMqConfigurator
         {
             cfg.Host(reformattedAddress, c =>
             {
-                c.RequestedConnectionTimeout(50);
+                c.RequestedConnectionTimeout(100);
                 c.Heartbeat(TimeSpan.FromMilliseconds(50));
             });
 
@@ -67,11 +68,9 @@ public class MassTransitRabbitMq : IMqConfigurator
 
             cfg.ReceiveEndpoint(uniqueQueueName, endpoint =>
             {
-                endpoint.UseMessageRetry(x => x.Immediate(int.MaxValue));
-
                 endpoint.ConfigureConsumeTopology = false;
                 
-                endpoint.SetQuorumQueue();
+                endpoint.SetQuorumQueue(_podReadService.GetPodType(_hostInfo.GetMQServiceName())!.NumberOfInstances);
 
                 endpoint.PrefetchCount = 1;
 

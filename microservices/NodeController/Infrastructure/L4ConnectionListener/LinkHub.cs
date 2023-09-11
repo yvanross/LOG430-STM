@@ -33,25 +33,35 @@ public sealed class LinkHub : IDisposable
     private readonly SemaphoreSlim _semaphoreSlim = new (NumberOfLinks);
     private readonly CancellationTokenSource _cancellationTokenSource = new ();
 
-    private readonly CancellationTokenSource _readCancellationTokenSource = new ();
-    private readonly CancellationTokenSource _writeCancellationTokenSource = new ();
+    private readonly CancellationTokenSource _blueReadCancellationTokenSource = new ();
+    private readonly CancellationTokenSource _greenReadCancellationTokenSource = new ();
+    private readonly CancellationTokenSource _blueWriteCancellationTokenSource = new ();
+    private readonly CancellationTokenSource _greenWriteCancellationTokenSource = new ();
 
     private const int NumberOfLinks = 4;
+
+    private int GreenPort { get; set; }
+
     //blue -> green
-    public LinkHub(ConnectionContext sourceConnection, IServiceType serviceType, IRouting routing, IPodReadService podReadService, ILogger logger)
+    public LinkHub(ConnectionContext sourceConnection, IServiceType serviceType, IRouting routing,
+        IPodReadService podReadService, ILogger logger, CancellationToken connectionConnectionClosed)
     {
         _serviceType = serviceType;
         _routing = routing;
         _podReadService = podReadService;
         _logger = logger;
 
+        connectionConnectionClosed.Register(() =>
+        {
+            TryCancelToken(_cancellationTokenSource);
+        });
+
         _cancellationTokenSource.Token.Register(() =>
         {
-            if(_readCancellationTokenSource.IsCancellationRequested is false)
-                _readCancellationTokenSource.Cancel();
-
-            if(_writeCancellationTokenSource.IsCancellationRequested is false)
-                _writeCancellationTokenSource.Cancel();
+            TryCancelToken(_blueWriteCancellationTokenSource);
+            TryCancelToken(_blueReadCancellationTokenSource);
+            TryCancelToken(_greenWriteCancellationTokenSource);
+            TryCancelToken(_greenReadCancellationTokenSource);
         });
 
 
@@ -82,7 +92,7 @@ public sealed class LinkHub : IDisposable
 
         var tasks = new[]
         {
-            (nameof(BlueRead), _blueReadLink.BeginGossiping(_readCancellationTokenSource.Token).ContinueWith(t =>
+            (nameof(BlueRead), _blueReadLink.BeginGossiping(_blueReadCancellationTokenSource.Token).ContinueWith(t =>
             {
                 try
                 {
@@ -94,13 +104,12 @@ public sealed class LinkHub : IDisposable
                 }
                 finally
                 {
-                    if( _readCancellationTokenSource.Token.IsCancellationRequested is false)
-                        _cancellationTokenSource.Cancel();
+                    TryCancelToken(_greenReadCancellationTokenSource);
                 }
 
                 return t;
             })),
-            (nameof(BlueWrite), _blueWriteLink.BeginGossiping(_writeCancellationTokenSource.Token).ContinueWith(t =>
+            (nameof(BlueWrite), _blueWriteLink.BeginGossiping(_blueWriteCancellationTokenSource.Token).ContinueWith(t =>
             {
                 try
                 {
@@ -112,13 +121,12 @@ public sealed class LinkHub : IDisposable
                 }
                 finally
                 {
-                    if( _readCancellationTokenSource.Token.IsCancellationRequested is false)
-                        _writeCancellationTokenSource.Cancel();
+                    //TryCancelToken(_greenReadCancellationTokenSource);
                 }
 
                 return t;
             })),
-            (nameof(GreenWrite), _greenWriteLink.BeginGossiping(_writeCancellationTokenSource.Token).ContinueWith(t =>
+            (nameof(GreenWrite), _greenWriteLink.BeginGossiping(_greenWriteCancellationTokenSource.Token).ContinueWith(t =>
             {
                 try
                 {
@@ -130,13 +138,12 @@ public sealed class LinkHub : IDisposable
                 }
                 finally
                 {
-                    if( _readCancellationTokenSource.Token.IsCancellationRequested is false)
-                        _writeCancellationTokenSource.Cancel();
+                    //TryCancelToken(_blueWriteCancellationTokenSource);
                 }
 
                 return t;
             })),
-            (nameof(GreenRead), _greenReadLink.BeginGossiping(_readCancellationTokenSource.Token).ContinueWith(t =>
+            (nameof(GreenRead), _greenReadLink.BeginGossiping(_greenReadCancellationTokenSource.Token).ContinueWith(t =>
             {
                 try
                 {
@@ -148,8 +155,8 @@ public sealed class LinkHub : IDisposable
                 }
                 finally
                 {
-                    if( _readCancellationTokenSource.Token.IsCancellationRequested is false)
-                        _cancellationTokenSource.Cancel();
+                    NotifyRoutingOfUnresponsiveService(GreenPort);
+                    //TryCancelToken(_blueWriteCancellationTokenSource);
                 }
 
                 return t;
@@ -234,24 +241,39 @@ public sealed class LinkHub : IDisposable
 
         if (destination is not null)
         {
-            var port = int.Parse(destination.Port);
+            GreenPort = int.Parse(destination.Port);
+
+            if (_podReadService.GetAllServices()
+                    .FirstOrDefault(si =>
+                        si.ContainerInfo is not null &&
+                        si.ContainerInfo.PortsInfo.RoutingPortNumber.Equals(GreenPort)) is
+                { } serviceInstance)
+            {
+                _logger.LogInformation($"Routing to {serviceInstance.ContainerInfo.Name}");
+            }
 
             try
             {
-                var destinationClient = new TcpClient(destination.Host, port);
+                var destinationClient = new TcpClient(destination.Host, GreenPort);
 
-                _logger.LogInformation($"Connected on {port}");
+                _logger.LogInformation($"Connected on {GreenPort}");
 
                 return destinationClient;
             }
             catch (Exception)
             {
-                NotifyRoutingOfUnresponsiveService(port);
+                NotifyRoutingOfUnresponsiveService(GreenPort);
 
                 throw new TcpConnectionException("TCP connection failed");
             }
         }
 
         throw new TcpConnectionException("No possible TCP connections");
+    }
+
+    private void TryCancelToken(CancellationTokenSource cancellationTokenSource)
+    {
+        if (cancellationTokenSource.IsCancellationRequested is false)
+            cancellationTokenSource.Cancel();
     }
 }

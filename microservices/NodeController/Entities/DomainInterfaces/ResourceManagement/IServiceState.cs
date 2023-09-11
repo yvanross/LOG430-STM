@@ -2,5 +2,7 @@
 
 public interface IServiceState
 {
+    public DateTime GetStateChangeTime();
+
     public string GetStateName();
 }

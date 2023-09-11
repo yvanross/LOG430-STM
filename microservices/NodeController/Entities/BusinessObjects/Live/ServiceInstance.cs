@@ -17,7 +17,7 @@ public class ServiceInstance : IServiceInstance
 
     public List<string> VolumeIds { get; set; } = new ();
 
-    public IServiceState? ServiceStatus { get; set; }
+    public required IServiceState ServiceStatus { get; set; }
 
     public string HttpRoute => $"http://{Address}:{ContainerInfo?.PortsInfo.RoutingPortNumber}";
 

@@ -20,8 +20,7 @@ export class ChaosDashboardComponent implements OnInit {
           Database: this.createChaosConfigGroup(this.defaultChaosConfig.ChaosConfigs.Database),
           Connector: this.createChaosConfigGroup(this.defaultChaosConfig.ChaosConfigs.Connector)
         }),
-        EndTestAt: [this.defaultChaosConfig.EndTestAt],
-        StartTestAt: [this.defaultChaosConfig.StartTestAt]
+        Duration: [this.defaultChaosConfig.Duration],
       }),
       Coordinates: this.fb.group({
         StartingCoordinates: [this.defaultCoordinates.StartingCoordinates],
@@ -48,8 +47,12 @@ export class ChaosDashboardComponent implements OnInit {
   onSubmit() {
     const chaosData = this.chaosForm.value;
 
-    const startTestAtLocal = new Date(chaosData.ChaosCodex.StartTestAt);
-    const endTestAtLocal = new Date(chaosData.ChaosCodex.EndTestAt);
+    const startTestAtUTC = new Date();
+
+    let duration = chaosData.ChaosCodex.Duration
+
+    // new Date object 5 minutes ahead of the current time
+    const endTestAtUTC = new Date(startTestAtUTC.getTime() + duration * 60 * 1000);
 
     const payload: IChaosExperimentDto = {
       ChaosCodex:{
@@ -76,8 +79,8 @@ export class ChaosDashboardComponent implements OnInit {
             HardwareFailures: chaosData.ChaosCodex.ChaosConfigs.Connector.Value.HardwareFailures
           }
         },
-        EndTestAt: endTestAtLocal.toISOString(),
-        StartTestAt: startTestAtLocal.toISOString()
+        EndTestAt: endTestAtUTC.toISOString(),
+        StartTestAt: startTestAtUTC.toISOString()
       },
       Coordinates:{
         StartingCoordinates: chaosData.Coordinates.StartingCoordinates,
@@ -122,8 +125,7 @@ export class ChaosDashboardComponent implements OnInit {
         }
       }
     },
-    EndTestAt: '2023-07-08T20:00:23.4011608Z',
-    StartTestAt: '2023-04-09T20:00:23.4012561Z'
+    Duration: 0,
   };
 
   defaultCoordinates = {

@@ -236,9 +236,9 @@ public class DockerdClient : IEnvironmentClient
 
             return containerCreateResponse.Id;
         },
-            onFailure: async (e, _) =>
+            onFailure: async (e, i) =>
             {
-                _logger.LogError(e, "Error while creating container");
+                _logger.LogError(e, $"Error while creating container, compensating transaction. Will retry immediately: {i< 2}");
 
                 if (creationId is not null)
                     await RemoveContainerInstance(creationId);
@@ -315,6 +315,8 @@ public class DockerdClient : IEnvironmentClient
                restRequest.AddQueryParameter("force", true);
 
                var res = await _restClient.DeleteAsync(restRequest);
+
+               res.ThrowIfError();
             }
 
             return Task.CompletedTask;

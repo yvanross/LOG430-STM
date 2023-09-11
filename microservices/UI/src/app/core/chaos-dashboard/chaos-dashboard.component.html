@@ -45,12 +45,8 @@
           </div>
           <!-- Other ChaosCodex properties -->
           <mat-form-field appearance="outline">
-            <mat-label>Start Test At</mat-label>
-            <input matInput type="datetime-local" formControlName="StartTestAt">
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>End Test At</mat-label>
-            <input matInput type="datetime-local" formControlName="EndTestAt">
+            <mat-label>Test Duration in Minutes</mat-label>
+            <input matInput type="number" [max]="30" [min]="0" formControlName="Duration">
           </mat-form-field>
         </mat-expansion-panel>
       </div>
