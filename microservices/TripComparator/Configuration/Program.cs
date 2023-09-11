@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using MqContracts;
 using RabbitMQ.Client;
+using ServiceMeshHelper;
 using ServiceMeshHelper.Controllers;
 
 namespace Configuration
@@ -81,7 +82,7 @@ namespace Configuration
         {
             var hostInfo = new HostInfo();
             
-            var host = TcpController.GetTcpSocketForRabbitMq(hostInfo.GetMQServiceName()).Result;
+            var host = RestController.GetAddress(hostInfo.GetMQServiceName(), LoadBalancingMode.RoundRobin).Result.First().Address;
 
             var uniqueQueueName = $"time_comparison.node_controller-to-any.query.{Guid.NewGuid()}";
 
