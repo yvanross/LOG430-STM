@@ -41,7 +41,7 @@ namespace Configuration;
 
 public class Program
 {
-    public static bool UseInMemoryDatabase = true;
+    public static readonly bool UseInMemoryDatabase = true;
 
     private static readonly InMemoryDatabaseRoot DatabaseRoot = new();
 
@@ -61,8 +61,6 @@ public class Program
 
     public static void Main(string[] args)
     {
-        Environment.SetEnvironmentVariable("API_KEY", "l7f41468f7c35f4bd39523510d89637523");
-
         var builder = WebApplication.CreateBuilder(args);
 
         RepositoryDbContextOptionConfiguration = UseInMemoryDatabase

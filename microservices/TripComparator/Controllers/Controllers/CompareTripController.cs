@@ -27,7 +27,7 @@ namespace Controllers.Controllers
         }
 
         [HttpPost]
-        [SwaggerOperation("This endpoint is for you to manually test your system during the first iteration of the lab.")]
+        [SwaggerOperation("This endpoint is for you to manually test your system (first iteration of the lab used to be without UI)")]
         public async Task<IActionResult> Post(string startingCoordinates, string destinationCoordinates)
         {
             _logger.LogInformation($"Comparing trip duration from {startingCoordinates} to {destinationCoordinates}");

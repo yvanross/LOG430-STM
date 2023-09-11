@@ -63,9 +63,9 @@ namespace Configuration.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] stop_times_bin {
+        internal static byte[] stop_times {
             get {
-                object obj = ResourceManager.GetObject("stop_times.bin", resourceCulture);
+                object obj = ResourceManager.GetObject("stop_times", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -78,9 +78,9 @@ namespace Configuration.Properties {
         ///STATION_M120,10120,STATION MONK,45.451158,-73.593242,,1,,2
         ///42,10120,Station Monk,45.451158,-73.593242,http://www.stm.info/fr/infos/reseaux/metro/monk,0, [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string stops_txt {
+        internal static string stops {
             get {
-                return ResourceManager.GetString("stops.txt", resourceCulture);
+                return ResourceManager.GetString("stops", resourceCulture);
             }
         }
         

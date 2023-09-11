@@ -114,8 +114,6 @@ namespace Configuration
                         endpoint.ConfigureConsumer<TripComparatorMqController>(context);
                     });
 
-                    //cfg.UseMessageRetry(x=>x.SetRetryPolicy(x=>x.Immediate(int.MaxValue)));
-
                     cfg.Publish<BusPositionUpdated>(p => p.ExchangeType = ExchangeType.Topic);
                 });
             });
