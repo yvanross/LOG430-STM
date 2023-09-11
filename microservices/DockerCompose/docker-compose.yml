@@ -1,10 +1,7 @@
 version: '3.8'
 services:
   nodecontroller:
-    image: nodecontroller
-    build:
-      context: ../
-      dockerfile: NodeController/NodeController/Dockerfile
+    image: log430/nodecontroller
     container_name: NodeController
     restart: always
     ports:
@@ -24,13 +21,14 @@ services:
       BRIDGE_PORT: 32674
     depends_on:
       - event-store
+
   event-store:
     container_name: EventStream
     image: cluster_mq
     restart: always
     hostname: EventStream
     build:
-      context: .
+      context: ../ClusterRabbitMq/
       dockerfile: Dockerfile
     ports:
       - '32771:5672'
@@ -41,7 +39,8 @@ services:
       RABBITMQ_ERLANG_COOKIE_FILE: /var/lib/rabbitmq/.erlang.cookie
     labels:
       Artifact_Category: Connector
-      Replicas: EventStream, EventStream1, EventStream2, EventStream3, EventStream4
+      Replicas: EventStream
+
   routetimeprovider:
     container_name: RouteTimeProvider
     image: routetimeprovider
@@ -58,6 +57,7 @@ services:
       - '32772:80'
     labels:
       ARTIFACT_CATEGORY: Computation
+
   tripcomparator:
     container_name: TripComparator
     image: tripcomparator
@@ -68,13 +68,13 @@ services:
     environment:
       SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
       NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
-      ID: Core.TripComparator
+      ID: TripComparator
       MQ_SERVICE_NAME: EventStream
     ports:
       - '32773:80'
     labels:
       ARTIFACT_CATEGORY: Computation
-      Pod_links: RouteTimeProvider, STM
+
   stm:
     container_name: STM
     image: stm
