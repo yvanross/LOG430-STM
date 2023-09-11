@@ -41,7 +41,7 @@ namespace Configuration;
 
 public class Program
 {
-    public static bool UseInMemoryDatabase = false;
+    public static bool UseInMemoryDatabase = true;
 
     private static readonly InMemoryDatabaseRoot DatabaseRoot = new();
 
@@ -54,7 +54,7 @@ public class Program
     public static Action<IServiceCollection> Domain { get; set; } = DomainSetup;
 
     //this is a quick start configuration, it should use dynamic values
-    private const int DbPort = 32672;
+    private const int DbPort = 00000;
     private const string DbUsername = "postgres";
     private const string DbPassword = "secret";
     private const string DatabaseName = "STM";

@@ -36,7 +36,7 @@ COPY ["Infrastructure.WriteRepositories/Infrastructure.WriteRepositories.csproj"
 RUN dotnet restore "Configuration/Configuration.csproj"
 COPY . .
 WORKDIR "/src/Configuration"
-RUN dotnet build "Configuration.csproj" -c Debug -o /app/build  #-c Release -o /app/build Commenting this to help debugging your container, but it is less performant
+RUN dotnet build "Configuration.csproj" -c Debug -o /app/build #  #-c Release -o /app/build Commenting this to help debugging your container, but it is less performant
 
 FROM build AS publish
 RUN dotnet publish "Configuration.csproj" -c Debug -o /app/publish /p:UseAppHost=false #-c Release -o /app/publish /p:UseAppHost=false Commenting this to help debugging your container, but it is less performant

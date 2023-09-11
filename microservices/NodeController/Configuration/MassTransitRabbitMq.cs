@@ -1,7 +1,6 @@
 ﻿using ApplicationLogic.Interfaces;
 using ApplicationLogic.Usecases;
 using Entities.Dao;
-using Infrastructure.Dao;
 using Infrastructure.Interfaces;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using ApplicationLogic.Interfaces;
 using ApplicationLogic.Interfaces.Dao;
 using Entities.BusinessObjects.Live;

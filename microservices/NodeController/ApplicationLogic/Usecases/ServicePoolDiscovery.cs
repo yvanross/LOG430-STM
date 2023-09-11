@@ -53,9 +53,9 @@ namespace ApplicationLogic.Usecases
                 .OfType<ServiceConfigurationWrapper>()
                 .ToList();
 
-            foreach (var container in containerInfos.OrderByDescending(container => container.PodLinks.Count()))
+            foreach (var container in containerInfos)
             {
-                _logger.LogInformation($"Registering service {container.CuratedInfo.Name} with {container.PodLinks.Count()} links");
+                _logger.LogInformation($"Registering service {container.CuratedInfo.Name}");
             }
 
             //sorting by the number of links (sidecars), so that the services with the most links are registered first, to avoid creating pods that are not needed

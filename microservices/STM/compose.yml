@@ -15,3 +15,5 @@ services:
           - 'stm-db:/var/lib/postgresql/data'
 volumes:
   stm-db: null
+
+  
