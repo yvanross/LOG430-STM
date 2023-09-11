@@ -10,7 +10,6 @@
 
 _build/
 _site/
-Properties/
 
 Project_Readme.html
 
@@ -224,3 +223,5 @@ __pycache__/
 Thumbs.db
 
 stop_times.txt
+.idea/
+.vs/

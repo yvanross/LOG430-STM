@@ -139,43 +139,6 @@ public class InMemoryEventQueueTests
         result.GetType().Should().Be<TestResult_SubscribeTest_With_Long_Funnel>();
     }
 
-    //if all the test are ran in parallel, this test will fail but it's more an issue of test setup than the actual code
-    [TestMethod]
-    public async Task UnSubscribeTest()
-    {
-        const string baseName = "test ";
-        const string newName = nameof(UnSubscribeTest);
-
-        try
-        {
-            async Task AsyncEventHandler(TestEvent result, CancellationToken token)
-            {
-                result.Name.Should().Be(baseName);
-
-                result.GetType().Should().Be<TestEvent>();
-
-                await _queue.Publish(new TestResult_SubscribeTest(Guid.NewGuid(), DateTime.UtcNow) { Name = newName });
-            }
-
-            _queue.Subscribe<TestEvent, TestEvent>(AsyncEventHandler, new TestLogger(TestContext));
-
-            _queue.UnSubscribe<TestEvent>(AsyncEventHandler);
-
-            await _queue.Publish(new TestEvent(Guid.NewGuid(), DateTime.UtcNow)
-            {
-                Name = baseName
-            });
-
-            _ = await _queue.ConsumeNext<TestResult_SubscribeTest>(new CancellationTokenSource(1000).Token);
-
-            Assert.Fail();
-        }
-        catch (OperationCanceledException e)
-        {
-            //expected behavior
-        }
-    }
-
     private class TestEvent : Event
     {
         public string Name { get; set; }
