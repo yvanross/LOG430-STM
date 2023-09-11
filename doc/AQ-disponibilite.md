@@ -46,6 +46,9 @@
 - Le service doit être disponible 99.99% du temps.
 - vous devez accumuler les données et démonter la disponibilité de ce service externe.
 
+### [CU11 ChaosMonkey performance](#cu11) {#d-cu11}
+- Le chaos monkey est le seul service qui ne nécessite pas de redondance
+
 ## Conception pilotée par les attributs
 
 ### [(SC) Détection de faute](#rdtq-détection-de-faute)

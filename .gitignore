@@ -40,7 +40,7 @@ bld/
 [Oo]bj/
 
 # Visual Studo 2015 cache/options directory
-.vs/
+#.vs/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -223,5 +223,3 @@ __pycache__/
 Thumbs.db
 
 stop_times.txt
-.idea/
-.vs/
