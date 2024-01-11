@@ -12,7 +12,7 @@ L'objectif principal des 3 laboratoires du cours de LOG430 est de vous permettre
   - Intégration des mécaniques de télémétrie
   - Exploration de l'architecture actuelle
 
-## Laboratoire #2 #2 (4.5 semaines, 37.5%) 
+## Laboratoire #2 (4.5 semaines, 37.5%) 
   - Réalisation de tactiques de disponibilité et de performance
   - ChaosMonkey détruit aléatoirement les conteneurs de calcul
   - Chaosmonkey attaque à la limitation du nombre d'instructions par secondes et à la mémoire vive (calcul seulement)
@@ -82,7 +82,7 @@ Vous devez déployer vos solutions de chaque itération sur docker desktop sur v
 
 ## Directive de Démonstration
 
-- Vous n'aurez droit à une 4 démonstrations maximum pour l'intégration et/ou l'implémentation.
+- Vous aurez droit à 4 démonstrations maximum pour l'intégration et/ou l'implémentation.
 - Chaque équipe disposera d'un maximum de 10 minutes par démonstration/exigence. (itération 1)
 - Donc soyez bien préparé
   - Assurez-vous d'avoir testé votre architecture

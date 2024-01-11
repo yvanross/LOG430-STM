@@ -53,9 +53,9 @@ En sachant que la variable docker NanoCpus à 1000000000 est l'équivalent de 1 
 ## Documenter la responsabilité détaillée de chaque composant du système
 
 - [ ] on veut comprendre le rôle de chaque composant du système, en incluant les composants de télémétrie ajoutés
-- [ ] réaliser une documentation (vue de type module) de l'infrastructure
-- [ ] réaliser une documentation (vue de type composant et connecteur) de l'infrastructure
-- [ ] réaliser une documentation (vue de type allocation) de l'infrastructure
+- [ ] réaliser une documentation (vue de type module)
+- [ ] réaliser une documentation (vue de type composant et connecteur)
+- [ ] réaliser une documentation (vue de type allocation)
 
 ## Proposer des solutions pour améliorer l'architecture du système
 
