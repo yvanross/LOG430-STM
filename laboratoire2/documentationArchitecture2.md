@@ -23,7 +23,12 @@ Groupe: 0x
 
 Equipe: 0x
 
+Membres de l'équipe:
+
 # Évaluation de la participation
+
+>L'évaluation suivante est faite afin d'encourager des discussions au sein de l'équipe. Une discussion saine du travail de chacun est utile afin d'améliorer le climat de travail. Les membres de l'équipe ont le droit de retirer le nom d'un ou une collègue du rapport.
+
 |nom de l'étudiant| Facteur multiplicatif|
 |:---------------:|:--------------------:|
 |Jean Travaillant  |          1           |
@@ -33,45 +38,50 @@ Equipe: 0x
 |Jay Oublié|      0         |
 
 # Introduction
+
 >TODO: insérer votre introduction
 
-# Cas d'utilisations
-- [CU01 - Veux comparer les temps de trajet.](#cu01){#da-cu01}
-- [CU02 - Mettre le chaos dans les microservices en termes de disponibilité.](#cu02){#da-cu02}
-- [CU05 - Veux informer l'administrateur sur les changements de statut des microservices.](#cu05){#da-cu05}
-- [CU06 - Veux pouvoir récupérer le temps de trajets d'un service externe.](#cu06){#da-cu06}
-- [CU09 - Veux pouvoir récupérer le temps de trajet de STM](#cu09){#da-cu09}
+# Vues architecturales
 
-# Attributs de qualité
+>Au travers des différentes vues architecturales, montrez comment la redondance est présente dans vos microservices après l'implémentation du laboratoire 2.
 
-- Vous devez vous assurer que les attributs de qualité (A) associés à chacun de vos cas d'utilisation soient documentés et réalisés. Pour chacun des attributs de qualité (A), vous devrez concevoir et réaliser une architecture qui utilisera au minimum une tactique architecturale pour chacune des sous-catégories (SC) suivantes.
+## Vues architecturales de type module - redondance
 
-- Si un attribut de qualité ou une sous-catégorie (SC) n'est pas représenté dans votre architecture, vous devez ajouter de nouveau cas d'utilisation tant que tous n'auront pas été couverts.
+## Vues architecturales de type composant et connecteur - redondance
 
-- [Vues architecturales de disponibilité](#disponibilité){#da-disponibilite}
-- Vous devez fournir les diagrammes de séquence démontrant le fonctionnenemnt de l'architecturte actuelle.
+## Vues architecturales de type allocation - redondance
+
+# Télémétrie
+
+- Analysez l'impact de vos modifications aux microservices sur les données de télémétrie recueilliez.
+
+## Télémétrie - Disponibilité
+
+## Télémétrie - Performance
+
+# Diagrammes de séquence
+
+## Diagrammes de séquence pour expliquer le fonctionnement des tactiques de redondance
+
+- Vous devez fournir les diagrammes de séquence démontrant le fonctionnement de l'architecture actuelle.
 - Vous devez fournir les diagrammes de séquence démontrant le fonctionnement de l'architecture optimale, incluant:
   - L'état au démarrage,
   - La mécanique de détection d'un problème
   - La mécanique de rétablissement du service, de récupération ou de reconfiguration.
 
-# Vues architecturales 
-- [Vues architecturales de type Module](#vues-module){#da-vues-module}
-- [Vues architecturales de type composant et connecteur](#vues-cetc){#da-vues-cetc}
-- [Vues architecturales de type allocation](#vues-allocation){#da-vues-allocation}
+## Diagrammes de séquence pour expliquer le fonctionnement des tactiques de performance
 
 # Conclusion
->TODO: insérer votre conclusion
 
+>TODO: insérer votre conclusion
 
 - N'oubliez pas d'effacer les TODO
 - Générer une version PDF de ce document pour votre remise finale.
-- Assurez vous du bon format de votre rapport PDF.
+- Assurez-vous du bon format de votre rapport PDF.
 - Créer un tag git avec la commande "git tag iterationX"
 
-
 \newpage
+
 # Annexes
 
 \pagebreak
-
