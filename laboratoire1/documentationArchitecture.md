@@ -69,7 +69,7 @@ En sachant que la variable docker NanoCpus à 500000000 est l'équivalent de 0,5
 
 # Vues architecturales
 
-## Vues architecturales de type Module
+## Vues architecturales de type Module au sujet du microservice STM
 
 ### Présentation primaire
 
