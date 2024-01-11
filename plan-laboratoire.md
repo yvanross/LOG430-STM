@@ -11,7 +11,7 @@
     - Chaosmonkey s'attaque à la limitation du nombre d'instruction par secondes / mémoire 
 
 ## Laboratoire #3 Ajout d'attaque de queues de messages et de base de données
-    - Réalisation des tactiques de modificabilité
+    - Réalisation des tactiques de modifiabilité
     - Destruction des queues de messages
     - Chaosmonkey s'attaque aux volumes des conteneur de calcul seulement
     - ChaosMonkey s'attaque au bases de données
