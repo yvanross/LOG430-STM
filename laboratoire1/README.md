@@ -14,17 +14,11 @@
 - Configurer Zipkins ou Jaeger
 
 ## Configuration de votre environnement
-- [ ] installer Dotnet runtime  https://dotnet.microsoft.com/en-us/download/dotnet/7.0
-- [ ] installer docker desktop https://www.docker.com/products/docker-desktop/
-  - [ ] settings/Activer "Expose Expose daemon on tcp://localhost:2375 without TLS" (mac/linux voir https://github.com/yvanross/LOG430-STM/issues/11 )
-- [ ] installer dockstation https://dockstation.io/
-- [ ] création de votre compte STM https://www.stm.info/en/about/developers
-- [ ] création de votre compte de TOMTOM https://developer.tomtom.com/user/register
-- [ ] mise à jour des données de la STM, au besoin (https://www.stm.info/en/about/developers)
+- voir Wiki
 
 ### Démarrer l'application
  - Remplir microservices\DockerCompose\.env
- - Utiliser dockstation
+ - Utiliser dockstation (ou docker cli)
  - Faire un lien vers microservices\DockerCompose\docker-compose.yml
  - Build (global pas sur un seul conteneur)
  - Start
