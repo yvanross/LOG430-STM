@@ -22,11 +22,6 @@
 - [ ] création de votre compte de TOMTOM https://developer.tomtom.com/user/register
 - [ ] mise à jour des données de la STM, au besoin (https://www.stm.info/en/about/developers)
 
-## Récupération de l'infrastructure
-```bash
-git clone git@github.com:yvanross/LOG430-STM.git
-```
-
 ### Démarrer l'application
  - Remplir microservices\DockerCompose\.env
  - Utiliser dockstation
