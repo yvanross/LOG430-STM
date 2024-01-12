@@ -1,13 +1,14 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER app
 WORKDIR /app
-EXPOSE 80
+EXPOSE 8080
+EXPOSE 8081
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Configuration/Nuget/*", ""]
-COPY ["Configuration/nuget.config", ""]
 COPY ["Configuration/Configuration.csproj", "Configuration/"]
 COPY ["Application.Commands/Application.Commands.csproj", "Application.Commands/"]
 COPY ["Application.CommandServices/Application.CommandServices.csproj", "Application.CommandServices/"]
@@ -17,9 +18,9 @@ COPY ["Domain.Aggregates.Stop/Domain.Aggregates.Stop.csproj", "Domain.Aggregates
 COPY ["Domain.Common/Domain.Common.csproj", "Domain.Common/"]
 COPY ["Domain.ValueObjects/Domain.ValueObjects.csproj", "Domain.ValueObjects/"]
 COPY ["Domain.Factories/Domain.Factories.csproj", "Domain.Factories/"]
+COPY ["Domain.Aggregates.Bus/Domain.Aggregates.Bus.csproj", "Domain.Aggregates.Bus/"]
 COPY ["Domain.Aggregates.Ride/Domain.Aggregates.Ride.csproj", "Domain.Aggregates.Ride/"]
 COPY ["Domain.Aggregates.Trip/Domain.Aggregates.Trip.csproj", "Domain.Aggregates.Trip/"]
-COPY ["Domain.Aggregates.Bus/Domain.Aggregates.Bus.csproj", "Domain.Aggregates.Bus/"]
 COPY ["Application.EventHandlers/Application.EventHandlers.csproj", "Application.EventHandlers/"]
 COPY ["Application.Common/Application.Common.csproj", "Application.Common/"]
 COPY ["Domain.Services/Domain.Services.csproj", "Domain.Services/"]
@@ -33,16 +34,14 @@ COPY ["Infrastructure.Events/Infrastructure.Events.csproj", "Infrastructure.Even
 COPY ["Infrastructure.FileHandlers/Infrastructure.FileHandlers.csproj", "Infrastructure.FileHandlers/"]
 COPY ["Infrastructure.ReadRepositories/Infrastructure.ReadRepositories.csproj", "Infrastructure.ReadRepositories/"]
 COPY ["Infrastructure.WriteRepositories/Infrastructure.WriteRepositories.csproj", "Infrastructure.WriteRepositories/"]
-RUN dotnet restore "Configuration/Configuration.csproj"
+RUN dotnet restore "./Configuration/./Configuration.csproj"
 COPY . .
 WORKDIR "/src/Configuration"
-RUN dotnet build "Configuration.csproj" -c Debug -o /app/build #  #-c Release -o /app/build Commenting this to help debugging your container, but it is less performant
+RUN dotnet build "./Configuration.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Configuration.csproj" -c Debug -o /app/publish /p:UseAppHost=false #-c Release -o /app/publish /p:UseAppHost=false Commenting this to help debugging your container, but it is less performant
-
-#here again to help debugging your container, but it might be less performant
-ENV ASPNETCORE_ENVIRONMENT=Development 
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./Configuration.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

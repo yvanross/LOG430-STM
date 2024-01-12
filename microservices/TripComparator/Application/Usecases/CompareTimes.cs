@@ -70,7 +70,7 @@ namespace Application.Usecases
                 var busPosition = new BusPosition()
                 {
                     Message = trackingResult.Message + $"\nCar: {_averageCarTravelTime} seconds",
-                    Seconds = Convert.ToInt32(trackingResult.Duration),
+                    Seconds = trackingResult.Duration,
                 };
 
                 await channel.WriteAsync(busPosition);

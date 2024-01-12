@@ -4,9 +4,7 @@ namespace Application.CommandServices.Interfaces;
 
 public interface ITransitDataReader : IDisposable
 {
-    void LoadStaticGtfsFromFilesInMemory();
+    IAsyncEnumerable<IStopWrapper> FetchStopData();
 
-    IEnumerable<IStopWrapper> FetchStopData();
-
-    IEnumerable<ITripWrapper> FetchTripData();
+    IAsyncEnumerable<ITripWrapper> FetchTripData();
 }

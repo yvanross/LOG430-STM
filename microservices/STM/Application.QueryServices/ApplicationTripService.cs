@@ -50,8 +50,8 @@ public class ApplicationTripService
 
     private async Task<Dictionary<string, List<ScheduledStopDto>>> GetRelevantTripIdsAsync(List<string> materializedIds)
     {
-        //For simplicity sake I will assume UTC-4 as the timezone for montreal and not account for daylight savings time.
-        //Out of the box the static GTFS comes in a 30 hour window.
+        //For simplicity's sake, I will assume UTC-4 as the timezone for montreal and not account for daylight savings time.
+        //Out of the box the static GTFS comes in a 30-hour window.
         //Converting that to UTC and saving to the DB means pushing all timespans by 4 hours.
         //We are now on a weird stretch with a maximum of 34 hours and a minimum of 4 hours.
         //Issue being that a trip at 25 hours might wrap at hour 1, being the next day.
@@ -70,8 +70,9 @@ public class ApplicationTripService
 
         var scheduledStopsGroupings = scheduledStops
             .Where(scheduledStop =>
-                    //if the departure time is greater than 24, it has meaning tomorrow and today (it wraps around)
-                    scheduledStop.DepartureTimespan >= numberOfHoursInADayOnEarth ?
+            
+                //if the departure time is greater than 24, it has meaning tomorrow and today (it wraps around)
+                scheduledStop.DepartureTimespan >= numberOfHoursInADayOnEarth ?
                     //then we need to check if the the today portion is is within a reasonable range of the current time or
                     (scheduledStop.DepartureTimespan.TotalSeconds % numberOfHoursInADayOnEarth.TotalSeconds) - maxAheadOfTimeAllowed.TotalSeconds < currentTimeOfDay.TotalSeconds ||
                     //if the tomorrow portion is in a reasonable range of the current time (in the event that the current time is late in the day) 
@@ -79,6 +80,7 @@ public class ApplicationTripService
                     //if the departure time is less than 24, it only has meaning today
                     scheduledStop.DepartureTimespan - maxAheadOfTimeAllowed < currentTimeOfDay
             )
+
             .GroupBy(scheduledStop => scheduledStop.TripId)
             .Where(g => g.Count() > 1)
             .ToList();

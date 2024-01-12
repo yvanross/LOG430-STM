@@ -1,6 +1,7 @@
 ﻿using Application.CommandServices.Interfaces;
 using Application.Common.Extensions;
 using Domain.Common.Seedwork.Abstract;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -10,6 +11,8 @@ public abstract class WriteRepository<TAggregate> : IWriteRepository<TAggregate>
     where TAggregate : Aggregate<TAggregate>, IEquatable<Entity<TAggregate>>
 {
     private protected readonly ILogger Logger;
+
+    protected DbSet<TAggregate> Aggregates { get; set; }
 
     //use only for bulk insert not saving
     private protected readonly AppWriteDbContext WriteDbContext;
@@ -21,8 +24,6 @@ public abstract class WriteRepository<TAggregate> : IWriteRepository<TAggregate>
 
         Aggregates = writeDbContext.Set<TAggregate>();
     }
-
-    protected DbSet<TAggregate> Aggregates { get; set; }
 
     public virtual async Task<IEnumerable<TAggregate>> GetAllAsync(params string[] ids)
     {
@@ -77,5 +78,14 @@ public abstract class WriteRepository<TAggregate> : IWriteRepository<TAggregate>
     public void Remove(TAggregate aggregate)
     {
         Aggregates.Remove(aggregate);
+    }
+
+    public async Task ClearAsync()
+    {
+        if (WriteDbContext.IsInMemory() is false)
+            await WriteDbContext.Database.ExecuteSqlRawAsync(
+                $"""
+                 DELETE FROM public."{Aggregates.EntityType.GetTableName()}"
+                 """);
     }
 }

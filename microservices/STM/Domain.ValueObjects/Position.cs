@@ -6,25 +6,24 @@ public record Position(double Latitude, double Longitude) : IValueObject<Positio
 {
     public double DistanceInMeters(Position other)
     {
-        const int earthRadius = 6371;
+        const int earthRadius = 6371; // Radius of the Earth in kilometers
 
-        var aPrime = new Position(ToRad(Latitude), ToRad(Longitude));
+        double latDifference = ToRad(other.Latitude - Latitude);
+        double lonDifference = ToRad(other.Longitude - Longitude);
 
-        var bPrime = new Position(ToRad(other.Latitude), ToRad(other.Longitude));
+        double a = Math.Sin(latDifference / 2) * Math.Sin(latDifference / 2) +
+                   Math.Cos(ToRad(Latitude)) * Math.Cos(ToRad(other.Latitude)) *
+                   Math.Sin(lonDifference / 2) * Math.Sin(lonDifference / 2);
+        double c = 2 * Math.Asin(Math.Sqrt(a));
 
-        var lat = Math.Sin((bPrime.Latitude - aPrime.Latitude) / 2);
-        var lon = Math.Sin((bPrime.Longitude - aPrime.Longitude) / 2);
+        var distance = earthRadius * c * 1000; // Convert to meters
 
-        var h1 = Math.Sin(lat / 2) * Math.Sin(lat / 2) +
-                 Math.Cos(aPrime.Latitude) * Math.Cos(bPrime.Latitude) *
-                 Math.Sin(lon / 2) * Math.Sin(lon / 2);
-        var h2 = 2 * Math.Asin(Math.Min(1, Math.Sqrt(h1)));
-
-        return h2 * earthRadius * 1000;
+        return distance;
     }
 
     private static double ToRad(double degree)
     {
         return degree * (Math.PI / 180);
     }
+
 }

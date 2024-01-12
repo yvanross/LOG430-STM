@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -10,6 +10,10 @@
     <ProjectReference Include="..\Application.CommandServices\Application.CommandServices.csproj" />
     <ProjectReference Include="..\Application.EventHandlers\Application.EventHandlers.csproj" />
     <ProjectReference Include="..\Domain.Services\Domain.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Cleaning\" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,4 @@
 using System.Reflection;
-using System.Resources;
 using Application.Commands.LoadStaticGtfs;
 using Application.Commands.Seedwork;
 using Application.Commands.UpdateBus;
@@ -17,7 +16,6 @@ using Application.QueryServices;
 using Application.QueryServices.ServiceInterfaces;
 using Configuration.Dispatchers;
 using Configuration.Policies;
-using Configuration.Properties;
 using Controllers.Jobs;
 using Controllers.Rest;
 using Domain.Common;
@@ -28,8 +26,9 @@ using Domain.Services.Aggregates;
 using Domain.Services.Utility;
 using Infrastructure.ApiClients;
 using Infrastructure.Events;
-using Infrastructure.FileHandlers.Gtfs;
-using Infrastructure.FileHandlers.Gtfs.Wrappers;
+using Infrastructure.FileHandlers.StaticGtfs;
+using Infrastructure.FileHandlers.StaticGtfs.Mappers.TypeConverter;
+using Infrastructure.FileHandlers.StaticGtfs.Processor;
 using Infrastructure.ReadRepositories;
 using Infrastructure.WriteRepositories;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -61,6 +60,10 @@ public class Program
 
     public static void Main(string[] args)
     {
+        var hostInfo = new HostInfo();
+
+        hostInfo.Validate();
+
         var builder = WebApplication.CreateBuilder(args);
 
         RepositoryDbContextOptionConfiguration = UseInMemoryDatabase
@@ -101,10 +104,6 @@ public class Program
 
         var scope = app.Services.CreateScope();
 
-        var hostInfo = (HostInfo)scope.ServiceProvider.GetRequiredService<IHostInfo>();
-
-        hostInfo.Validate();
-
         if (scope.ServiceProvider.GetRequiredService<AppReadDbContext>().Database.IsInMemory() is false)
             scope.ServiceProvider.GetRequiredService<AppReadDbContext>().Database.Migrate();
 
@@ -135,8 +134,6 @@ public class Program
         services.AddScoped(typeof(IInfiniteRetryPolicy<>), typeof(InfiniteRetryPolicy<>));
         services.AddScoped(typeof(IBackOffRetryPolicy<>), typeof(BackOffRetryPolicy<>));
 
-        services.AddSingleton(_ => new ResourceManager(typeof(Resources)));
-
         services.AddSingleton<IHostInfo, HostInfo>();
 
         services.AddSingleton<IDataReader, DataReader>();
@@ -155,6 +152,8 @@ public class Program
 
     private static void InfrastructureSetup(IServiceCollection services, IConfiguration configuration)
     {
+        var hostInfo = new HostInfo();
+
         if (RepositoryDbContextOptionConfiguration is null)
             throw new NullReferenceException("RepositoryDbContextOptionConfiguration is null");
 
@@ -177,12 +176,14 @@ public class Program
 
         services.AddScoped<IStmClient, StmClient>();
 
-        services.AddScoped<ITransitDataReader, TransitDataReader>();
-        services.AddScoped<GtfsFileFileCache>();
-        services.AddScoped<WrapperMediator>();
+        services.AddScoped<ITransitDataReader, GtfsDataReader>();
+        services.AddScoped<TripProcessor>();
+        services.AddScoped<StopsProcessor>();
+        services.AddScoped<GtfsTimespanConverter>();
+        services.AddSingleton<IMemoryConsumptionSettings, MemoryConsumptionSettings>(_ => new MemoryConsumptionSettings(hostInfo.GetMemoryConsumption()));
 
         services.AddSingleton<IConsumer, InMemoryEventQueue>();
-        services.AddSingleton<IPublisher, InMemoryEventQueue>();
+        services.AddSingleton<IEventPublisher, InMemoryEventQueue>();
     }
 
     private static void ApplicationSetup(IServiceCollection services)

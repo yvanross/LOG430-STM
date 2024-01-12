@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.Policies;
 using Application.Usecases;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 using MqContracts;
 
 namespace Controllers.Controllers;

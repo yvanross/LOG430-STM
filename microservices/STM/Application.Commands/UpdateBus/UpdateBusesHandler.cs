@@ -14,7 +14,7 @@ public class UpdateBusesHandler : ICommandHandler<UpdateBusesCommand>
     private readonly IBusWriteRepository _busRepository;
     private readonly BusServices _busServices;
     private readonly ILogger<UpdateBusesHandler> _logger;
-    private readonly IPublisher _publisher;
+    private readonly IEventPublisher _eventPublisher;
     private readonly IDatetimeProvider _datetimeProvider;
     private readonly IStmClient _stmClient;
     private readonly IUnitOfWork _unitOfWork;
@@ -27,7 +27,7 @@ public class UpdateBusesHandler : ICommandHandler<UpdateBusesCommand>
         IUnitOfWork unitOfWork,
         ILogger<UpdateBusesHandler> logger,
         BusServices busServices,
-        IPublisher publisher,
+        IEventPublisher eventPublisher,
         IDatetimeProvider datetimeProvider)
     {
         _stmClient = stmClient;
@@ -35,7 +35,7 @@ public class UpdateBusesHandler : ICommandHandler<UpdateBusesCommand>
         _unitOfWork = unitOfWork;
         _logger = logger;
         _busServices = busServices;
-        _publisher = publisher;
+        _eventPublisher = eventPublisher;
         _datetimeProvider = datetimeProvider;
     }
 
@@ -60,7 +60,7 @@ public class UpdateBusesHandler : ICommandHandler<UpdateBusesCommand>
 
             await _unitOfWork.SaveChangesAsync();
 
-            await _publisher.Publish(new BusPositionsUpdated(Guid.NewGuid(), _datetimeProvider.GetCurrentTime()));
+            await _eventPublisher.Publish(new BusPositionsUpdated(Guid.NewGuid(), _datetimeProvider.GetCurrentTime()));
         }
         catch (Exception e)
         {

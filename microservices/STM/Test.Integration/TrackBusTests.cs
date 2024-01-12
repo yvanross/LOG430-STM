@@ -10,17 +10,15 @@ namespace Tests.Integration;
 
 public class TrackBusTests : IntegrationTest
 {
-    //Set an API KEY**
-    private const string ApiKey = "";
-
     public TrackBusTests(ITestOutputHelper outputHelper) : base(outputHelper)
     {
-        Environment.SetEnvironmentVariable("API_KEY", ApiKey);
     }
 
     //This is a very long running test and since it depends on real time data, it might return false negatives, read the log to see where it failed
     //It is more of a proof of concept than a real test
     //Bear in mind it is long running
+
+    //IMPORTANT ADD API KEY TO ENVIRONMENT VARIABLES IN IntegrationWebApplicationFactory.cs
     [Fact]
     public async Task Should_Begin_Tracking_Bus()
     {
@@ -28,9 +26,9 @@ public class TrackBusTests : IntegrationTest
 
         await Consumer.ConsumeNext<ServiceInitialized>(cancellationToken.Token);
 
-        var initialPosition = new Position(45.49536173070412, -73.563059502814810);
+        var initialPosition = new Position(45.50805689530107, -73.57132679709797);
 
-        var destination = new Position(45.50174862045254, -73.57655617412391);
+        var destination = new Position(45.499665217304695, -73.57887989771196);
 
         var query = new GetEarliestBusQuery(initialPosition, destination);
 

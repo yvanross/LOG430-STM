@@ -18,11 +18,6 @@ public sealed class AppReadDbContext : DbContext, IQueryContext
         return Set<T>().AsNoTracking();
     }
 
-    public bool IsInMemory()
-    {
-        return Database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory";
-    }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Stop>(

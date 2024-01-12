@@ -5,7 +5,7 @@ using Event = Application.EventHandlers.Event;
 
 namespace Infrastructure.TcpClients;
 
-public class MassTransitPublisher : IPublisher
+public class MassTransitPublisher : IEventPublisher
 {
     private readonly IPublishEndpoint _publishEndpoint;
     private readonly IInfiniteRetryPolicy<MassTransitPublisher> _retryPolicy;

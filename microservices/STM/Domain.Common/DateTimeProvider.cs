@@ -13,14 +13,11 @@ public class DateTimeProvider : IDatetimeProvider
     {
         var currentUtcDateTime = DateTime.UtcNow;
 
-        var utcMinusFourOffset = TimeSpan.FromHours(-4);
+        var utcMinusFourTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
 
-        var utcMinusFourTimeZone = TimeZoneInfo.GetSystemTimeZones()
-            .FirstOrDefault(timeZone => timeZone.BaseUtcOffset.Equals(utcMinusFourOffset));
+        var isDaylightSavingTime = utcMinusFourTimeZone.IsDaylightSavingTime(currentUtcDateTime);
 
-        var isDaylightSavingTime = utcMinusFourTimeZone?.IsDaylightSavingTime(currentUtcDateTime) ?? false;
-
-        return isDaylightSavingTime ? 5 : 4;
+        return isDaylightSavingTime ? 4 : 5;
     }
 
     public DateTime GetMontrealTime()

@@ -3,6 +3,7 @@ using Application.Common.Extensions;
 using Application.Dtos;
 using Application.Mapping.Interfaces;
 using Domain.Aggregates.Trip;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -13,6 +14,7 @@ public class TripWriteRepository : ITripWriteRepository
     private readonly AppWriteDbContext _writeDbContext;
     private readonly IMappingTo<IEnumerable<ScheduledStopDto>, Trip> _scheduledStopDtoToTripMapper;
     private readonly IMappingTo<Trip, IEnumerable<ScheduledStopDto>> _tripToScheduledStopDtoMapper;
+    private readonly DbContextOptions<AppWriteDbContext> _dbContextOptions;
     private readonly ILogger<TripWriteRepository> _logger;
 
     private readonly DbSet<ScheduledStopDto> _scheduledStopDtos;
@@ -21,11 +23,13 @@ public class TripWriteRepository : ITripWriteRepository
         AppWriteDbContext writeDbContext,
         IMappingTo<IEnumerable<ScheduledStopDto>, Trip> scheduledStopDtoToTripMapper,
         IMappingTo<Trip, IEnumerable<ScheduledStopDto>> tripToScheduledStopDtoMapper,
+        DbContextOptions<AppWriteDbContext> dbContextOptions,
         ILogger<TripWriteRepository> logger)
     {
         _writeDbContext = writeDbContext;
         _scheduledStopDtoToTripMapper = scheduledStopDtoToTripMapper;
         _tripToScheduledStopDtoMapper = tripToScheduledStopDtoMapper;
+        _dbContextOptions = dbContextOptions;
         _logger = logger;
         _scheduledStopDtos = _writeDbContext.Set<ScheduledStopDto>();
     }
@@ -83,11 +87,25 @@ public class TripWriteRepository : ITripWriteRepository
         if (_writeDbContext.IsInMemory())
             await _scheduledStopDtos.AddRangeAsync(scheduledStopDtos);
         else
-            await _writeDbContext.BulkInsertAsync(scheduledStopDtos);
+        {
+            // Create a new DbContext instance for this operation
+            await using var context = new AppWriteDbContext(_dbContextOptions);
+
+            await context.BulkInsertAsync(scheduledStopDtos);
+        }
     }
 
     public void Remove(Trip ride)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task ClearAsync()
+    {
+        if (_writeDbContext.IsInMemory() is false)
+            await _writeDbContext.Database.ExecuteSqlRawAsync(
+                $"""
+                DELETE FROM public."{_scheduledStopDtos.EntityType.GetTableName()}"
+                """);
     }
 }

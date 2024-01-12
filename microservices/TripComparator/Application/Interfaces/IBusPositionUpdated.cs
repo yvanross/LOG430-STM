@@ -2,7 +2,7 @@
 
 public interface IBusPositionUpdated
 {
-    int Seconds { get; }
+    double Seconds { get; }
 
     string Message { get; }
 }

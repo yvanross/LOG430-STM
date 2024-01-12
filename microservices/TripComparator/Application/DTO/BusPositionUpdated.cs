@@ -5,7 +5,7 @@ namespace MqContracts;
 
 public class BusPositionUpdated
 {
-    public int Seconds { get; set; }
+    public double Seconds { get; set; }
 
     public string Message { get; set; }
 }

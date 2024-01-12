@@ -6,11 +6,15 @@ using Application.Mapping.Interfaces.Wrappers;
 using Domain.Aggregates.Stop;
 using Domain.Aggregates.Trip;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks.Dataflow;
 
 namespace Application.Commands.LoadStaticGtfs;
 
 public sealed class LoadStaticGtfsHandler : ICommandHandler<LoadStaticGtfsCommand>
 {
+    private readonly int _batchSize;
+    private readonly int _maxDegreeOfParallelism;
+
     private readonly ILogger<LoadStaticGtfsHandler> _logger;
     private readonly IMappingTo<IStopWrapper, Stop> _stopMapper;
     private readonly IStopWriteRepository _stopWriteRepository;
@@ -26,6 +30,7 @@ public sealed class LoadStaticGtfsHandler : ICommandHandler<LoadStaticGtfsComman
         IUnitOfWork unitOfWork,
         IMappingTo<ITripWrapper, Trip> tripMapper,
         IMappingTo<IStopWrapper, Stop> stopMapper,
+        IMemoryConsumptionSettings memoryConsumptionSettings,
         ILogger<LoadStaticGtfsHandler> logger)
     {
         _tripWriteRepository = tripWriteRepository;
@@ -35,40 +40,26 @@ public sealed class LoadStaticGtfsHandler : ICommandHandler<LoadStaticGtfsComman
         _tripMapper = tripMapper;
         _stopMapper = stopMapper;
         _logger = logger;
+
+        _batchSize = memoryConsumptionSettings.GetBatchSize();
+        _maxDegreeOfParallelism = memoryConsumptionSettings.GetMaxDegreeOfParallelism();
     }
 
     public async Task Handle(LoadStaticGtfsCommand command, CancellationToken cancellation)
     {
         try
         {
-            _transitDataReader.LoadStaticGtfsFromFilesInMemory();
+            _logger.LogInformation("Loading Static gtfs data, should take around 1 to 5 minutes depending on configuration and hardware");
 
-            _logger.LogInformation("Static gtfs data loaded in memory, mapping to aggregates...");
+            await ProcessStops(cancellation);
 
-            var stops = new List<Stop>();
-
-            foreach (var stopWrapper in _transitDataReader.FetchStopData())
-            {
-                stops.Add(_stopMapper.MapFrom(stopWrapper));
-            }
-
-            await _stopWriteRepository.AddAllAsync(stops);
-
-            stops.Clear();
+            await ProcessTrips();
 
             GC.Collect();
-
-            _logger.LogInformation("Stops persisted");
-
-            await BatchInsertTrips(_transitDataReader.FetchTripData());
-
-            GC.Collect();
-
-            _logger.LogInformation("Trips persisted");
 
             _transitDataReader.Dispose();
 
-            //for simplicity sake we don't use a transaction here but the events still only fire after the commit
+            //For simplicity, we don't use a transaction here but the events still only fire after the commit
             await _unitOfWork.SaveChangesAsync();
         }
         catch (Exception e)
@@ -84,39 +75,74 @@ public sealed class LoadStaticGtfsHandler : ICommandHandler<LoadStaticGtfsComman
         }
     }
 
+    private async Task ProcessStops(CancellationToken cancellation)
+    {
+        var stops = new List<Stop>();
+
+        await foreach (var stopWrapper in _transitDataReader.FetchStopData().WithCancellation(cancellation))
+        {
+            stops.Add(_stopMapper.MapFrom(stopWrapper));
+        }
+
+        await _stopWriteRepository.AddAllAsync(stops);
+
+        _logger.LogInformation("Stops persisted");
+
+        stops.Clear();
+    }
+
+    private async Task ProcessTrips()
+    {
+        var tripWrappers = _transitDataReader.FetchTripData();
+
+        await BatchInsertTrips(tripWrappers);
+
+        _logger.LogInformation("Trips persisted");
+    }
+
     /// <summary>
-    /// In order to spare computers with 8gb of ram (obviously only works with an actual database)
+    /// In order to spare computers with less ram (obviously only works with an actual database)
     /// Reducing Batch size lowers memory usage but increases time to insert
     /// Increasing Batch size increases memory usage but decreases time to insert
-    /// You can always fine tune this to your liking, the current value takes into account systems with 8gb of ram
+    /// You can always fine tune this to your liking, the current value takes into account most systems
     /// </summary>
-    /// <param name="aggregates"></param>
-    /// <returns></returns>
-    private async Task BatchInsertTrips(IEnumerable<ITripWrapper> tripWrappers)
+    private async Task BatchInsertTrips(IAsyncEnumerable<ITripWrapper> tripWrappers)
     {
-        const int batchSize = 10000;
+        var actionBlock = new ActionBlock<Trip[]>(
+            async batch =>
+            {
+                // Each batch is processed in its own task with its own DbContext instance
+                await _tripWriteRepository.AddAllAsync(batch);
+            },
+            new ExecutionDataflowBlockOptions
+            {
+                MaxDegreeOfParallelism = _maxDegreeOfParallelism
+            });
 
-        var batch = new List<Trip>(batchSize);
+        var batch = new List<Trip>(_batchSize);
 
-        foreach (var trip in tripWrappers)
+        await foreach (var trip in tripWrappers)
         {
             batch.Add(_tripMapper.MapFrom(trip));
-
             trip.Dispose();
 
-            if (batch.Count >= batchSize)
+            if (batch.Count >= _batchSize)
             {
-                await _tripWriteRepository.AddAllAsync(batch);
+                actionBlock.Post(batch.ToArray());
 
-                batch.Clear();
+                batch = new List<Trip>(_batchSize);
             }
         }
 
+        // Post the last batch if it has any trips
         if (batch.Count > 0)
         {
-            await _tripWriteRepository.AddAllAsync(batch);
-
-            batch.Clear();
+            actionBlock.Post(batch.ToArray());
         }
+
+        // Ensure all batches are processed
+        actionBlock.Complete();
+
+        await actionBlock.Completion;
     }
 }

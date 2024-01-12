@@ -118,7 +118,7 @@ public class StmClient : IStmClient
             _logger.LogError(
                 """
                         Error while parsing STM feed
-                        This is nearly always due to a wrong API key
+                        This is sometimes due to a wrong API key
                         Validate your key by testing it on 
                         https://portail.developpeurs.stm.info/apihub/?_gl=1*nsvvxk*_ga*MTA1MTIyMTQ0Mi4xNjc2MDU0OTc3*_ga_37MDMXFX83*MTY5MzkxNzMzNC4yMS4xLjE2OTM5MTc0MjYuNDAuMC4w#/apis/bc64b63f-4ef4-4055-bd2f-eb3bf30ddd16/show/spec
                         """);

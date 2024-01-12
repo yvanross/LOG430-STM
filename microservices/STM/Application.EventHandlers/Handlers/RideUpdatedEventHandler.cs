@@ -8,13 +8,13 @@ namespace Application.EventHandlers.Handlers;
 
 public class RideUpdatedEventHandler : IDomainEventHandler<RideTrackingUpdated>
 {
-    private readonly IPublisher _publisher;
+    private readonly IEventPublisher _eventPublisher;
     private readonly IEventContext _eventContext;
     private readonly IDatetimeProvider _datetimeProvider;
 
-    public RideUpdatedEventHandler(IPublisher publisher, IEventContext eventContext, IDatetimeProvider datetimeProvider)
+    public RideUpdatedEventHandler(IEventPublisher eventPublisher, IEventContext eventContext, IDatetimeProvider datetimeProvider)
     {
-        _publisher = publisher;
+        _eventPublisher = eventPublisher;
         _eventContext = eventContext;
         _datetimeProvider = datetimeProvider;
     }
@@ -29,7 +29,7 @@ public class RideUpdatedEventHandler : IDomainEventHandler<RideTrackingUpdated>
             _datetimeProvider.GetCurrentTime());
 
         //decoupling the domain event from the infrastructure
-        await _publisher.Publish(applicationEvent);
+        await _eventPublisher.Publish(applicationEvent);
 
         await _eventContext.AddOrUpdateAsync(applicationEvent);
     }

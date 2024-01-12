@@ -3,6 +3,4 @@
 public interface IQueryContext
 {
     IQueryable<T> GetData<T>() where T : class;
-
-    bool IsInMemory();
 }

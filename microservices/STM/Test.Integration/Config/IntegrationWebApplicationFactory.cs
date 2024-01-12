@@ -14,12 +14,15 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
 {
     private readonly PostgreSqlContainer _container = new PostgreSqlBuilder()
         .WithImage("postgres:latest")
+        .WithPortBinding(32573,5432)
         .WithDatabase("stm")
         .WithUsername("postgres")
         .WithPassword("postgres")
         .Build();
 
     private readonly ITestOutputHelper _outputHelper;
+
+    private const string ApiKey = "l7f41468f7c35f4bd39523510d89637523";
 
     public IntegrationWebApplicationFactory(ITestOutputHelper outputHelper)
     {
@@ -38,6 +41,10 @@ public class IntegrationWebApplicationFactory : WebApplicationFactory<Program>, 
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        Environment.SetEnvironmentVariable("API_KEY", ApiKey);
+        Environment.SetEnvironmentVariable("BASE_PATH", @"..\..\..\..\Configuration\Data\");
+        Environment.SetEnvironmentVariable("MEMORY_CONSUMPTION", "HIGH");
+
         builder
             .ConfigureAppConfiguration((_, config) =>
             {

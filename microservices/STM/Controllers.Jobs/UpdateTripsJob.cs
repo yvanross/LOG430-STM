@@ -32,7 +32,7 @@ public class UpdateTripsJob : BackgroundService
 
             var commandDispatcher = scope.ServiceProvider.GetRequiredService<ICommandDispatcher>();
 
-            var publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
+            var publisher = scope.ServiceProvider.GetRequiredService<IEventPublisher>();
 
             var consumer = scope.ServiceProvider.GetRequiredService<IConsumer>();
           
@@ -55,7 +55,7 @@ public class UpdateTripsJob : BackgroundService
         CancellationToken stoppingToken,
         IEventContext eventContext,
         ICommandDispatcher commandDispatcher,
-        IPublisher publisher)
+        IEventPublisher eventPublisher)
     {
         var priorEvent = await eventContext.TryGetAsync<StaticGtfsDataLoaded>();
 
@@ -69,15 +69,15 @@ public class UpdateTripsJob : BackgroundService
 
         if (staticGtfsWasLoadedButNotUpdated || staticGtfsWasLoadedAndUpdatedButLongAgo)
         {
-            await DispatchUpdateTrips(commandDispatcher, stoppingToken, publisher);
+            await DispatchUpdateTrips(commandDispatcher, stoppingToken, eventPublisher);
         }
     }
 
-    private async Task DispatchUpdateTrips(ICommandDispatcher commandDispatcher, CancellationToken token, IPublisher publisher)
+    private async Task DispatchUpdateTrips(ICommandDispatcher commandDispatcher, CancellationToken token, IEventPublisher eventPublisher)
     {
         await commandDispatcher.DispatchAsync(new UpdateTripsCommand(), token);
 
-        await publisher.Publish(new StmTripModificationApplied(Guid.NewGuid(), _datetimeProvider.GetCurrentTime()));
+        await eventPublisher.Publish(new StmTripModificationApplied(Guid.NewGuid(), _datetimeProvider.GetCurrentTime()));
 
         _logger.LogInformation("Trips updated");
     }

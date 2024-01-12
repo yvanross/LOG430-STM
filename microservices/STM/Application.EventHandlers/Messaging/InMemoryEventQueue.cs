@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.EventHandlers.Messaging;
 
-public class InMemoryEventQueue : IPublisher, IConsumer
+public class InMemoryEventQueue : IEventPublisher, IConsumer
 {
     private readonly IServiceProvider? _serviceProvider;
     private readonly ILogger<InMemoryEventQueue>? _logger;

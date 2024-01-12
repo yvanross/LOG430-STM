@@ -1,4 +1,5 @@
-﻿using Application.Commands.LoadStaticGtfs;
+﻿using Application.Commands.Cleaning;
+using Application.Commands.LoadStaticGtfs;
 using Application.Commands.Seedwork;
 using Application.EventHandlers.Interfaces;
 using Contracts;
@@ -35,7 +36,7 @@ public class LoadStaticGtfsJob : BackgroundService
 
             var eventContext = scope.ServiceProvider.GetRequiredService<IEventContext>();
 
-            var publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
+            var publisher = scope.ServiceProvider.GetRequiredService<IEventPublisher>();
 
             var staticGtfsDataLoaded = await eventContext.TryGetAsync<StaticGtfsDataLoaded>();
 
@@ -43,6 +44,8 @@ public class LoadStaticGtfsJob : BackgroundService
 
             if (staticGtfsWasNeverLoaded)
             {
+                await commandDispatcher.DispatchAsync(new ClearDb(), stoppingToken);
+
                 _logger.LogInformation("Loading static GTFS data");
 
                 await commandDispatcher.DispatchAsync(new LoadStaticGtfsCommand(), stoppingToken);

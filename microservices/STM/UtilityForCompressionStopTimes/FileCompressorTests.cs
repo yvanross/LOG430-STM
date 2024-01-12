@@ -15,8 +15,16 @@ public class FileCompressorTests
     [TestMethod]
     public async Task CompressTripFileTest()
     {
-        await FileCompressor.CompressTripFile(
-            @"C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\Aspect.Configuration\Data\stop_times",
-            @"C:\Users\david\Documents\GitHub\LOG430-STM\microservices\STM\Aspect.Configuration\Data\");
+        await FileCompressor.CompressStopTimesFile(
+            @"..\..\..\..\Configuration\Data\stop_times",
+            @"..\..\..\..\Configuration\Data\");
+
+        await FileCompressor.CompressTripsFile(
+            @"..\..\..\..\Configuration\Data\trips",
+            @"..\..\..\..\Configuration\Data\");
+
+        await FileCompressor.CompressStopsFile(
+            @"..\..\..\..\Configuration\Data\stops",
+            @"..\..\..\..\Configuration\Data\");
     }
 }

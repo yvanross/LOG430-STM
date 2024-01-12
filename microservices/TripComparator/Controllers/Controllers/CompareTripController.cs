@@ -1,6 +1,7 @@
 using Application.Interfaces.Policies;
 using Application.Usecases;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Controllers.Controllers
@@ -27,7 +28,7 @@ namespace Controllers.Controllers
         }
 
         [HttpPost]
-        [SwaggerOperation("This endpoint is for you to manually test your system (first iteration of the lab used to be without UI)")]
+        [SwaggerOperation("This endpoint is for you to manually test your system (without UI)")]
         public async Task<IActionResult> Post(string startingCoordinates, string destinationCoordinates)
         {
             _logger.LogInformation($"Comparing trip duration from {startingCoordinates} to {destinationCoordinates}");
