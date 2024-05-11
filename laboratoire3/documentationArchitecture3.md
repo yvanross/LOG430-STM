@@ -42,17 +42,21 @@ Membres de l'équipe:
 
 # Vues architecturales
 
-## Vues architecturales de type Module - modifiabilité
+>Au travers des différentes vues architecturales, montrez les améliorations apportées à vos microservices après l'implémentation du laboratoire 3. La présence des vues primaires, des catalogues d'éléments et des diagrammes de contexte est recommandée.
 
-## Vues architecturales de type composant et connecteur - modifiabilité
+## Vues architecturales de type Module
 
-## Vues architecturales de type allocation - modifiabilité
+## Vues architecturales de type composant et connecteur
+
+## Vues architecturales de type allocation
 
 # Impact des changements du laboratoire 3 sur la télémétrie
 
->Les différents changements que vous avez faits dans les microservices peuvent-ils être ressentis dans les données récoltées par télémétrie? Comparez avec les résultats précédents.
+>Les différents changements que vous avez faits dans les microservices peuvent-ils être ressentis dans les données récoltées par télémétrie? Comparez avec les résultats obtenus lors des laboratoires 1 et 2.
 
-# Explication des tactiques de modifiabilité utilisées dans le laboratoire 3
+# Explication des tactiques de modifiabilité utilisées dans lors des différents laboratoires
+
+>Différentes tactiques de modifiabilité ont été utilisées lors de ces 3 laboratoires. Elles étaient soient déjà présentes dans le projet fournies, soit elles ont été appliquées par votre équipe. Expliquez comment les tactiques de modifiabilité ont été utilisées lors des trois laboratoires.
 
 # Conclusion
 >TODO: insérer votre conclusion
@@ -60,7 +64,7 @@ Membres de l'équipe:
 - N'oubliez pas d'effacer les TODO
 - Générer une version PDF de ce document pour votre remise finale.
 - Assurez-vous du bon format de votre rapport PDF.
-- Créer un tag git avec la commande "git tag iterationX"
+- Créer un tag git avec la commande "git tag laboratoire-3"
 
 
 \newpage

@@ -43,7 +43,7 @@ Membres de l'équipe:
 
 # Vues architecturales
 
->Au travers des différentes vues architecturales, montrez comment la redondance est présente dans vos microservices après l'implémentation du laboratoire 2.
+- Au travers des différentes vues architecturales, montrez comment la redondance est présente dans vos microservices après l'implémentation du laboratoire 2. La présence des vues primaires, des catalogues d'éléments et des diagrammes de contexte est recommandée.
 
 ## Vues architecturales de type module - redondance
 
@@ -53,7 +53,7 @@ Membres de l'équipe:
 
 # Télémétrie
 
-- Analysez l'impact de vos modifications aux microservices sur les données de télémétrie recueilliez.
+- Analysez l'impact de vos modifications aux microservices sur les données de télémétrie recueillies. Donnez des valeurs concrètes et faites des comparaisons avec les valeurs recueillies lors du laboratoire 1.
 
 ## Télémétrie - Disponibilité
 
@@ -78,7 +78,7 @@ Membres de l'équipe:
 - N'oubliez pas d'effacer les TODO
 - Générer une version PDF de ce document pour votre remise finale.
 - Assurez-vous du bon format de votre rapport PDF.
-- Créer un tag git avec la commande "git tag iterationX"
+- Créer un tag git avec la commande "git tag laboratoire-2"
 
 \newpage
 

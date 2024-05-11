@@ -14,17 +14,21 @@
 - Configurer Zipkins ou Jaeger
 
 ## Configuration de votre environnement
-- voir Wiki
+
+- voir la Wiki sur Github
 
 ### Démarrer l'application
- - Remplir microservices\DockerCompose\.env
- - Utiliser dockstation (ou docker cli)
- - Faire un lien vers microservices\DockerCompose\docker-compose.yml
- - Build (global pas sur un seul conteneur)
- - Start
+
+- Remplir microservices\DockerCompose\.env
+- Utiliser dockstation (ou docker cli)
+- Faire un lien vers microservices\DockerCompose\docker-compose.yml
+- Build (global, pas sur un seul conteneur)
+- Start
     
 ## Déployer des mécaniques de télémétrie (open telemetry)
-- Installer Zipkin ou Jaeger
+- Ajouter le conteneur Zipkin ou Jaeger
+- Recueillir les données de télémétrie dans vos microservices STM, RouteTimeProvider et TripComparator.
+- Envoyer ces données au conteneur Zipkin ou Jaeger.
   
 ## Documenter ce que la télémétrie et l'analyse du code vous révèlent sur l'architecture du système
 - Analyser votre architecture en termes de 
@@ -48,7 +52,7 @@ En sachant que la variable docker NanoCpus à 1000000000 est l'équivalent de 1 
 
 ## Proposer des solutions pour améliorer l'architecture du système
 
-En fonctions de vos analyses et de la description sommaire des itérations à venir documentées dans le document de spécifications-itérations, proposer des solutions pour améliorer l'architecture du système en termes de
+En fonctions de vos analyses et de la description sommaire des itérations à venir documentées dans le document de spécifications-itérations, proposer des solutions pour améliorer l'architecture du système en termes de:
 - [ ] disponibilité
 - [ ] performance
 

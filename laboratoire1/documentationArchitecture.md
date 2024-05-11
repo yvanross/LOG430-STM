@@ -41,11 +41,9 @@ Membres de l'équipe:
 >TODO: insérer votre introduction
 
 # Télémétrie
-Analyse des microservices pour comprendre l'architecture du système et ses contraintes en termes de performance et de disponibilité.
+>TODO: Analyse des microservices pour comprendre l'architecture du système et ses contraintes en termes de performance et de disponibilité. N'utilisez pas seulement Zipkin ou Jaeger comme source de données. D'autres sources sont disponibles sans devoir faire de modifications aux microservices. Donnez-nous des valeurs numériques et analysez les valeurs obtenues.
 
 ## introduction
-
-On veut savoir comment vous avez trouvé ces informations et ce que vous avez fait pour les obtenir. On veut aussi savoir ce que vous avez fait pour les analyser. On veut aussi savoir ce que vous avez fait pour les documenter. On veut aussi savoir ce que vous avez fait pour les utiliser pour améliorer l'architecture du système.
 
 ## Disponibilité
 
@@ -69,7 +67,7 @@ En sachant que la variable docker NanoCpus à 500000000 est l'équivalent de 0,5
 
 # Vues architecturales
 
-## Vues architecturales de type Module au sujet du microservice STM
+## Vues architecturales de type Module du microservice STM
 
 ### Présentation primaire
 
@@ -77,7 +75,7 @@ En sachant que la variable docker NanoCpus à 500000000 est l'équivalent de 0,5
 
 ### Diagramme de contexte
 
-## Vues architecturales de type composant et connecteur
+## Vues architecturales de type composant et connecteur (de tous les microservices)
 
 ### Présentation primaire
 
@@ -85,7 +83,7 @@ En sachant que la variable docker NanoCpus à 500000000 est l'équivalent de 0,5
 
 ### Diagramme de contexte
 
-## Vues architecturales de type allocation
+## Vues architecturales de type allocation (de tous les microservices)
 
 ### Présentation primaire
 
@@ -107,7 +105,7 @@ Vous pouvez vous aider de vues architecturales de type Module, composant et conn
 
 ## Conclusion améliorations
 
-# Explication des tactiques de modifiabilité présentes dans la STM
+# Explication des tactiques de modifiabilité présentes dans le microservice STM
 
 # Conclusion du laboratoire
 
