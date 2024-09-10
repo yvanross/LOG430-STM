@@ -52,11 +52,13 @@ public class Program
     public static Action<IServiceCollection> Application { get; set; } = ApplicationSetup;
     public static Action<IServiceCollection> Domain { get; set; } = DomainSetup;
 
-    //this is a quick start configuration, it should use dynamic values
+    // this is a quick start configuration
+    // set values using environment variables instead
+    private const string DbServerAddress = ""
     private const int DbPort = 00000;
-    private const string DbUsername = "postgres";
-    private const string DbPassword = "secret";
-    private const string DatabaseName = "STM";
+    private const string DbUsername = "";
+    private const string DbPassword = "";
+    private const string DatabaseName = "";
 
     public static void Main(string[] args)
     {
@@ -73,7 +75,7 @@ public class Program
                 options.EnableDetailedErrors();
                 options.EnableSensitiveDataLogging();
                 options.EnableThreadSafetyChecks();
-                options.UseNpgsql($"Server=host.docker.internal;Port={DbPort};Username={DbUsername};Password={DbPassword};Database={DatabaseName};");
+                options.UseNpgsql($"Server={DbServerAddress};Port={DbPort};Username={DbUsername};Password={DbPassword};Database={DatabaseName};");
             };
 
         builder.Services.AddLogging(loggingBuilder =>
