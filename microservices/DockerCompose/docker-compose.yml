@@ -1,4 +1,3 @@
-version: '3.8'
 services:
   nodecontroller:
     image: log430/nodecontroller:latest
