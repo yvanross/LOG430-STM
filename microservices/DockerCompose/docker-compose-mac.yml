@@ -1,0 +1,91 @@
+services:
+  nodecontroller:
+    image: 'log430/nodecontroller:latest'
+    container_name: NodeController
+    restart: always
+    ports:
+      - '${NODE_CONTROLLER_PORT}:8080'
+      - '4300-4310:4300-4310'
+    environment:
+      TEAM_NAME: '${TEAM_NAME}'
+      STUDENT_NAME: '${STUDENT_NAME}'
+      GROUP: '${GROUP}'
+      SECRET: '${SECRET}'
+      INGRESS_ADDRESS: '${INGRESS_ADDRESS}'
+      INGRESS_PORT: '${INGRESS_PORT}'
+      SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
+      NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
+      MQ_SERVICE_NAME: EventStream
+      CUSTOM_CONTAINER_PORTS_DISCOVERY: '5672,5432,80'
+      BRIDGE_PORT: 32674
+      Logging__LogLevel__Default: Information
+      CONNECT_TO_INGRESS: true
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+  event-store:
+    container_name: EventStream
+    image: cluster_mq
+    restart: always
+    hostname: EventStream
+    build:
+      context: ../ClusterRabbitMq/
+      dockerfile: Dockerfile
+    ports:
+      - '32771:5672'
+      - '30001:15672'
+      - '25673:25672'
+    environment:
+      ID: EventStream
+      RABBITMQ_ERLANG_COOKIE_FILE: /var/lib/rabbitmq/.erlang.cookie
+    labels:
+      Artifact_Category: Connector
+      Replicas: EventStream
+  routetimeprovider:
+    container_name: RouteTimeProvider
+    image: routetimeprovider
+    restart: always
+    build:
+      context: ../RouteTimeProvider
+      dockerfile: ../RouteTimeProvider/RouteTimeProvider/Dockerfile
+    environment:
+      SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
+      NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
+      ID: RouteTimeProvider
+      API_KEY: '${TOMTOM}'
+    ports:
+      - '32772:8080'
+    labels:
+      ARTIFACT_CATEGORY: Computation
+  tripcomparator:
+    container_name: TripComparator
+    image: tripcomparator
+    restart: always
+    build:
+      context: ../TripComparator
+      dockerfile: ../TripComparator/Configuration/Dockerfile
+    environment:
+      SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
+      NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
+      ID: TripComparator
+      MQ_SERVICE_NAME: EventStream
+    ports:
+      - '32773:8080'
+    labels:
+      ARTIFACT_CATEGORY: Computation
+  stm:
+    container_name: STM
+    image: stm
+    restart: always
+    build:
+      context: ../STM
+      dockerfile: ../STM/Configuration/Dockerfile
+    environment:
+      SERVICES_ADDRESS: '${SERVICES_ADDRESS}'
+      NODE_CONTROLLER_PORT: '${NODE_CONTROLLER_PORT}'
+      ID: STM
+      API_KEY: '${STM}'
+      MEMORY_CONSUMPTION: LOW
+    ports:
+      - '32774:8080'
+    labels:
+      ARTIFACT_CATEGORY: Computation
