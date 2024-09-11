@@ -54,7 +54,7 @@ public class Program
 
     // this is a quick start configuration
     // set values using environment variables instead
-    private const string DbServerAddress = ""
+    private const string DbServerAddress = "";
     private const int DbPort = 00000;
     private const string DbUsername = "";
     private const string DbPassword = "";
