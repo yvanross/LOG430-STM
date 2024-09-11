@@ -19,7 +19,7 @@ services:
       CUSTOM_CONTAINER_PORTS_DISCOVERY: 5672,5432,80
       BRIDGE_PORT: 32674
       # Trace > Information > Error
-      Logging__LogLevel__Default: Informationà
+      Logging__LogLevel__Default: Information
       CONNECT_TO_INGRESS: true
     volumes: 
       - /var/run/docker.sock:/var/run/docker.sock
